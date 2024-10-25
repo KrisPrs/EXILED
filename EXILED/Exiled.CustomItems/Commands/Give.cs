@@ -24,15 +24,6 @@ namespace Exiled.CustomItems.Commands
     /// </summary>
     internal sealed class Give : ICommand
     {
-        private Give()
-        {
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Give"/> instance.
-        /// </summary>
-        public static Give Instance { get; } = new();
-
         /// <inheritdoc/>
         public string Command { get; } = "give";
 
@@ -40,7 +31,7 @@ namespace Exiled.CustomItems.Commands
         public string[] Aliases { get; } = { "g" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Дает кастомный предмет.";
+        public string Description { get; set; } = "Дает кастомный предмет.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

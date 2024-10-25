@@ -31,15 +31,6 @@ namespace Exiled.CustomRoles.Commands.Admin
     /// </summary>
     internal sealed class Give : ICommand
     {
-        private Give()
-        {
-        }
-
-        /// <summary>
-        ///     Gets the <see cref="Give" /> command instance.
-        /// </summary>
-        public static Give Instance { get; } = new();
-
         /// <inheritdoc />
         public string Command { get; } = "give";
 
@@ -47,7 +38,7 @@ namespace Exiled.CustomRoles.Commands.Admin
         public string[] Aliases { get; } = { "g" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Gives the specified custom role to the indicated player(s).";
+        public string Description { get; set; } = "Gives the specified custom role to the indicated player(s).";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

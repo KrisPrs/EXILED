@@ -421,7 +421,7 @@ namespace Exiled.API.Features.Roles
             SpectatorGameRole spectatorRole => new SpectatorRole(spectatorRole),
             HumanGameRole humanRole => new HumanRole(humanRole),
             FilmmakerGameRole filmmakerRole => new FilmMakerRole(filmmakerRole),
-            NoneGameRole => new NoneRole(role),
+            NoneGameRole noneRole => new NoneRole(noneRole),
             _ => null,
         };
 

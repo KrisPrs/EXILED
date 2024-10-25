@@ -22,15 +22,6 @@ namespace Exiled.CustomItems.Commands
     /// </summary>
     internal sealed class Info : ICommand
     {
-        private Info()
-        {
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Info"/> instance.
-        /// </summary>
-        public static Info Instance { get; } = new();
-
         /// <inheritdoc/>
         public string Command { get; } = "info";
 
@@ -38,7 +29,7 @@ namespace Exiled.CustomItems.Commands
         public string[] Aliases { get; } = { "i" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Дает информацию о кастомном предмете.";
+        public string Description { get; set; } = "Дает информацию о кастомном предмете.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

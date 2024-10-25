@@ -20,15 +20,6 @@ namespace Exiled.CustomItems.Commands.List
     /// <inheritdoc/>
     internal sealed class Registered : ICommand
     {
-        private Registered()
-        {
-        }
-
-        /// <summary>
-        /// Gets the command instance.
-        /// </summary>
-        public static Registered Instance { get; } = new();
-
         /// <inheritdoc/>
         public string Command { get; } = "registered";
 
@@ -36,7 +27,7 @@ namespace Exiled.CustomItems.Commands.List
         public string[] Aliases { get; } = { "r", "reg" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Получает все зарегистрированные кастомные предметы.";
+        public string Description { get; set; } = "Получает все зарегистрированные кастомные предметы.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

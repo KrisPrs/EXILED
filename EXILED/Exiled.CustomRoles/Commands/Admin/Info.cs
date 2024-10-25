@@ -23,15 +23,6 @@ namespace Exiled.CustomRoles.Commands.Admin
     /// </summary>
     internal sealed class Info : ICommand
     {
-        private Info()
-        {
-        }
-
-        /// <summary>
-        ///     Gets the <see cref="Info" /> instance.
-        /// </summary>
-        public static Info Instance { get; } = new();
-
         /// <inheritdoc />
         public string Command { get; } = "info";
 
@@ -39,7 +30,7 @@ namespace Exiled.CustomRoles.Commands.Admin
         public string[] Aliases { get; } = { "i" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Информация про кастомную роль.";
+        public string Description { get; set; } = "Информация про кастомную роль.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

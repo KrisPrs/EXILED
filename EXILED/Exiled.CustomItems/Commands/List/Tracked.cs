@@ -23,15 +23,6 @@ namespace Exiled.CustomItems.Commands.List
     /// <inheritdoc/>
     internal sealed class Tracked : ICommand
     {
-        private Tracked()
-        {
-        }
-
-        /// <summary>
-        /// Gets the command instance.
-        /// </summary>
-        public static Tracked Instance { get; } = new();
-
         /// <inheritdoc/>
         public string Command { get; } = "insideinventories";
 
@@ -39,7 +30,7 @@ namespace Exiled.CustomItems.Commands.List
         public string[] Aliases { get; } = { "ii", "inside", "inv", "inventories" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Получает все предметы которые лежат в инвенторях игроков.";
+        public string Description { get; set; } = "Получает все предметы которые лежат в инвенторях игроков.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

@@ -23,15 +23,6 @@ namespace Exiled.CustomRoles.Commands.Admin.List
     /// <inheritdoc />
     internal sealed class InGame : ICommand
     {
-        private InGame()
-        {
-        }
-
-        /// <summary>
-        ///     Gets the command instance.
-        /// </summary>
-        public static InGame Instance { get; } = new();
-
         /// <inheritdoc />
         public string Command { get; } = "ingame";
 
@@ -39,7 +30,7 @@ namespace Exiled.CustomRoles.Commands.Admin.List
         public string[] Aliases { get; } = { "ig", "alife" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Получает все кастомные роли которые сейчас учавствуют в раунде.";
+        public string Description { get; set; } = "Получает все кастомные роли которые сейчас учавствуют в раунде.";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

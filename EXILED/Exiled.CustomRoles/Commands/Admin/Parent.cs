@@ -8,8 +8,10 @@
 namespace Exiled.CustomRoles.Commands.Admin
 {
     using System;
+    using System.Collections.Generic;
 
     using CommandSystem;
+    using Exiled.API.Features;
 
     /// <summary>
     ///     The main parent command.
@@ -18,36 +20,21 @@ namespace Exiled.CustomRoles.Commands.Admin
     [CommandHandler(typeof(GameConsoleCommandHandler))]
     public class Parent : ParentCommand
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Parent" /> class.
-        /// </summary>
-        public Parent()
-        {
-            LoadGeneratedCommands();
-        }
-
         /// <inheritdoc />
         public override string Command { get; } = "customroles";
 
         /// <inheritdoc />
-        public override string[] Aliases { get; } = { "cr", "crs" };
+        public override string[] Aliases { get; set; } = { "cr", "crs" };
 
         /// <inheritdoc />
-        public override string Description { get; } = string.Empty;
+        public override string Description { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public override void LoadGeneratedCommands()
+        protected override IEnumerable<Type> CommandsToRegister()
         {
-            RegisterCommand(Give.Instance);
-            RegisterCommand(Info.Instance);
-            RegisterCommand(List.List.Instance);
-        }
-
-        /// <inheritdoc />
-        protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            response = "Доступные команды: give, info, list";
-            return false;
+            yield return typeof(Give);
+            yield return typeof(Info);
+            yield return typeof(List.List);
         }
     }
 }

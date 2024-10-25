@@ -203,12 +203,14 @@ namespace Exiled.API.Features
 
             npc.ReferenceHub.characterClassManager._hub = npc.ReferenceHub;
 
-            npc.Role.Set(role, reason, roleFlags);
-
-            if (position is not null)
+            Timing.CallDelayed(Timing.WaitForOneFrame, () =>
             {
-                npc.Position = position.Value;
-            }
+                npc.Role.Set(role, reason, roleFlags);
+                if (position is not null)
+                {
+                    npc.Position = position.Value;
+                }
+            });
 
             return npc;
         }

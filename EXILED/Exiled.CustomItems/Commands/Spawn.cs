@@ -21,15 +21,6 @@ namespace Exiled.CustomItems.Commands
     /// </summary>
     internal sealed class Spawn : ICommand
     {
-        private Spawn()
-        {
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Info"/> instance.
-        /// </summary>
-        public static Spawn Instance { get; } = new();
-
         /// <inheritdoc/>
         public string Command { get; } = "spawn";
 
@@ -37,7 +28,7 @@ namespace Exiled.CustomItems.Commands
         public string[] Aliases { get; } = { "sp" };
 
         /// <inheritdoc/>
-        public string Description { get; } = "Спавнит кастомный предмет.";
+        public string Description { get; set; } = "Спавнит кастомный предмет.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

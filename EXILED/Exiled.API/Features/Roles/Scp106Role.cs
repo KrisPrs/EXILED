@@ -298,7 +298,11 @@ namespace Exiled.API.Features.Roles
 
             HuntersAtlasAbility._estimatedCost = cost;
             HuntersAtlasAbility.SetSubmerged(true);
-            Timing.CallDelayed(2f, () => Owner.Position = position);
+            Timing.CallDelayed(2f, () =>
+            {
+                if (IsValid)
+                    Owner.Position = position;
+            });
 
             return true;
         }

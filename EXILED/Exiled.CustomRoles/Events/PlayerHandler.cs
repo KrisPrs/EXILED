@@ -15,6 +15,7 @@ namespace Exiled.CustomRoles.Events
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Roles;
+    using Exiled.API.Features.Spawn;
     using Exiled.Events.EventArgs.Player;
 
     using FLXLib.Extensions;
@@ -22,6 +23,8 @@ namespace Exiled.CustomRoles.Events
     using MEC;
 
     using PlayerRoles;
+
+    using UnityEngine;
 
     /// <summary>
     ///     Event Handlers for the CustomRole API.
@@ -37,6 +40,8 @@ namespace Exiled.CustomRoles.Events
         public void OnWaitingForPlayers()
         {
             Extensions.InternalPlayerToCustomRoles.Clear();
+            Extensions.ToChangeRolePlayers.Clear();
+            Extensions.AssignInventoryPlayers.Clear();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.ChangingRole" />
@@ -49,6 +54,20 @@ namespace Exiled.CustomRoles.Events
                 ev.Player.SessionVariables[LastCustomRoleKey] = customRole;
             else
                 ev.Player.SessionVariables.Remove(LastCustomRoleKey);
+        }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.Spawning" />
+        public void OnSpawning(SpawningEventArgs ev)
+        {
+            if (Extensions.ToChangeRolePlayers.TryGetValue(ev.Player, out CustomRole cr))
+            {
+                if (cr.SpawnProperties.IsAny && !ev.Player.Role.SpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
+                    ev.Position = cr.SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
+
+                cr.AddProperties(ev.Player, (SpawnReason)ev.Player.Role.SpawnReason, Extensions.AssignInventoryPlayers.Remove(ev.Player));
+
+                Extensions.ToChangeRolePlayers.Remove(ev.Player);
+            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.SendingRole" />

@@ -40,6 +40,8 @@ namespace Exiled.CustomRoles
 
             Server.WaitingForPlayers += playerHandler.OnWaitingForPlayers;
 
+            Player.Spawning += playerHandler.OnSpawning;
+
             Player.ChangingRole += playerHandler.OnChangingRole;
             Player.SendingRole += playerHandler.OnSendingRole;
             Player.ChangedNickname += playerHandler.OnChangedNickname;
@@ -51,6 +53,8 @@ namespace Exiled.CustomRoles
         public override void OnDisabled()
         {
             Server.WaitingForPlayers -= playerHandler.OnWaitingForPlayers;
+
+            Player.Spawning -= playerHandler.OnSpawning;
 
             Player.ChangingRole -= playerHandler.OnChangingRole;
             Player.SendingRole -= playerHandler.OnSendingRole;

@@ -22,15 +22,6 @@ namespace Exiled.CustomRoles.Commands.Admin.List
     /// <inheritdoc />
     internal sealed class Registered : ICommand
     {
-        private Registered()
-        {
-        }
-
-        /// <summary>
-        ///     Gets the command instance.
-        /// </summary>
-        public static Registered Instance { get; } = new();
-
         /// <inheritdoc />
         public string Command { get; } = "registered";
 
@@ -38,7 +29,7 @@ namespace Exiled.CustomRoles.Commands.Admin.List
         public string[] Aliases { get; } = { "r", "reg" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Список всех кастомных ролей.";
+        public string Description { get; set; } = "Список всех кастомных ролей.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
