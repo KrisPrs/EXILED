@@ -66,6 +66,11 @@ namespace Exiled.Events.Handlers
         public static Event<SpawningItemEventArgs> SpawningItem { get; set; } = new();
 
         /// <summary>
+        /// Invoked before an item already spawned.
+        /// </summary>
+        public static Event<SpawnedItemEventArgs> SpawnedItem { get; set; } = new();
+
+        /// <summary>
         /// Invoked before an item is spawned in locker.
         /// </summary>
         public static Event<FillingLockerEventArgs> FillingLocker { get; set; } = new();
@@ -163,6 +168,12 @@ namespace Exiled.Events.Handlers
         /// </summary>
         /// <param name="ev">The <see cref="SpawningItemEventArgs"/> instance.</param>
         public static void OnSpawningItem(SpawningItemEventArgs ev) => SpawningItem.InvokeSafely(ev);
+
+        /// <summary>
+        /// Called after an item already spawned.
+        /// </summary>
+        /// <param name="ev">The <see cref="SpawnedItemEventArgs"/> instance.</param>
+        public static void OnSpawnedItem(SpawnedItemEventArgs ev) => SpawnedItem.InvokeSafely(ev);
 
         /// <summary>
         /// Called before an item is spawned in locker.
