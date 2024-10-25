@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="SpawnedItem.cs" company="Exiled Team">
 // Copyright (c) Exiled Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -10,14 +10,12 @@ namespace Exiled.Events.Patches.Events.Map
     using System.Collections.Generic;
     using System.Reflection.Emit;
 
-    using API.Features.Pickups;
     using API.Features.Pools;
     using Attributes;
+
     using Exiled.Events.EventArgs.Map;
-    using Exiled.Events.EventArgs.Player;
     using Handlers;
     using HarmonyLib;
-    using InventorySystem.Items.Pickups;
     using MapGeneration.Distributors;
 
     using static HarmonyLib.AccessTools;
@@ -36,16 +34,14 @@ namespace Exiled.Events.Patches.Events.Map
 
             newInstructions.InsertRange(newInstructions.Count - 1, new CodeInstruction[]
             {
-                // ItemPickupBase
+                // Map.OnSpawnedItem(new SpawnedItemEventArgs(itemPickupBase))
                 new(OpCodes.Ldarg_0),
-
-                // SpawnedItemEventArgs ev = new(Pickup)
                 new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SpawnedItemEventArgs))[0]),
                 new(OpCodes.Call, Method(typeof(Map), nameof(Map.OnSpawnedItem))),
             });
 
-            foreach (CodeInstruction t in newInstructions)
-                yield return t;
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
