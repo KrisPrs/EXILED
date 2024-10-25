@@ -12,7 +12,7 @@ namespace Exiled.Events.EventArgs.Map
     using InventorySystem.Items.Pickups;
 
     /// <summary>
-    /// Contains all information before the server spawns an item.
+    /// Contains all information after the server spawns an item.
     /// </summary>
     public class SpawnedItemEventArgs : IPickupEvent
     {

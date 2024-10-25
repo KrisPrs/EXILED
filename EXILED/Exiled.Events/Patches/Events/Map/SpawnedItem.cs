@@ -13,6 +13,7 @@ namespace Exiled.Events.Patches.Events.Map
     using API.Features.Pickups;
     using API.Features.Pools;
     using Attributes;
+    using Exiled.Events.EventArgs.Map;
     using Exiled.Events.EventArgs.Player;
     using Handlers;
     using HarmonyLib;
@@ -33,18 +34,14 @@ namespace Exiled.Events.Patches.Events.Map
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
-            const int offset = 1;
-            int index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Call) + offset;
-
-            newInstructions.InsertRange(index, new CodeInstruction[]
+            newInstructions.InsertRange(newInstructions.Count - 1, new CodeInstruction[]
             {
-                // Pickup::Get(ItemPickupBase)
+                // ItemPickupBase
                 new(OpCodes.Ldarg_0),
-                new(OpCodes.Call, FirstMethod(typeof(Pickup), x => x.Name == nameof(Pickup.Get) && !x.IsGenericMethod && x.GetParameters()[0].ParameterType == typeof(ItemPickupBase))),
 
-                // Scp244SpawnedEventArgs ev = new(Pickup)
-                new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SpawnedEventArgs))[0]),
-                new(OpCodes.Call, Method(typeof(Map), nameof(Map.OnSpawningItem))),
+                // SpawnedItemEventArgs ev = new(Pickup)
+                new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SpawnedItemEventArgs))[0]),
+                new(OpCodes.Call, Method(typeof(Map), nameof(Map.OnSpawnedItem))),
             });
 
             foreach (CodeInstruction t in newInstructions)
