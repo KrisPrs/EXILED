@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="SpawnedItem.cs" company="Exiled Team">
 // Copyright (c) Exiled Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -10,13 +10,12 @@ namespace Exiled.Events.Patches.Events.Map
     using System.Collections.Generic;
     using System.Reflection.Emit;
 
-    using API.Features.Pickups;
     using API.Features.Pools;
     using Attributes;
-    using Exiled.Events.EventArgs.Player;
+
+    using Exiled.Events.EventArgs.Map;
     using Handlers;
     using HarmonyLib;
-    using InventorySystem.Items.Pickups;
     using MapGeneration.Distributors;
 
     using static HarmonyLib.AccessTools;
@@ -33,22 +32,16 @@ namespace Exiled.Events.Patches.Events.Map
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
-            const int offset = 1;
-            int index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Call) + offset;
-
-            newInstructions.InsertRange(index, new CodeInstruction[]
+            newInstructions.InsertRange(newInstructions.Count - 1, new CodeInstruction[]
             {
-                // Pickup::Get(ItemPickupBase)
+                // Map.OnSpawnedItem(new SpawnedItemEventArgs(itemPickupBase))
                 new(OpCodes.Ldarg_0),
-                new(OpCodes.Call, FirstMethod(typeof(Pickup), x => x.Name == nameof(Pickup.Get) && !x.IsGenericMethod && x.GetParameters()[0].ParameterType == typeof(ItemPickupBase))),
-
-                // Scp244SpawnedEventArgs ev = new(Pickup)
-                new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SpawnedEventArgs))[0]),
-                new(OpCodes.Call, Method(typeof(Map), nameof(Map.OnSpawningItem))),
+                new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SpawnedItemEventArgs))[0]),
+                new(OpCodes.Call, Method(typeof(Map), nameof(Map.OnSpawnedItem))),
             });
 
-            foreach (CodeInstruction t in newInstructions)
-                yield return t;
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
