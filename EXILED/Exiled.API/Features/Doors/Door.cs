@@ -31,7 +31,7 @@ namespace Exiled.API.Features.Doors
     /// <summary>
     /// A wrapper class for <see cref="DoorVariant"/>.
     /// </summary>
-    public class Door : TypeCastObject<Door>, IWrapper<DoorVariant>, IWorldSpace
+    public class Door : TypeCastObject<Door>, IWrapper<DoorVariant>, IWorldSpace, IPermission
     {
         /// <summary>
         /// A <see cref="Dictionary{TKey,TValue}"/> containing all known <see cref="DoorVariant"/>'s and their corresponding <see cref="Door"/>.
@@ -171,7 +171,19 @@ namespace Exiled.API.Features.Doors
         /// <remarks>
         /// This value is <see langword="false"/> if <see cref="KeycardPermissions"/> is equal to <see cref="KeycardPermissions.None"/>.
         /// </remarks>
-        public bool IsKeycardDoor => KeycardPermissions is not KeycardPermissions.None;
+        public bool IsKeycardDoor => Permissions is not Enums.KeycardPermissions.None;
+
+        /// <summary>
+        /// Gets or sets the required permissions to interact with the generator.
+        /// </summary>
+        /// <remarks>
+        /// Setting this value to <see cref="KeycardPermissions.None"/> will allow this door to be opened without a keycard.
+        /// </remarks>
+        public KeycardPermissions Permissions
+        {
+            get => (KeycardPermissions)RequiredPermissions.RequiredPermissions;
+            set => RequiredPermissions.RequiredPermissions = (BaseKeycardPermissions)value;
+        }
 
         /// <summary>
         /// Gets or sets the keycard permissions required to open the door.
@@ -179,6 +191,7 @@ namespace Exiled.API.Features.Doors
         /// <remarks>
         /// Setting this value to <see cref="KeycardPermissions.None"/> will allow this door to be opened without a keycard.
         /// </remarks>
+        [Obsolete]
         public KeycardPermissions KeycardPermissions
         {
             get => (KeycardPermissions)RequiredPermissions.RequiredPermissions;
