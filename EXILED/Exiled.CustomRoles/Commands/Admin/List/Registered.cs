@@ -12,46 +12,67 @@ namespace Exiled.CustomRoles.Commands.Admin.List
     using System.Text;
 
     using API.Features;
-
     using CommandSystem;
-
     using Exiled.API.Features.Pools;
-
     using Permissions.Extensions;
 
     /// <inheritdoc />
     internal sealed class Registered : ICommand
     {
-        /// <inheritdoc />
-        public string Command { get; } = "registered";
+        /// <summary>
+        /// Gets or sets the command aliases.
+        /// </summary>
+        public string[] Aliases { get; set; } = { "r", "reg" };
 
-        /// <inheritdoc />
-        public string[] Aliases { get; } = { "r", "reg" };
-
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the command description.
+        /// </summary>
         public string Description { get; set; } = "Список всех кастомных ролей.";
+
+        /// <summary>
+        /// Gets or sets the message to display when the sender lacks permission.
+        /// </summary>
+        public string NoPermissionMessage { get; set; } = "Не хватает прав!";
+
+        /// <summary>
+        /// Gets or sets the message to display when there are no custom roles.
+        /// </summary>
+        public string NoCustomRolesMessage { get; set; } = "На сервере нет кастомных ролей.";
+
+        /// <summary>
+        /// Gets or sets the format for the custom roles list.
+        /// </summary>
+        public string CustomRolesListFormat { get; set; } = "[Кастомные роли ({0})]";
+
+        /// <summary>
+        /// Gets or sets the format for a single custom role.
+        /// </summary>
+        public string CustomRoleFormat { get; set; } = "[{0}. {1} ({2})]";
+
+        /// <inheritdoc />
+        public string Command { get; set; } = "registered";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("customroles.list.registered"))
             {
-                response = "Не хватает прав!";
+                response = NoPermissionMessage;
                 return false;
             }
 
             if (CustomRole.Registered.Count == 0)
             {
-                response = "На сервере нет кастомных ролей.";
+                response = NoCustomRolesMessage;
                 return false;
             }
 
             StringBuilder builder = StringBuilderPool.Pool.Get().AppendLine();
 
-            builder.Append("[Кастомные роли (").Append(CustomRole.Registered.Count).AppendLine(")]");
+            builder.Append(string.Format(CustomRolesListFormat, CustomRole.Registered.Count));
 
             foreach (CustomRole role in CustomRole.Registered.OrderBy(r => r.Id))
-                builder.Append('[').Append(role.Id).Append(". ").Append(role.Name).Append(" (").Append(role.Role).Append(')').AppendLine("]");
+                builder.Append(string.Format(CustomRoleFormat, role.Id, role.Name, role.Role)).AppendLine();
 
             response = StringBuilderPool.Pool.ToStringReturn(builder);
             return true;

@@ -15,9 +15,10 @@ namespace Exiled.Events
     using CentralAuth;
     using Exiled.Events.Features;
     using HarmonyLib;
+    using Interactables.Interobjects.DoorUtils;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.Usables;
-
+    using InventorySystem.Items.Usables.Scp330;
     using PlayerRoles.Ragdolls;
     using PlayerRoles.RoleAssign;
     using PluginAPI.Events;

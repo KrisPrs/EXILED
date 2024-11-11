@@ -62,15 +62,6 @@ namespace Exiled.API.Features.DamageHandlers
 
             switch (damageType)
             {
-                case DamageType.Silent:
-                    Base = new SilentDamageHandler()
-                    {
-                        Damage = damage,
-                    };
-                    break;
-                case DamageType.MetalPipe:
-                    Base = new MetalPipeDamageHandler(attacker.ReferenceHub, Damage);
-                    break;
                 case DamageType.Falldown:
                     Base = new UniversalDamageHandler(damage, DeathTranslations.Falldown, cassieAnnouncement);
                     break;
@@ -122,7 +113,6 @@ namespace Exiled.API.Features.DamageHandlers
                     Base = new MicroHidDamageHandler(microHidOwner, damage);
                     break;
                 case DamageType.Explosion:
-                case DamageType.SpicyFlame:
                     Base = new ExplosionDamageHandler(attacker.Footprint, UnityEngine.Vector3.zero, damage, 0);
                     break;
                 case DamageType.Firearm:

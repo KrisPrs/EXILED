@@ -13,17 +13,12 @@ namespace Exiled.CustomRoles.Commands.Admin
 
     using API;
     using API.Features;
-
     using CommandSystem;
-
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Pools;
-
     using Permissions.Extensions;
-
     using PlayerRoles;
-
     using RemoteAdmin;
 
     /// <summary>
@@ -32,32 +27,82 @@ namespace Exiled.CustomRoles.Commands.Admin
     internal sealed class Give : ICommand
     {
         /// <inheritdoc />
-        public string Command { get; } = "give";
+        public string Command { get; set; } = "give";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "g" };
+        public string[] Aliases { get; set; } = { "g" };
 
         /// <inheritdoc />
         public string Description { get; set; } = "Gives the specified custom role to the indicated player(s).";
+
+        /// <summary>
+        /// Gets or sets the message displayed when the user does not have the required permission.
+        /// </summary>
+        public string NoPermissionMessage { get; set; } = "Не хватает прав!";
+
+        /// <summary>
+        /// Gets or sets the message displayed when the specified custom role is not found.
+        /// </summary>
+        /// <remarks>
+        /// The message contains a placeholder for the role name, which is replaced with the actual role name when the message is displayed.
+        /// </remarks>
+        public string NoRoleFoundMessage { get; set; } = "Кастомная роль {0} не найдена!";
+
+        /// <summary>
+        /// Gets or sets the message displayed when the specified player is not found.
+        /// </summary>
+        public string PlayerNotFoundMessage { get; set; } = "Игрок не найден.";
+
+        /// <summary>
+        /// Gets or sets the message displayed when a custom role is successfully given to a player.
+        /// </summary>
+        /// <remarks>
+        /// The message contains placeholders for the role name and the player's nickname, which are replaced with the actual values when the message is displayed.
+        /// </remarks>
+        public string RoleGivenMessage { get; set; } = "Кастомная роль {0} дана игроку {1}.";
+
+        /// <summary>
+        /// Gets or sets the message displayed when a custom role is successfully given to all players.
+        /// </summary>
+        /// <remarks>
+        /// The message contains a placeholder for the role name, which is replaced with the actual role name when the message is displayed.
+        /// </remarks>
+        public string AllPlayersRoleGivenMessage { get; set; } = "Кастомная роль {0} дана всем игрокам.";
+
+        /// <summary>
+        /// Gets or sets the error message displayed when a player is not found.
+        /// </summary>
+        /// <remarks>
+        /// The message contains a placeholder for the player's nickname or ID, which is replaced with the actual value when the message is displayed.
+        /// </remarks>
+        public string PlayerNotFoundErrorMessage { get; set; } = "Игрок {0} не найден";
+
+        /// <summary>
+        /// Gets or sets the usage message displayed when the command is used incorrectly.
+        /// </summary>
+        /// <remarks>
+        /// The message contains a placeholder for the command name, which is replaced with the actual command name when the message is displayed.
+        /// </remarks>
+        public string UsageMessage { get; set; } = "{0} <Название/ID кастомной роли> [Никнейм/ID/SteamID игрока или all/*]";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("customroles.give"))
             {
-                response = "Не хватает прав!";
+                response = NoPermissionMessage;
                 return false;
             }
 
             if (arguments.Count == 0)
             {
-                response = "give <Название/ID кастомной роли> [Никнейм/ID/SteamID игрока или all/*]";
+                response = string.Format(UsageMessage, Command);
                 return false;
             }
 
             if (!CustomRole.TryGet(arguments.At(0), out CustomRole? role) || role is null)
             {
-                response = $"Кастомная роль {arguments.At(0)} не найдена!";
+                response = string.Format(NoRoleFoundMessage, arguments.At(0));
                 return false;
             }
 
@@ -68,11 +113,11 @@ namespace Exiled.CustomRoles.Commands.Admin
                     Player player = Player.Get(playerCommandSender);
 
                     TryAddRole(player, role);
-                    response = $"Кастомная роль {role.Name} дана игроку {player.Nickname}.";
+                    response = string.Format(RoleGivenMessage, role.Name, player.Nickname);
                     return true;
                 }
 
-                response = "Игрок не найден.";
+                response = PlayerNotFoundMessage;
                 return false;
             }
 
@@ -87,18 +132,18 @@ namespace Exiled.CustomRoles.Commands.Admin
                     foreach (Player player in players)
                         TryAddRole(player, role);
 
-                    response = $"Кастомная роль {role.Name} дана всем игрокам.";
+                    response = string.Format(AllPlayersRoleGivenMessage, role.Name);
                     ListPool<Player>.Pool.Return(players);
                     return true;
                 default:
-                    if (Player.Get(identifier) is not Player ply)
+                    if (Player.Get(identifier) is not { } ply)
                     {
-                        response = $"Игрок {identifier} не найден";
+                        response = string.Format(PlayerNotFoundErrorMessage, identifier);
                         return false;
                     }
 
                     TryAddRole(ply, role);
-                    response = $"Кастомная роль {role.Name} дана игроку {ply.Nickname}.";
+                    response = string.Format(RoleGivenMessage, role.Name, ply.Nickname);
                     return true;
             }
         }

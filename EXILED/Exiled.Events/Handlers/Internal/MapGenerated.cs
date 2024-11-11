@@ -19,8 +19,14 @@ namespace Exiled.Events.Handlers.Internal
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features.Lockers;
+
+    using HarmonyLib;
+
+    using Interactables.Interobjects.DoorUtils;
+
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
+    using InventorySystem.Items.Usables.Scp330;
 
     using MEC;
 

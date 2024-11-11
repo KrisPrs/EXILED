@@ -385,10 +385,10 @@ namespace Exiled.Loader
             }
 
             foreach (Type type in abstractTypeDerives)
-                serializerBuilder.WithTagMapping($"!{type.Name}", type);
+                serializerBuilder.WithTagMapping($"!{type.FullName}", type);
 
             foreach (Type type in abstractTypeDerives)
-                deserializerBuilder.WithTagMapping($"!{type.Name}", type);
+                deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
 
             Serializer = serializerBuilder.Build();
             Deserializer = deserializerBuilder.Build();

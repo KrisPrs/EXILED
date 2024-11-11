@@ -98,10 +98,6 @@ namespace Exiled.API.Features.DamageHandlers
 
                 switch (Base)
                 {
-                    case SilentDamageHandler:
-                        return DamageType.Silent;
-                    case MetalPipeDamageHandler:
-                        return DamageType.MetalPipe;
                     case CustomReasonDamageHandler:
                         return DamageType.Custom;
                     case WarheadDamageHandler:

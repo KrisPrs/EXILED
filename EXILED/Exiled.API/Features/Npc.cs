@@ -13,6 +13,7 @@ namespace Exiled.API.Features
     using System.Linq;
     using System.Reflection;
 
+    using CentralAuth;
     using CommandSystem;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
@@ -171,7 +172,10 @@ namespace Exiled.API.Features
         /// <returns>The <see cref="Npc"/> spawned.</returns>
         public static Npc Spawn(string name, RoleTypeId role, SpawnReason reason = SpawnReason.RoundStart, RoleSpawnFlags roleFlags = RoleSpawnFlags.All, string userId = "", Vector3? position = null)
         {
-            GameObject newObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            GameObject newObject = UnityEngine.Object.Instantiate(Mirror.NetworkManager.singleton.playerPrefab);
+
+            userId = PlayerAuthenticationManager.DedicatedId;
+
             Npc npc = new(newObject)
             {
                 IsNPC = true,
@@ -186,7 +190,16 @@ namespace Exiled.API.Features
             try
             {
                 npc.ReferenceHub.authManager._hub = npc.ReferenceHub;
-                npc.ReferenceHub.authManager.UserId = string.IsNullOrEmpty(userId) ? $"Dummy{npc.Id}@localhost" : userId;
+                npc.ReferenceHub.authManager.SyncedUserId = userId;
+                npc.ReferenceHub.authManager._privUserId = userId;
+                try
+                {
+                    npc.ReferenceHub.authManager.InstanceMode = ClientInstanceMode.DedicatedServer;
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Ignore: {e.Message}");
+                }
             }
             catch (Exception e)
             {
@@ -211,6 +224,8 @@ namespace Exiled.API.Features
                     npc.Position = position.Value;
                 }
             });
+
+            Round.IgnoredPlayers.Add(npc.ReferenceHub);
 
             return npc;
         }

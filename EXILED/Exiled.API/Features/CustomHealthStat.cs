@@ -16,48 +16,12 @@ namespace Exiled.API.Features
     /// </summary>
     public class CustomHealthStat : HealthStat
     {
-        private float customMaxValue;
-
         /// <inheritdoc/>
         public override float MaxValue => CustomMaxValue == default ? base.MaxValue : CustomMaxValue;
 
         /// <summary>
         /// Gets or sets the maximum amount of health the player will have.
         /// </summary>
-        public float CustomMaxValue
-        {
-            get
-            {
-                float result = customMaxValue;
-
-                if (Hub.playerStats.TryGetModule(out MaxHealthStat maxHealthStat))
-                {
-                    result += maxHealthStat.CurValue;
-                }
-
-                return result;
-            }
-
-            set
-            {
-                if (Hub.playerStats.TryGetModule(out MaxHealthStat maxHealthStat))
-                {
-                    if (value > 100)
-                    {
-                        customMaxValue = 100;
-                        maxHealthStat.CurValue = value - 100;
-                    }
-                    else
-                    {
-                        customMaxValue = value;
-                        maxHealthStat.CurValue = 0;
-                    }
-                }
-                else
-                {
-                    customMaxValue = value;
-                }
-            }
-        }
+        public float CustomMaxValue { get; set; }
     }
 }

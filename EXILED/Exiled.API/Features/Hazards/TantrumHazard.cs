@@ -10,7 +10,6 @@ namespace Exiled.API.Features.Hazards
     using Exiled.API.Enums;
     using global::Hazards;
     using Mirror;
-    using PlayerRoles;
     using RelativePositioning;
     using UnityEngine;
 
@@ -61,11 +60,6 @@ namespace Exiled.API.Features.Hazards
             get => Base.PlaySizzle;
             set => Base.PlaySizzle = value;
         }
-
-        /// <summary>
-        /// Gets the teams that will be affected by the tantrum.
-        /// </summary>
-        public Team[] TargetedTeams => Base._targetedTeams;
 
         /// <summary>
         /// Gets or sets the synced position.

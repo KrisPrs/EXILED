@@ -12,11 +12,9 @@ namespace Exiled.CustomItems.Commands
     using System.Linq;
 
     using CommandSystem;
-
     using Exiled.API.Features;
     using Exiled.CustomItems.API.Features;
     using Exiled.Permissions.Extensions;
-
     using RemoteAdmin;
 
     /// <summary>
@@ -33,24 +31,81 @@ namespace Exiled.CustomItems.Commands
         /// <inheritdoc/>
         public string Description { get; set; } = "Дает кастомный предмет.";
 
+        /// <summary>
+        /// Gets or sets message displayed when the user does not have the required permission.
+        /// </summary>
+        public string PermissionRequiredMessage { get; set; } = "Не хватает прав!";
+
+        /// <summary>
+        /// Gets or sets message displayed when the user uses the command incorrectly.
+        /// </summary>
+        public string UsageMessage { get; set; } = "give <Название/ID кастомного предмета> [Никнейм/ID/SteamID игрока или */all для выдачи всем]";
+
+        /// <summary>
+        /// Gets or sets message displayed when the specified item is not found.
+        /// </summary>
+        /// <remarks>
+        /// The {0} placeholder will be replaced with the item name.
+        /// </remarks>
+        public string ItemNotFoundMessage { get; set; } = "Кастомный предмет {0} не найден!";
+
+        /// <summary>
+        /// Gets or sets message displayed when the specified player is not found.
+        /// </summary>
+        public string PlayerNotFoundMessage { get; set; } = "Игрок не найден.";
+
+        /// <summary>
+        /// Gets or sets message displayed when the player is not eligible to receive the item.
+        /// </summary>
+        public string NotEligibleMessage { get; set; } = "Вы не можете получить кастомный предмет!";
+
+        /// <summary>
+        /// Gets or sets message displayed when the item is successfully given to a player.
+        /// </summary>
+        /// <remarks>
+        /// The {0} placeholder will be replaced with the item name, {1} with the player's nickname, and {2} with the player's ID.
+        /// </remarks>
+        public string ItemGivenMessage { get; set; } = "{0} дан игроку {1} ({2})";
+
+        /// <summary>
+        /// Gets or sets message displayed when the item is successfully given to all players.
+        /// </summary>
+        /// <remarks>
+        /// The {0} placeholder will be replaced with the item name, and {1} with the number of players.
+        /// </remarks>
+        public string ItemGivenToAllMessage { get; set; } = "Кастомный предмет {0} дан ({1} игрокам)";
+
+        /// <summary>
+        /// Gets or sets message displayed when a player is not eligible to receive the item.
+        /// </summary>
+        public string PlayerNotEligibleMessage { get; set; } = "Игрок не можете получить кастомный предмет!";
+
+        /// <summary>
+        /// Gets or sets message displayed when a player cannot be found by their identifier.
+        /// </summary>
+        /// <remarks>
+        /// The {0} placeholder will be replaced with the identifier.
+        /// </remarks>
+        public string PlayerNotFoundByIdentifierMessage { get; set; } = "Невозможно найти игрока: {0}.";
+
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("customitems.give"))
             {
-                response = "Не хватает прав!";
+                response = PermissionRequiredMessage;
                 return false;
             }
 
             if (arguments.Count == 0)
             {
-                response = "give <Название/ID кастомного предмета> [Никнейм/ID/SteamID игрока или */all для выдачи всем]";
+                response = UsageMessage;
                 return false;
             }
 
             if (!CustomItem.TryGet(arguments.At(0), out CustomItem? item))
             {
-                response = $"Кастомный предмет {arguments.At(0)} не найден!";
+                response = string.Format(ItemNotFoundMessage, arguments.At(0));
                 return false;
             }
 
@@ -62,16 +117,16 @@ namespace Exiled.CustomItems.Commands
 
                     if (!CheckEligible(player))
                     {
-                        response = "Вы не можете получить кастомный предмет!";
+                        response = NotEligibleMessage;
                         return false;
                     }
 
                     item?.Give(player);
-                    response = $"{item?.Name} дан игроку {player.Nickname} ({player.UserId})";
+                    response = string.Format(ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
                     return true;
                 }
 
-                response = "Игрок не найден.";
+                response = PlayerNotFoundMessage;
                 return false;
             }
 
@@ -85,23 +140,23 @@ namespace Exiled.CustomItems.Commands
                     foreach (Player ply in eligiblePlayers)
                         item?.Give(ply);
 
-                    response = $"Кастомный предмет {item?.Name} дан ({eligiblePlayers.Count} игрокам)";
+                    response = string.Format(ItemGivenToAllMessage, item?.Name, eligiblePlayers.Count);
                     return true;
                 default:
                     if (Player.Get(identifier) is not { } player)
                     {
-                        response = $"Невозможно найти игрока: {identifier}.";
+                        response = string.Format(PlayerNotFoundByIdentifierMessage, identifier);
                         return false;
                     }
 
                     if (!CheckEligible(player))
                     {
-                        response = "Игрок не можете получить кастомный предмет!";
+                        response = PlayerNotEligibleMessage;
                         return false;
                     }
 
                     item?.Give(player);
-                    response = $"{item?.Name} дан игроку {player.Nickname} ({player.UserId})";
+                    response = string.Format(ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
                     return true;
             }
         }

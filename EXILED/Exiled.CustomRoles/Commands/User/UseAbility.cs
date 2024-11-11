@@ -22,13 +22,38 @@ namespace Exiled.CustomRoles.Commands.User
     public class UseAbility : ICommand
     {
         /// <inheritdoc />
-        public string Command => "ability";
+        public string Command { get; set; } = "ability";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "a" };
+        public string[] Aliases { get; set; } = { "a" };
 
         /// <inheritdoc />
         public string Description => "Использует спецспособность";
+
+        /// <summary>
+        /// Gets or sets the response when no custom role is found.
+        /// </summary>
+        public string NoCustomRoleResponse { get; set; } = "У вас нет спецролей со спецспособностями";
+
+        /// <summary>
+        /// Gets or sets the response when no abilities detected.
+        /// </summary>
+        public string NoAbilitiesResponse { get; set; } = "У вашей спецроли нет спецспособностей!";
+
+        /// <summary>
+        /// Gets or sets the response when an invalid ability number is detected.
+        /// </summary>
+        public string InvalidAbilityNumberResponse { get; set; } = "Такая способность не существует!";
+
+        /// <summary>
+        /// Gets or sets the response when invalid arguments detected.
+        /// </summary>
+        public string InvalidArgumentResponse { get; set; } = "{0} не является числом!";
+
+        /// <summary>
+        /// Gets or sets the response when an ability is already used.
+        /// </summary>
+        public string AbilityUsedResponse { get; set; } = "Способность {0} успешно использована!";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -37,7 +62,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (!player.TryGetCustomRole(out CustomRole role))
             {
-                response = "У вас нет спецролей со спецспособностями";
+                response = NoCustomRoleResponse;
                 return false;
             }
 
@@ -49,7 +74,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (role.CustomAbilities == null)
             {
-                response = "У вашей спецроли нет спецспособностей!";
+                response = NoAbilitiesResponse;
                 return false;
             }
 
@@ -71,7 +96,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (activeAbilities.IsEmpty())
             {
-                response = "У вашей спецроли нет спецспособностей!";
+                response = NoAbilitiesResponse;
                 return false;
             }
 
@@ -80,14 +105,14 @@ namespace Exiled.CustomRoles.Commands.User
             {
                 if (!int.TryParse(arguments.At(0), out abilityNumber))
                 {
-                    response = $"{arguments.At(0)} не является числом!";
+                    response = string.Format(InvalidArgumentResponse, arguments.At(0));
                     return false;
                 }
             }
 
             if (activeAbilities.Count < abilityNumber)
             {
-                response = "Такая способность не существует!";
+                response = InvalidAbilityNumberResponse;
                 return false;
             }
 
@@ -99,7 +124,7 @@ namespace Exiled.CustomRoles.Commands.User
             }
 
             activeAbilities[abilityNumber - 1].UseAbility(player);
-            response = $"Способность {activeAbilities[abilityNumber - 1].Name} успешно использована!";
+            response = string.Format(AbilityUsedResponse, activeAbilities[abilityNumber - 1].Name);
             return false;
         }
     }

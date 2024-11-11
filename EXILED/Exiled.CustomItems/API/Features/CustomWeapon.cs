@@ -11,7 +11,6 @@ namespace Exiled.CustomItems.API.Features
     using System.ComponentModel;
     using System.Linq;
 
-    using AudioSystem.Models.SoundConfigs;
     using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
@@ -83,11 +82,6 @@ namespace Exiled.CustomItems.API.Features
         ///     Gets or sets a value indicating whether firearm's attachments can be modified.
         /// </summary>
         public bool AllowAttachmentsChange { get; set; } = true;
-
-        /// <summary>
-        ///     Gets or sets a value indicating what sound will be played on shot.
-        /// </summary>
-        public LocalSoundConfig? ShotAudio { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating shot cooldown.
@@ -372,7 +366,6 @@ namespace Exiled.CustomItems.API.Features
                 }
             }
 
-            ShotAudio?.PlayPreset(ev.Player.Transform);
             OnShooting(ev);
         }
 

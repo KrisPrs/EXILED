@@ -283,7 +283,6 @@ namespace Exiled.API.Features.Items
             ItemType.SCP2176 => new Scp2176(owner),
             ItemType.SCP1576 => new Scp1576(),
             ItemType.Jailbird => new Jailbird(),
-            ItemType.Marshmallow => new Marshmallow(),
             _ => new Item(type),
         };
 

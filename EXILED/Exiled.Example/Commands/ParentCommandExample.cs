@@ -33,10 +33,10 @@ namespace Exiled.Example.Commands
         public override string Command { get; } = "yourcommand";   // COMMAND
 
         /// <inheritdoc />
-        public override string[] Aliases { get; set; } = { "yc" };   // ALIASES, is dont necessary to add aliases, if you want to add a aliase just put = null;
+        public override string[] Aliases { get; } = { "yc" };   // ALIASES, is dont necessary to add aliases, if you want to add a aliase just put = null;
 
         /// <inheritdoc />
-        public override string Description { get; set; } = "YOUR DESC";   // PARENT COMMAND DESC
+        public override string Description { get; } = "YOUR DESC";   // PARENT COMMAND DESC
 
         /// <inheritdoc />
         public override void LoadGeneratedCommands() // Put here your commands (the other commands dont need the [CommandHandler(typeof())]
