@@ -183,6 +183,11 @@ namespace Exiled.API.Features.Lockers
         }
 
         /// <summary>
+        /// Gets the id of this chamber in <see cref="Locker"/>.
+        /// </summary>
+        public byte Id { get; }
+
+        /// <summary>
         /// Gets the <see cref="Stopwatch"/> of current cooldown.
         /// </summary>
         /// <remarks>Used in <see cref="CanInteract"/> check.</remarks>
