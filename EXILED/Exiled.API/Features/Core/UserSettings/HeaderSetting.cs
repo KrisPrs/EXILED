@@ -7,6 +7,8 @@
 
 namespace Exiled.API.Features.Core.UserSettings
 {
+    using System;
+
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
@@ -22,22 +24,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="paddling"><inheritdoc cref="ReducedPaddling"/></param>
         public HeaderSetting(string name, string hintDescription = "", bool paddling = false)
-            : this(new SSGroupHeader(name, paddling, hintDescription))
+            : base(new SSGroupHeader(name, paddling, hintDescription))
         {
             Base = (SSGroupHeader)base.Base;
-
             Base.SetId(null, name);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
-        /// </summary>
-        /// <param name="settingBase">A <see cref="SSGroupHeader"/> instance.</param>
-        internal HeaderSetting(SSGroupHeader settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-            Base.SetId(null, settingBase.Label);
         }
 
         /// <inheritdoc/>
@@ -56,9 +46,53 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a representation of this <see cref="HeaderSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
+        public override string ToString() => base.ToString() + $" /{Label}/";
+
+        /// <summary>
+        /// Represents a config for KeybindSetting.
+        /// </summary>
+        public class HeaderConfig : SettingConfig<HeaderSetting>
         {
-            return base.ToString() + $" /{ReducedPaddling}/";
+            /// <summary>
+            /// Initializes a new instance of the <see cref="HeaderConfig"/> class.
+            /// </summary>
+            /// <param name="name"/><inheritdoc cref="Name"/>
+            /// <param name="description"><inheritdoc cref="Description"/></param>
+            /// <param name="paddling"><inheritdoc cref="Paddling"/></param>
+            public HeaderConfig(string name = null, string description = null, bool paddling = false)
+            {
+                Name = name;
+                Description = description;
+                Paddling = paddling;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="HeaderConfig"/> class.
+            /// </summary>
+            public HeaderConfig()
+            {
+            }
+
+            /// <summary>
+            /// Gets or sets HeaderName of a HeaderConfig.
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// Gets or sets HeaderDescription of a HeaderConfig.
+            /// </summary>
+            public string Description { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether HeaderPaddling is needed.
+            /// </summary>
+            public bool Paddling { get; set; }
+
+            /// <summary>
+            /// Creates a HeaderSetting instanse.
+            /// </summary>
+            /// <returns>HeaderSetting.</returns>
+            public override HeaderSetting Create() => new(Name, Description, Paddling);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Exiled.Events.Handlers.Internal
     using InventorySystem.Items.Usables;
     using PlayerRoles;
     using PlayerRoles.RoleAssign;
+    using UserSettings.ServerSpecific;
     using Utils.NonAllocLINQ;
 
     /// <summary>
@@ -51,6 +52,7 @@ namespace Exiled.Events.Handlers.Internal
             if (Events.Instance.Config.ShouldReloadTranslationsAtRoundRestart)
                 TranslationManager.Reload();
 
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived += SettingBase.OnRandomSettingTriggered;
             RoundSummary.RoundLock = false;
         }
 
@@ -118,9 +120,7 @@ namespace Exiled.Events.Handlers.Internal
         public static void OnVerified(VerifiedEventArgs ev)
         {
             RoleAssigner.CheckLateJoin(ev.Player.ReferenceHub, ClientInstanceMode.ReadyClient);
-
-            if (SettingBase.SyncOnJoin != null && SettingBase.SyncOnJoin(ev.Player))
-                SettingBase.SendToPlayer(ev.Player);
+            SettingBase.SendToPlayer(ev.Player);
 
             // TODO: Remove if this has been fixed for https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/52
             foreach (Room room in Room.List.Where(current => current.AreLightsOff))

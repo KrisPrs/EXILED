@@ -11,44 +11,32 @@ namespace Exiled.API.Features.Core.UserSettings
 
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
+    using Interfaces;
 
     /// <summary>
     /// Represents a two-button setting.
     /// </summary>
-    public class TwoButtonsSetting : SettingBase, IWrapper<SSTwoButtonsSetting>
+    public class TwoButtonsSetting : SettingBase, IWrapper<SSTwoButtonsSetting>, ISettingHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoButtonsSetting"/> class.
         /// </summary>
-        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="firstOption"><inheritdoc cref="FirstOption"/></param>
         /// <param name="secondOption"><inheritdoc cref="SecondOption"/></param>
         /// <param name="defaultIsSecond"><inheritdoc cref="IsSecondDefault"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
-        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
-        public TwoButtonsSetting(int id, string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription), header, onChanged)
+        public TwoButtonsSetting(string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", HeaderSetting header = null)
+            : base(new SSTwoButtonsSetting(NextId++, label, firstOption, secondOption, defaultIsSecond, hintDescription), header)
         {
             Base = (SSTwoButtonsSetting)base.Base;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TwoButtonsSetting"/> class.
+        /// Gets or sets the action to be executed when this setting is triggered.
         /// </summary>
-        /// <param name="settingBase">A <see cref="SSTwoButtonsSetting"/> instance.</param>
-        internal TwoButtonsSetting(SSTwoButtonsSetting settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-
-            if (OriginalDefinition != null && OriginalDefinition.Is(out TwoButtonsSetting setting))
-            {
-                FirstOption = setting.FirstOption;
-                SecondOption = setting.SecondOption;
-            }
-        }
+        public event Action<Player, TwoButtonsSetting> OnTriggered;
 
         /// <inheritdoc/>
         public new SSTwoButtonsSetting Base { get; }
@@ -102,9 +90,97 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a representation of this <see cref="ButtonSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
+        public override string ToString() => base.ToString() + $" /{FirstOption}/ *{SecondOption}* +{IsSecondDefault}+ '{IsFirst}'";
+
+        /// <inheritdoc cref="ISettingHandler"/>>
+        public void Handle(Player player, SettingBase setting)
         {
-            return base.ToString() + $" /{FirstOption}/ *{SecondOption}* +{IsSecondDefault}+ '{IsFirst}'";
+            if (setting != this)
+                return;
+
+            OnTriggered?.Invoke(player, this);
+        }
+
+        /// <summary>
+        /// Represents a config for TextInputSetting.
+        /// </summary>
+        public class TwoButtonsConfig : SettingConfig<TwoButtonsSetting>
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TwoButtonsConfig"/> class.
+            /// </summary>
+            /// <param name="label"></param>
+            /// <param name="firstOption"/><inheritdoc cref="FirstOption"/>
+            /// <param name="headerName"><inheritdoc cref="HeaderName"/></param>
+            /// <param name="defaultIsSecond"></param>
+            /// <param name="hintDescription"><inheritdoc cref="HintDescription"/></param>
+            /// <param name="headerDescription"><inheritdoc cref="HeaderDescription"/></param>
+            /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
+            /// <param name="secondOption"></param>
+            public TwoButtonsConfig(string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
+            {
+                Label = label;
+                FirstOption = firstOption;
+                SecondOption = secondOption;
+                DefaultIsSecond = defaultIsSecond;
+                HintDescription = hintDescription;
+                HeaderName = headerName;
+                HeaderPaddling = headerPaddling;
+                HeaderDescription = headerDescription;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TwoButtonsConfig"/> class.
+            /// </summary>
+            public TwoButtonsConfig()
+            {
+            }
+
+            /// <summary>
+            /// Gets or sets label of a TwoButtonsConfig.
+            /// </summary>
+            public string Label { get; set; }
+
+            /// <summary>
+            /// Gets or sets label of a TwoButtonsConfig.
+            /// </summary>
+            public string FirstOption { get; set; }
+
+            /// <summary>
+            /// Gets or sets label of a TwoButtonsConfig.
+            /// </summary>
+            public string SecondOption { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether default is second.
+            /// </summary>
+            public bool DefaultIsSecond { get; set; }
+
+            /// <summary>
+            /// Gets or sets HintDescription of a TwoButtonsConfig.
+            /// </summary>
+            public string HintDescription { get; set; }
+
+            /// <summary>
+            /// Gets or sets HeaderName of a TwoButtonsConfig.
+            /// </summary>
+            public string HeaderName { get; set; }
+
+            /// <summary>
+            /// Gets or sets HeaderDescription of a TwoButtonsConfig.
+            /// </summary>
+            public string HeaderDescription { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether HeaderPaddling is needed.
+            /// </summary>
+            public bool HeaderPaddling { get; set; }
+
+            /// <summary>
+            /// Creates a TwoButtonsSetting instanse.
+            /// </summary>
+            /// <returns>TwoButtonsSetting.</returns>
+            public override TwoButtonsSetting Create() => new(Label, FirstOption, SecondOption, DefaultIsSecond, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }
