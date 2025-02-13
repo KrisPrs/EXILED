@@ -36,7 +36,6 @@ namespace Exiled.API.Features.Core.UserSettings
             HeaderSetting header = null)
             : base(new SSTextArea(NextId++, label, foldoutMode, hintDescription, alignment), header)
         {
-            Base = (SSTextArea)base.Base;
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public event Action<Player, TextInputSetting> OnTriggered;
 
         /// <inheritdoc/>
-        public new SSTextArea Base { get; }
+        public new SSTextArea Base => (SSTextArea)base.Base;
 
         /// <summary>
         /// Gets or sets the text for the setting.

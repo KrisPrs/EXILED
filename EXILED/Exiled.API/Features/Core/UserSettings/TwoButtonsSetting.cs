@@ -30,7 +30,6 @@ namespace Exiled.API.Features.Core.UserSettings
         public TwoButtonsSetting(string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", HeaderSetting header = null)
             : base(new SSTwoButtonsSetting(NextId++, label, firstOption, secondOption, defaultIsSecond, hintDescription), header)
         {
-            Base = (SSTwoButtonsSetting)base.Base;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public event Action<Player, TwoButtonsSetting> OnTriggered;
 
         /// <inheritdoc/>
-        public new SSTwoButtonsSetting Base { get; }
+        public new SSTwoButtonsSetting Base => (SSTwoButtonsSetting)base.Base;
 
         /// <summary>
         /// Gets or sets a value indicating whether the second option is chosen.

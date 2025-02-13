@@ -26,12 +26,11 @@ namespace Exiled.API.Features.Core.UserSettings
         public HeaderSetting(string name, string hintDescription = "", bool paddling = false)
             : base(new SSGroupHeader(name, paddling, hintDescription))
         {
-            Base = (SSGroupHeader)base.Base;
             Base.SetId(null, name);
         }
 
         /// <inheritdoc/>
-        public new SSGroupHeader Base { get; }
+        public new SSGroupHeader Base => (SSGroupHeader)base.Base;
 
         /// <summary>
         /// Gets or sets a value indicating whether to reduce padding.

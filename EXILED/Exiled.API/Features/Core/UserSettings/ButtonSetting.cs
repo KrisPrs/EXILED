@@ -30,7 +30,6 @@ namespace Exiled.API.Features.Core.UserSettings
         public ButtonSetting(string label, string buttonText, float holdTime = 0.0f, string hintDescription = null, HeaderSetting header = null)
             : base(new SSButton(NextId++, label, buttonText, holdTime, hintDescription), header)
         {
-            Base = (SSButton)base.Base;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public event Action<Player, ButtonSetting> OnTriggered;
 
         /// <inheritdoc/>
-        public new SSButton Base { get; }
+        public new SSButton Base => (SSButton)base.Base;
 
         /// <summary>
         /// Gets the last press time.

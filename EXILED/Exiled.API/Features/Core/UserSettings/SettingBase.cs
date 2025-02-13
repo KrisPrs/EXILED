@@ -45,7 +45,8 @@ namespace Exiled.API.Features.Core.UserSettings
             Base = settingBase;
             Header = header;
             Settings.Add(settingBase.SettingId, this);
-            UpdateSynced();
+            SyncedSettings.Add(this);
+            ServerSpecificSettingsSync.DefinedSettings = GroupByHeaders(SyncedSettings).Select(x => x.Base).ToArray();
         }
 
         /// <summary>
@@ -60,10 +61,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets or sets next Id to give.
         /// </summary>
-        public static int NextId { get; set; }
+        public static int NextId { get; set; } = 1;
 
         /// <inheritdoc/>
-        public ServerSpecificSettingBase Base { get; }
+        public ServerSpecificSettingBase Base { get; set; }
 
         /// <summary>
         /// Gets or sets the id of this setting.
@@ -192,10 +193,11 @@ namespace Exiled.API.Features.Core.UserSettings
             if (predicate != null && !predicate(player))
                 return;
 
+            HashSet<SettingBase> hashSet = collection.ToHashSet();
             if (PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
-                PlayerSettings[player] = list.Concat(collection).ToHashSet();
+                list.UnionWith(hashSet);
             else
-                PlayerSettings[player] = collection.ToHashSet();
+                PlayerSettings[player] = hashSet;
         }
 
         /// <summary>
@@ -283,18 +285,8 @@ namespace Exiled.API.Features.Core.UserSettings
                 !settingBases.Contains(setting) || setting is not ISettingHandler handler)
                 return;
 
+            setting.Base = settingBase;
             handler.Handle(player, setting);
-        }
-
-        /// <summary>
-        /// Trying to add new setting to a SyncedSettings, if does so, creates new array and put it as DefinedSettings.
-        /// </summary>
-        public void UpdateSynced()
-        {
-            if (!SyncedSettings.Add(this))
-                return;
-
-            ServerSpecificSettingsSync.DefinedSettings = GroupByHeaders(SyncedSettings).Select(x => x.Base).ToArray();
         }
 
         /// <summary>

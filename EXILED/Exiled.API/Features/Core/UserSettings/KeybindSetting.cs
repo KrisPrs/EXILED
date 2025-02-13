@@ -30,7 +30,6 @@ namespace Exiled.API.Features.Core.UserSettings
         public KeybindSetting(string label, KeyCode suggested, bool preventInteractionOnGUI = false, string hintDescription = "", HeaderSetting header = null)
             : base(new SSKeybindSetting(NextId++, label, suggested, preventInteractionOnGUI, hintDescription), header)
         {
-            Base = (SSKeybindSetting)base.Base;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public event Action<Player, KeybindSetting> OnTriggered;
 
         /// <inheritdoc/>
-        public new SSKeybindSetting Base { get; }
+        public new SSKeybindSetting Base => (SSKeybindSetting)base.Base;
 
         /// <summary>
         /// Gets a value indicating whether the key is pressed.

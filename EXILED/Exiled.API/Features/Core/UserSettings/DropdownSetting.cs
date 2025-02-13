@@ -38,7 +38,6 @@ namespace Exiled.API.Features.Core.UserSettings
             HeaderSetting header = null)
             : base(new SSDropdownSetting(NextId++, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription), header)
         {
-            Base = (SSDropdownSetting)base.Base;
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public event Action<Player, DropdownSetting> OnTriggered;
 
         /// <inheritdoc/>
-        public new SSDropdownSetting Base { get; }
+        public new SSDropdownSetting Base => (SSDropdownSetting)base.Base;
 
         /// <summary>
         /// Gets or sets a collection of all options in dropdown.
