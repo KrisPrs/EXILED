@@ -45,8 +45,7 @@ namespace Exiled.API.Features.Core.UserSettings
             Base = settingBase;
             Header = header;
             Settings.Add(settingBase.SettingId, this);
-            SyncedSettings.Add(this);
-            ServerSpecificSettingsSync.DefinedSettings = GroupByHeaders(SyncedSettings).Select(x => x.Base).ToArray();
+            UpdateSynced();
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets or sets next Id to give.
         /// </summary>
-        public static int NextId { get; set; } = 1;
+        public static int NextId { get; set; }
 
         /// <inheritdoc/>
         public ServerSpecificSettingBase Base { get; set; }
@@ -193,11 +192,10 @@ namespace Exiled.API.Features.Core.UserSettings
             if (predicate != null && !predicate(player))
                 return;
 
-            HashSet<SettingBase> hashSet = collection.ToHashSet();
             if (PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
-                list.UnionWith(hashSet);
+                PlayerSettings[player] = list.Concat(collection).ToHashSet();
             else
-                PlayerSettings[player] = hashSet;
+                PlayerSettings[player] = collection.ToHashSet();
         }
 
         /// <summary>
@@ -287,6 +285,17 @@ namespace Exiled.API.Features.Core.UserSettings
 
             setting.Base = settingBase;
             handler.Handle(player, setting);
+        }
+
+        /// <summary>
+        /// Trying to add new setting to a SyncedSettings, if does so, creates new array and put it as DefinedSettings.
+        /// </summary>
+        public void UpdateSynced()
+        {
+            if (!SyncedSettings.Add(this))
+                return;
+
+            ServerSpecificSettingsSync.DefinedSettings = GroupByHeaders(SyncedSettings).Select(x => x.Base).ToArray();
         }
 
         /// <summary>
