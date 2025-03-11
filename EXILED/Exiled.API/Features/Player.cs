@@ -3477,6 +3477,11 @@ namespace Exiled.API.Features
         [Obsolete("Use PlayGunSound(Player, Vector3, ItemType, byte, byte) instead.")]
         public void PlayGunSound(ItemType type, byte volume, byte audioClipId = 0)
         {
+            FirearmType firearmType = type.GetFirearmType();
+            if (firearmType is FirearmType.None)
+                return;
+
+            PlayGunSound(firearmType, 1, audioClipId);
         }
 
         /// <inheritdoc cref="MirrorExtensions.PlayGunSound(Player, Vector3, FirearmType, float, int)"/>
