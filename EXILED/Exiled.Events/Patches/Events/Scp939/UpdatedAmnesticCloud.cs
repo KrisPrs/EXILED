@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="CreatedAmnesticCloud.cs" company="ExMod Team">
+// <copyright file="UpdatedAmnesticCloud.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -23,11 +23,11 @@ namespace Exiled.Events.Patches.Events.Scp939
 
     /// <summary>
     /// Patches <see cref="Scp939AmnesticCloudInstance.State" /> setter.
-    /// to add the <see cref="Scp939.CreatedAmnesticCloud" /> event.
+    /// to add the <see cref="Scp939.UpdatedAmnesticCloudState" /> event.
     /// </summary>
-    [EventPatch(typeof(Scp939), nameof(Scp939.CreatedAmnesticCloud))]
+    [EventPatch(typeof(Scp939), nameof(Scp939.UpdatedAmnesticCloudState))]
     [HarmonyPatch(typeof(Scp939AmnesticCloudInstance), nameof(Scp939AmnesticCloudInstance.State), MethodType.Setter)]
-    internal static class CreatedAmnesticCloud
+    internal static class UpdatedAmnesticCloud
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
@@ -52,12 +52,15 @@ namespace Exiled.Events.Patches.Events.Scp939
                     // owner
                     new(OpCodes.Ldloc_S, hub.LocalIndex),
 
+                    // CloudState
+                    new(OpCodes.Ldarg_1),
+
                     // this
                     new(OpCodes.Ldarg_0),
 
-                    // Scp939.OnCreatedAmnesticCloud(new CreatedAmnesticCloudEventArgs(owner, this));
-                    new(OpCodes.Newobj, GetDeclaredConstructors(typeof(CreatedAmnesticCloudEventArgs))[0]),
-                    new(OpCodes.Call, Method(typeof(Scp939), nameof(Scp939.OnCreatedAmnesticCloud))),
+                    // Scp939.OnCreatedAmnesticCloud(new UpdatedCloudStateEventArgs(owner, CloudState, this));
+                    new(OpCodes.Newobj, GetDeclaredConstructors(typeof(UpdatedAmnesticCloudStateEventArgs))[0]),
+                    new(OpCodes.Call, Method(typeof(Scp939), nameof(Scp939.OnUpdatedCloudState))),
                 });
 
             newInstructions[newInstructions.Count - 1].labels.Add(ret);

@@ -7,6 +7,8 @@
 
 namespace Exiled.API.Enums
 {
+    using System;
+
     using Exiled.API.Features.Doors;
     using Interactables.Interobjects;
 
@@ -200,6 +202,7 @@ namespace Exiled.API.Enums
         /// <summary>
         /// Represents the NUKE_ARMORY door.
         /// </summary>
+        [Obsolete("This Door has been removed from the game.")]
         NukeArmory,
 
         /// <summary>
@@ -238,8 +241,9 @@ namespace Exiled.API.Enums
         CheckpointGateB,
 
         /// <summary>
-        /// Represents the Gate in the Checkpoint between EZ and HCZ.
+        /// Represents a door than Yamato never implemented.
         /// </summary>
+        [Obsolete("This Door has never been in the game.")]
         SurfaceDoor,
 
         /// <summary>
