@@ -95,6 +95,7 @@ namespace Exiled.Events.Patches.Events.Item
                     API.Features.Items.Item item = ev.Item;
                     ev.Player.RemoveHeldItem(destroy: false);
                     ev.Player.AddItem(item);
+
                     return false;
                 }
 

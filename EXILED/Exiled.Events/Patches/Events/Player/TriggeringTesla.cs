@@ -8,7 +8,6 @@
 namespace Exiled.Events.Patches.Events.Player
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection.Emit;
 
     using API.Features;
@@ -69,7 +68,7 @@ namespace Exiled.Events.Patches.Events.Player
         {
             TeslaGate teslaGate = TeslaGate.Get(baseTeslaGate);
 
-            foreach (Player player in ReferenceHub.AllHubs.Select(Player.Get))
+            foreach (Player player in Player.List)
             {
                 if (player is null || !teslaGate.CanBeIdle(player))
                     continue;

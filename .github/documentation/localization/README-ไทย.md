@@ -23,7 +23,7 @@ EXILED เป็นปลั๊กอินเฟรมเวิร์คระ�
 ถ้าคุณเลือกใช้โปรแกรมติดตั้ง (installer), มันจะทำการติดตั้งฟีเจอร์ทั้งหมดของ EXILED ให้โดยอัตโนมัติ,  หากคุณรันโปรแกรมติดตั้งนั้นอย่างถูกต้อง.
 
 # Windows
-### การติดตั้งอัตโนมัติ ([รายละเอียดเพิ่มเติม](https://github.com/ExMod-Team/EXILED/blob/master/EXILED/Exiled.Installer/README.md))
+### การติดตั้งอัตโนมัติ ([รายละเอียดเพิ่มเติม](https://github.com/ExMod-Team/EXILED/blob/master/Exiled.Installer/README.md))
 **หมายเหตุ**: ตรวจสอบให้แน่ใจว่าคุณใช้บัญชีผู้ใช้ที่รันเซิร์ฟเวอร์อยู่, หรือที่มีสิทธิ์แอดมินก่อนที่จะรันโปรแกรมติดตั้ง.
 
   - ดาวน์โหลด **`Exiled.Installer-Win.exe` [จากที่นี่](https://github.com/ExMod-Team/EXILED/releases)** (คลิกที่ Assets -> จากนั้น คลิกที่ Installer)
@@ -49,7 +49,7 @@ EXILED เป็นปลั๊กอินเฟรมเวิร์คระ�
   - ย้ายไปที่: ``C:\Users\%UserName%\AppData\Roaming\EXILED\Plugins`` (ไปที่นี่โดยการกด Win + R, เเล้วพิมพ์ `%appdata%`)
 
 # Linux
-### การติดตั้งอัตโนมัติ ([รายละเอียดเพิ่มเติม](https://github.com/ExMod-Team/EXILED/blob/master/EXILED/Exiled.Installer/README.md))
+### การติดตั้งอัตโนมัติ ([รายละเอียดเพิ่มเติม](https://github.com/ExMod-Team/EXILED/blob/master/Exiled.Installer/README.md))
 
 **หมายเหตุ:** หากคุณคุณติดตั้ง EXILED บน remote เซิร์ฟเวอร์. ตรวจสอบให้แน่ใจว่าคุณรันโปรแกรมติดตั้ง, ด้วยผู้ใช้เดียวกับที่รันเซิร์ฟเวอร์ SCP:SL ของคุณ (หรือผู้ใช้ root) 
 

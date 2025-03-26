@@ -39,9 +39,9 @@ namespace Exiled.Events.Handlers
         public static Event<PlacedAmnesticCloudEventArgs> PlacedAmnesticCloud { get; set; } = new();
 
         /// <summary>
-        /// Invoked after SCP-939 <see cref="AmnesticCloudHazard"/> is state updated.
+        /// Invoked after SCP-939 fully spawned <see cref="AmnesticCloudHazard"/>.
         /// </summary>
-        public static Event<UpdatedAmnesticCloudStateEventArgs> UpdatedAmnesticCloudState { get; set; } = new();
+        public static Event<CreatedAmnesticCloudEventArgs> CreatedAmnesticCloud { get; set; } = new();
 
         /// <summary>
         /// Invoked before SCP-939 plays a stolen voice.
@@ -99,10 +99,10 @@ namespace Exiled.Events.Handlers
         public static void OnPlacedAmnesticCloud(PlacedAmnesticCloudEventArgs ev) => PlacedAmnesticCloud.InvokeSafely(ev);
 
         /// <summary>
-        /// Called after <see cref="AmnesticCloudHazard"/> is state updated.
+        /// Called after SCP-939 fully spawned <see cref="AmnesticCloudHazard"/>.
         /// </summary>
-        /// <param name="ev">The <see cref="UpdatedAmnesticCloudStateEventArgs" /> instance.</param>
-        public static void OnUpdatedCloudState(UpdatedAmnesticCloudStateEventArgs ev) => UpdatedAmnesticCloudState.InvokeSafely(ev);
+        /// <param name="ev">The <see cref="CreatedAmnesticCloudEventArgs" /> instance.</param>
+        public static void OnCreatedAmnesticCloud(CreatedAmnesticCloudEventArgs ev) => CreatedAmnesticCloud.InvokeSafely(ev);
 
         /// <summary>
         /// Called before SCP-939 plays a stolen voice.
