@@ -21,9 +21,10 @@ namespace Exiled.Events.Patches.Events.Player
 
     /// <summary>
     /// Patches <see cref="AnimatorReloaderModuleBase.ServerProcessCmd" />.
-    /// Adds the <see cref="Handlers.Player.ReloadingWeapon" /> event.
+    /// Adds the <see cref="Handlers.Player.ReloadingWeapon" /> and <see cref="Handlers.Player.UnloadingWeapon" />event.
     /// </summary>
     [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.ReloadingWeapon))]
+    [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.UnloadingWeapon))]
     [HarmonyPatch(typeof(AnimatorReloaderModuleBase), nameof(AnimatorReloaderModuleBase.ServerProcessCmd))]
     internal static class ReloadingWeapon
     {
@@ -31,7 +32,7 @@ namespace Exiled.Events.Patches.Events.Player
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
-            int offset = 2;
+            int offset = -2;
             int index = newInstructions.FindIndex(x => x.Calls(Method(typeof(IReloadUnloadValidatorModule), nameof(IReloadUnloadValidatorModule.ValidateReload)))) + offset;
 
             Label returnLabel = generator.DefineLabel();
@@ -40,8 +41,8 @@ namespace Exiled.Events.Patches.Events.Player
                 index,
                 new[]
                 {
-                    // player
-                    new CodeInstruction(OpCodes.Ldarg_0),
+                    // this.Firearm
+                    new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
                     new(OpCodes.Callvirt, PropertyGetter(typeof(AnimatorReloaderModuleBase), nameof(AnimatorReloaderModuleBase.Firearm))),
 
                     // ReloadingWeaponEventArgs ev = new(firearm)

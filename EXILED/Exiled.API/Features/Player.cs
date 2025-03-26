@@ -142,7 +142,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a list of all <see cref="Player"/>'s on the server.
         /// </summary>
-        public static IReadOnlyCollection<Player> List => Dictionary.Values.Where(x => !x.IsNPC).ToList();
+        public static IReadOnlyCollection<Player> List => Dictionary.Values.ToList();
 
         /// <summary>
         /// Gets a <see cref="Dictionary{TKey, TValue}"/> containing cached <see cref="Player"/> and their user ids.
@@ -951,6 +951,9 @@ namespace Exiled.API.Features
             get => Item.Get(Inventory.CurInstance);
             set
             {
+                if (CurrentItem is MicroHid microHid)
+                    microHid.State = InventorySystem.Items.MicroHID.Modules.MicroHidPhase.Standby;
+
                 if (value is null || value.Type == ItemType.None)
                 {
                     Inventory.ServerSelectItem(0);
@@ -2188,6 +2191,12 @@ namespace Exiled.API.Features
         /// <summary>
         /// Forces the player to use an item.
         /// </summary>
+        /// <param name="usable">The item to be used.</param>
+        public void UseItem(Usable usable) => usable?.Use(this);
+
+        /// <summary>
+        /// Forces the player to use an item.
+        /// </summary>
         /// <param name="item">The item to be used.</param>
         /// <returns><see langword="true"/> if item was used successfully. Otherwise, <see langword="false"/>.</returns>
         [Obsolete("Use `void UseItem(Usable)`")]
@@ -2197,17 +2206,7 @@ namespace Exiled.API.Features
                 return false;
 
             UseItem(usableItem);
-
             return true;
-        }
-
-        /// <summary>
-        /// Forces the player to use an item.
-        /// </summary>
-        /// <param name="item">The item to be used.</param>
-        public void UseItem(Usable item)
-        {
-            item.Use(this);
         }
 
         /// <summary>
@@ -2906,6 +2905,26 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
+        /// Removes specific candy from the players <see cref="Scp330"/>.
+        /// </summary>
+        /// <param name="candyType">The <see cref="CandyKindID"/> to remove.</param>
+        /// <param name="removeAll">Remove all candy of that type.</param>
+        /// <returns><see langword="true"/> if a candy was removed.</returns>
+        public bool TryRemoveCandу(CandyKindID candyType, bool removeAll = false)
+        {
+            foreach (Item item in Items)
+            {
+                if (item is not Scp330 bag)
+                    continue;
+
+                if (bag.RemoveCandy(candyType, removeAll) > 0)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Resets the player's inventory to the provided list of items, clearing any items it already possess.
         /// </summary>
         /// <param name="newItems">The new items that have to be added to the inventory.</param>
@@ -3028,6 +3047,36 @@ namespace Exiled.API.Features
         {
             if (hint.Show)
                 ShowHint(hint.Content, hint.Duration);
+        }
+
+        /// <summary>
+        /// Messages the given <see cref="Features.Message"/> to the player.
+        /// </summary>
+        /// <param name="message">The <see cref="Features.Message"/> to be messaged.</param>
+        /// <param name="shouldClearPrevious">Clears all player's messages before sending the new one.</param>
+        public void Message(Message message, bool shouldClearPrevious = false)
+        {
+            if (message.Show)
+                Message(message.Duration, message.Content, message.Type, shouldClearPrevious);
+        }
+
+        /// <summary>
+        /// Shows a message to the player.
+        /// </summary>
+        /// <param name="duration">The message duration.</param>
+        /// <param name="message">The message to be messaged.</param>
+        /// <param name="type">The message type.</param>
+        /// <param name="shouldClearPrevious">Clears all player's messages before sending the new one.</param>
+        public void Message(ushort duration, string message, MessageType type = MessageType.Broadcast, bool shouldClearPrevious = false)
+        {
+            if (type == MessageType.Broadcast)
+            {
+                Broadcast(duration, message, shouldClearPrevious: shouldClearPrevious);
+            }
+            else
+            {
+                ShowHint(message, duration);
+            }
         }
 
         /// <summary>
