@@ -67,6 +67,9 @@ namespace Exiled.API.Extensions
             { EffectType.AntiScp207, typeof(AntiScp207) },
             { EffectType.Scanned, typeof(Scanned) },
             { EffectType.SilentWalk, typeof(SilentWalk) },
+#pragma warning disable CS0618
+            { EffectType.Marshmallow, typeof(MarshmallowEffect) },
+#pragma warning restore CS0618
             { EffectType.Strangled, typeof(Strangled) },
             { EffectType.Ghostly, typeof(Ghostly) },
             { EffectType.FogControl, typeof(FogControl) },
@@ -75,13 +78,6 @@ namespace Exiled.API.Extensions
             { EffectType.SeveredEyes, typeof(SeveredEyes) },
             { EffectType.PitDeath, typeof(PitDeath) },
             { EffectType.Blurred, typeof(Blurred) },
-            #pragma warning disable CS0618
-            { EffectType.Marshmallow, typeof(MarshmallowEffect) },
-            { EffectType.BecomingFlamingo, typeof(BecomingFlamingo) },
-            { EffectType.Scp559, typeof(Scp559Effect) },
-            { EffectType.Scp956Target, typeof(Scp956Target) },
-            { EffectType.Snowed, typeof(Snowed) },
-            #pragma warning restore CS0618
         });
 
         /// <summary>
@@ -175,7 +171,7 @@ namespace Exiled.API.Extensions
         /// <seealso cref="IsHealing(EffectType)"/>
         public static bool IsPositive(this EffectType effect) => effect is EffectType.BodyshotReduction or EffectType.DamageReduction
             or EffectType.Invigorated or EffectType.Invisible or EffectType.MovementBoost or EffectType.RainbowTaste
-            or EffectType.Scp207 or EffectType.Scp1853 or EffectType.Vitality or EffectType.AntiScp207 or EffectType.Ghostly or EffectType.Scp1344;
+            or EffectType.Scp207 or EffectType.Scp1853 or EffectType.Vitality or EffectType.AntiScp207 or EffectType.Ghostly;
 
         /// <summary>
         /// Returns whether the provided <paramref name="effect"/> affects the player's movement speed.

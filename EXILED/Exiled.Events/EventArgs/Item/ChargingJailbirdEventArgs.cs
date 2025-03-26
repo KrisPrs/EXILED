@@ -26,7 +26,9 @@ namespace Exiled.Events.EventArgs.Item
         {
             Player = Player.Get(player);
             Jailbird = (Jailbird)Item.Get(swingItem);
+#pragma warning disable CS0618
             IsAllowed = isAllowed;
+#pragma warning restore CS0618
         }
 
         /// <summary>

@@ -8,14 +8,11 @@
 namespace Exiled.API.Features
 {
 #pragma warning disable SA1401
-
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    using CommandSystem.Commands.RemoteAdmin.Cleanup;
-    using Decals;
     using Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features.Hazards;
@@ -29,10 +26,8 @@ namespace Exiled.API.Features
     using LightContainmentZoneDecontamination;
     using MapGeneration;
     using PlayerRoles.Ragdolls;
-    using RemoteAdmin;
     using UnityEngine;
     using Utils;
-    using Utils.Networking;
 
     using Object = UnityEngine.Object;
 
@@ -111,24 +106,6 @@ namespace Exiled.API.Features
         public static SqueakSpawner SqueakSpawner => squeakSpawner ??= Object.FindObjectOfType<SqueakSpawner>();
 
         /// <summary>
-        /// Sends a staff message to all players online with <see cref="PlayerPermissions.AdminChat"/> permission.
-        /// </summary>
-        /// <param name="message">The message to send.</param>
-        /// <param name="player">The player to send message as, null will use Server Host.</param>
-        public static void StaffMessage(string message, Player player = null)
-        {
-            player ??= Server.Host;
-
-            foreach (Player target in Player.List)
-            {
-                if (!CommandProcessor.CheckPermissions(target.Sender, PlayerPermissions.AdminChat))
-                    continue;
-
-                player.ReferenceHub.encryptedChannelManager.TrySendMessageToClient(player.NetId + "!" + message, EncryptedChannelManager.EncryptedChannel.AdminChat);
-            }
-        }
-
-        /// <summary>
         /// Broadcasts a message to all <see cref="Player">players</see>.
         /// </summary>
         /// <param name="broadcast">The <see cref="Features.Broadcast"/> to be broadcasted.</param>
@@ -152,17 +129,6 @@ namespace Exiled.API.Features
                 ClearBroadcasts();
 
             Server.Broadcast.RpcAddElement(message, duration, type);
-        }
-
-        /// <summary>
-        /// Broadcasts delegate invocation result to all <see cref="Player">players</see>.
-        /// </summary>
-        /// <param name="duration">The duration in seconds.</param>
-        /// <param name="func">The delegate whose invocation result will be the message.</param>
-        public static void Broadcast(ushort duration, Func<Player, string> func)
-        {
-            foreach (Player player in Player.List)
-                player.Broadcast(duration, func.Invoke(player));
         }
 
         /// <summary>
@@ -307,19 +273,6 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
-        /// Destroy specified amount of specified <see cref="DecalPoolType"/> object.
-        /// </summary>
-        /// <param name="decalType">Decal type to destroy.</param>
-        /// <param name="amount">Amount of decals to destroy.</param>
-        public static void Clean(DecalPoolType decalType, int amount) => new DecalCleanupMessage(decalType, amount).SendToAuthenticated();
-
-        /// <summary>
-        /// Destroy all specified <see cref="DecalPoolType"/> objects.
-        /// </summary>
-        /// <param name="decalType">Decal type to destroy.</param>
-        public static void Clean(DecalPoolType decalType) => Clean(decalType, int.MaxValue);
-
-        /// <summary>
         /// Places a blood decal.
         /// </summary>
         /// <param name="position">The position of the blood decal.</param>
@@ -412,12 +365,6 @@ namespace Exiled.API.Features
             Firearm.ItemTypeToFirearmInstance.Clear();
             Firearm.BaseCodesValue.Clear();
             Firearm.AvailableAttachmentsValue.Clear();
-
-#pragma warning disable CS0618
-            Scp559.CakeToWrapper.Clear();
-
-            Coffee.BaseToWrapper.Clear();
-#pragma warning restore CS0618
         }
     }
 }

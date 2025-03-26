@@ -8,7 +8,6 @@
 namespace Exiled.Events.Patches.Events.Map
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection.Emit;
 
     using API.Features;
@@ -70,7 +69,7 @@ namespace Exiled.Events.Patches.Events.Map
         private static void ProcessEvent(FlashbangGrenade instance, float distance)
         {
             HashSet<Player> targetToAffect = HashSetPool<Player>.Pool.Get();
-            foreach (Player player in ReferenceHub.AllHubs.Select(Player.Get))
+            foreach (Player player in Player.List)
             {
                 if ((instance.transform.position - player.Position).sqrMagnitude >= distance)
                     continue;
@@ -94,7 +93,9 @@ namespace Exiled.Events.Patches.Events.Map
                 return;
 
             foreach (Player player in explodingGrenadeEvent.TargetsToAffect)
+            {
                 instance.ProcessPlayer(player.ReferenceHub);
+            }
         }
     }
 }

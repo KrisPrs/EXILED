@@ -132,16 +132,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a <see cref="IReadOnlyList{T}"/> of <see cref="Room"/> around the <see cref="Room"/>.
         /// </summary>
-        public IReadOnlyList<Room> NearestRooms
-        {
-            get
-            {
-                if (NearestRoomsValue.Count == 0 && Identifier.ConnectedRooms.Count > 0)
-                    NearestRoomsValue.AddRange(Identifier.ConnectedRooms.Select(Get));
-
-                return NearestRoomsValue;
-            }
-        }
+        public IReadOnlyList<Room> NearestRooms { get; private set; }
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Pickup"/> in the <see cref="Room"/>.
@@ -447,6 +438,7 @@ namespace Exiled.API.Features
 
             Windows = WindowsValue.AsReadOnly();
             Doors = DoorsValue.AsReadOnly();
+            NearestRooms = NearestRoomsValue.AsReadOnly();
             Speakers = SpeakersValue.AsReadOnly();
             Cameras = CamerasValue.AsReadOnly();
         }
