@@ -2205,12 +2205,6 @@ namespace Exiled.API.Features
         /// <summary>
         /// Forces the player to use an item.
         /// </summary>
-        /// <param name="usable">The item to be used.</param>
-        public void UseItem(Usable usable) => usable?.Use(this);
-
-        /// <summary>
-        /// Forces the player to use an item.
-        /// </summary>
         /// <param name="item">The item to be used.</param>
         /// <returns><see langword="true"/> if item was used successfully. Otherwise, <see langword="false"/>.</returns>
         [Obsolete("Use `void UseItem(Usable)`")]
@@ -2993,12 +2987,6 @@ namespace Exiled.API.Features
         /// <seealso cref="DropItems()"/>
         public void ClearItems(bool destroy = true)
         {
-            foreach (Item item in Items)
-            {
-                if (item is Armor armor)
-                    armor.RemoveExcessOnDrop = false;
-            }
-
             while (Items.Count > 0)
                 RemoveItem(Items.ElementAt(0), destroy);
         }

@@ -81,15 +81,6 @@ namespace Exiled.CustomItems.API.Features
                 SetupKeycard(card);
         }
 
-        /// <inheritdoc/>
-        public override Pickup? Spawn(Vector3 position, Item item, Player? previousOwner = null)
-        {
-            if (item.Is(out Keycard card))
-                SetupKeycard(card);
-
-            return base.Spawn(position, item, previousOwner);
-        }
-
         /// <summary>
         /// Setups keycard according to this class.
         /// </summary>

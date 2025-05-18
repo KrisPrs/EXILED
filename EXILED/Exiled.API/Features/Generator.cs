@@ -216,7 +216,7 @@ namespace Exiled.API.Features
         public KeycardPermissions Permissions
         {
             get => (KeycardPermissions)Base._requiredPermission;
-            set => Base._requiredPermission = (Interactables.Interobjects.DoorUtils.KeycardPermissions)value;
+            set => Base._requiredPermission = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
         }
 
         /// <summary>

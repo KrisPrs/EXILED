@@ -14,21 +14,18 @@ namespace Exiled.CustomRoles.API.Features
     using System.Reflection;
 
     using CustomItems.API.Features;
-
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Pools;
+    using Exiled.API.Features.Roles;
     using Exiled.API.Interfaces;
     using Exiled.Events.EventArgs.Player;
-
     using FLXLib.Spawns;
     using MEC;
     using PlayerRoles;
-
     using UnityEngine;
-
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -595,7 +592,7 @@ namespace Exiled.CustomRoles.API.Features
             player.Scale = Scale;
             if (Gravity.HasValue && player.Role is FpcRole fpcRole)
                 fpcRole.Gravity = Gravity.Value;
-            Vector3 position = GetSpawnPosition();
+            Vector3 position = SpawnProperties.GetRandomPoint();
             if (position != Vector3.zero)
             {
                 player.Position = position;
@@ -945,7 +942,7 @@ namespace Exiled.CustomRoles.API.Features
             }
         }
 
-        private void OnInternalSpawned(SpawnedEventArgs ev)
+        private void OnInternalSpawning(SpawningEventArgs ev)
         {
             if (Role != RoleTypeId.None && ev.NewRole == Role && !ev.Player.HasCustomRole() && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
             {

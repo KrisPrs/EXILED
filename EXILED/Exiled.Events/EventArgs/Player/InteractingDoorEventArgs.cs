@@ -26,6 +26,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="door">
         /// <inheritdoc cref="Door" />
         /// </param>
+        /// <param name="colliderId">Something.</param>
         /// <param name="isAllowed">
         /// <inheritdoc cref="IsAllowed" />
         /// </param>

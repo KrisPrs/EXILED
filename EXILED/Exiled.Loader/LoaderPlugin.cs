@@ -97,7 +97,10 @@ namespace Exiled.Loader
             Directory.CreateDirectory(Paths.Plugins);
             Directory.CreateDirectory(Paths.Dependencies);
 
-            Timing.RunCoroutine(new Loader().Run());
+            Timing.CallDelayed(Timing.WaitForOneFrame, () =>
+            {
+                new Loader().Run(new Assembly[] { });
+            });
         }
 
         /// <summary>

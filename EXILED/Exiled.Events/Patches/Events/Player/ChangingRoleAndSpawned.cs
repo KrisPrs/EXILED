@@ -223,9 +223,6 @@ namespace Exiled.Events.Patches.Events.Player
                     HashSet<ushort> hashSet = HashSetPool<ushort>.Pool.Get();
                     foreach (KeyValuePair<ushort, ItemBase> item2 in inventory.UserInventory.Items)
                     {
-                        if (item2.Value is BodyArmor bodyArmor)
-                            bodyArmor.DontRemoveExcessOnDrop = true;
-
                         if (item2.Value is Scp1344Item scp1344Item)
                             scp1344Item.Status = Scp1344Status.Idle;
                         else

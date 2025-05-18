@@ -7,13 +7,12 @@
 
 namespace Exiled.API.Features.Roles
 {
+    using System;
     using System.Collections.Generic;
 
     using Exiled.API.Enums;
     using Exiled.API.Features.Pools;
-
     using Mirror;
-
     using PlayerRoles;
     using PlayerRoles.PlayableScps;
     using PlayerRoles.PlayableScps.HumeShield;
@@ -21,9 +20,7 @@ namespace Exiled.API.Features.Roles
     using PlayerRoles.PlayableScps.Scp939.Mimicry;
     using PlayerRoles.PlayableScps.Scp939.Ripples;
     using PlayerRoles.Subroutines;
-
     using RelativePositioning;
-
     using UnityEngine;
 
     using Scp1507GameRole = PlayerRoles.PlayableScps.Scp1507.Scp1507Role;

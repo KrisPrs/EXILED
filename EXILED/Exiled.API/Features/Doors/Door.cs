@@ -176,8 +176,8 @@ namespace Exiled.API.Features.Doors
         /// </remarks>
         public KeycardPermissions Permissions
         {
-            get => (KeycardPermissions)RequiredPermissions.RequiredPermissions;
-            set => RequiredPermissions.RequiredPermissions = (BaseKeycardPermissions)value;
+            get => (KeycardPermissions)RequiredPermissions;
+            set => RequiredPermissions = (DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -186,7 +186,6 @@ namespace Exiled.API.Features.Doors
         /// <remarks>
         /// Setting this value to <see cref="KeycardPermissions.None"/> will allow this door to be opened without a keycard.
         /// </remarks>
-        [Obsolete]
         public KeycardPermissions KeycardPermissions
         {
             get => (KeycardPermissions)RequiredPermissions;

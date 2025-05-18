@@ -75,12 +75,6 @@ namespace Exiled.API.Features.Items
         }
 
         /// <summary>
-        /// Gets a value indicating whether excess ammo should be removed when the armor is dropped.
-        /// </summary>
-        public bool RemoveExcessOnDrop
-        {
-            get => !Base.DontRemoveExcessOnDrop;
-            internal set => Base.DontRemoveExcessOnDrop = !value;
         /// Gets or sets the Weight of the armor.
         /// </summary>
         public new float Weight

@@ -130,8 +130,8 @@ namespace Exiled.API.Features.Items
 
             if (throwable.Projectile is ExplosionGrenade grenade)
             {
-                MaxRadius = grenade._maxRadius;
-                ScpDamageMultiplier = grenade._scpDamageMultiplier;
+                MaxRadius = grenade.MaxRadius;
+                ScpDamageMultiplier = grenade.ScpDamageMultiplier;
                 BurnDuration = grenade._burnedDuration;
                 DeafenDuration = grenade._deafenedDuration;
                 ConcussDuration = grenade._concussedDuration;

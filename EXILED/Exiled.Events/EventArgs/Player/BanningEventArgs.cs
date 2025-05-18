@@ -12,8 +12,6 @@ namespace Exiled.Events.EventArgs.Player
     using API.Features;
     using CommandSystem;
 
-    using CommandSystem;
-
     /// <summary>
     /// Contains all information before banning a player from the server.
     /// </summary>
