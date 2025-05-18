@@ -12,6 +12,7 @@ namespace Exiled.API.Extensions
     using Enums;
 
     using Features;
+    using PlayerRoles.PlayableScps.Scp1507;
     using PlayerRoles.PlayableScps.Scp3114;
     using PlayerStatsSystem;
 
@@ -101,6 +102,7 @@ namespace Exiled.API.Extensions
             { ItemType.Jailbird, DamageType.Jailbird },
             { ItemType.GunFRMG0, DamageType.Frmg0 },
             { ItemType.GunA7, DamageType.A7 },
+            { ItemType.GunSCP127, DamageType.Scp127 },
         };
 
         /// <summary>
@@ -180,6 +182,12 @@ namespace Exiled.API.Extensions
                     return DamageType.MicroHid;
                 case DisruptorDamageHandler:
                     return DamageType.ParticleDisruptor;
+                case Scp1507DamageHandler:
+                    return DamageType.Scp1507;
+                case Scp956DamageHandler:
+                    return DamageType.Scp956;
+                case SnowballDamageHandler:
+                    return DamageType.SnowBall;
                 case Scp049DamageHandler scp049DamageHandler:
                     return scp049DamageHandler.DamageSubType switch
                     {

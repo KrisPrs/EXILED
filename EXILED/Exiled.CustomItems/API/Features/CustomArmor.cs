@@ -8,13 +8,16 @@
 namespace Exiled.CustomItems.API.Features
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
 
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
+    using Exiled.API.Structs;
     using Exiled.Events.EventArgs.Player;
 
+    using InventorySystem.Items.Armor;
     using MEC;
 
     /// <summary>

@@ -7,8 +7,7 @@
 namespace Exiled.CustomItems.API.Features
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
+
     using System.Linq;
 
     using CustomPlayerEffects;
@@ -153,7 +152,7 @@ namespace Exiled.CustomItems.API.Features
                 if (!Attachments.IsEmpty())
                     firearm.AddAttachment(Attachments);
 
-                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = ClipSize;
+
 
                 firearm.AmmoDrain = AmmoUsage;
             }
@@ -165,6 +164,7 @@ namespace Exiled.CustomItems.API.Features
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon += OnInternalReloading;
+            Exiled.Events.Handlers.Player.ReloadedWeapon += OnInternalReloaded;
             Exiled.Events.Handlers.Player.Shooting += OnInternalShooting;
             Exiled.Events.Handlers.Player.Shot += OnInternalShot;
             Exiled.Events.Handlers.Player.Hurting += OnInternalHurting;
@@ -178,6 +178,7 @@ namespace Exiled.CustomItems.API.Features
         protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon -= OnInternalReloading;
+            Exiled.Events.Handlers.Player.ReloadedWeapon -= OnInternalReloaded;
             Exiled.Events.Handlers.Player.Shooting -= OnInternalShooting;
             Exiled.Events.Handlers.Player.Shot -= OnInternalShot;
             Exiled.Events.Handlers.Player.Hurting -= OnInternalHurting;
@@ -196,7 +197,15 @@ namespace Exiled.CustomItems.API.Features
         }
 
         /// <summary>
-        ///     Handles shooting for custom weapons.
+        /// Handles reloaded for custom weapons.
+        /// </summary>
+        /// <param name="ev"><see cref="ReloadedWeaponEventArgs"/>.</param>
+        protected virtual void OnReloaded(ReloadedWeaponEventArgs ev)
+        {
+        }
+
+        /// <summary>
+        /// Handles shooting for custom weapons.
         /// </summary>
         /// <param name="ev"><see cref="ShootingEventArgs" />.</param>
         protected virtual void OnShooting(ShootingEventArgs ev)

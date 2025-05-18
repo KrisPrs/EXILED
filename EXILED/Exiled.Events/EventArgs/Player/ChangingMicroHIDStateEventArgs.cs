@@ -19,7 +19,7 @@ namespace Exiled.Events.EventArgs.Player
     /// <summary>
     /// Contains all information before MicroHID state is changed.
     /// </summary>
-    public class ChangingMicroHIDStateEventArgs : IDeniableEvent, IItemEvent, IPlayerEvent
+    public class ChangingMicroHIDStateEventArgs : IDeniableEvent, IMicroHIDEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangingMicroHIDStateEventArgs" /> class.

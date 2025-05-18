@@ -22,7 +22,7 @@ namespace Exiled.Events
     using InventorySystem.Items.Usables.Scp330;
     using PlayerRoles.Ragdolls;
     using PlayerRoles.RoleAssign;
-    using PluginAPI.Events;
+
     using Respawning;
     using UnityEngine.SceneManagement;
     using UserSettings.ServerSpecific;
@@ -84,9 +84,13 @@ namespace Exiled.Events
             RagdollManager.OnRagdollRemoved += Handlers.Internal.RagdollList.OnRemovedRagdoll;
             ItemPickupBase.OnPickupAdded += Handlers.Internal.PickupEvent.OnSpawnedPickup;
             ItemPickupBase.OnPickupDestroyed += Handlers.Internal.PickupEvent.OnRemovedPickup;
-            ServerConsole.ReloadServerName();
 
-            EventManager.RegisterEvents<Handlers.Player>(this);
+            AdminToys.AdminToyBase.OnAdded += Handlers.Internal.AdminToyList.OnAddedAdminToys;
+            AdminToys.AdminToyBase.OnRemoved += Handlers.Internal.AdminToyList.OnRemovedAdminToys;
+
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived += SettingBase.OnSettingUpdated;
+
+            ServerConsole.ReloadServerName();
         }
 
         /// <inheritdoc/>
@@ -119,7 +123,7 @@ namespace Exiled.Events
             ItemPickupBase.OnPickupAdded -= Handlers.Internal.PickupEvent.OnSpawnedPickup;
             ItemPickupBase.OnPickupDestroyed -= Handlers.Internal.PickupEvent.OnRemovedPickup;
 
-            EventManager.UnregisterEvents<Handlers.Player>(this);
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived -= SettingBase.OnSettingUpdated;
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace Exiled.API.Extensions
         /// </summary>
         /// <param name="type">The item to be checked.</param>
         /// <returns>Returns whether the <see cref="ItemType"/> is a throwable item.</returns>
-        public static bool IsThrowable(this ItemType type) => type is ItemType.SCP018 or ItemType.GrenadeHE or ItemType.GrenadeFlash or ItemType.SCP2176;
+        public static bool IsThrowable(this ItemType type) => type is ItemType.SCP018 or ItemType.GrenadeHE or ItemType.GrenadeFlash or ItemType.SCP2176 or ItemType.Coal or ItemType.SpecialCoal or ItemType.Snowball;
 
         /// <summary>
         /// Check if an <see cref="ItemType">item</see> is a medical item.
@@ -129,7 +129,7 @@ namespace Exiled.API.Extensions
             if (!InventoryItemLoader.AvailableItems.TryGetValue(item.GetItemType(), out ItemBase itemBase) || itemBase is not InventorySystem.Items.Firearms.Firearm firearm)
                 return 0;
 
-            return (firearm.Modules.FirstOrDefault(x => x is IAmmoContainerModule) as IAmmoContainerModule).AmmoMax;
+            return firearm.GetTotalMaxAmmo();
         }
 
         /// <summary>
@@ -182,6 +182,7 @@ namespace Exiled.API.Extensions
             ItemType.GunCom45 => FirearmType.Com45,
             ItemType.GunFRMG0 => FirearmType.FRMG0,
             ItemType.ParticleDisruptor => FirearmType.ParticleDisruptor,
+            ItemType.GunSCP127 => FirearmType.Scp127,
             _ => FirearmType.None,
         };
 
@@ -220,6 +221,7 @@ namespace Exiled.API.Extensions
             FirearmType.Com45 => ItemType.GunCom45,
             FirearmType.FRMG0 => ItemType.GunFRMG0,
             FirearmType.ParticleDisruptor => ItemType.ParticleDisruptor,
+            FirearmType.Scp127 => ItemType.GunSCP127,
             _ => ItemType.None,
         };
 
@@ -234,6 +236,11 @@ namespace Exiled.API.Extensions
             ItemType.GrenadeHE => ProjectileType.FragGrenade,
             ItemType.SCP018 => ProjectileType.Scp018,
             ItemType.SCP2176 => ProjectileType.Scp2176,
+#pragma warning disable CS0618
+            ItemType.Coal => ProjectileType.Coal,
+            ItemType.SpecialCoal => ProjectileType.SpecialCoal,
+            ItemType.Snowball => ProjectileType.Snowball,
+#pragma warning restore CS0618
             _ => ProjectileType.None,
         };
 
@@ -248,6 +255,11 @@ namespace Exiled.API.Extensions
             ProjectileType.Scp018 => ItemType.SCP018,
             ProjectileType.FragGrenade => ItemType.GrenadeHE,
             ProjectileType.Scp2176 => ItemType.SCP2176,
+#pragma warning disable CS0618
+            ProjectileType.Coal => ItemType.Coal,
+            ProjectileType.SpecialCoal => ItemType.SpecialCoal,
+            ProjectileType.Snowball => ItemType.Snowball,
+#pragma warning restore CS0618
             _ => ItemType.None,
         };
 

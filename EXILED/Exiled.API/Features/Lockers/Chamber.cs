@@ -16,6 +16,7 @@ namespace Exiled.API.Features.Lockers
     using Exiled.API.Extensions;
     using Exiled.API.Features.Pickups;
     using Exiled.API.Interfaces;
+    using InventorySystem.Items.Pickups;
     using MapGeneration.Distributors;
     using UnityEngine;
 
@@ -77,13 +78,13 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public IEnumerable<Pickup> ToBeSpawned
         {
-            get => Base._toBeSpawned.Select(Pickup.Get);
+            get => Base.ToBeSpawned.Select(Pickup.Get);
             set
             {
-                Base._toBeSpawned.Clear();
+                Base.ToBeSpawned.Clear();
 
                 foreach (Pickup pickup in value)
-                    Base._toBeSpawned.Add(pickup.Base);
+                    Base.ToBeSpawned.Add(pickup.Base);
             }
         }
 
@@ -124,7 +125,7 @@ namespace Exiled.API.Features.Lockers
         public KeycardPermissions RequiredPermissions
         {
             get => (KeycardPermissions)Base.RequiredPermissions;
-            set => Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.KeycardPermissions)value;
+            set => Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -147,8 +148,8 @@ namespace Exiled.API.Features.Lockers
         /// </remarks>
         public Transform Spawnpoint
         {
-            get => Base._spawnpoint;
-            set => Base._spawnpoint = value;
+            get => Base.Spawnpoint;
+            set => Base.Spawnpoint = value;
         }
 
         /// <summary>
@@ -156,8 +157,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public bool InitiallySpawn
         {
-            get => Base._spawnOnFirstChamberOpening;
-            set => Base._spawnOnFirstChamberOpening = value;
+            get => Base.SpawnOnFirstChamberOpening;
+            set => Base.SpawnOnFirstChamberOpening = value;
         }
 
         /// <summary>
@@ -165,8 +166,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public float Cooldown
         {
-            get => Base._targetCooldown;
-            set => Base._targetCooldown = value;
+            get => Base.TargetCooldown;
+            set => Base.TargetCooldown = value;
         }
 
         /// <summary>
@@ -199,6 +200,56 @@ namespace Exiled.API.Features.Lockers
         public bool CanInteract => Base.CanInteract;
 
         /// <summary>
+        /// Adds an item to the current chamber.
+        /// </summary>
+        /// <param name="item">The pickup to add.</param>
+        public void AddItem(Pickup item)
+        {
+            Transform parent = UseMultipleSpawnpoints && Spawnpoints.Any()
+                ? Spawnpoints.GetRandomValue()
+                : Spawnpoint;
+
+            if (IsOpen)
+            {
+                item.Transform.SetParent(parent);
+
+                if (!item.IsSpawned)
+                    item.Spawn();
+
+                return;
+            }
+
+            // If the item is already spawned on the network, unspawn it before proceeding.
+            if (item.IsSpawned)
+                item.UnSpawn();
+
+            // Set the item's parent transform.
+            item.Transform.SetParent(parent);
+
+            // Lock the item in place.
+            item.IsLocked = true;
+
+            // Notify any pickup distributor triggers.
+            (item.Base as IPickupDistributorTrigger)?.OnDistributed();
+
+            // If the item has a Rigidbody component, make it kinematic and reset its position and rotation.
+            if (item.Rigidbody != null)
+            {
+                item.Rigidbody.isKinematic = true;
+                item.Rigidbody.transform.localPosition = Vector3.zero;
+                item.Rigidbody.transform.localRotation = Quaternion.identity;
+
+                // Add the Rigidbody to the list of bodies to be unfrozen later.
+                SpawnablesDistributorBase.BodiesToUnfreeze.Add(item.Rigidbody);
+            }
+
+            Base.Content.Add(item.Base);
+            item.Spawn();
+            if (Base.WasEverOpened)
+                item.IsLocked = false;
+        }
+
+        /// <summary>
         /// Spawns a specified item from <see cref="AcceptableTypes"/>.
         /// </summary>
         /// <param name="type"><see cref="ItemType"/> from <see cref="AcceptableTypes"/>.</param>
@@ -229,7 +280,7 @@ namespace Exiled.API.Features.Lockers
                     continue;
                 }
 
-                Base._toBeSpawned.Add(pickup.Base);
+                Base.ToBeSpawned.Add(pickup.Base);
             }
         }
 
@@ -255,6 +306,6 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         /// <param name="chamber"><see cref="LockerChamber"/>.</param>
         /// <returns><see cref="Chamber"/>.</returns>
-        internal static Chamber Get(LockerChamber chamber) => Chambers.TryGetValue(chamber, out Chamber chmb) ? chmb : new(chamber, Locker.Get(x => x.Chambers.Any(x => x.Base == chamber)).FirstOrDefault());
+        internal static Chamber Get(LockerChamber chamber) => chamber == null ? null : Chambers.TryGetValue(chamber, out Chamber chmb) ? chmb : new(chamber, Locker.Get(x => x.Chambers.Any(x => x.Base == chamber)).FirstOrDefault());
     }
 }

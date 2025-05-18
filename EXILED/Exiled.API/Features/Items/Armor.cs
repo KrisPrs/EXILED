@@ -65,12 +65,13 @@ namespace Exiled.API.Features.Items
         public bool IsWorn => Base.IsWorn;
 
         /// <summary>
-        /// Gets or sets the Weight of the armor.
+        /// Gets or sets a value indicating whether excess ammo should be removed when the armor is dropped.
         /// </summary>
-        public new float Weight
+        [Obsolete("Not functional anymore", true)]
+        public bool RemoveExcessOnDrop
         {
-            get => Base.Weight;
-            set => Base._weight = value;
+            get => false;
+            set => _ = value;
         }
 
         /// <summary>
@@ -80,6 +81,12 @@ namespace Exiled.API.Features.Items
         {
             get => !Base.DontRemoveExcessOnDrop;
             internal set => Base.DontRemoveExcessOnDrop = !value;
+        /// Gets or sets the Weight of the armor.
+        /// </summary>
+        public new float Weight
+        {
+            get => Base.Weight;
+            set => Base._weight = value;
         }
 
         /// <summary>

@@ -48,6 +48,9 @@ namespace Exiled.Events.Patches.Events.Player
                 // sender
                 new(OpCodes.Ldarg_1),
 
+                // commandSender
+                new(OpCodes.Ldarg_1),
+
                 // reason
                 new(OpCodes.Ldarg_2),
 
@@ -57,7 +60,7 @@ namespace Exiled.Events.Patches.Events.Player
                 // true
                 new(OpCodes.Ldc_I4_1),
 
-                // KickingEventArgs ev = new(Player, sender, string, string, bool)
+                // KickingEventArgs ev = new(Player, Player, ICommandSender, string, string, bool)
                 new(OpCodes.Newobj, GetDeclaredConstructors(typeof(KickingEventArgs))[0]),
                 new(OpCodes.Dup),
                 new(OpCodes.Dup),

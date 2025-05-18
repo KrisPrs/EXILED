@@ -25,7 +25,6 @@ namespace Exiled.CustomRoles.API.Features
 
     using FLXLib.Spawns;
     using MEC;
-
     using PlayerRoles;
 
     using UnityEngine;
@@ -134,6 +133,12 @@ namespace Exiled.CustomRoles.API.Features
         public virtual Vector3 Scale { get; set; } = Vector3.one;
 
         /// <summary>
+        /// Gets or sets a value indicating the <see cref="Player"/>'s gravity.
+        /// </summary>
+        public virtual Vector3? Gravity { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Dictionary{TKey, TValue}"/> containing cached <see cref="string"/> and their  <see cref="Dictionary{TKey, TValue}"/> which is cached Role with FF multiplier.
         ///     Gets or sets a <see cref="Dictionary{TKey, TValue}" /> containing cached <see cref="string" /> and their
         ///     <see cref="Dictionary{TKey, TValue}" /> which is cached Role with FF multiplier.
         /// </summary>
@@ -588,6 +593,13 @@ namespace Exiled.CustomRoles.API.Features
             player.Health = MaxHealth;
             player.MaxHealth = MaxHealth;
             player.Scale = Scale;
+            if (Gravity.HasValue && player.Role is FpcRole fpcRole)
+                fpcRole.Gravity = Gravity.Value;
+            Vector3 position = GetSpawnPosition();
+            if (position != Vector3.zero)
+            {
+                player.Position = position;
+            }
 
             Log.Debug($"{Name}: Setting player info");
             player.InfoArea &= ~PlayerInfoArea.Role;
@@ -933,7 +945,7 @@ namespace Exiled.CustomRoles.API.Features
             }
         }
 
-        private void OnInternalSpawning(SpawningEventArgs ev)
+        private void OnInternalSpawned(SpawnedEventArgs ev)
         {
             if (Role != RoleTypeId.None && ev.NewRole == Role && !ev.Player.HasCustomRole() && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
             {

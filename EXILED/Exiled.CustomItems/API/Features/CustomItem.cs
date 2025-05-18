@@ -18,6 +18,7 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
+    using Exiled.API.Features.Lockers;
     using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Spawn;
@@ -27,15 +28,9 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.Events.EventArgs.Player;
     using Exiled.Events.EventArgs.Scp914;
     using Exiled.Loader;
-
-    using InventorySystem.Items.Firearms;
     using InventorySystem.Items.Pickups;
-
-    using MapGeneration.Distributors;
-
     using MEC;
     using UnityEngine;
-
     using YamlDotNet.Serialization;
 
     using static CustomItems;
@@ -681,7 +676,7 @@ namespace Exiled.CustomItems.API.Features
         {
             List<CustomItem> unregisteredItems = new();
 
-            foreach (CustomItem customItem in Registered)
+            foreach (CustomItem customItem in Registered.ToList())
             {
                 customItem.TryUnregister();
                 unregisteredItems.Add(customItem);

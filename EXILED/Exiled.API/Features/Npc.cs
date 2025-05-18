@@ -11,7 +11,6 @@ namespace Exiled.API.Features
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
     using CentralAuth;
 
@@ -19,7 +18,7 @@ namespace Exiled.API.Features
     using CommandSystem.Commands.RemoteAdmin.Dummies;
 
     using Exiled.API.Enums;
-    using Exiled.API.Features.Components;
+    using Exiled.API.Features.CustomStats;
     using Exiled.API.Features.Roles;
 
     using Footprinting;
@@ -34,13 +33,16 @@ namespace Exiled.API.Features
 
     using UnityEngine;
 
-    using Object = UnityEngine.Object;
-
     /// <summary>
     /// Wrapper class for handling NPC players.
     /// </summary>
     public class Npc : Player
     {
+        /// <summary>
+        /// The time it takes for the NPC to receive its <see cref="CustomHumeShieldStat"/> and <see cref="Role"/>.
+        /// </summary>
+        public const float SpawnSetRoleDelay = 0.5f;
+
         /// <inheritdoc cref="Player" />
         public Npc(ReferenceHub referenceHub)
             : base(referenceHub)
@@ -265,10 +267,13 @@ namespace Exiled.API.Features
         {
             Npc npc = new(DummyUtils.SpawnDummy(name));
 
-            Timing.CallDelayed(0.5f, () =>
+            Timing.CallDelayed(SpawnSetRoleDelay, () =>
             {
-                npc.Role.Set(role);
+                npc.Role.Set(role, SpawnReason.ForceClass);
                 npc.Position = position;
+                npc.CustomHealthStat = (HealthStat)npc.ReferenceHub.playerStats._dictionarizedTypes[typeof(HealthStat)];
+                npc.Health = npc.MaxHealth; // otherwise the npc will spawn with 0 health
+                npc.ReferenceHub.playerStats._dictionarizedTypes[typeof(HumeShieldStat)] = npc.ReferenceHub.playerStats.StatModules[Array.IndexOf(PlayerStats.DefinedModules, typeof(HumeShieldStat))] = npc.CustomHumeShieldStat = new CustomHumeShieldStat { Hub = npc.ReferenceHub };
             });
 
             Dictionary.Add(npc.GameObject, npc);
@@ -287,9 +292,12 @@ namespace Exiled.API.Features
         {
             Npc npc = new(DummyUtils.SpawnDummy(name));
 
-            Timing.CallDelayed(0.5f, () =>
+            Timing.CallDelayed(SpawnSetRoleDelay, () =>
             {
-                npc.Role.Set(role, SpawnReason.RoundStart, position is null ? RoleSpawnFlags.All : RoleSpawnFlags.AssignInventory);
+                npc.Role.Set(role, SpawnReason.ForceClass, position is null ? RoleSpawnFlags.All : RoleSpawnFlags.AssignInventory);
+                npc.ReferenceHub.playerStats._dictionarizedTypes[typeof(HealthStat)] = npc.ReferenceHub.playerStats.StatModules[Array.IndexOf(PlayerStats.DefinedModules, typeof(HealthStat))] = npc.CustomHealthStat = new HealthStat { Hub = npc.ReferenceHub };
+                npc.Health = npc.MaxHealth; // otherwise the npc will spawn with 0 health
+                npc.ReferenceHub.playerStats._dictionarizedTypes[typeof(HumeShieldStat)] = npc.ReferenceHub.playerStats.StatModules[Array.IndexOf(PlayerStats.DefinedModules, typeof(HumeShieldStat))] = npc.CustomHumeShieldStat = new CustomHumeShieldStat { Hub = npc.ReferenceHub };
 
                 if (position is not null)
                     npc.Position = position.Value;
