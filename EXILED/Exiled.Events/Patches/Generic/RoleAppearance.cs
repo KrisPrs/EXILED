@@ -29,7 +29,8 @@ namespace Exiled.Events.Patches.Generic
     /// <summary>
     /// Patches <see cref="RoleSyncInfo.Write(Mirror.NetworkWriter)"/> to implement <see cref="Role.GlobalAppearance"/>, <see cref="Role.TeamAppearances"/> and <see cref="Role.IndividualAppearances"/>.
     /// </summary>
-    [HarmonyPatch(typeof(RoleSyncInfo), nameof(RoleSyncInfo.Write))]
+    // TODO: Починить, срёт.
+    // [HarmonyPatch(typeof(RoleSyncInfo), nameof(RoleSyncInfo.Write))]
     internal class RoleAppearance
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> codeInstructions, ILGenerator generator)
