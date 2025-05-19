@@ -383,30 +383,37 @@ namespace Exiled.Loader
 
             Log.Info($"Loaded serial");
 
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            try
             {
-                foreach (Type type in
-                         assembly.GetTypes()
-                             .Where(myType => myType.BaseType != null
-                                              && myType is { IsClass: true, IsAbstract: false }
-                                              && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
+                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    Log.Debug($"Found subclass for tagging: {type.Name}");
-                    abstractTypeDerives.Add(type);
+                    foreach (Type type in
+                             assembly.GetTypes()
+                                 .Where(myType => myType.BaseType != null
+                                                  && myType is { IsClass: true, IsAbstract: false }
+                                                  && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
+                    {
+                        Log.Debug($"Found subclass for tagging: {type.Name}");
+                        abstractTypeDerives.Add(type);
+                    }
                 }
+
+                foreach (Type type in abstractTypeDerives)
+                    serializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+                foreach (Type type in abstractTypeDerives)
+                    deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+                Serializer = serializerBuilder.Build();
+                Deserializer = deserializerBuilder.Build();
+
+                ConfigManager.Reload();
+                TranslationManager.Reload();
             }
-
-            foreach (Type type in abstractTypeDerives)
-                serializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-            foreach (Type type in abstractTypeDerives)
-                deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-            Serializer = serializerBuilder.Build();
-            Deserializer = deserializerBuilder.Build();
-
-            ConfigManager.Reload();
-            TranslationManager.Reload();
+            catch (Exception e)
+            {
+                Log.Error($"Second try catch - {e}");
+            }
 
             EnablePlugins();
             CommandTranslationManager.Reload();
