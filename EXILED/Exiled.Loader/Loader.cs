@@ -337,19 +337,30 @@ namespace Exiled.Loader
         /// <param name="dependencies">The dependencies that could have been loaded by Exiled.Bootstrap.</param>
         public void Run(Assembly[] dependencies)
         {
-            Paths.Reload(Starter.LoaderPlugin.Config.ExiledDirectoryPath);
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CheckUAC() : geteuid() == 0)
+            try
             {
-                ServerConsole.AddLog("YOU ARE RUNNING THE SERVER AS ROOT / ADMINISTRATOR. THIS IS HIGHLY UNRECOMMENDED. PLEASE INSTALL YOUR SERVER AS A NON-ROOT/ADMIN USER.", ConsoleColor.DarkRed);
-                Thread.Sleep(5000);
+                Log.Info($"Run Exiled Loader!");
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CheckUAC() : geteuid() == 0)
+                {
+                    ServerConsole.AddLog("YOU ARE RUNNING THE SERVER AS ROOT / ADMINISTRATOR. THIS IS HIGHLY UNRECOMMENDED. PLEASE INSTALL YOUR SERVER AS A NON-ROOT/ADMIN USER.", ConsoleColor.DarkRed);
+                    Thread.Sleep(5000);
+                }
+
+                if (dependencies?.Length > 0)
+                    Dependencies.AddRange(dependencies);
+
+                Log.Info($"Loading dep&plug");
+
+                LoadDependencies();
+                LoadPlugins();
+
+                Log.Info($"Loaded dep&plug");
             }
-
-            if (dependencies?.Length > 0)
-                Dependencies.AddRange(dependencies);
-
-            LoadDependencies();
-            LoadPlugins();
+            catch (Exception e)
+            {
+                Log.Error($"First try catch - {e}");
+            }
 
             SerializerBuilder serializerBuilder = new SerializerBuilder()
                 .WithTypeConverter(new VectorsConverter())
@@ -369,6 +380,8 @@ namespace Exiled.Loader
                 .IgnoreUnmatchedProperties();
 
             HashSet<Type> abstractTypeDerives = new HashSet<Type>();
+
+            Log.Info($"Loaded serial");
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -449,14 +462,6 @@ namespace Exiled.Loader
                     Log.Error(
                         $"You're running an older version of Exiled ({Version.ToString(3)})! {plugin.Name} won't be loaded! " +
                         $"Required version to load it: {plugin.RequiredExiledVersion?.ToString(3)}");
-
-                    return true;
-                }
-                else if ((requiredVersion.Major < actualVersion.Major) && !Starter.LoaderPlugin.Config.ShouldLoadOutdatedPlugins)
-                {
-                    Log.Error(
-                        $"You're running an older version of {plugin.Name} ({plugin.Version.ToString(3)})! " +
-                        $"Its Required Major version is {requiredVersion.Major}, but the actual version is: {actualVersion.Major}. This plugin will not be loaded!");
 
                     return true;
                 }
