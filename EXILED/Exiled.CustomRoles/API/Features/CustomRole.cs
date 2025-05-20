@@ -592,11 +592,6 @@ namespace Exiled.CustomRoles.API.Features
             player.Scale = Scale;
             if (Gravity.HasValue && player.Role is FpcRole fpcRole)
                 fpcRole.Gravity = Gravity.Value;
-            Vector3 position = SpawnProperties.GetRandomPoint();
-            if (position != Vector3.zero)
-            {
-                player.Position = position;
-            }
 
             Log.Debug($"{Name}: Setting player info");
             player.InfoArea &= ~PlayerInfoArea.Role;
@@ -658,6 +653,7 @@ namespace Exiled.CustomRoles.API.Features
             {
                 if (SpawnProperties.IsAny && useSpawnpoint)
                     player.Position = SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
+
                 AddProperties(player, spawnReason, assignInventory);
                 RoleAdded(player);
                 Log.Debug($"{Name}: Set basic role (nonforce) to {player.Nickname}");
