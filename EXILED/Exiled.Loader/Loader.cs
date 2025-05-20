@@ -383,48 +383,41 @@ namespace Exiled.Loader
 
             Log.Info($"Loaded serial");
 
-            try
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                try
                 {
-                    try
+                    foreach (Type type in
+                             assembly.GetTypes()
+                                 .Where(myType => myType.BaseType != null
+                                                  && myType is { IsClass: true, IsAbstract: false }
+                                                  && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
                     {
-                        foreach (Type type in
-                                 assembly.GetTypes()
-                                     .Where(myType => myType.BaseType != null
-                                                      && myType is { IsClass: true, IsAbstract: false }
-                                                      && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
-                        {
-                            Log.Debug($"Found subclass for tagging: {type.Name}");
-                            abstractTypeDerives.Add(type);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error($"Second try catch - {e}");
+                        Log.Debug($"Found subclass for tagging: {type.Name}");
+                        abstractTypeDerives.Add(type);
                     }
                 }
-
-                foreach (Type type in abstractTypeDerives)
-                    serializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-                foreach (Type type in abstractTypeDerives)
-                    deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-                Log.Info("Loading Serializers");
-
-                Serializer = serializerBuilder.Build();
-                Deserializer = deserializerBuilder.Build();
-
-                Log.Info("Loaded Serializers");
-
-                ConfigManager.Reload();
-                TranslationManager.Reload();
+                catch (Exception e)
+                {
+                    Log.Error($"Second try catch - {e}");
+                }
             }
-            catch (Exception e)
-            {
-                Log.Error($"Third try catch - {e}");
-            }
+
+            foreach (Type type in abstractTypeDerives)
+                serializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+            foreach (Type type in abstractTypeDerives)
+                deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+            Log.Info("Loading Serializers");
+
+            Serializer = serializerBuilder.Build();
+            Deserializer = deserializerBuilder.Build();
+
+            Log.Info("Loaded Serializers");
+
+            ConfigManager.Reload();
+            TranslationManager.Reload();
 
             EnablePlugins();
             CommandTranslationManager.Reload();
