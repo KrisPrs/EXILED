@@ -61,7 +61,7 @@ namespace Exiled.CustomRoles.Events
         {
             if (Extensions.ToChangeRolePlayers.TryGetValue(ev.Player, out CustomRole cr))
             {
-                if (cr.SpawnProperties.IsAny && ev.NewRole.SpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
+                if (cr.SpawnProperties.IsAny && !ev.NewRole.SpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
                     ev.Position = cr.SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
 
                 cr.AddProperties(ev.Player, (SpawnReason)ev.NewRole.SpawnReason, Extensions.AssignInventoryPlayers.Remove(ev.Player));
