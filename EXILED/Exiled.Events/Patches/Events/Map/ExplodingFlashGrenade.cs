@@ -7,19 +7,18 @@
 
 namespace Exiled.Events.Patches.Events.Map
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection.Emit;
 
     using API.Features;
     using API.Features.Pools;
-
     using Exiled.API.Extensions;
     using Exiled.Events.EventArgs.Map;
     using Exiled.Events.Patches.Generic;
     using HarmonyLib;
     using InventorySystem.Items.ThrowableProjectiles;
-
     using UnityEngine;
 
     using static HarmonyLib.AccessTools;
@@ -68,6 +67,9 @@ namespace Exiled.Events.Patches.Events.Map
             HashSet<Player> targetToAffect = HashSetPool<Player>.Pool.Get();
             foreach (Player player in ReferenceHub.AllHubs.Select(Player.Get))
             {
+                if (player == null)
+                    continue;
+
                 if ((instance.transform.position - player.Position).sqrMagnitude > distance)
                     continue;
 
