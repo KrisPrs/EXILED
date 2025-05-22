@@ -59,7 +59,16 @@ namespace Exiled.Loader
                 }
 
                 foreach (ICommand command in Loader.Plugins.SelectMany(x => x.Commands.Select(y => y.Value.Item1)))
-                    LoadCommand(command);
+                {
+                    try
+                    {
+                        LoadCommand(command);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"An error has occurred while loading command translation! \n {e}");
+                    }
+                }
 
                 Log.Info("Plugin command translations loaded successfully!");
 
