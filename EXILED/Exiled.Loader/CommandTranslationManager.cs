@@ -43,6 +43,9 @@ namespace Exiled.Loader
                 SortedDictionary<string, CommandTranslation> deserializedTranslations = new(StringComparer.Ordinal);
                 void LoadCommand(ICommand command)
                 {
+                    if (command == null)
+                        return;
+
                     string commandName = command.GetType().FullName!;
 
                     if (command is CommandHandler parentCommand)
@@ -115,7 +118,7 @@ namespace Exiled.Loader
                     {
                         if (configValue == DefaultValue)
                         {
-                            if (Starter.LoaderPlugin.Config.PrintFullCommandProps)
+                            if (LoaderPlugin.Config.PrintFullCommandProps)
                                 translationProperties[propertyInfo.Name] = propertyInfo.GetValue(command) as string;
                             continue;
                         }
@@ -124,7 +127,7 @@ namespace Exiled.Loader
                     }
                     else
                     {
-                        translationProperties[propertyInfo.Name] = Starter.LoaderPlugin.Config.PrintFullCommandProps ? propertyInfo.GetValue(command) as string : DefaultValue;
+                        translationProperties[propertyInfo.Name] = LoaderPlugin.Config.PrintFullCommandProps ? propertyInfo.GetValue(command) as string : DefaultValue;
                     }
                 }
 
