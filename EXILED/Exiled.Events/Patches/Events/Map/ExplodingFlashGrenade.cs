@@ -67,7 +67,7 @@ namespace Exiled.Events.Patches.Events.Map
             HashSet<Player> targetToAffect = HashSetPool<Player>.Pool.Get();
             foreach (Player player in ReferenceHub.AllHubs.Select(Player.Get))
             {
-                if (player == null)
+                if (player == null || !player.IsConnected)
                     continue;
 
                 if ((instance.transform.position - player.Position).sqrMagnitude > distance)
@@ -95,7 +95,7 @@ namespace Exiled.Events.Patches.Events.Map
                 return;
 
             foreach (Player player in explodingGrenadeEvent.TargetsToAffect)
-                instance.ProcessPlayer(player.ReferenceHub);
+                instance.ProcessPlayer(player?.ReferenceHub);
         }
     }
 }
