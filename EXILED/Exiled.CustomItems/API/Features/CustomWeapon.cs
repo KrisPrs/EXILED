@@ -154,6 +154,7 @@ namespace Exiled.CustomItems.API.Features
                 if (!Attachments.IsEmpty())
                     firearm.AddAttachment(Attachments);
 
+                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = ClipSize;
                 firearm.AmmoDrain = AmmoUsage;
             }
 
