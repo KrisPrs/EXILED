@@ -99,15 +99,17 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="label"/><inheritdoc cref="Label"/>
             /// <param name="keyCode"><inheritdoc cref="KeyCode"/></param>
             /// <param name="headerName"><inheritdoc cref="HeaderName"/></param>
+            /// /// <param name="allowSpectatorTrigger"><inheritdoc cref="AllowSpectatorTrigger"/></param>
             /// <param name="preventInteractionOnGui"><inheritdoc cref="PreventInteractionOnGUI"/></param>
             /// <param name="hintDescription"><inheritdoc cref="HintDescription"/></param>
             /// <param name="headerDescription"><inheritdoc cref="HeaderDescription"/></param>
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
-            public KeybindConfig(string label, KeyCode keyCode, string hintDescription = null, bool preventInteractionOnGui = false, string headerName = null, string headerDescription = null, bool headerPaddling = false)
+            public KeybindConfig(string label, KeyCode keyCode, string hintDescription = null, bool preventInteractionOnGui = false, bool allowSpectatorTrigger = true, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
                 Label = label;
                 KeyCode = keyCode;
                 HintDescription = hintDescription;
+                AllowSpectatorTrigger = allowSpectatorTrigger;
                 PreventInteractionOnGUI = preventInteractionOnGui;
                 HeaderName = headerName;
                 HeaderDescription = headerDescription;
