@@ -22,14 +22,14 @@ namespace Exiled.Events.Patches.Events.Player
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="PlayerInteract.OnInteract" />.
     /// Adds the <see cref="Handlers.Player.Interacted" /> event.
     /// </summary>
     [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.Interacted))]
-    [HarmonyPatch(typeof(PlayerInteract), nameof(PlayerInteract.OnInteract))]
+
+    // [HarmonyPatch(typeof(PlayerInteract), nameof(PlayerInteract.OnInteract))]
     internal static class Interacted
     {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        /* private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
@@ -49,6 +49,6 @@ namespace Exiled.Events.Patches.Events.Player
                 yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
-        }
+        }*/
     }
 }
