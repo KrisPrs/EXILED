@@ -411,8 +411,8 @@ namespace Exiled.Loader
 
             Log.Info("Loading Serializers");
 
-            Serializer = serializerBuilder.Build();
-            Deserializer = deserializerBuilder.Build();
+            Serializer = serializerBuilder.WithTypeConverter(new ColorConverter()).Build();
+            Deserializer = deserializerBuilder.WithTypeConverter(new ColorConverter()).Build();
 
             Log.Info("Loaded Serializers");
 
