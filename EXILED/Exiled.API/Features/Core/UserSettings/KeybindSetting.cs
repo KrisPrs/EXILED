@@ -25,10 +25,11 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="suggested"><inheritdoc cref="KeyCode"/></param>
         /// <param name="preventInteractionOnGUI"><inheritdoc cref="PreventInteractionOnGUI"/></param>
+        /// <param name="allowSpectatorTrigger"><inheritdoc cref="AllowSpectatorTrigger"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
-        public KeybindSetting(string label, KeyCode suggested, bool preventInteractionOnGUI = false, string hintDescription = "", HeaderSetting header = null)
-            : base(new SSKeybindSetting(NextId++, label, suggested, preventInteractionOnGUI, hintDescription), header)
+        public KeybindSetting(string label, KeyCode suggested, bool preventInteractionOnGUI = false, bool allowSpectatorTrigger = true, string hintDescription = "", HeaderSetting header = null)
+            : base(new SSKeybindSetting(NextId++, label, suggested, preventInteractionOnGUI, allowSpectatorTrigger, hintDescription), header)
         {
         }
 
@@ -52,6 +53,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.PreventInteractionOnGUI;
             set => Base.PreventInteractionOnGUI = value;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the interaction is prevented while player is in RA, Settings etc.
+        /// </summary>
+        public bool AllowSpectatorTrigger
+        {
+            get => Base.AllowSpectatorTrigger;
+            set => Base.AllowSpectatorTrigger = value;
         }
 
         /// <summary>
@@ -90,15 +100,17 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="keyCode"><inheritdoc cref="KeyCode"/></param>
             /// <param name="headerName"><inheritdoc cref="HeaderName"/></param>
             /// <param name="preventInteractionOnGui"><inheritdoc cref="PreventInteractionOnGUI"/></param>
+            /// <param name="allowSpectatorTrigger"><inheritdoc cref="AllowSpectatorTrigger"/></param>
             /// <param name="hintDescription"><inheritdoc cref="HintDescription"/></param>
             /// <param name="headerDescription"><inheritdoc cref="HeaderDescription"/></param>
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
-            public KeybindConfig(string label, KeyCode keyCode, string hintDescription = null, bool preventInteractionOnGui = false, string headerName = null, string headerDescription = null, bool headerPaddling = false)
+            public KeybindConfig(string label, KeyCode keyCode, string hintDescription = null, bool preventInteractionOnGui = false, bool allowSpectatorTrigger = true, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
                 Label = label;
                 KeyCode = keyCode;
                 HintDescription = hintDescription;
                 PreventInteractionOnGUI = preventInteractionOnGui;
+                AllowSpectatorTrigger = allowSpectatorTrigger;
                 HeaderName = headerName;
                 HeaderDescription = headerDescription;
                 HeaderPaddling = headerPaddling;
@@ -127,6 +139,11 @@ namespace Exiled.API.Features.Core.UserSettings
             public bool PreventInteractionOnGUI { get; set; }
 
             /// <summary>
+            /// Gets or sets a value indicating whether interaction on GUI would be prevented.
+            /// </summary>
+            public bool AllowSpectatorTrigger { get; set; }
+
+            /// <summary>
             /// Gets or sets HintDescription of a KeybindConfig.
             /// </summary>
             public string HintDescription { get; set; }
@@ -150,7 +167,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a KeybindSetting instanse.
             /// </summary>
             /// <returns>KeybindSetting.</returns>
-            public override KeybindSetting Create() => new(Label, KeyCode, PreventInteractionOnGUI, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override KeybindSetting Create() => new(Label, KeyCode, PreventInteractionOnGUI, AllowSpectatorTrigger, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }
