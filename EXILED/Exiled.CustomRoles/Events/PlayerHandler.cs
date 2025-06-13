@@ -57,14 +57,16 @@ namespace Exiled.CustomRoles.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.Spawning" />
-        public void OnSpawning(SpawningEventArgs ev)
+        public void OnSpawned(SpawnedEventArgs ev)
         {
+            Log.Debug($"Spawned {ev.Player.Nickname}");
             if (Extensions.ToChangeRolePlayers.TryGetValue(ev.Player, out CustomRole cr))
             {
-                if (cr.SpawnProperties.IsAny && !ev.NewRole.SpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
-                    ev.Position = cr.SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
+                Log.Debug($"Player with role {ev.Player.Role.Type} going to custom role {cr.Name} ({cr.Id})");
+                if (cr.SpawnProperties.IsAny && !ev.SpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
+                    ev.Player.Position = cr.SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
 
-                cr.AddProperties(ev.Player, (SpawnReason)ev.NewRole.SpawnReason, Extensions.AssignInventoryPlayers.Remove(ev.Player));
+                cr.AddProperties(ev.Player, ev.Reason, Extensions.AssignInventoryPlayers.Remove(ev.Player));
 
                 Extensions.ToChangeRolePlayers.Remove(ev.Player);
             }

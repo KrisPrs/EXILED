@@ -40,7 +40,7 @@ namespace Exiled.CustomRoles
 
             Server.WaitingForPlayers += playerHandler.OnWaitingForPlayers;
 
-            Player.Spawning += playerHandler.OnSpawning;
+            Player.Spawned += playerHandler.OnSpawned;
 
             Player.ChangingRole += playerHandler.OnChangingRole;
             Player.SendingRole += playerHandler.OnSendingRole;
@@ -54,7 +54,7 @@ namespace Exiled.CustomRoles
         {
             Server.WaitingForPlayers -= playerHandler.OnWaitingForPlayers;
 
-            Player.Spawning -= playerHandler.OnSpawning;
+            Player.Spawned -= playerHandler.OnSpawned;
 
             Player.ChangingRole -= playerHandler.OnChangingRole;
             Player.SendingRole -= playerHandler.OnSendingRole;
