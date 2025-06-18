@@ -29,8 +29,7 @@ namespace Exiled.Events.Patches.Generic
     /// <summary>
     /// Patches <see cref="RoleSyncInfo.Write(Mirror.NetworkWriter)"/> to implement <see cref="Role.GlobalAppearance"/>, <see cref="Role.TeamAppearances"/> and <see cref="Role.IndividualAppearances"/>.
     /// </summary>
-    // TODO: Починить, срёт.
-    // [HarmonyPatch(typeof(RoleSyncInfo), nameof(RoleSyncInfo.Write))]
+    [HarmonyPatch(typeof(RoleSyncInfo), nameof(RoleSyncInfo.Write))]
     internal class RoleAppearance
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> codeInstructions, ILGenerator generator)
@@ -103,6 +102,7 @@ namespace Exiled.Events.Patches.Generic
 
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SendingRoleEventArgs))[0]),
                     new(OpCodes.Dup),
+                    new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnSendingRole))),
 
                     new(OpCodes.Callvirt, PropertyGetter(typeof(SendingRoleEventArgs), nameof(SendingRoleEventArgs.RoleType))),
                     new(OpCodes.Stfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole))),
