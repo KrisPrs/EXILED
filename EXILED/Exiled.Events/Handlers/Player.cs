@@ -706,9 +706,9 @@ namespace Exiled.Events.Handlers
         public static void OnInteracted(InteractedEventArgs ev) => Interacted.InvokeSafely(ev);
 
         /// <summary>
-        /// Called after a <see cref="API.Features.Player"/> interacted with something.
+        /// Called before sending role to a <see cref="API.Features.Player"/>.
         /// </summary>
-        /// <param name="ev">The <see cref="InteractedEventArgs"/> instance.</param>
+        /// <param name="ev">The <see cref="SendingRoleEventArgs"/> instance.</param>
         public static void OnSendingRole(SendingRoleEventArgs ev) => SendingRole.InvokeSafely(ev);
 
         /// <summary>
