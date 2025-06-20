@@ -64,11 +64,10 @@ namespace Exiled.Events.Patches.Generic
             if (isInvisible)
                 return;
 
-            if (Player.Get(hubReceiver) is not { } receiver || Player.Get(hubTarget) is not { } target)
+            if (Player.Get(hubReceiver) is not Player receiver || Player.Get(hubTarget) is not Player target)
                 return;
 
-            isInvisible = target.Role.Is(out FpcRole role) && (role.IsInvisible || role.IsInvisibleFor.Contains(receiver)) &&
-                          (receiver.Role is not SpectatorRole spectatorRole || spectatorRole.SpectatedPlayer != target);
+            isInvisible = target.Role.Is(out FpcRole role) && (role.IsInvisible || role.IsInvisibleFor.Contains(receiver));
         }
     }
 }

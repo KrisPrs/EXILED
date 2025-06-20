@@ -177,7 +177,8 @@ namespace Exiled.Events.Patches.Events.Player
                     // RemovingHandcuffsEventArgs ev = new(Cuffer, Target, UncuffReason.CufferDied, true)
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(RemovingHandcuffsEventArgs))[0]),
 
-                    new(OpCodes.Dup),
+                    // TODO: Uncomment this part in next major update to prevent breaking changes
+                    // new(OpCodes.Dup),
 
                     // Handlers.Player.OnRemovingHandcuffs(ev)
                     new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnRemovingHandcuffs))),
@@ -185,8 +186,8 @@ namespace Exiled.Events.Patches.Events.Player
                     // TODO: Uncomment this part in next major update to prevent breaking changes
                     // if (!ev.IsAllowed)
                     //    return true;
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
-                    new(OpCodes.Brfalse_S, returnLabel),
+                    // new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
+                    // new(OpCodes.Brfalse_S, returnLabel),
 
                     // Invoking RemovedHandcuffs event
                     // Player.Get(Cuffer)
@@ -233,15 +234,17 @@ namespace Exiled.Events.Patches.Events.Player
                     // RemovingHandcuffsEventArgs ev = new(Cuffer, Target, UncuffReason.CufferDied, true)
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(RemovingHandcuffsEventArgs))[0]),
 
-                    new(OpCodes.Dup),
+                    // TODO: Uncomment this part in next major update to prevent breaking changes
+                    // new(OpCodes.Dup),
 
                     // Handlers.Player.OnRemovingHandcuffs(ev)
                     new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnRemovingHandcuffs))),
 
+                    // TODO: Uncomment this part in next major update to prevent breaking changes
                     // if (!ev.IsAllowed)
                     //    return true;
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
-                    new(OpCodes.Brfalse_S, returnLabel),
+                    // new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
+                    // new(OpCodes.Brfalse_S, returnLabel),
 
                     // Invoking RemovedHandcuffs event
                     // Player.Get(Cuffer)
@@ -288,15 +291,17 @@ namespace Exiled.Events.Patches.Events.Player
                     // RemovingHandcuffsEventArgs ev = new(Cuffer, Target, UncuffReason.OutOfRange, true)
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(RemovingHandcuffsEventArgs))[0]),
 
-                    new(OpCodes.Dup),
+                    // TODO: Uncomment this part in next major update to prevent breaking changes
+                    // new(OpCodes.Dup),
 
                     // Handlers.Player.OnRemovingHandcuffs(ev)
                     new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnRemovingHandcuffs))),
 
+                    // TODO: Uncomment this part in next major update to prevent breaking changes
                     // if (!ev.IsAllowed)
                     //    return true;
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
-                    new(OpCodes.Brfalse_S, returnLabel),
+                    // new(OpCodes.Callvirt, PropertyGetter(typeof(RemovingHandcuffsEventArgs), nameof(RemovingHandcuffsEventArgs.IsAllowed))),
+                    // new(OpCodes.Brfalse_S, returnLabel),
 
                     // Invoking RemovedHandcuffs event
                     // Player.Get(Cuffer)

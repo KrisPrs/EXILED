@@ -53,6 +53,11 @@ namespace Exiled.Events.Handlers
         public static Event<LockingDownEventArgs> LockingDown { get; set; } = new();
 
         /// <summary>
+        /// Invoked before SCP-079 changes a speaker status.
+        /// </summary>
+        public static Event<ChangingSpeakerStatusEventArgs> ChangingSpeakerStatus { get; set; } = new();
+
+        /// <summary>
         /// Invoked before SCP-079 recontainment.
         /// </summary>
         public static Event<RecontainingEventArgs> Recontaining { get; set; } = new();
@@ -128,6 +133,12 @@ namespace Exiled.Events.Handlers
         /// </summary>
         /// <param name="ev">The <see cref="LockingDownEventArgs" /> instance.</param>
         public static void OnLockingDown(LockingDownEventArgs ev) => LockingDown.InvokeSafely(ev);
+
+        /// <summary>
+        /// Called while interacting with a speaker with SCP-079.
+        /// </summary>
+        /// <param name="ev">The <see cref="ChangingSpeakerStatusEventArgs" /> instance.</param>
+        public static void OnChangingSpeakerStatus(ChangingSpeakerStatusEventArgs ev) => ChangingSpeakerStatus.InvokeSafely(ev);
 
         /// <summary>
         /// Called before SCP-079 is recontained.
