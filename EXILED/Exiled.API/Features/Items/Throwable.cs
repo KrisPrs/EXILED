@@ -106,6 +106,9 @@ namespace Exiled.API.Features.Items
 
             return projectile;
         }
+        /// Cancel the the throws of the item.
+        /// </summary>
+        public void CancelThrow() => Base.ServerProcessCancellation();
 
         /// <summary>
         /// Clones current <see cref="Throwable"/> object.

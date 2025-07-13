@@ -59,7 +59,26 @@ namespace Exiled.CustomRoles.API
         }
 
         /// <summary>
-        /// Gets a <see cref="CustomRole"/> of the player.
+        /// Checks whether the player has any custom role assigned.
+        /// </summary>
+        /// <param name="player">The <see cref="Player"/> to check.</param>
+        /// <returns><c>true</c> if the player has at least one custom role; otherwise, <c>false</c>.</returns>
+        public static bool HasAnyCustomRole(this Player player)
+        {
+            if (player == null)
+                return false;
+
+            foreach (CustomRole role in CustomRole.Registered)
+            {
+                if (role.Check(player))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Registers an <see cref="IEnumerable{T}"/> of <see cref="CustomRole"/>s.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to check for role.</param>
         /// <returns>A target <see cref="CustomRole"/> (can be null).</returns>

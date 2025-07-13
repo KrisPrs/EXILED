@@ -348,6 +348,11 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
+        /// Gets the player's current aspect ratio type.
+        /// </summary>
+        public AspectRatioType AspectRatio => ReferenceHub.aspectRatioSync.AspectRatio.GetAspectRatioLabel();
+
+        /// <summary>
         /// Gets or sets the player's custom player info string. This string is displayed along with the player's <see cref="InfoArea"/>.
         /// </summary>
         public string CustomInfo
@@ -355,10 +360,9 @@ namespace Exiled.API.Features
             get => ReferenceHub.nicknameSync.Network_customPlayerInfoString;
             set
             {
-                if (!value.IsCustomInfoValid(out string denialReason))
+                if (!NicknameSync.ValidateCustomInfo(value, out string rejectionText))
                 {
-                    Log.Error($"Invalid Custominfo:\n{denialReason}");
-                    return;
+                    Log.Error($"Could not set CustomInfo for {Nickname}. Reason: {rejectionText}");
                 }
 
                 if (value != null && value.Contains('<'))
@@ -702,7 +706,7 @@ namespace Exiled.API.Features
         public Vector3 Scale
         {
             get => ReferenceHub.transform.localScale;
-            set => SetScale(value, List);
+            set => SetScale(value);
         }
 
         /// <summary>
@@ -2070,23 +2074,21 @@ namespace Exiled.API.Features
         /// Sets the scale of a player on the server side.
         /// </summary>
         /// <param name="scale">The scale to set.</param>
+        public void SetScale(Vector3 scale)
+        {
+            ReferenceHub.transform.localScale = scale;
+            new SyncedScaleMessages.ScaleMessage(scale, ReferenceHub).SendToAuthenticated();
+        }
+
+        /// <summary>
+        /// Sets the scale of a player on the server side.
+        /// </summary>
+        /// <param name="scale">The scale to set.</param>
         /// <param name="viewers">Who should see the updated scale.</param>
         public void SetScale(Vector3 scale, IEnumerable<Player> viewers)
         {
-            if (scale == Scale)
-                return;
-
-            try
-            {
-                ReferenceHub.transform.localScale = scale;
-
-                foreach (Player target in viewers)
-                    Server.SendSpawnMessage?.Invoke(null, new object[] { NetworkIdentity, target.Connection });
-            }
-            catch (Exception exception)
-            {
-                Log.Error($"{nameof(SetScale)} error: {exception}");
-            }
+            ReferenceHub.transform.localScale = scale;
+            new SyncedScaleMessages.ScaleMessage(scale, ReferenceHub).SendToHubsConditionally(x => x != null && viewers.Contains(Get(x)));
         }
 
         /// <summary>
@@ -2096,21 +2098,9 @@ namespace Exiled.API.Features
         /// <param name="viewers">Who should see the fake scale.</param>
         public void SetFakeScale(Vector3 fakeScale, IEnumerable<Player> viewers)
         {
-            Vector3 currentScale = Scale;
-
-            try
-            {
-                ReferenceHub.transform.localScale = fakeScale;
-
-                foreach (Player target in viewers)
-                    Server.SendSpawnMessage.Invoke(null, new object[] { NetworkIdentity, target.Connection });
-
-                ReferenceHub.transform.localScale = currentScale;
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"{nameof(SetFakeScale)}: {ex}");
-            }
+            SyncedScaleMessages.ScaleMessage scaleMessage = new(fakeScale, ReferenceHub);
+            foreach (Player player in viewers)
+                player.Connection.Send(scaleMessage, 0);
         }
 
         /// <summary>
