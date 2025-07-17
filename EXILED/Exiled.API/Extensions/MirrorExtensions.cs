@@ -330,11 +330,10 @@ namespace Exiled.API.Extensions
         /// <param name="player">Target to send.</param>
         /// <param name="words">The message to be reproduced.</param>
         /// <param name="translation">The translation should be show in the subtitles.</param>
-        /// <param name="customSubtitles">The custom subtitles to show.</param>
         /// <param name="makeHold">Same on <see cref="Cassie.MessageTranslated(string, string, bool, bool, bool)"/>'s isHeld.</param>
         /// <param name="makeNoise">Same on <see cref="Cassie.MessageTranslated(string, string, bool, bool, bool)"/>'s isNoisy.</param>
         /// <param name="isSubtitles">Same on <see cref="Cassie.MessageTranslated(string, string, bool, bool, bool)"/>'s isSubtitles.</param>
-        public static void MessageTranslated(this Player player, string words, string translation, string customSubtitles, bool makeHold = false, bool makeNoise = true, bool isSubtitles = true)
+        public static void MessageTranslated(this Player player, string words, string translation, bool makeHold = false, bool makeNoise = true, bool isSubtitles = true)
         {
             StringBuilder announcement = StringBuilderPool.Pool.Get();
 
@@ -348,10 +347,10 @@ namespace Exiled.API.Extensions
 
             foreach (RespawnEffectsController controller in RespawnEffectsController.AllControllers)
             {
-                if (controller != null)
-                {
-                    SendFakeTargetRpc(player, controller.netIdentity, typeof(RespawnEffectsController), nameof(RespawnEffectsController.RpcCassieAnnouncement), message, makeHold, makeNoise, isSubtitles, customSubtitles);
-                }
+                if (!controller)
+                    continue;
+
+                SendFakeTargetRpc(player, controller.netIdentity, typeof(RespawnEffectsController), nameof(RespawnEffectsController.RpcCassieAnnouncement), message, makeHold, makeNoise, isSubtitles);
             }
         }
 
