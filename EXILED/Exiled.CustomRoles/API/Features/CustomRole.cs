@@ -10,6 +10,7 @@ namespace Exiled.CustomRoles.API.Features
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -24,20 +25,18 @@ namespace Exiled.CustomRoles.API.Features
     using Exiled.Events.EventArgs.Player;
     using FLXLib.Spawns;
     using MEC;
+    using Mirror;
     using PlayerRoles;
     using UnityEngine;
     using YamlDotNet.Serialization;
+
+    using Extensions = Extensions;
 
     /// <summary>
     ///     The custom role base class.
     /// </summary>
     public abstract class CustomRole
     {
-        /// <summary>
-        ///     This var makes player skip base role replace by <see cref="ReplacesBaseRole" /> for one rolechange.
-        /// </summary>
-        public const string SkipBaseRoleReplaceKey = "skipRoleReplace";
-
         private static readonly Dictionary<uint, CustomRole?> IdLookupTable = new();
 
         /// <summary>
@@ -651,8 +650,12 @@ namespace Exiled.CustomRoles.API.Features
             }
             else
             {
-                if (SpawnProperties.IsAny && useSpawnpoint)
-                    player.Position = SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
+                Log.Debug($"Спавним игрока {player.Nickname} по второму сценарию");
+                Timing.CallDelayed(0.25f, () =>
+                {
+                    if (SpawnProperties.IsAny && useSpawnpoint && NetworkServer.active && player.IsConnected)
+                        player.Position = SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
+                });
 
                 AddProperties(player, spawnReason, assignInventory);
                 RoleAdded(player);
@@ -940,7 +943,7 @@ namespace Exiled.CustomRoles.API.Features
 
         private void OnInternalSpawning(SpawningEventArgs ev)
         {
-            if (Role != RoleTypeId.None && ev.NewRole == Role && !ev.Player.HasCustomRole() && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
+            if (ev.NewRole == Role && !ev.Player.HasCustomRole() && !Extensions.ToChangeRolePlayers.ContainsKey(ev.Player))
             {
                 try
                 {
