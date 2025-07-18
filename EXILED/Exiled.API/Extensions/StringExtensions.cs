@@ -187,46 +187,83 @@ namespace Exiled.API.Extensions
         /// <returns>Is Custominfo valid.</returns>
         public static bool IsCustomInfoValid(this string customInfo, out string denialReason)
         {
-            denialReason = null;
-            if (customInfo == null || !customInfo.Contains('<'))
+            denialReason = string.Empty;
+            if (string.IsNullOrEmpty(customInfo))
                 return true;
 
-            foreach (string token in customInfo.Split('<').Skip(1))
+            bool flag1 = customInfo.Contains("<");
+            bool flag2 = customInfo.Contains("\\u003c");
+            if (!flag1 && !flag2)
+                return true;
+
+            List<string> stringList = new();
+            if (flag1)
+                stringList.AddRange(customInfo.Split(new[] { '<' }, StringSplitOptions.None));
+
+            if (flag2)
+                stringList.AddRange(customInfo.Split(new[] { "\\u003c" }, StringSplitOptions.None));
+
+            bool flag3 = true;
+            foreach (string str in stringList)
             {
-                if (token.StartsWith("/", StringComparison.Ordinal) ||
-                    token.StartsWith("b>", StringComparison.Ordinal) ||
-                    token.StartsWith("i>", StringComparison.Ordinal) ||
-                    token.StartsWith("size=", StringComparison.Ordinal) ||
-                    token.Length is 0)
-                    continue;
+                if (!str.StartsWith("/", StringComparison.Ordinal) && !str.StartsWith("b>", StringComparison.Ordinal) && !str.StartsWith("i>", StringComparison.Ordinal) && !str.StartsWith("size=", StringComparison.Ordinal) && str.Length != 0)
+                {
+                    if (str.StartsWith("color=", StringComparison.Ordinal))
+                    {
+                        if (str.Length < 14)
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - Некорректный цвет";
+                            flag3 = false;
+                            break;
+                        }
 
-                if (token.StartsWith("color=", StringComparison.Ordinal))
-                {
-                    if (token.Length < 14 || token[13] != '>')
-                        denialReason = $"(Bad text reject) \ntoken: {token} \nInfo: {customInfo}";
-                    else if (!Misc.AllowedColors.ContainsValue(token.Substring(6, 7)))
-                        denialReason = $"(Bad color reject) \ntoken: {token} \nInfo: {customInfo}";
-                    else
-                        continue;
-                }
-                else if (token.StartsWith("#", StringComparison.Ordinal))
-                {
-                    if (token.Length < 8 || token[7] != '>')
-                        denialReason = $"(Bad text reject) \ntoken: {token} \nInfo: {customInfo}";
-                    else if (!Misc.AllowedColors.ContainsValue(token.Substring(0, 7)))
-                        denialReason = $"(Bad color reject) \ntoken: {token} \nInfo: {customInfo}";
-                    else
-                        continue;
-                }
-                else
-                {
-                    denialReason = $"(Bad tag reject) \ntoken: {token} \nInfo: {customInfo}";
-                }
+                        if (str[13] != '>')
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - незакрытый тег цвета (отсутствует '>')";
+                            flag3 = false;
+                            break;
+                        }
 
-                return false;
+                        if (!Misc.AcceptedColours.Contains(str.Substring(7, 6)))
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - Данный цвет не входит в список разрешенных";
+                            flag3 = false;
+                            break;
+                        }
+                    }
+                    else if (str.StartsWith("#", StringComparison.Ordinal))
+                    {
+                        if (str.Length < 8)
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - Некорректный цвет";
+                            flag3 = false;
+                            break;
+                        }
+
+                        if (str[7] != '>')
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - незакрытый тег цвета (отсутствует '>')";
+                            flag3 = false;
+                            break;
+                        }
+
+                        if (!Misc.AcceptedColours.Contains(str.Substring(1, 6)))
+                        {
+                            denialReason = "Указанный тег цвета не соответствует требованиям - Данный цвет не входит в список разрешенных";
+                            flag3 = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        denialReason = "Указанный текст содержит тег форматирования, который не разрешен";
+                        flag3 = false;
+                        break;
+                    }
+                }
             }
 
-            return true;
+            return flag3;
         }
     }
 }
