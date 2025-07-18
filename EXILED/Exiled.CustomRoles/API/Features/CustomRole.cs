@@ -37,6 +37,11 @@ namespace Exiled.CustomRoles.API.Features
     /// </summary>
     public abstract class CustomRole
     {
+        /// <summary>
+        ///     This var makes player skip base role replace by <see cref="ReplacesBaseRole" /> for one rolechange.
+        /// </summary>
+        public const string SkipBaseRoleReplaceKey = "skipRoleReplace";
+
         private static readonly Dictionary<uint, CustomRole?> IdLookupTable = new();
 
         /// <summary>
@@ -943,7 +948,7 @@ namespace Exiled.CustomRoles.API.Features
 
         private void OnInternalSpawning(SpawningEventArgs ev)
         {
-            if (ev.NewRole == Role && !ev.Player.HasCustomRole() && !Extensions.ToChangeRolePlayers.ContainsKey(ev.Player))
+            if (ev.NewRole == Role && !ev.Player.HasCustomRole() && !Extensions.ToChangeRolePlayers.ContainsKey(ev.Player) && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
             {
                 try
                 {
