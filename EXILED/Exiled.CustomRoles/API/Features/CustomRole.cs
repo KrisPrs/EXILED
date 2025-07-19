@@ -649,18 +649,16 @@ namespace Exiled.CustomRoles.API.Features
                     Extensions.AssignInventoryPlayers.Add(player);
 
                 Extensions.ToChangeRolePlayers[player] = this;
-
                 player.Role.Set(Role, spawnReason, flags);
+
                 Log.Debug($"{Name}: Set basic role (force) to {player.Nickname} with flags: {flags}.");
             }
             else
             {
                 Log.Debug($"Спавним игрока {player.Nickname} по второму сценарию");
-                Timing.CallDelayed(0.25f, () =>
-                {
-                    if (SpawnProperties.IsAny && useSpawnpoint && NetworkServer.active && player.IsConnected)
-                        player.Position = SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
-                });
+
+                if (SpawnProperties.IsAny && useSpawnpoint && NetworkServer.active && player.IsConnected)
+                    player.Position = SpawnProperties.GetRandomPoint() + (Vector3.up * 1.5f);
 
                 AddProperties(player, spawnReason, assignInventory);
                 RoleAdded(player);
@@ -802,6 +800,19 @@ namespace Exiled.CustomRoles.API.Features
         }
 
         /// <summary>
+        ///     Called after the role has been added to the player.
+        /// </summary>
+        /// <param name="player">The <see cref="Player" /> the role was added to.</param>
+        public virtual void RoleAdded(Player player)
+        {
+            if (CustomAbilities is not null)
+            {
+                foreach (CustomAbility ability in CustomAbilities)
+                    ability.AddAbility(player);
+            }
+        }
+
+        /// <summary>
         ///     Tries to register this role.
         /// </summary>
         /// <returns>True if the role registered properly.</returns>
@@ -888,10 +899,9 @@ namespace Exiled.CustomRoles.API.Features
             Log.Debug($"{Name}: Loading events.");
 
             Exiled.Events.Handlers.Player.ChangingRole += OnInternalChangingRole;
-            Exiled.Events.Handlers.Player.Spawned += OnInternalSpawned;
 
             if (ReplacesBaseRole)
-                Exiled.Events.Handlers.Player.Spawning += OnInternalSpawning;
+                Exiled.Events.Handlers.Player.Spawned += OnInternalSpawned;
         }
 
         /// <summary>
@@ -905,10 +915,9 @@ namespace Exiled.CustomRoles.API.Features
             Log.Debug($"{Name}: Unloading events.");
 
             Exiled.Events.Handlers.Player.ChangingRole -= OnInternalChangingRole;
-            Exiled.Events.Handlers.Player.Spawned -= OnInternalSpawned;
 
             if (ReplacesBaseRole)
-                Exiled.Events.Handlers.Player.Spawning -= OnInternalSpawning;
+                Exiled.Events.Handlers.Player.Spawned -= OnInternalSpawned;
         }
 
         /// <summary>
@@ -916,19 +925,6 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player" /> to show the message to.</param>
         protected virtual void ShowMessage(Player player) => player.ShowHint(string.Format(CustomRoles.Instance!.Config.GotRoleHint.Content, Name, Description), CustomRoles.Instance.Config.GotRoleHint.Duration);
-
-        /// <summary>
-        ///     Called after the role has been added to the player.
-        /// </summary>
-        /// <param name="player">The <see cref="Player" /> the role was added to.</param>
-        protected virtual void RoleAdded(Player player)
-        {
-            if (CustomAbilities is not null)
-            {
-                foreach (CustomAbility ability in CustomAbilities)
-                    ability.AddAbility(player);
-            }
-        }
 
         /// <summary>
         ///     Called after the role is removed from the player.
@@ -946,9 +942,9 @@ namespace Exiled.CustomRoles.API.Features
             }
         }
 
-        private void OnInternalSpawning(SpawningEventArgs ev)
+        private void OnInternalSpawned(SpawnedEventArgs ev)
         {
-            if (ev.NewRole == Role && !ev.Player.HasCustomRole() && !Extensions.ToChangeRolePlayers.ContainsKey(ev.Player) && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
+            if (ev.Player.Role == Role && !ev.Player.HasCustomRole() && !Extensions.ToChangeRolePlayers.ContainsKey(ev.Player) && !ev.Player.SessionVariables.Remove(SkipBaseRoleReplaceKey))
             {
                 try
                 {
@@ -958,14 +954,6 @@ namespace Exiled.CustomRoles.API.Features
                 {
                     Log.Error($"[{nameof(CustomRole)}.{nameof(OnInternalChangingRole)}] [{Name}] Failed to add customRole-replacer of basic {Role}:\n{e}");
                 }
-            }
-        }
-
-        private void OnInternalSpawned(SpawnedEventArgs ev)
-        {
-            if (Check(ev.Player))
-            {
-                RoleAdded(ev.Player);
             }
         }
     }
