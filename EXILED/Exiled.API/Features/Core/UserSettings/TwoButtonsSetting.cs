@@ -86,6 +86,31 @@ namespace Exiled.API.Features.Core.UserSettings
         }
 
         /// <summary>
+        /// Sends updated values to clients.
+        /// </summary>
+        /// <param name="firstOption"><inheritdoc cref="FirstOption"/></param>
+        /// <param name="secondOption"><inheritdoc cref="SecondOption"/></param>
+        /// <param name="overrideValue">If false, sends fake values.</param>
+        /// <param name="filter">Who to send the update to.</param>
+        public void UpdateSetting(string firstOption, string secondOption, bool overrideValue = true, Predicate<Player> filter = null)
+        {
+            filter ??= _ => true;
+            Base.SendTwoButtonUpdate(firstOption, secondOption, overrideValue, hub => filter(Player.Get(hub)));
+        }
+
+        /// <summary>
+        /// If setting is server only, sends updated values to clients.
+        /// </summary>
+        /// <param name="isSecond"><inheritdoc cref="IsSecond"/></param>
+        /// <param name="overrideValue">If false, sends fake values.</param>
+        /// <param name="filter">Who to send the update to.</param>
+        public void UpdateValue(bool isSecond, bool overrideValue = true, Predicate<Player> filter = null)
+        {
+            filter ??= _ => true;
+            Base.SendValueUpdate(isSecond, overrideValue, hub => filter(Player.Get(hub)));
+        }
+
+        /// <summary>
         /// Returns a representation of this <see cref="ButtonSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>

@@ -103,6 +103,30 @@ namespace Exiled.API.Features.Core.UserSettings
         }
 
         /// <summary>
+        /// Sends updated values to clients.
+        /// </summary>
+        /// <param name="options"><inheritdoc cref="Options"/></param>
+        /// <param name="overrideValue">If false, sends fake values.</param>
+        /// <param name="filter">Who to send the update to.</param>
+        public void UpdateSetting(string[] options, bool overrideValue = true, Predicate<Player> filter = null)
+        {
+            filter ??= _ => true;
+            Base.SendDropdownUpdate(options, overrideValue, hub => filter(Player.Get(hub)));
+        }
+
+        /// <summary>
+        /// If setting is server only, sends updated values to clients.
+        /// </summary>
+        /// <param name="selectedIndex"><inheritdoc cref="SelectedIndex"/></param>
+        /// <param name="overrideValue">If false, sends fake values.</param>
+        /// <param name="filter">Who to send the update to.</param>
+        public void UpdateValue(int selectedIndex, bool overrideValue = true, Predicate<Player> filter = null)
+        {
+            filter ??= _ => true;
+            Base.SendValueUpdate(selectedIndex, overrideValue, hub => filter(Player.Get(hub)));
+        }
+
+        /// <summary>
         /// Gets a string representation of this <see cref="DropdownSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>

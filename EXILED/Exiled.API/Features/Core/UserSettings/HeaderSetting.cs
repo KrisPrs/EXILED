@@ -35,6 +35,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets or sets a value indicating whether to reduce padding.
         /// </summary>
+        // TODO: change to ReducedPadding (thanks Valera)
         public bool ReducedPaddling
         {
             get => Base.ReducedPadding;

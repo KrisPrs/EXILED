@@ -8,7 +8,6 @@
 namespace Exiled.API.Features.Roles
 {
     using System.Collections.Generic;
-    using System.Reflection;
 
     using Exiled.API.Extensions;
     using Exiled.API.Features.Pools;
@@ -18,6 +17,7 @@ namespace Exiled.API.Features.Roles
 
     using PlayerRoles;
     using PlayerRoles.FirstPersonControl;
+    using PlayerRoles.FirstPersonControl.Thirdperson;
     using PlayerRoles.Ragdolls;
     using PlayerRoles.Spectating;
     using PlayerRoles.Visibility;
@@ -72,6 +72,15 @@ namespace Exiled.API.Features.Roles
         {
             get => FirstPersonController.FpcModule.Motor.ReceivedPosition;
             set => FirstPersonController.FpcModule.Motor.ReceivedPosition = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="CharacterModel"/> associated with the player.
+        /// </summary>
+        public CharacterModel Model
+        {
+            get => FirstPersonController.FpcModule.CharacterModelInstance;
+            set => FirstPersonController.FpcModule.CharacterModelInstance = value;
         }
 
         /// <summary>

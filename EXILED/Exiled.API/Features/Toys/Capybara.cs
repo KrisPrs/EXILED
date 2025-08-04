@@ -38,8 +38,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool Collidable
         {
-            get => Base.Network_collisionsEnabled;
-            set => Base.Network_collisionsEnabled = value;
+            get => Base.NetworkCollisionsEnabled;
+            set => Base.NetworkCollisionsEnabled = value;
         }
     }
 }
