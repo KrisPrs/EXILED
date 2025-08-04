@@ -485,7 +485,7 @@ namespace Exiled.Loader
         /// Load every plugin inside the given directory, if null it's default EXILED one (global).
         /// </summary>
         /// <param name="dir">The sub-directory of the plugin - if null the default EXILED one will be used.</param>
-        private static void LoadPluginsFromDirectory(string dir = null)
+        private static void LoadPluginsFromDirectory(string? dir = null)
         {
             string path = Paths.Plugins;
             if (dir != null)
@@ -496,7 +496,7 @@ namespace Exiled.Loader
 
             foreach (string assemblyPath in Directory.GetFiles(path, "*.dll"))
             {
-                Assembly assembly = LoadAssembly(assemblyPath);
+                Assembly? assembly = LoadAssembly(assemblyPath);
 
                 if (assembly == null)
                     continue;
@@ -509,7 +509,7 @@ namespace Exiled.Loader
                 if (Locations[assembly].Contains("dependencies"))
                     continue;
 
-                IPlugin<IConfig> plugin = CreatePlugin(assembly);
+                IPlugin<IConfig>? plugin = CreatePlugin(assembly);
 
                 if (plugin == null)
                     continue;

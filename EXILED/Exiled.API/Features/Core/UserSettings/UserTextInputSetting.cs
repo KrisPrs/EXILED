@@ -46,9 +46,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="collectionId"><inheritdoc cref="SettingBase.CollectionId"/></param>
         /// <param name="isServerOnly"><inheritdoc cref="SettingBase.IsServerOnly"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
-        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
-        public UserTextInputSetting(int id, string label, string placeHolder = "", int characterLimit = 64, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard, string hintDescription = null, byte collectionId = byte.MaxValue, bool isServerOnly = false, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSPlaintextSetting(id, label, placeHolder, characterLimit, contentType, hintDescription, collectionId, isServerOnly), header, onChanged)
+        public UserTextInputSetting(int id, string label, string placeHolder = "", int characterLimit = 64, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard, string hintDescription = null, byte collectionId = byte.MaxValue, bool isServerOnly = false, HeaderSetting header = null)
+            : base(new SSPlaintextSetting(id, label, placeHolder, characterLimit, contentType, hintDescription, collectionId, isServerOnly), header)
         {
             Base = (SSPlaintextSetting)base.Base;
         }

@@ -389,8 +389,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void UpdateAppearance()
         {
-            if (Owner != null)
-                Owner.RoleManager._sendNextFrame = true;
+            // if (Owner != null)
+              //  Owner.RoleManager._sendNextFrame = true; TODO ??????? ?????, ??????????????? ???? ???????
         }
 
         /// <summary>
