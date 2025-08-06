@@ -34,7 +34,7 @@ namespace Exiled.Events.Patches.Events.Player
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
-            int index = newInstructions.FindLastIndex(x => x.opcode == OpCodes.Ldarg_0);
+            int index = newInstructions.FindLastIndex(x => x.opcode == OpCodes.Ldarg_1);
 
             newInstructions.InsertRange(index, new CodeInstruction[]
             {
