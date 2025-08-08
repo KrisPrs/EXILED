@@ -151,17 +151,17 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public Vector3 Scale
         {
-            get => GameObject.GetWorldScale();
+            get => GameObject.transform.localScale;
             set
             {
                 if (!IsSpawned)
                 {
-                    GameObject.SetWorldScale(value);
+                    GameObject.transform.localScale = value;
                     return;
                 }
 
                 UnSpawn();
-                GameObject.SetWorldScale(value);
+                GameObject.transform.localScale = value;
                 Spawn();
             }
         }
