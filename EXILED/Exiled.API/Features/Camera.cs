@@ -158,8 +158,6 @@ namespace Exiled.API.Features
             Base = camera079;
             Camera079ToCamera.Add(camera079, this);
             Type = GetCameraType();
-            if (Base != null && Type is CameraType.Unknown)
-                Log.Error($"[CameraType] Room: {Room?.Type ?? RoomType.Unknown} Name:{Name}");
         }
 
         /// <summary>
