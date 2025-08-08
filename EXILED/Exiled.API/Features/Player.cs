@@ -47,6 +47,7 @@ namespace Exiled.API.Features
     using InventorySystem.Items.Usables;
     using InventorySystem.Items.Usables.Scp330;
     using MapGeneration.Distributors;
+    using MapGeneration.Rooms;
     using MEC;
     using Mirror;
     using Mirror.LiteNetLib4Mirror;
@@ -1012,6 +1013,12 @@ namespace Exiled.API.Features
         /// Gets the current zone the player is in.
         /// </summary>
         public ZoneType Zone => CurrentRoom?.Zone ?? ZoneType.Unspecified;
+
+        /// <summary>
+        /// Gets the current Level the player is in.
+        /// </summary>
+        /// <remarks>Will return null if CurrentRoom is not a <see cref="MultiLevelRoomIdentifier"/>.</remarks>
+        public RoomLevelName? LevelName => CurrentRoom?.LevelName;
 
         /// <summary>
         /// Gets the current <see cref="Features.Lift"/> the player is in. Can be <see langword="null"/>.
@@ -3542,6 +3549,13 @@ namespace Exiled.API.Features
             ReferenceHub.playerStats.GetModule<AhpStat>()
                 .ServerAddProcess(amount, limit, decay, efficacy, sustain, persistant);
         }
+
+        /// <summary>
+        /// Adds a new <see cref="RegenerationProcess"/> to the player.
+        /// </summary>
+        /// <param name="rate">Health points regenerated per second.</param>
+        /// <param name="duration">Total duration of the regeneration (in seconds).</param>
+        public void AddRegeneration(float rate, float duration) => AddRegeneration(0, rate, duration, 1f, 1f);
 
         /// <summary>
         /// Adds a new <see cref="RegenerationProcess"/> to the player.
