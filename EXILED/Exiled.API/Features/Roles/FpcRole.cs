@@ -329,6 +329,8 @@ namespace Exiled.API.Features.Roles
         {
             float strength = jumpStrength ?? FirstPersonController.FpcModule.JumpSpeed;
             FirstPersonController.FpcModule.Motor.JumpController.ForceJump(strength);
+        }
+
         /// <inheritdoc/>
         internal override bool CheckAppearanceCompatibility(RoleTypeId newAppearance)
         {
