@@ -48,6 +48,7 @@ namespace Exiled.API.Features.Roles
         private RoleTypeId fakeAppearance;
         private Dictionary<Player, RoleTypeId> individualAppearances = DictionaryPool<Player, RoleTypeId>.Pool.Get();
         private Dictionary<Team, RoleTypeId> teamAppearances = DictionaryPool<Team, RoleTypeId>.Pool.Get();
+        private Dictionary<string, RoleTypeId> roleAppearances = DictionaryPool<string, RoleTypeId>.Pool.Get();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Role"/> class.
@@ -150,6 +151,11 @@ namespace Exiled.API.Features.Roles
         /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Team"/>'s.
         /// </summary>
         public IReadOnlyDictionary<Team, RoleTypeId> TeamAppearances => teamAppearances;
+
+        /// <summary>
+        /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Team"/>'s.
+        /// </summary>
+        public IReadOnlyDictionary<string, RoleTypeId> RoleAppearances => roleAppearances;
 
         /// <summary>
         /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Player"/>'s.
@@ -291,6 +297,31 @@ namespace Exiled.API.Features.Roles
             }
 
             teamAppearances[team] = newAppearance;
+
+            if (update)
+            {
+                UpdateAppearance();
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Try-set a new team appearance for current <see cref="Role"/>.
+        /// </summary>
+        /// <param name="role">Target <see cref="Role"/>.</param>
+        /// <param name="newAppearance">New team specific <see cref="RoleTypeId"/> appearance.</param>
+        /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
+        /// <returns>A boolean indicating whether or not a target <see cref="RoleTypeId"/> will be used as new appearance.</returns>
+        public bool TrySetRoleAppearance(string role, RoleTypeId newAppearance, bool update = true)
+        {
+            if (!CheckAppearanceCompatibility(newAppearance))
+            {
+                Log.Error($"Prevent Seld-Desync of {Owner.Nickname} ({Type}) with {newAppearance}");
+                return false;
+            }
+
+            roleAppearances[role] = newAppearance;
 
             if (update)
             {

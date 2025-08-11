@@ -12,10 +12,10 @@ namespace Exiled.API.Extensions
     using System.Linq;
 
     using Enums;
-
     using Exiled.API.Features;
     using Exiled.API.Features.Roles;
     using Exiled.API.Features.Spawn;
+    using FLXLib.Extensions;
     using Footprinting;
     using InventorySystem;
     using InventorySystem.Configs;
@@ -246,6 +246,11 @@ namespace Exiled.API.Extensions
                 return appearance;
 
             if (role.IndividualAppearances.TryGetValue(player, out appearance))
+            {
+                return appearance;
+            }
+
+            if (role.RoleAppearances.TryGetValue(player.GetCustomOrBasicRole(), out appearance))
             {
                 return appearance;
             }
