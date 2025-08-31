@@ -385,6 +385,20 @@ namespace Exiled.API.Features.Roles
         }
 
         /// <summary>
+        /// Clears all custom <see cref="RoleAppearances"/>.
+        /// </summary>
+        /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
+        public void ClearRoleAppearances(bool update = true)
+        {
+            roleAppearances.Clear();
+
+            if (update)
+            {
+                UpdateAppearance();
+            }
+        }
+
+        /// <summary>
         /// Clears all custom <see cref="IndividualAppearances"/>.
         /// </summary>
         /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
@@ -408,6 +422,7 @@ namespace Exiled.API.Features.Roles
             ClearGlobalAppearance(false);
             ClearTeamAppearances(false);
             ClearIndividualAppearances(false);
+            ClearRoleAppearances(false);
 
             if (update)
             {
@@ -420,8 +435,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void UpdateAppearance()
         {
-            // if (Owner != null)
-              //  Owner.RoleManager._sendNextFrame = true; TODO ??????? ?????, ??????????????? ???? ???????
+            if (Owner != null)
+              Owner.RoleManager.SendNewRoleInfo();
         }
 
         /// <summary>
