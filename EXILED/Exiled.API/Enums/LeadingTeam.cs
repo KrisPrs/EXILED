@@ -36,7 +36,7 @@ namespace Exiled.API.Enums
         Anomalies,
 
         /// <summary>
-        /// Represents the flamingo team (removed from the game).
+        /// Represents the Flamingo team.
         /// </summary>
         Flamingo,
 

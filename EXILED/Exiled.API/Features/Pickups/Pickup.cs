@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features.Items;
+
 namespace Exiled.API.Features.Pickups
 {
     using System;
@@ -13,7 +15,6 @@ namespace Exiled.API.Features.Pickups
 
     using Exiled.API.Extensions;
     using Exiled.API.Features.Core;
-    using Exiled.API.Features.Items;
     using Exiled.API.Features.Pickups.Projectiles;
     using Exiled.API.Interfaces;
 
@@ -151,17 +152,17 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public Vector3 Scale
         {
-            get => GameObject.transform.localScale;
+            get => GameObject.GetWorldScale();
             set
             {
                 if (!IsSpawned)
                 {
-                    GameObject.transform.localScale = value;
+                    GameObject.SetWorldScale(value);
                     return;
                 }
 
                 UnSpawn();
-                GameObject.transform.localScale = value;
+                GameObject.SetWorldScale(value);
                 Spawn();
             }
         }
@@ -290,7 +291,7 @@ namespace Exiled.API.Features.Pickups
         /// <summary>
         /// Gets a value indicating whether this pickup is spawned.
         /// </summary>
-        public bool IsSpawned => Base && NetworkServer.spawned.ContainsValue(Base.netIdentity);
+        public bool IsSpawned => NetworkServer.spawned.ContainsValue(Base.netIdentity);
 
         /// <summary>
         /// Gets an existing <see cref="Pickup"/> or creates a new instance of one.

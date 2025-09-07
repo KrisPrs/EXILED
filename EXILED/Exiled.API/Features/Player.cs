@@ -9,19 +9,15 @@ namespace Exiled.API.Features
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
     using Core;
-
     using CustomPlayerEffects;
     using CustomPlayerEffects.Danger;
     using DamageHandlers;
-
     using Enums;
-
     using Exiled.API.Features.Core.Interfaces;
     using Exiled.API.Features.CustomStats;
     using Exiled.API.Features.Doors;
@@ -47,6 +43,7 @@ namespace Exiled.API.Features
     using InventorySystem.Items.Usables;
     using InventorySystem.Items.Usables.Scp330;
     using MapGeneration.Distributors;
+    using MapGeneration.Rooms;
     using MEC;
     using Mirror;
     using Mirror.LiteNetLib4Mirror;
@@ -140,6 +137,19 @@ namespace Exiled.API.Features
         /// Gets a list of all <see cref="Player"/>'s on the server.
         /// </summary>
         public static IReadOnlyCollection<Player> List => Dictionary.Values.ToList();
+
+        /// <summary>
+        /// Gets an <see cref="IEnumerable{T}"/> of all <see cref="Player"/>'s on the server.
+        /// This property should be used for enumeration (e.g. LINQ) as it doesn't create a new list, improving performance.
+        /// </summary>
+        public static IEnumerable<Player> Enumerable => Dictionary.Values;
+
+        /// <summary>
+        /// Gets the number of players currently on the server.
+        /// </summary>
+        /// <seealso cref="List"/>
+        /// <seealso cref="Enumerable"/>
+        public static int Count => Dictionary.Count;
 
         /// <summary>
         /// Gets a <see cref="Dictionary{TKey, TValue}"/> containing cached <see cref="Player"/> and their user ids.
@@ -319,8 +329,8 @@ namespace Exiled.API.Features
         /// </summary>
         public string DisplayNickname
         {
-            get => ReferenceHub.nicknameSync.Network_displayName;
-            set => ReferenceHub.nicknameSync.Network_displayName = value;
+            get => ReferenceHub.nicknameSync.DisplayName;
+            set => ReferenceHub.nicknameSync.DisplayName = value;
         }
 
         /// <summary>
@@ -1014,6 +1024,12 @@ namespace Exiled.API.Features
         public ZoneType Zone => CurrentRoom?.Zone ?? ZoneType.Unspecified;
 
         /// <summary>
+        /// Gets the current Level the player is in.
+        /// </summary>
+        /// <remarks>Will return null if CurrentRoom is not a <see cref="MultiLevelRoomIdentifier"/>.</remarks>
+        public RoomLevelName? LevelName => CurrentRoom?.LevelName;
+
+        /// <summary>
         /// Gets the current <see cref="Features.Lift"/> the player is in. Can be <see langword="null"/>.
         /// </summary>
         public Lift Lift => Lift.Get(Position);
@@ -1183,7 +1199,7 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="player">The LabApi player.</param>
         /// <returns>EXILED player.</returns>
-        public static implicit operator LabApi.Features.Wrappers.Player(Player player) => LabApi.Features.Wrappers.Player.Get(player.ReferenceHub);
+        public static implicit operator LabApi.Features.Wrappers.Player(Player player) => LabApi.Features.Wrappers.Player.Get(player?.ReferenceHub);
 
         /// <summary>
         /// Gets a <see cref="Player"/> <see cref="IEnumerable{T}"/> filtered by side. Can be empty.
@@ -1298,7 +1314,7 @@ namespace Exiled.API.Features
             if (UnverifiedPlayers.TryGetValue(gameObject, out player))
                 return player;
 
-            if (ReferenceHub.TryGetHub(gameObject, out ReferenceHub hub) && ReferenceHub.TryGetLocalHub(out ReferenceHub localHub) && localHub != hub)
+            if (ReferenceHub.TryGetHub(gameObject, out ReferenceHub hub))
                 return new(hub);
 
             return null;
@@ -1788,15 +1804,15 @@ namespace Exiled.API.Features
         /// <summary>
         /// Forces the player to reload their current weapon.
         /// </summary>
-        /// <returns><see langword="true"/> if firearm was successfully reloaded. Otherwise, <see langword="false"/>.</returns>
-        public bool ReloadWeapon()
+        /// <returns><see langword="true"/> if the firearm was successfully reloaded. Otherwise, <see langword="false"/>.</returns>
+        public bool TryReloadWeapon()
         {
-            if (CurrentItem is Firearm firearm)
+            if (CurrentItem is not Firearm firearm || firearm.AnimatorReloaderModule == null)
             {
-                firearm.Reload();
+                return false;
             }
 
-            return false;
+            return firearm.AnimatorReloaderModule.ServerTryReload();
         }
 
         /// <summary>
@@ -2197,15 +2213,19 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="usableItem">The ItemType to be used.</param>
         /// <returns><see langword="true"/> if item was used successfully. Otherwise, <see langword="false"/>.</returns>
-        [Obsolete("Use `void UseItem(Usable)`")]
         public bool UseItem(ItemType usableItem) => UseItem(Item.Create(usableItem));
+
+        /// <summary>
+        /// Forces the player to use an item.
+        /// </summary>
+        /// <param name="usable">The item to be used.</param>
+        public void UseItem(Usable usable) => usable?.Use(this);
 
         /// <summary>
         /// Forces the player to use an item.
         /// </summary>
         /// <param name="item">The item to be used.</param>
         /// <returns><see langword="true"/> if item was used successfully. Otherwise, <see langword="false"/>.</returns>
-        [Obsolete("Use `void UseItem(Usable)`")]
         public bool UseItem(Item item)
         {
             if (item is not Usable usableItem)
@@ -2213,15 +2233,6 @@ namespace Exiled.API.Features
 
             UseItem(usableItem);
             return true;
-        }
-
-        /// <summary>
-        /// Forces the player to use an item.
-        /// </summary>
-        /// <param name="item">The item to be used.</param>
-        public void UseItem(Usable item)
-        {
-            item.Use(this);
         }
 
         /// <summary>
@@ -2643,18 +2654,11 @@ namespace Exiled.API.Features
                 return AddItem(itemType.GetFirearmType(), null);
             }
 
-            try
-            {
-                Item item = Item.Create(itemType);
-                AddItem(item);
-                return item;
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error while creating ({itemType}): {ex}");
-            }
+            Item item = Item.Create(itemType);
 
-            return null;
+            AddItem(item);
+
+            return item;
         }
 
         /// <summary>
@@ -2833,13 +2837,6 @@ namespace Exiled.API.Features
         {
             try
             {
-                if (!itemBase)
-                {
-                    Log.Warn($"{nameof(Player)}.{nameof(AddItem)}(ItemBase, [Item]) called with itemBase == null (item: {item}, player: {this})!\n" +
-                              $"**Called from**: {new StackTrace()}");
-                    return null;
-                }
-
                 item ??= Item.Get(itemBase);
                 item.AddReason = addReason;
 
@@ -3580,17 +3577,6 @@ namespace Exiled.API.Features
             Connection.Send(new RoundRestartMessage(roundRestartType, delay, newPort, reconnect, false));
         }
 
-        /// <inheritdoc cref="MirrorExtensions.PlayGunSound(Player, Vector3, ItemType, byte, byte)"/>
-        [Obsolete("Use PlayGunSound(Player, Vector3, ItemType, byte, byte) instead.")]
-        public void PlayGunSound(ItemType type, byte volume, byte audioClipId = 0)
-        {
-            FirearmType firearmType = type.GetFirearmType();
-            if (firearmType is FirearmType.None)
-                return;
-
-            PlayGunSound(firearmType, 1, audioClipId);
-        }
-
         /// <inheritdoc cref="MirrorExtensions.PlayGunSound(Player, Vector3, FirearmType, float, int)"/>
         public void PlayGunSound(FirearmType itemType, float pitch = 1, int clipIndex = 0) =>
             this.PlayGunSound(Position, itemType, pitch, clipIndex);
@@ -3889,6 +3875,6 @@ namespace Exiled.API.Features
         /// Converts the player in a human-readable format.
         /// </summary>
         /// <returns>A string containing Player-related data.</returns>
-        public override string ToString() => $"{Id} ({Nickname}) [{UserId}] *{(Role is null ? "No role" : Role)}* (con: {IsConnected})";
+        public override string ToString() => $"{Id} ({Nickname}) [{UserId}] *{(Role is null ? "No role" : Role)}*";
     }
 }
