@@ -20,17 +20,31 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
         /// </summary>
+        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="name"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
-        /// <param name="paddling"><inheritdoc cref="ReducedPaddling"/></param>
-        public HeaderSetting(string name, string hintDescription = "", bool paddling = false)
-            : base(new SSGroupHeader(name, paddling, hintDescription))
+        /// <param name="padding"><inheritdoc cref="ReducedPaddling"/></param>
+        public HeaderSetting(int id, string name, string hintDescription = "", bool padding = false)
+            : this(new SSGroupHeader(id, name, padding, hintDescription))
         {
-            Base.SetId(null, name);
+            Base = (SSGroupHeader)base.Base;
+
+            Base.SetId(id, name);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
+        /// </summary>
+        /// <param name="settingBase">A <see cref="SSGroupHeader"/> instance.</param>
+        internal HeaderSetting(SSGroupHeader settingBase)
+            : base(settingBase)
+        {
+            Base = settingBase;
+            Base.SetId(null, settingBase.Label);
         }
 
         /// <inheritdoc/>
-        public new SSGroupHeader Base => (SSGroupHeader)base.Base;
+        public new SSGroupHeader Base { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to reduce padding.
@@ -46,7 +60,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a representation of this <see cref="HeaderSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString() => base.ToString() + $" /{Label}/";
+        public override string ToString()
+        {
+            return base.ToString() + $" /{ReducedPaddling}/";
+        }
 
         /// <summary>
         /// Represents a config for KeybindSetting.
@@ -92,7 +109,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a HeaderSetting instanse.
             /// </summary>
             /// <returns>HeaderSetting.</returns>
-            public override HeaderSetting Create() => new(Name, Description, Paddling);
+            public override HeaderSetting Create() => new(++IdIncrementor, Name, Description, Paddling);
         }
     }
 }

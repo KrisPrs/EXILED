@@ -9,42 +9,50 @@ namespace Exiled.API.Features.Core.UserSettings
 {
     using System;
 
-    using Exiled.API.Features.Core.Interfaces;
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
     using TMPro;
-    using UnityEngine;
 
     /// <summary>
     /// Represents a text input setting.
     /// </summary>
-    public class TextInputSetting : SettingBase, IWrapper<SSTextArea>, ISettingHandler
+    public class TextInputSetting : SettingBase, IWrapper<SSTextArea>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TextInputSetting"/> class.
         /// </summary>
+        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="foldoutMode"><inheritdoc cref="FoldoutMode"/></param>
         /// <param name="alignment"><inheritdoc cref="Alignment"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
+        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public TextInputSetting(
+            int id,
             string label,
             SSTextArea.FoldoutMode foldoutMode = SSTextArea.FoldoutMode.NotCollapsable,
             TextAlignmentOptions alignment = TextAlignmentOptions.TopLeft,
             string hintDescription = null,
-            HeaderSetting header = null)
-            : base(new SSTextArea(NextId++, label, foldoutMode, hintDescription, alignment), header)
+            HeaderSetting header = null,
+            Action<Player, SettingBase> onChanged = null)
+            : base(new SSTextArea(id, label, foldoutMode, hintDescription, alignment), header, onChanged)
         {
+            Base = (SSTextArea)base.Base;
         }
 
         /// <summary>
-        /// Gets or sets the action to be executed when this setting is triggered.
+        /// Initializes a new instance of the <see cref="TextInputSetting"/> class.
         /// </summary>
-        public event Action<Player, TextInputSetting> OnTriggered;
+        /// <param name="settingBase">A <see cref="SSTextArea"/> instance.</param>
+        internal TextInputSetting(SSTextArea settingBase)
+            : base(settingBase)
+        {
+            Base = settingBase;
+        }
 
         /// <inheritdoc/>
-        public new SSTextArea Base => (SSTextArea)base.Base;
+        public new SSTextArea Base { get; }
 
         /// <summary>
         /// Gets or sets the text for the setting.
@@ -77,15 +85,9 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a representation of this <see cref="TextInputSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString() => base.ToString() + $" /{FoldoutMode}/ *{Alignment}*";
-
-        /// <inheritdoc cref="ISettingHandler"/>>
-        public void Handle(Player player, SettingBase setting)
+        public override string ToString()
         {
-            if (setting != this)
-                return;
-
-            OnTriggered?.Invoke(player, this);
+            return base.ToString() + $" /{FoldoutMode}/ *{Alignment}*";
         }
 
         /// <summary>
@@ -160,7 +162,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TextInputSetting instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
-            public override TextInputSetting Create() => new(Label, FoldoutMode, TextAlignmentOptions, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override TextInputSetting Create() => new(++IdIncrementor, Label, FoldoutMode, TextAlignmentOptions, HintDescription, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

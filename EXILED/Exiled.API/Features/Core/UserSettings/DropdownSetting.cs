@@ -11,42 +11,60 @@ namespace Exiled.API.Features.Core.UserSettings
     using System.Collections.Generic;
     using System.Linq;
 
-    using Exiled.API.Features.Core.Interfaces;
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// Represents a dropdown setting.
     /// </summary>
-    public class DropdownSetting : SettingBase, IWrapper<SSDropdownSetting>, ISettingHandler
+    public class DropdownSetting : SettingBase, IWrapper<SSDropdownSetting>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DropdownSetting"/> class.
         /// </summary>
+        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="options"><inheritdoc cref="Options"/></param>
         /// <param name="defaultOptionIndex"><inheritdoc cref="DefaultOptionIndex"/></param>
         /// <param name="dropdownEntryType"><inheritdoc cref="DropdownType"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
+        /// <param name="collectionId"><inheritdoc cref="SettingBase.CollectionId"/></param>
+        /// <param name="isServerOnly"><inheritdoc cref="SettingBase.IsServerOnly"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
+        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public DropdownSetting(
+            int id,
             string label,
             IEnumerable<string> options,
             int defaultOptionIndex = 0,
             SSDropdownSetting.DropdownEntryType dropdownEntryType = SSDropdownSetting.DropdownEntryType.Regular,
             string hintDescription = null,
-            HeaderSetting header = null)
-            : base(new SSDropdownSetting(NextId++, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription), header)
+            byte collectionId = byte.MaxValue,
+            bool isServerOnly = false,
+            HeaderSetting header = null,
+            Action<Player, SettingBase> onChanged = null)
+            : base(new SSDropdownSetting(id, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription, collectionId, isServerOnly), header, onChanged)
         {
+            Base = (SSDropdownSetting)base.Base;
         }
 
         /// <summary>
-        /// Gets or sets the action to be executed when this setting is triggered.
+        /// Initializes a new instance of the <see cref="DropdownSetting"/> class.
         /// </summary>
-        public event Action<Player, DropdownSetting> OnTriggered;
+        /// <param name="settingBase">A <see cref="SSDropdownSetting"/> instance.</param>
+        internal DropdownSetting(SSDropdownSetting settingBase)
+            : base(settingBase)
+        {
+            Base = settingBase;
+
+            if (OriginalDefinition != null && OriginalDefinition.Is(out DropdownSetting dropdown))
+            {
+                Options = dropdown.Options;
+            }
+        }
 
         /// <inheritdoc/>
-        public new SSDropdownSetting Base => (SSDropdownSetting)base.Base;
+        public new SSDropdownSetting Base { get; }
 
         /// <summary>
         /// Gets or sets a collection of all options in dropdown.
@@ -130,15 +148,9 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Gets a string representation of this <see cref="DropdownSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString() => base.ToString() + $" ={DefaultOptionIndex}= -{SelectedIndex}- /{string.Join(";", Options)}/";
-
-        /// <inheritdoc cref="ISettingHandler"/>>
-        public void Handle(Player player, SettingBase setting)
+        public override string ToString()
         {
-            if (setting != this)
-                return;
-
-            OnTriggered?.Invoke(player, this);
+            return base.ToString() + $" ={DefaultOptionIndex}= -{SelectedIndex}- /{string.Join(";", Options)}/";
         }
 
         /// <summary>
@@ -156,15 +168,17 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="headerName"><inheritdoc cref="HeaderName"/></param>
             /// <param name="headerDescription"><inheritdoc cref="HeaderDescription"/></param>
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
+            /// <param name="isServerOnly"><inheritdoc cref="IsServerOnly"/></param>
             /// <param name="dropdownEntryType"></param>
             /// <inheritdoc cref="Label"/>
-            public DropdownConfig(string label, IEnumerable<string> options, int defaultOptionIndex, SSDropdownSetting.DropdownEntryType dropdownEntryType = SSDropdownSetting.DropdownEntryType.Regular, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
+            public DropdownConfig(string label, IEnumerable<string> options, int defaultOptionIndex, bool isServerOnly, SSDropdownSetting.DropdownEntryType dropdownEntryType = SSDropdownSetting.DropdownEntryType.Regular, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
                 Label = label;
                 Options = options;
                 DefaultOptionIndex = defaultOptionIndex;
                 DropdownEntryType = dropdownEntryType;
                 HintDescription = hintDescription;
+                IsServerOnly = isServerOnly;
                 HeaderName = headerName;
                 HeaderDescription = headerDescription;
                 HeaderPaddling = headerPaddling;
@@ -198,6 +212,11 @@ namespace Exiled.API.Features.Core.UserSettings
             public SSDropdownSetting.DropdownEntryType DropdownEntryType { get; set; }
 
             /// <summary>
+            /// Gets or sets a value indicating whether updates come from client.
+            /// </summary>
+            public bool IsServerOnly { get; set; }
+
+            /// <summary>
             /// Gets or sets HintDescription of a DropdownConfig.
             /// </summary>
             public string HintDescription { get; set; }
@@ -221,7 +240,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a DropdownSetting instanse.
             /// </summary>
             /// <returns>DropdownSetting.</returns>
-            public override DropdownSetting Create() => new(Label, Options, DefaultOptionIndex, DropdownEntryType, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override DropdownSetting Create() => new(++IdIncrementor, Label, Options, DefaultOptionIndex, DropdownEntryType, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

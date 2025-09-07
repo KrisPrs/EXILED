@@ -44,6 +44,7 @@ namespace Exiled.Events.Handlers.Internal
         /// <inheritdoc cref="Handlers.Server.OnWaitingForPlayers" />
         public static void OnWaitingForPlayers()
         {
+            SpawnLocationType
             GenerateAttachments();
             MultiAdminFeatures.CallEvent(MultiAdminFeatures.EventType.WAITING_FOR_PLAYERS);
 
@@ -53,7 +54,7 @@ namespace Exiled.Events.Handlers.Internal
             if (Events.Instance.Config.ShouldReloadTranslationsAtRoundRestart)
                 TranslationManager.Reload();
 
-            ServerSpecificSettingsSync.ServerOnSettingValueReceived += SettingBase.OnRandomSettingTriggered;
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived += SettingBase.OnSettingUpdated;
             RoundSummary.RoundLock = false;
         }
 
@@ -121,6 +122,7 @@ namespace Exiled.Events.Handlers.Internal
         public static void OnVerified(VerifiedEventArgs ev)
         {
             RoleAssigner.CheckLateJoin(ev.Player.ReferenceHub, ClientInstanceMode.ReadyClient);
+
             SettingBase.SendToPlayer(ev.Player);
 
             // TODO: Remove if this has been fixed for https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/52

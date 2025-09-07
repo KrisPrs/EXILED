@@ -9,43 +9,40 @@ namespace Exiled.API.Features.Core.UserSettings
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
 
+    using Exiled.API.Features.Pools;
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
-    using Interfaces;
 
     /// <summary>
     /// A base class for all Server Specific Settings.
     /// </summary>
-    public abstract class SettingBase : TypeCastObject<SettingBase>, IWrapper<ServerSpecificSettingBase>
+    public class SettingBase : TypeCastObject<SettingBase>, IWrapper<ServerSpecificSettingBase>
     {
         /// <summary>
-        /// A <see cref="Dictionary{TKey,TValue}"/> that contains <see cref="SettingBase"/> that are currently with players.
+        /// A <see cref="Dictionary{TKey,TValue}"/> that contains <see cref="SettingBase"/> that were received by a players.
         /// </summary>
-        public static readonly Dictionary<Player, HashSet<SettingBase>> PlayerSettings = new();
+        internal static readonly Dictionary<Player, List<SettingBase>> ReceivedSettings = new();
 
         /// <summary>
-        /// A <see cref="Dictionary{TKey,TValue}"/> that contains <see cref="int"/> Id and <see cref="SettingBase"/> with this Id.
+        /// A collection that contains all settings that were sent to clients.
         /// </summary>
-        public static readonly Dictionary<int, SettingBase> Settings = new();
-
-        /// <summary>
-        /// A <see cref="HashSet{TValue}"/> that contains <see cref="SettingBase"/> that was ever Defined.
-        /// </summary>
-        public static readonly HashSet<SettingBase> SyncedSettings = new();
+        internal static readonly List<SettingBase> Settings = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingBase"/> class.
         /// </summary>
         /// <param name="settingBase">A <see cref="ServerSpecificSettingBase"/> instance.</param>
         /// <param name="header"><inheritdoc cref="Header"/></param>
-        internal SettingBase(ServerSpecificSettingBase settingBase, HeaderSetting header)
+        /// <param name="onChanged"><inheritdoc cref="OnChanged"/></param>
+        internal SettingBase(ServerSpecificSettingBase settingBase, HeaderSetting header, Action<Player, SettingBase> onChanged)
         {
             Base = settingBase;
+
             Header = header;
-            Settings.Add(settingBase.SettingId, this);
-            UpdateSynced();
+            OnChanged = onChanged;
         }
 
         /// <summary>
@@ -55,15 +52,29 @@ namespace Exiled.API.Features.Core.UserSettings
         internal SettingBase(ServerSpecificSettingBase settingBase)
         {
             Base = settingBase;
+
+            if (OriginalDefinition != null)
+            {
+                Header = OriginalDefinition.Header;
+                OnChanged = OriginalDefinition.OnChanged;
+                Label = OriginalDefinition.Label;
+                HintDescription = OriginalDefinition.HintDescription;
+            }
         }
 
         /// <summary>
-        /// Gets or sets next Id to give.
+        /// Gets the list of all synced settings.
         /// </summary>
-        public static int NextId { get; set; }
+        public static IReadOnlyDictionary<Player, ReadOnlyCollection<SettingBase>> SyncedList
+            => new ReadOnlyDictionary<Player, ReadOnlyCollection<SettingBase>>(ReceivedSettings.ToDictionary(x => x.Key, x => x.Value.AsReadOnly()));
+
+        /// <summary>
+        /// Gets the list of settings that were used as a prefabs.
+        /// </summary>
+        public static IReadOnlyCollection<SettingBase> List => Settings;
 
         /// <inheritdoc/>
-        public ServerSpecificSettingBase Base { get; set; }
+        public ServerSpecificSettingBase Base { get; }
 
         /// <summary>
         /// Gets or sets the id of this setting.
@@ -125,10 +136,26 @@ namespace Exiled.API.Features.Core.UserSettings
         public ServerSpecificSettingBase.UserResponseMode ResponseMode => Base.ResponseMode;
 
         /// <summary>
+        /// Gets the setting that was sent to players.
+        /// </summary>
+        /// <remarks>Can be <c>null</c> if this <see cref="SettingBase"/> is a prefab.</remarks>
+        public SettingBase OriginalDefinition => Settings.Find(x => x.Id == Id);
+
+        /// <summary>
         /// Gets or sets the header of this setting.
         /// </summary>
         /// <remarks>Can be <c>null</c>.</remarks>
         public HeaderSetting Header { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action to be executed when this setting is changed.
+        /// </summary>
+        public Action<Player, SettingBase> OnChanged { get; set; }
+
+        /// <summary>
+        /// Gets or sets incrementor to avoid useless id setting.
+        /// </summary>
+        protected static int IdIncrementor { get; set; }
 
         /// <summary>
         /// Tries to get the setting with the specified id.
@@ -143,7 +170,7 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             setting = null;
 
-            if (!PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
+            if (!ReceivedSettings.TryGetValue(player, out List<SettingBase> list))
                 return false;
 
             setting = (T)list.FirstOrDefault(x => x.Id == id);
@@ -151,60 +178,64 @@ namespace Exiled.API.Features.Core.UserSettings
         }
 
         /// <summary>
-        /// Send DefinedSettings to specified Player.
+        /// Tries to get the setting with the specified id.
         /// </summary>
-        /// <param name="player">A player which get settings.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void SendToPlayer(Player player, Func<Player, bool> predicate = null)
-        {
-            if (predicate == null || predicate(player))
-                return;
+        /// <param name="player">Player who has received the setting.</param>
+        /// <param name="id">Id of the setting.</param>
+        /// <param name="setting">A <see cref="SettingBase"/> instance if found. Otherwise, <c>null</c>.</param>
+        /// <returns><c>true</c> if the setting was found, <c>false</c> otherwise.</returns>
+        public static bool TryGetSetting(Player player, int id, out SettingBase setting) => TryGetSetting<SettingBase>(player, id, out setting);
 
-            ServerSpecificSettingsSync.SendToPlayer(player.ReferenceHub);
-        }
+        /// <summary>
+        /// Creates a new instance of this setting.
+        /// </summary>
+        /// <param name="settingBase">A <see cref="ServerSpecificSettingBase"/> instance.</param>
+        /// <returns>A new instance of this setting.</returns>
+        /// <remarks>
+        /// This method is used only to create a new instance of <see cref="SettingBase"/> from an existing <see cref="ServerSpecificSettingBase"/> instance.
+        /// New setting won't be synced with players.
+        /// </remarks>
+        public static SettingBase Create(ServerSpecificSettingBase settingBase) => settingBase switch
+        {
+            SSButton button => new ButtonSetting(button),
+            SSDropdownSetting dropdownSetting => new DropdownSetting(dropdownSetting),
+            SSTextArea textArea => new TextInputSetting(textArea),
+            SSGroupHeader header => new HeaderSetting(header),
+            SSKeybindSetting keybindSetting => new KeybindSetting(keybindSetting),
+            SSTwoButtonsSetting twoButtonsSetting => new TwoButtonsSetting(twoButtonsSetting),
+            SSPlaintextSetting plainTextSetting => new UserTextInputSetting(plainTextSetting),
+            SSSliderSetting sliderSetting => new SliderSetting(sliderSetting),
+            _ => new SettingBase(settingBase)
+        };
+
+        /// <summary>
+        /// Creates a new instance of this setting.
+        /// </summary>
+        /// <param name="settingBase">A<see cref="ServerSpecificSettingBase"/> instance.</param>
+        /// <typeparam name="T">Type of the setting.</typeparam>
+        /// <returns>A new instance of this setting.</returns>
+        /// <remarks>
+        /// This method is used only to create a new instance of <see cref="SettingBase"/> from an existing <see cref="ServerSpecificSettingBase"/> instance.
+        /// New setting won't be synced with players.
+        /// </remarks>
+        public static T Create<T>(ServerSpecificSettingBase settingBase)
+            where T : SettingBase => Create(settingBase) as T;
+
+        /// <summary>
+        /// Syncs setting with all players.
+        /// </summary>
+        public static void SendToAll() => ServerSpecificSettingsSync.SendToAll();
 
         /// <summary>
         /// Syncs setting with all players according to the specified predicate.
         /// </summary>
-        /// <param name="collection">A collection to send.</param>
         /// <param name="predicate">A requirement to meet.</param>
-        public static void AddToAll(List<SettingBase> collection, Func<Player, bool> predicate = null)
+        public static void SendToAll(Func<Player, bool> predicate)
         {
             foreach (Player player in Player.List)
-                AddToPlayer(player, collection, predicate);
-        }
-
-        /// <summary>
-        /// Syncs setting with all players according to the specified predicate.
-        /// </summary>
-        /// <param name="setting">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void AddToAll(SettingBase setting, Func<Player, bool> predicate = null)
-        {
-            foreach (Player player in Player.List)
-                AddToPlayer(player, setting, predicate);
-        }
-
-        /// <summary>
-        /// Syncs setting with the specified target.
-        /// </summary>
-        /// <param name="player">Target player.</param>
-        /// <param name="setting">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void AddToPlayer(Player player, SettingBase setting, Func<Player, bool> predicate = null)
-        {
-            if (predicate != null && !predicate(player))
-                return;
-
-            if (PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
             {
-                Log.Info(setting.ToString());
-                list.Add(setting);
-            }
-            else
-            {
-                list = new HashSet<SettingBase> { setting };
-                PlayerSettings.Add(player, list);
+                if (predicate(player))
+                    SendToPlayer(player);
             }
         }
 
@@ -212,122 +243,130 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Syncs setting with the specified target.
         /// </summary>
         /// <param name="player">Target player.</param>
-        /// <param name="collection">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void AddToPlayer(Player player, List<SettingBase> collection, Func<Player, bool> predicate = null)
-        {
-            if (predicate != null && !predicate(player))
-                return;
-
-            if (PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
-                PlayerSettings[player] = list.Concat(collection).ToHashSet();
-            else
-                PlayerSettings[player] = collection.ToHashSet();
-        }
+        public static void SendToPlayer(Player player) => ServerSpecificSettingsSync.SendToPlayer(player.ReferenceHub);
 
         /// <summary>
-        /// Syncs setting with all players according to the specified predicate.
-        /// </summary>
-        /// <param name="collection">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void RemoveFromAll(List<SettingBase> collection, Func<Player, bool> predicate = null)
-        {
-            foreach (Player player in Player.List)
-                RemoveFromPlayer(player, collection, predicate);
-        }
-
-        /// <summary>
-        /// Syncs setting with all players according to the specified predicate.
-        /// </summary>
-        /// <param name="setting">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void RemoveFromAll(SettingBase setting, Func<Player, bool> predicate = null)
-        {
-            foreach (Player player in Player.List)
-                RemoveFromPlayer(player, setting, predicate);
-        }
-
-        /// <summary>
-        /// Syncs setting with the specified target.
+        /// Syncs specific settings with the specified target.
         /// </summary>
         /// <param name="player">Target player.</param>
-        /// <param name="collection">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void RemoveFromPlayer(Player player, List<SettingBase> collection, Func<Player, bool> predicate = null)
-        {
-            if ((predicate != null && !predicate(player)) || !PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
-                return;
-
-            list.RemoveWhere(collection.Contains);
-        }
-
-        /// <summary>
-        /// Syncs setting with the specified target.
-        /// </summary>
-        /// <param name="player">Target player.</param>
-        /// <param name="setting">A collection to send.</param>
-        /// <param name="predicate">A requirement to meet.</param>
-        public static void RemoveFromPlayer(Player player, SettingBase setting, Func<Player, bool> predicate = null)
-        {
-            if ((predicate != null && !predicate(player)) || !PlayerSettings.TryGetValue(player, out HashSet<SettingBase> list))
-                return;
-
-            list.Remove(setting);
-        }
+        /// <param name="settings">Settings to send to the player.</param>
+        public static void SendToPlayer(Player player, IEnumerable<SettingBase> settings) =>
+            ServerSpecificSettingsSync.SendToPlayer(player.ReferenceHub, settings.Select(setting => setting.Base).ToArray());
 
         /// <summary>
         /// Registers all settings from the specified collection.
         /// </summary>
         /// <param name="settings">A collection of settings to register.</param>
+        /// <param name="predicate">A requirement to meet when sending settings to players.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully registered.</returns>
         /// <remarks>This method is used to sync new settings with players.</remarks>
-        public static IEnumerable<SettingBase> GroupByHeaders(IEnumerable<SettingBase> settings)
+        public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
-            List<SettingBase> list = settings.ToList();
-            List<SettingBase> result = new(list.Count);
+            IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
+            IEnumerable<IGrouping<HeaderSetting, SettingBase>> grouped =
+                (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+                .Select(Create)
+                .Concat(settingBases)
+                .Where(s => s != null)
+                .GroupBy(s => s.Header);
 
-            while (list.Exists(x => x.Header != null))
+            List<SettingBase> result = new();
+            foreach (IGrouping<HeaderSetting, SettingBase> grouping in grouped)
             {
-                SettingBase header = list.Find(x => x.Header != null).Header;
-                List<SettingBase> range = list.FindAll(x => x.Header.Label == header.Label);
+                if (grouping.Key != null)
+                    result.Add(grouping.Key);
 
-                result.Add(header);
-                result.AddRange(range);
-
-                list.Remove(header);
-                list.RemoveAll(x => x.Header.Label == header.Label);
+                result.AddRange(grouping);
             }
 
-            result.AddRange(list);
+            ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
+            Settings.AddRange(settingBases);
+
+            if (predicate == null)
+                SendToAll();
+            else
+                SendToAll(predicate);
+
             return result;
         }
 
         /// <summary>
-        /// Penis Penis Penis.
+        /// Registers all settings from the specified collection to player.
         /// </summary>
-        /// <param name="referenceHub"> f.</param>
-        /// <param name="settingBase"> fuck you man.</param>
-        public static void OnRandomSettingTriggered(ReferenceHub referenceHub, ServerSpecificSettingBase settingBase)
+        /// <param name="player">A player that will receive settings.</param>
+        /// <param name="settings">A collection of settings to register.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully registered.</returns>
+        /// <remarks>This method is used to sync new settings with players.</remarks>
+        public static IEnumerable<SettingBase> Register(Player player, IEnumerable<SettingBase> settings)
         {
-            if (!Player.TryGet(referenceHub, out Player player) ||
-                !Settings.TryGetValue(settingBase.SettingId, out SettingBase setting) ||
-                !PlayerSettings.TryGetValue(player, out HashSet<SettingBase> settingBases) ||
-                !settingBases.Contains(setting) || setting is not ISettingHandler handler)
-                return;
+            IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
+            IEnumerable<IGrouping<HeaderSetting, SettingBase>> grouped =
+                (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+                .Select(Create)
+                .Concat(settingBases)
+                .Where(s => s != null)
+                .GroupBy(s => s.Header);
 
-            setting.Base = settingBase;
-            handler.Handle(player, setting);
+            List<SettingBase> result = new();
+            foreach (IGrouping<HeaderSetting, SettingBase> grouping in grouped)
+            {
+                if (grouping.Key != null)
+                    result.Add(grouping.Key);
+
+                result.AddRange(grouping);
+            }
+
+            ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
+            Settings.AddRange(settingBases);
+
+            SendToPlayer(player);
+
+            return result;
         }
 
         /// <summary>
-        /// Trying to add new setting to a SyncedSettings, if does so, creates new array and put it as DefinedSettings.
+        /// Removes settings from players.
         /// </summary>
-        public void UpdateSynced()
+        /// <param name="predicate">Determines which players will receive this update.</param>
+        /// <param name="settings">Settings to remove. If <c>null</c>, all settings will be removed.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully removed.</returns>
+        /// <remarks>This method is used to unsync settings from players. Using it with <see cref="Register(IEnumerable{SettingBase},Func{Player,bool})"/> provides an opportunity to update synced settings.</remarks>
+        public static IEnumerable<SettingBase> Unregister(Func<Player, bool> predicate = null, IEnumerable<SettingBase> settings = null)
         {
-            if (!SyncedSettings.Add(this))
-                return;
+            List<ServerSpecificSettingBase> list = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
+            List<SettingBase> list2 = new((settings ?? Settings).Where(setting => list.Remove(setting.Base)));
 
-            ServerSpecificSettingsSync.DefinedSettings = GroupByHeaders(SyncedSettings).Select(x => x.Base).ToArray();
+            ServerSpecificSettingsSync.DefinedSettings = list.ToArray();
+
+            if (predicate == null)
+                SendToAll();
+            else
+                SendToAll(predicate);
+
+            ListPool<ServerSpecificSettingBase>.Pool.Return(list);
+
+            return list2;
+        }
+
+        /// <summary>
+        /// Removes settings from players.
+        /// </summary>
+        /// <param name="player">Determines which player will receive this update.</param>
+        /// <param name="settings">Settings to remove. If <c>null</c>, all settings will be removed.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully removed.</returns>
+        /// <remarks>This method is used to unsync settings from players. Using it with <see cref="Register(Player,IEnumerable{SettingBase})"/> provides an opportunity to update synced settings.</remarks>
+        public static IEnumerable<SettingBase> Unregister(Player player, IEnumerable<SettingBase> settings = null)
+        {
+            List<ServerSpecificSettingBase> list = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
+            List<SettingBase> list2 = new((settings ?? Settings).Where(setting => list.Remove(setting.Base)));
+
+            ServerSpecificSettingsSync.DefinedSettings = list.ToArray();
+
+            SendToPlayer(player);
+
+            ListPool<ServerSpecificSettingBase>.Pool.Return(list);
+
+            return list2;
         }
 
         /// <summary>
@@ -347,17 +386,66 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a string representation of this <see cref="SettingBase"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString() => $"{Id} ({Label}) [{HintDescription}] {{{ResponseMode}}} ^{Header}^";
+        public override string ToString()
+        {
+            return $"{Id} ({Label}) [{HintDescription}] {{{ResponseMode}}} ^{Header}^";
+        }
 
         /// <summary>
-        /// Represents a config for TextInputSetting.
+        /// Internal method that fires when a setting is updated.
         /// </summary>
-        /// <typeparam name="TSetting">Penis.</typeparam>
+        /// <param name="hub"><see cref="ReferenceHub"/> that has updates the setting.</param>
+        /// <param name="settingBase">A new updated setting.</param>
+        internal static void OnSettingUpdated(ReferenceHub hub, ServerSpecificSettingBase settingBase)
+        {
+            if (!Player.TryGet(hub, out Player player) || hub.IsHost)
+                return;
+
+            SettingBase setting;
+
+            if (!ReceivedSettings.TryGetValue(player, out List<SettingBase> list))
+            {
+                setting = Create(settingBase);
+                ReceivedSettings.Add(player, new() { setting });
+
+                if (setting.Is(out ButtonSetting _))
+                    goto invoke;
+
+                return;
+            }
+
+            if (!list.Exists(x => x.Id == settingBase.SettingId))
+            {
+                setting = Create(settingBase);
+                list.Add(setting);
+
+                if (setting.Is(out ButtonSetting _))
+                    goto invoke;
+
+                return;
+            }
+
+            setting = list.Find(x => x.Id == settingBase.SettingId);
+
+            invoke:
+
+            if (setting.OriginalDefinition == null)
+            {
+                Settings.Add(Create(settingBase.OriginalDefinition));
+            }
+
+            setting.OriginalDefinition?.OnChanged?.Invoke(player, setting);
+        }
+
+        /// <summary>
+        /// A base class for all Server Specific Settings configs.
+        /// </summary>
+        /// <typeparam name="TSetting">Type of Server Specific Setting.</typeparam>
         public abstract class SettingConfig<TSetting>
-                    where TSetting : SettingBase
+            where TSetting : SettingBase
         {
             /// <summary>
-            /// Creates a TextInputSetting instanse.
+            /// Creates a SettingBase instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
             public abstract TSetting Create();

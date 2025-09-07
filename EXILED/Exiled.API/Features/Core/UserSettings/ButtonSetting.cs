@@ -12,33 +12,46 @@ namespace Exiled.API.Features.Core.UserSettings
 
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
-    using Interfaces;
 
     /// <summary>
     /// Represents a button setting.
     /// </summary>
-    public class ButtonSetting : SettingBase, IWrapper<SSButton>, ISettingHandler
+    public class ButtonSetting : SettingBase, IWrapper<SSButton>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ButtonSetting"/> class.
         /// </summary>
+        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="buttonText"><inheritdoc cref="Text"/></param>
         /// <param name="holdTime"><inheritdoc cref="HoldTime"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
-        public ButtonSetting(string label, string buttonText, float holdTime = 0.0f, string hintDescription = null, HeaderSetting header = null)
-            : base(new SSButton(NextId++, label, buttonText, holdTime, hintDescription), header)
+        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
+        public ButtonSetting(int id, string label, string buttonText, float holdTime = 0.0f, string hintDescription = null, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
+            : base(new SSButton(id, label, buttonText, holdTime, hintDescription), header, onChanged)
         {
+            Base = (SSButton)base.Base;
         }
 
         /// <summary>
-        /// Gets or sets the action to be executed when this setting is triggered.
+        /// Initializes a new instance of the <see cref="ButtonSetting"/> class.
         /// </summary>
-        public event Action<Player, ButtonSetting> OnTriggered;
+        /// <param name="settingBase">A <see cref="SSButton"/> instance.</param>
+        internal ButtonSetting(SSButton settingBase)
+            : base(settingBase)
+        {
+            Base = settingBase;
+
+            if (OriginalDefinition != null && OriginalDefinition.Is(out ButtonSetting setting))
+            {
+                Text = setting.Text;
+                HoldTime = setting.HoldTime;
+            }
+        }
 
         /// <inheritdoc/>
-        public new SSButton Base => (SSButton)base.Base;
+        public new SSButton Base { get; }
 
         /// <summary>
         /// Gets the last press time.
@@ -80,15 +93,9 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Returns a representation of this <see cref="ButtonSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString() => base.ToString() + $" ={Text}= -{HoldTime}- /{LastPress}/";
-
-        /// <inheritdoc cref="ISettingHandler"/>>
-        public void Handle(Player player, SettingBase setting)
+        public override string ToString()
         {
-            if (setting != this)
-                return;
-
-            OnTriggered?.Invoke(player, this);
+            return base.ToString() + $" ={Text}= -{HoldTime}- /{LastPress}/";
         }
 
         /// <summary>
@@ -163,7 +170,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override ButtonSetting Create() => new(Label, ButtonText, HoldTime, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override ButtonSetting Create() => new(++IdIncrementor, Label, ButtonText, HoldTime, HintDescription, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }
