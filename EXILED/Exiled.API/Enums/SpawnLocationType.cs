@@ -79,10 +79,14 @@ namespace Exiled.API.Enums
         InsideLczCafe,
 
         /// <summary>
-        /// Inside the Nuke armory.
+        /// Inside the Hid Lab.
         /// </summary>
-        [Obsolete("This Location has been removed from the game.")]
-        InsideNukeArmory,
+        InsideHidLab,
+
+        /// <summary>
+        /// Inside the SCP-127 Lab.
+        /// </summary>
+        Inside127Lab,
 
         /// <summary>
         /// Inside the surface nuke room.
