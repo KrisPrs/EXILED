@@ -29,11 +29,6 @@ namespace Exiled.API.Enums
         Inside049Armory = 3,
 
         /// <summary>
-        /// The inside nuke armory.
-        /// </summary>
-        InsideNukeArmory,
-
-        /// <summary>
         /// The inside of the inner SCP-079 door.
         /// </summary>
         Inside079Secondary,

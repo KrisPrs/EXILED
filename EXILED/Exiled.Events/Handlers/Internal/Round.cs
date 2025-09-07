@@ -44,7 +44,6 @@ namespace Exiled.Events.Handlers.Internal
         /// <inheritdoc cref="Handlers.Server.OnWaitingForPlayers" />
         public static void OnWaitingForPlayers()
         {
-            SpawnLocationType
             GenerateAttachments();
             MultiAdminFeatures.CallEvent(MultiAdminFeatures.EventType.WAITING_FOR_PLAYERS);
 
