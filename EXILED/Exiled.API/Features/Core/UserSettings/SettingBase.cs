@@ -275,6 +275,9 @@ namespace Exiled.API.Features.Core.UserSettings
 
             foreach (SettingBase setting in fullList)
             {
+                if (setting is HeaderSetting)
+                    continue;
+
                 if (setting.Header == null)
                 {
                     settingsWithoutHeaders.Add(setting);
@@ -332,6 +335,9 @@ namespace Exiled.API.Features.Core.UserSettings
 
             foreach (SettingBase setting in fullList)
             {
+                if (setting is HeaderSetting)
+                    continue;
+
                 if (setting.Header == null)
                 {
                     settingsWithoutHeaders.Add(setting);
