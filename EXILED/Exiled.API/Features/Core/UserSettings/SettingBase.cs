@@ -262,27 +262,42 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <remarks>This method is used to sync new settings with players.</remarks>
         public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
-            IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
-            var grouped = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+            SettingBase[] settingBases = settings as SettingBase[] ?? settings.ToArray();
+
+            List<SettingBase> fullList = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
-                .Distinct()
-                .Where(s => s != null)
-                .GroupBy(s => s.Header.Label)
-                .Select(g => new
+                .ToList();
+
+            Dictionary<string, HeaderSetting> headersDict = new();
+            Dictionary<string, List<SettingBase>> settingsByLabel = new();
+            List<SettingBase> settingsWithoutHeaders = new();
+
+            foreach (SettingBase setting in fullList)
+            {
+                if (setting.Header == null)
                 {
-                    Header = g.First().Header,
-                    Items = g.AsEnumerable(),
-                });
+                    settingsWithoutHeaders.Add(setting);
+                    continue;
+                }
+
+                if (!headersDict.ContainsKey(setting.Header.Label))
+                    headersDict[setting.Header.Label] = setting.Header;
+
+                if (!settingsByLabel.ContainsKey(setting.Header.Label))
+                    settingsByLabel[setting.Header.Label] = new List<SettingBase>();
+
+                settingsByLabel[setting.Header.Label].Add(setting);
+            }
 
             List<SettingBase> result = new();
-            foreach (var group in grouped)
+            foreach (HeaderSetting header in headersDict.Values.OrderBy(h => h.Label))
             {
-                if (group.Header != null)
-                    result.Add(group.Header);
-
-                result.AddRange(group.Items);
+                result.Add(header);
+                result.AddRange(settingsByLabel[header.Label]);
             }
+
+            result.AddRange(settingsWithoutHeaders);
 
             ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
             Settings.AddRange(settingBases);
@@ -304,31 +319,45 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <remarks>This method is used to sync new settings with players.</remarks>
         public static IEnumerable<SettingBase> Register(Player player, IEnumerable<SettingBase> settings)
         {
-            IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
-            var grouped = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+            SettingBase[] settingBases = settings as SettingBase[] ?? settings.ToArray();
+
+            List<SettingBase> fullList = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
-                .Distinct()
-                .Where(s => s != null)
-                .GroupBy(s => s.Header.Label)
-                .Select(g => new
+                .ToList();
+
+            Dictionary<string, HeaderSetting> headersDict = new();
+            Dictionary<string, List<SettingBase>> settingsByLabel = new();
+            List<SettingBase> settingsWithoutHeaders = new();
+
+            foreach (SettingBase setting in fullList)
+            {
+                if (setting.Header == null)
                 {
-                    Header = g.First().Header,
-                    Items = g.AsEnumerable(),
-                });
+                    settingsWithoutHeaders.Add(setting);
+                    continue;
+                }
+
+                if (!headersDict.ContainsKey(setting.Header.Label))
+                    headersDict[setting.Header.Label] = setting.Header;
+
+                if (!settingsByLabel.ContainsKey(setting.Header.Label))
+                    settingsByLabel[setting.Header.Label] = new List<SettingBase>();
+
+                settingsByLabel[setting.Header.Label].Add(setting);
+            }
 
             List<SettingBase> result = new();
-            foreach (var group in grouped)
+            foreach (HeaderSetting header in headersDict.Values.OrderBy(h => h.Label))
             {
-                if (group.Header != null)
-                    result.Add(group.Header);
-
-                result.AddRange(group.Items);
+                result.Add(header);
+                result.AddRange(settingsByLabel[header.Label]);
             }
+
+            result.AddRange(settingsWithoutHeaders);
 
             ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
             Settings.AddRange(settingBases);
-
             SendToPlayer(player);
 
             return result;
