@@ -259,7 +259,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// </summary>
             /// <returns>ButtonSetting.</returns>
             public override SliderSetting Create() => new(++IdIncrementor, Label, MinimumValue, MaximumValue, DefaultValue, IsInteger, StringFormat, DisplayFormat,
-                HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+                HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

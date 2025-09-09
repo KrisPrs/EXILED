@@ -220,7 +220,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TwoButtonsSetting instanse.
             /// </summary>
             /// <returns>TwoButtonsSetting.</returns>
-            public override TwoButtonsSetting Create() => new(++IdIncrementor, Label, FirstOption, SecondOption, DefaultIsSecond, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+            public override TwoButtonsSetting Create() => new(++IdIncrementor, Label, FirstOption, SecondOption, DefaultIsSecond, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

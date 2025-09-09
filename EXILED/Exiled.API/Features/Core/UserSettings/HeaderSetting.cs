@@ -20,16 +20,13 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
         /// </summary>
-        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="name"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="padding"><inheritdoc cref="ReducedPaddling"/></param>
-        public HeaderSetting(int id, string name, string hintDescription = "", bool padding = false)
-            : this(new SSGroupHeader(id, name, padding, hintDescription))
+        public HeaderSetting(string name, string hintDescription = "", bool padding = false)
+            : this(new SSGroupHeader(null, name, padding, hintDescription))
         {
             Base = (SSGroupHeader)base.Base;
-
-            Base.SetId(id, name);
         }
 
         /// <summary>
@@ -109,7 +106,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a HeaderSetting instanse.
             /// </summary>
             /// <returns>HeaderSetting.</returns>
-            public override HeaderSetting Create() => new(++IdIncrementor, Name, Description, Paddling);
+            public override HeaderSetting Create() => new(Name, Description, Paddling);
         }
     }
 }

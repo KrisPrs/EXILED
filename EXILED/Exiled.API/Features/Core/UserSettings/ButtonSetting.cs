@@ -170,7 +170,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override ButtonSetting Create() => new(++IdIncrementor, Label, ButtonText, HoldTime, HintDescription, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+            public override ButtonSetting Create() => new(++IdIncrementor, Label, ButtonText, HoldTime, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

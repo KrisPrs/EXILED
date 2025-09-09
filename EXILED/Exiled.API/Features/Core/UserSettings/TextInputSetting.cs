@@ -162,7 +162,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TextInputSetting instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
-            public override TextInputSetting Create() => new(++IdIncrementor, Label, FoldoutMode, TextAlignmentOptions, HintDescription, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+            public override TextInputSetting Create() => new(++IdIncrementor, Label, FoldoutMode, TextAlignmentOptions, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

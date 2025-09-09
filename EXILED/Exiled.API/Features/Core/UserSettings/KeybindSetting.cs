@@ -169,7 +169,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a KeybindSetting instanse.
             /// </summary>
             /// <returns>KeybindSetting.</returns>
-            public override KeybindSetting Create() => new(++IdIncrementor, Label, KeyCode, PreventInteractionOnGUI, AllowSpectatorTrigger, HintDescription, 255, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+            public override KeybindSetting Create() => new(++IdIncrementor, Label, KeyCode, PreventInteractionOnGUI, AllowSpectatorTrigger, HintDescription, 255, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }

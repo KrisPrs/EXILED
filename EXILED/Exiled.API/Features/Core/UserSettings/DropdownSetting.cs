@@ -240,7 +240,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a DropdownSetting instanse.
             /// </summary>
             /// <returns>DropdownSetting.</returns>
-            public override DropdownSetting Create() => new(++IdIncrementor, Label, Options, DefaultOptionIndex, DropdownEntryType, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(++IdIncrementor, HeaderName, HeaderDescription, HeaderPaddling));
+            public override DropdownSetting Create() => new(++IdIncrementor, Label, Options, DefaultOptionIndex, DropdownEntryType, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
         }
     }
 }
