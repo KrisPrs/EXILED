@@ -267,6 +267,7 @@ namespace Exiled.API.Features.Core.UserSettings
                 (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
+                .Distinct()
                 .Where(s => s != null)
                 .GroupBy(s => s.Header);
 
@@ -304,6 +305,7 @@ namespace Exiled.API.Features.Core.UserSettings
                 (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
+                .Distinct()
                 .Where(s => s != null)
                 .GroupBy(s => s.Header);
 
