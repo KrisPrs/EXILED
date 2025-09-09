@@ -155,7 +155,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets or sets incrementor to avoid useless id setting.
         /// </summary>
-        protected static int IdIncrementor { get; set; }
+        protected static int IdIncrementor { get; set; } = 0;
 
         /// <summary>
         /// Tries to get the setting with the specified id.

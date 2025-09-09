@@ -24,7 +24,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="padding"><inheritdoc cref="ReducedPaddling"/></param>
         public HeaderSetting(string name, string hintDescription = "", bool padding = false)
-            : this(new SSGroupHeader(null, name, padding, hintDescription))
+            : this(new SSGroupHeader(0, name, padding, hintDescription))
         {
             Base = (SSGroupHeader)base.Base;
         }
@@ -37,7 +37,7 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
-            Base.SetId(null, settingBase.Label);
+            Base.SetId(0, settingBase.Label);
         }
 
         /// <inheritdoc/>
