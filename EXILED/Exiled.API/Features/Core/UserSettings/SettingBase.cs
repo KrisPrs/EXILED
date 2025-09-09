@@ -263,21 +263,25 @@ namespace Exiled.API.Features.Core.UserSettings
         public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
             IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
-            IEnumerable<IGrouping<HeaderSetting, SettingBase>> grouped =
-                (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+            var grouped = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
                 .Distinct()
                 .Where(s => s != null)
-                .GroupBy(s => s.Header);
+                .GroupBy(s => s.Header.Label)
+                .Select(g => new
+                {
+                    Header = g.First().Header,
+                    Items = g.AsEnumerable(),
+                });
 
             List<SettingBase> result = new();
-            foreach (IGrouping<HeaderSetting, SettingBase> grouping in grouped)
+            foreach (var group in grouped)
             {
-                if (grouping.Key != null)
-                    result.Add(grouping.Key);
+                if (group.Header != null)
+                    result.Add(group.Header);
 
-                result.AddRange(grouping);
+                result.AddRange(group.Items);
             }
 
             ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
@@ -301,21 +305,25 @@ namespace Exiled.API.Features.Core.UserSettings
         public static IEnumerable<SettingBase> Register(Player player, IEnumerable<SettingBase> settings)
         {
             IEnumerable<SettingBase> settingBases = settings as SettingBase[] ?? settings.ToArray();
-            IEnumerable<IGrouping<HeaderSetting, SettingBase>> grouped =
-                (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
+            var grouped = (ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>())
                 .Select(Create)
                 .Concat(settingBases)
                 .Distinct()
                 .Where(s => s != null)
-                .GroupBy(s => s.Header);
+                .GroupBy(s => s.Header.Label)
+                .Select(g => new
+                {
+                    Header = g.First().Header,
+                    Items = g.AsEnumerable(),
+                });
 
             List<SettingBase> result = new();
-            foreach (IGrouping<HeaderSetting, SettingBase> grouping in grouped)
+            foreach (var group in grouped)
             {
-                if (grouping.Key != null)
-                    result.Add(grouping.Key);
+                if (group.Header != null)
+                    result.Add(group.Header);
 
-                result.AddRange(grouping);
+                result.AddRange(group.Items);
             }
 
             ServerSpecificSettingsSync.DefinedSettings = result.Select(x => x.Base).ToArray();
