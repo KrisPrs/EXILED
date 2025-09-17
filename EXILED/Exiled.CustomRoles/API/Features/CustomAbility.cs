@@ -91,6 +91,169 @@ namespace Exiled.CustomRoles.API.Features
         }
 
         /// <summary>
+        /// Registers all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <param name="byAttribute">Whether to register by attribute.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all registered <see cref="CustomAbility"/>'s.</returns>
+        /// <remarks>
+        /// This is just a dumbed down version of <see cref="RegisterAbilities(bool, object?)"/> for QoL, if you actually use <see cref="CustomAbilityAttribute"/>, do not use this overload.
+        /// </remarks>
+        public static IEnumerable<CustomAbility> RegisterAbilities(bool byAttribute = false)
+        {
+            if (byAttribute)
+            {
+                return RegisterAbilities(false, null);
+            }
+
+            List<CustomAbility> abilities = new();
+
+            foreach (Type type in Assembly.GetCallingAssembly().GetTypes())
+            {
+                if (type.IsAbstract || !type.IsSubclassOf(typeof(CustomAbility)))
+                    continue;
+
+                CustomAbility ability = (CustomAbility)Activator.CreateInstance(type);
+
+                if (ability.TryRegister())
+                    abilities.Add(ability);
+            }
+
+            return abilities;
+        }
+
+        /// <summary>
+        /// Registers all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <param name="skipReflection">Whether reflection is skipped (more efficient if you are not using your custom item classes as config objects).</param>
+        /// <param name="overrideClass">The class to search properties for, if different from the plugin's config class.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all registered <see cref="CustomAbility"/>'s.</returns>
+        public static IEnumerable<CustomAbility> RegisterAbilities(bool skipReflection = false, object? overrideClass = null)
+        {
+            List<CustomAbility> abilities = new();
+            Assembly assembly = Assembly.GetCallingAssembly();
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (type.BaseType != typeof(CustomAbility) || type.GetCustomAttribute(typeof(CustomAbilityAttribute)) is null)
+                    continue;
+
+                CustomAbility? customAbility = null;
+
+                if (!skipReflection && Server.PluginAssemblies.ContainsKey(assembly))
+                {
+                    IPlugin<IConfig> plugin = Server.PluginAssemblies[assembly];
+
+                    foreach (PropertyInfo property in overrideClass?.GetType().GetProperties() ??
+                                                      plugin.Config.GetType().GetProperties())
+                    {
+                        if (property.PropertyType != type)
+                            continue;
+
+                        customAbility = property.GetValue(overrideClass ?? plugin.Config) as CustomAbility;
+                        break;
+                    }
+                }
+
+                if (customAbility is null)
+                    customAbility = (CustomAbility)Activator.CreateInstance(type);
+
+                if (customAbility.TryRegister())
+                    abilities.Add(customAbility);
+            }
+
+            return abilities;
+        }
+
+        /// <summary>
+        /// Registers all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <param name="targetTypes">The <see cref="IEnumerable{T}"/> of <see cref="Type"/> containing the target types.</param>
+        /// <param name="isIgnored">A value indicating whether the target types should be ignored.</param>
+        /// <param name="skipReflection">Whether reflection is skipped (more efficient if you are not using your custom item classes as config objects).</param>
+        /// <param name="overrideClass">The class to search properties for, if different from the plugin's config class.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all registered <see cref="CustomAbility"/>'s.</returns>
+        public static IEnumerable<CustomAbility> RegisterAbilities(IEnumerable<Type> targetTypes, bool isIgnored = false, bool skipReflection = false, object? overrideClass = null)
+        {
+            List<CustomAbility> abilities = new();
+            Assembly assembly = Assembly.GetCallingAssembly();
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (((type.BaseType != typeof(CustomAbility)) && !type.IsSubclassOf(typeof(CustomAbility))) || type.GetCustomAttribute(typeof(CustomAbilityAttribute)) is null ||
+                    (isIgnored && targetTypes.Contains(type)) || (!isIgnored && !targetTypes.Contains(type)))
+                    continue;
+
+                CustomAbility? customAbility = null;
+
+                if (!skipReflection && Server.PluginAssemblies.ContainsKey(assembly))
+                {
+                    IPlugin<IConfig> plugin = Server.PluginAssemblies[assembly];
+
+                    foreach (PropertyInfo property in overrideClass?.GetType().GetProperties() ?? plugin.Config.GetType().GetProperties())
+                    {
+                        if (property.PropertyType != type)
+                            continue;
+
+                        customAbility = property.GetValue(overrideClass ?? plugin.Config) as CustomAbility;
+                    }
+                }
+
+                if (customAbility is null)
+                    customAbility = (CustomAbility)Activator.CreateInstance(type);
+
+                if (customAbility.TryRegister())
+                    abilities.Add(customAbility);
+            }
+
+            return abilities;
+        }
+
+        /// <summary>
+        /// Unregisters all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all unregistered <see cref="CustomAbility"/>'s.</returns>
+        public static IEnumerable<CustomAbility> UnregisterAbilities()
+        {
+            List<CustomAbility> unregisteredAbilities = new();
+
+            foreach (CustomAbility customAbility in Registered)
+            {
+                customAbility.TryUnregister();
+                unregisteredAbilities.Add(customAbility);
+            }
+
+            return unregisteredAbilities;
+        }
+
+        /// <summary>
+        /// Unregisters all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <param name="targetTypes">The <see cref="IEnumerable{T}"/> of <see cref="Type"/> containing the target types.</param>
+        /// <param name="isIgnored">A value indicating whether the target types should be ignored.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all unregistered <see cref="CustomAbility"/>'s.</returns>
+        public static IEnumerable<CustomAbility> UnregisterAbilities(IEnumerable<Type> targetTypes, bool isIgnored = false)
+        {
+            List<CustomAbility> unregisteredAbilities = new();
+
+            foreach (CustomAbility customAbility in Registered)
+            {
+                if ((targetTypes.Contains(customAbility.GetType()) && isIgnored) || (!targetTypes.Contains(customAbility.GetType()) && !isIgnored))
+                    continue;
+
+                customAbility.TryUnregister();
+                unregisteredAbilities.Add(customAbility);
+            }
+
+            return unregisteredAbilities;
+        }
+
+        /// <summary>
+        /// Unregisters all the <see cref="CustomAbility"/>'s present in the current assembly.
+        /// </summary>
+        /// <param name="targetAbilities">The <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> containing the target roles.</param>
+        /// <param name="isIgnored">A value indicating whether the target abilities should be ignored.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="CustomAbility"/> which contains all unregistered <see cref="CustomAbility"/>'s.</returns>
+        public static IEnumerable<CustomAbility> UnregisterAbilities(IEnumerable<CustomAbility> targetAbilities, bool isIgnored = false) => UnregisterAbilities(targetAbilities.Select(x => x.GetType()), isIgnored);
+
+        /// <summary>
         ///     Checks to see if the specified player has this ability.
         /// </summary>
         /// <param name="player">The <see cref="Player" /> to check.</param>

@@ -13,14 +13,16 @@ namespace Exiled.API.Features.Pickups
 
     using Exiled.API.Extensions;
     using Exiled.API.Features.Core;
-    using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups.Keycards;
     using Exiled.API.Features.Pickups.Projectiles;
     using Exiled.API.Interfaces;
+
     using InventorySystem;
     using InventorySystem.Items;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
     using InventorySystem.Items.Usables.Scp244;
+
     using Mirror;
     using RelativePositioning;
     using UnityEngine;
@@ -36,6 +38,7 @@ namespace Exiled.API.Features.Pickups
     using BaseScp1576Pickup = InventorySystem.Items.Usables.Scp1576.Scp1576Pickup;
     using BaseScp2176Projectile = InventorySystem.Items.ThrowableProjectiles.Scp2176Projectile;
     using BaseScp330Pickup = InventorySystem.Items.Usables.Scp330.Scp330Pickup;
+
     using Object = UnityEngine.Object;
 
     /// <summary>
@@ -315,7 +318,16 @@ namespace Exiled.API.Features.Pickups
                     _ => new GrenadePickup(timeGrenade),
                 },
                 BaseFirearmPickup firearmPickup => new FirearmPickup(firearmPickup),
-                BaseKeycardPickup keycardPickup => new KeycardPickup(keycardPickup),
+                BaseKeycardPickup keycardPickup => keycardPickup.NetworkInfo.ItemId switch
+                {
+                    ItemType.KeycardCustomTaskForce => new TaskForceKeycardPickup(keycardPickup),
+                    ItemType.KeycardCustomSite02 => new Site02KeycardPickup(keycardPickup),
+                    ItemType.KeycardCustomManagement => new ManagementKeycardPickup(keycardPickup),
+                    ItemType.KeycardCustomMetalCase => new MetalKeycardPickup(keycardPickup),
+                    ItemType.SurfaceAccessPass => new SingleUseKeycardPickup(keycardPickup),
+                    ItemType.KeycardChaosInsurgency => new ChaosKeycardPickup(keycardPickup),
+                    _ => new KeycardPickup(keycardPickup),
+                },
                 BaseBodyArmorPickup bodyArmorPickup => new BodyArmorPickup(bodyArmorPickup),
                 BaseScp330Pickup scp330Pickup => new Scp330Pickup(scp330Pickup),
                 BaseScp1576Pickup scp1576Pickup => new Scp1576Pickup(scp1576Pickup),
@@ -485,7 +497,16 @@ namespace Exiled.API.Features.Pickups
                 _ => new GrenadePickup(type),
             },
             BaseFirearmPickup => new FirearmPickup(type),
-            BaseKeycardPickup => new KeycardPickup(type),
+            BaseKeycardPickup => type switch
+            {
+                ItemType.KeycardCustomTaskForce => new TaskForceKeycardPickup(type),
+                ItemType.KeycardCustomSite02 => new Site02KeycardPickup(type),
+                ItemType.KeycardCustomManagement => new ManagementKeycardPickup(type),
+                ItemType.KeycardCustomMetalCase => new MetalKeycardPickup(type),
+                ItemType.SurfaceAccessPass => new SingleUseKeycardPickup(type),
+                ItemType.KeycardChaosInsurgency => new ChaosKeycardPickup(type),
+                _ => new KeycardPickup(type),
+            },
             BaseBodyArmorPickup => new BodyArmorPickup(type),
             BaseScp330Pickup => new Scp330Pickup(),
             BaseScp1576Pickup => new Scp1576Pickup(),
@@ -530,7 +551,7 @@ namespace Exiled.API.Features.Pickups
         /// <typeparam name="T">The specified <see cref="Pickup"/> type.</typeparam>
         /// <returns>The created <see cref="Pickup"/>.</returns>
         /// <seealso cref="Projectile.Create(Enums.ProjectileType)"/>
-        public static Pickup Create<T>(ItemType type) // TODO modify return type to "T"
+        public static T Create<T>(ItemType type)
             where T : Pickup => Create(type) as T;
 
         /// <summary>

@@ -16,10 +16,8 @@ namespace Exiled.Events
     using Exiled.API.Features.Core.UserSettings;
     using Exiled.Events.Features;
     using HarmonyLib;
-    using Interactables.Interobjects.DoorUtils;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.Usables;
-    using InventorySystem.Items.Usables.Scp330;
     using PlayerRoles.Ragdolls;
     using PlayerRoles.RoleAssign;
 
@@ -89,8 +87,8 @@ namespace Exiled.Events
             AdminToys.AdminToyBase.OnAdded += Handlers.Internal.AdminToyList.OnAddedAdminToys;
             AdminToys.AdminToyBase.OnRemoved += Handlers.Internal.AdminToyList.OnRemovedAdminToys;
 
-            AdminToys.AdminToyBase.OnAdded += Handlers.Internal.AdminToyList.OnAddedAdminToys;
-            AdminToys.AdminToyBase.OnRemoved += Handlers.Internal.AdminToyList.OnRemovedAdminToys;
+            LabApi.Events.Handlers.PlayerEvents.ReloadingWeapon += Handlers.Player.OnReloadingWeapon;
+            LabApi.Events.Handlers.PlayerEvents.UnloadingWeapon += Handlers.Player.OnUnloadingWeapon;
 
             ServerConsole.ReloadServerName();
         }
@@ -124,6 +122,11 @@ namespace Exiled.Events
             RagdollManager.OnRagdollRemoved -= Handlers.Internal.RagdollList.OnRemovedRagdoll;
             ItemPickupBase.OnPickupAdded -= Handlers.Internal.PickupEvent.OnSpawnedPickup;
             ItemPickupBase.OnPickupDestroyed -= Handlers.Internal.PickupEvent.OnRemovedPickup;
+
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived -= SettingBase.OnSettingUpdated;
+
+            LabApi.Events.Handlers.PlayerEvents.ReloadingWeapon -= Handlers.Player.OnReloadingWeapon;
+            LabApi.Events.Handlers.PlayerEvents.UnloadingWeapon -= Handlers.Player.OnUnloadingWeapon;
         }
 
         /// <summary>
