@@ -451,7 +451,7 @@ namespace Exiled.API.Features.Roles
                 roleTypeId = obfuscatedRole.GetRoleForUser(player.ReferenceHub);
             }
 
-            player.Connection.Send(new RoleSyncInfo(Owner.ReferenceHub, roleTypeId, player.ReferenceHub));
+            player.Connection.Send(new RoleSyncInfo(Owner.ReferenceHub, roleTypeId, player.ReferenceHub, null));
             Owner.RoleManager.PreviouslySentRole[player.NetId] = roleTypeId;
         }
 
