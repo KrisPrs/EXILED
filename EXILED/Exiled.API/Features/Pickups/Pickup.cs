@@ -145,6 +145,19 @@ namespace Exiled.API.Features.Pickups
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether Pickup is kinematic.
+        /// </summary>
+        public bool IsKinematic
+        {
+            get => Rigidbody.isKinematic;
+            set
+            {
+                Rigidbody.isKinematic = value;
+                PhysicsModule.ServerSendRpc(PhysicsModule.ServerWriteRigidbody);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the pickup's scale value.
         /// </summary>
         public Vector3 Scale
