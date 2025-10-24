@@ -31,6 +31,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         internal static readonly List<SettingBase> Settings = new();
 
+        private static readonly Dictionary<Player, bool> WasPressed = new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingBase"/> class.
         /// </summary>
@@ -477,6 +479,17 @@ namespace Exiled.API.Features.Core.UserSettings
             if (setting.OriginalDefinition == null)
             {
                 Settings.Add(Create(settingBase.OriginalDefinition));
+            }
+
+            if (setting is KeybindSetting keybindSetting)
+            {
+                if (!WasPressed.TryGetValue(player, out bool wasPressedPreviously))
+                    wasPressedPreviously = false;
+
+                if (wasPressedPreviously == keybindSetting.IsPressed)
+                    return;
+
+                WasPressed[player] = keybindSetting.IsPressed;
             }
 
             setting.OriginalDefinition?.OnChanged?.Invoke(player, setting);
