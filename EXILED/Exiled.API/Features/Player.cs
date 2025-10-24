@@ -64,6 +64,7 @@ namespace Exiled.API.Features
     using VoiceChat.Playbacks;
 
     using static DamageHandlers.DamageHandlerBase;
+    using static InventorySystem.Items.Firearms.Modules.AnimatorReloaderModuleBase;
 
     using DamageHandlerBase = PlayerStatsSystem.DamageHandlerBase;
     using Firearm = Items.Firearm;
@@ -145,11 +146,17 @@ namespace Exiled.API.Features
         public static IEnumerable<Player> Enumerable => Dictionary.Values;
 
         /// <summary>
-        /// Gets the number of players currently on the server.
+        /// Gets the number of players (Count Dummy with it) currently on the server.
         /// </summary>
         /// <seealso cref="List"/>
         /// <seealso cref="Enumerable"/>
-        public static int Count => Dictionary.Count;
+        /// <seealso cref="ConnectedCount"/>
+        public static int Count => List.Count;
+
+        /// <summary>
+        /// Gets the number of connected players currently on the server.
+        /// </summary>
+        public static int ConnectedCount => ReferenceHub.GetPlayerCount(CentralAuth.ClientInstanceMode.ReadyClient);
 
         /// <summary>
         /// Gets a <see cref="Dictionary{TKey, TValue}"/> containing cached <see cref="Player"/> and their user ids.
@@ -462,6 +469,15 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the player has noclip enabled.
+        /// </summary>
+        public bool IsNoclipEnabled
+        {
+            get => ReferenceHub.playerStats.GetModule<AdminFlagsStat>().HasFlag(AdminFlags.Noclip);
+            set => ReferenceHub.playerStats.GetModule<AdminFlagsStat>().SetFlag(AdminFlags.Noclip, value);
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the <see cref="Player"/> that currently has the player cuffed.
         /// <para>
         /// This value will be <see langword="null"/> if the player is not cuffed. Setting this value to <see langword="null"/> will uncuff the player if they are cuffed.
@@ -516,8 +532,15 @@ namespace Exiled.API.Features
         /// <returns>Returns the direction the player is looking at.</returns>
         public Quaternion Rotation
         {
-            get => Transform.rotation;
-            set => ReferenceHub.TryOverrideRotation(value.eulerAngles);
+            get => CameraTransform.rotation;
+            set
+            {
+                Vector2 rotation = value.eulerAngles;
+                rotation.x = Mathf.Repeat(rotation.x + 180f, 360f) - 180f; // X Rotation is limited to [-88, 88] degrees, and just clamps values like 400 even though they are in range
+                rotation.x *= -1; // X Rotation is inverted in class FpcMouseLook
+                rotation.y = Mathf.Repeat(rotation.y, 360f); // This is necessary because rotation is clamped in FpcMouseLook
+                ReferenceHub.TryOverrideRotation(rotation);
+            }
         }
 
         /// <summary>
@@ -1152,8 +1175,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsSpectatable
         {
-            get => SpectatableVisibilityManager.IsHidden(ReferenceHub);
-            set => SpectatableVisibilityManager.SetHidden(ReferenceHub, value);
+            get => !SpectatableVisibilityManager.IsHidden(ReferenceHub);
+            set => SpectatableVisibilityManager.SetHidden(ReferenceHub, !value);
         }
 
         /// <summary>
@@ -1811,6 +1834,25 @@ namespace Exiled.API.Features
         public bool TryRemoveCustomeRoleFriendlyFire(string role) => CustomRoleFriendlyFireMultiplier.Remove(role);
 
         /// <summary>
+        /// Forces the player's client to play the weapon reload animation, bypassing server-side checks.
+        /// </summary>
+        /// <returns><see langword="true"/> if the command to start reloading was sent. Otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// This method does not check if the weapon can actually be reloaded. It only forces the animation and is not guaranteed to result in a successful reload.
+        /// </remarks>
+        public bool ReloadWeapon()
+        {
+            if (CurrentItem is not Firearm firearm || firearm.AnimatorReloaderModule == null)
+            {
+                return false;
+            }
+
+            firearm.AnimatorReloaderModule.IsReloading = true;
+            firearm.AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Reload);
+            return true;
+        }
+
+        /// <summary>
         /// Forces the player to reload their current weapon.
         /// </summary>
         /// <returns><see langword="true"/> if the firearm was successfully reloaded. Otherwise, <see langword="false"/>.</returns>
@@ -1822,6 +1864,39 @@ namespace Exiled.API.Features
             }
 
             return firearm.AnimatorReloaderModule.ServerTryReload();
+        }
+
+        /// <summary>
+        /// Forces the player's client to play the weapon unload animation, bypassing server-side checks.
+        /// </summary>
+        /// <returns><see langword="true"/> if the command to start unloading was sent. Otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// This method does not check if the weapon can actually be unloaded. It only forces the animation and is not guaranteed to result in a successful unload.
+        /// </remarks>
+        public bool UnloadWeapon()
+        {
+            if (CurrentItem is not Firearm firearm || firearm.AnimatorReloaderModule == null)
+            {
+                return false;
+            }
+
+            firearm.AnimatorReloaderModule.IsUnloading = true;
+            firearm.AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Unload);
+            return true;
+        }
+
+        /// <summary>
+        /// Forces the player to unload their current weapon.
+        /// </summary>
+        /// <returns><see langword="true"/> if the firearm was successfully unloaded. Otherwise, <see langword="false"/>.</returns>
+        public bool TryUnloadWeapon()
+        {
+            if (CurrentItem is not Firearm firearm || firearm.AnimatorReloaderModule == null)
+            {
+                return false;
+            }
+
+            return firearm.AnimatorReloaderModule.ServerTryUnload();
         }
 
         /// <summary>

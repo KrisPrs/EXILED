@@ -50,11 +50,11 @@ namespace Exiled.Events.Patches.Events.Server
                 new[]
                 {
                     // GetPlayers(list);
-                    new CodeInstruction(OpCodes.Ldloc_S, 2).MoveLabelsFrom(newInstructions[index]),
+                    new CodeInstruction(OpCodes.Ldloc_S, 3).MoveLabelsFrom(newInstructions[index]),
                     new(OpCodes.Call, Method(typeof(RespawningTeam), nameof(GetPlayers))),
 
                     // maxWaveSize
-                    new(OpCodes.Ldloc_3),
+                    new(OpCodes.Ldloc_0),
 
                     // wave
                     new(OpCodes.Ldarg_0),
@@ -84,21 +84,33 @@ namespace Exiled.Events.Patches.Events.Server
                     new CodeInstruction(OpCodes.Ldloc_S, ev.LocalIndex).WithLabels(continueLabel),
                     new(OpCodes.Dup),
                     new(OpCodes.Dup),
+                    new(OpCodes.Dup),
 
                     // num = ev.MaximumRespawnAmount
                     new(OpCodes.Callvirt, PropertyGetter(typeof(RespawningTeamEventArgs), nameof(RespawningTeamEventArgs.MaximumRespawnAmount))),
-                    new(OpCodes.Stloc_3),
+                    new(OpCodes.Stloc_0),
 
                     // list = GetHubs(ev.Players)
                     new(OpCodes.Callvirt, PropertyGetter(typeof(RespawningTeamEventArgs), nameof(RespawningTeamEventArgs.Players))),
                     new(OpCodes.Call, Method(typeof(RespawningTeam), nameof(GetHubs))),
-                    new(OpCodes.Stloc_S, 2),
+                    new(OpCodes.Stloc_S, 3),
 
                     // wave = ev.Wave.Base;
                     new(OpCodes.Callvirt, PropertyGetter(typeof(RespawningTeamEventArgs), nameof(RespawningTeamEventArgs.Wave))),
                     new(OpCodes.Callvirt, PropertyGetter(typeof(TimedWave), nameof(TimedWave.Base))),
                     new(OpCodes.Starg_S, 0),
+
+                    // WaveSpawner.SpawnQueue = ev.SpawnQueue;
+                    new(OpCodes.Callvirt, PropertyGetter(typeof(RespawningTeamEventArgs), nameof(RespawningTeamEventArgs.SpawnQueue))),
+                    new(OpCodes.Stsfld, Field(typeof(WaveSpawner), nameof(WaveSpawner.SpawnQueue))),
                 });
+
+            // remove "wave.PopulateQueue(WaveSpawner.SpawnQueue, num);"
+            offset = -3;
+            index = newInstructions.FindIndex(instruction => instruction.Calls(Method(typeof(SpawnableWaveBase), nameof(SpawnableWaveBase.PopulateQueue)))) + offset;
+            List<Label> extractLabels = newInstructions[index].ExtractLabels();
+            newInstructions.RemoveRange(index, 4);
+            newInstructions[index].WithLabels(extractLabels);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
@@ -106,15 +118,8 @@ namespace Exiled.Events.Patches.Events.Server
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
 
-        private static List<Player> GetPlayers(List<ReferenceHub> hubs) => hubs.Select(Player.Get).ToList();
+        private static List<Player> GetPlayers(ReferenceHub[] hubs) => hubs.Select(Player.Get).ToList();
 
-        private static List<ReferenceHub> GetHubs(List<Player> players) => players.Select(player => player.ReferenceHub).ToList();
-
-        private static void RefillQueue(Queue<RoleTypeId> newQueue)
-        {
-            WaveSpawner.SpawnQueue.Clear();
-            foreach (RoleTypeId role in newQueue)
-                WaveSpawner.SpawnQueue.Enqueue(role);
-        }
+        private static ReferenceHub[] GetHubs(List<Player> players) => players.Select(player => player.ReferenceHub).ToArray();
     }
 }
