@@ -127,7 +127,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="UnityEngine.Bounds"/> representing the space inside the lift.
         /// </summary>
-        public Bounds Bounds => Base.WorldspaceBounds;
+        public Bounds Bounds => (Bounds) Base.WorldspaceBounds;
 
         /// <summary>
         /// Gets the lift's <see cref="ElevatorType"/>.
