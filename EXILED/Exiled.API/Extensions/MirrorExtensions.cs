@@ -522,6 +522,9 @@ namespace Exiled.API.Extensions
         /// <param name="pos">The position to change.</param>
         public static void MoveNetworkIdentityObject(this Player player, NetworkIdentity identity, Vector3 pos)
         {
+            if (identity == null)
+                return;
+
             identity.gameObject.transform.position = pos;
             ObjectDestroyMessage objectDestroyMessage = new()
             {
@@ -569,6 +572,9 @@ namespace Exiled.API.Extensions
         /// <param name="scale">The scale the object needs to be set to.</param>
         public static void ScaleNetworkIdentityObject(this Player player, NetworkIdentity identity, Vector3 scale)
         {
+            if (identity == null)
+                return;
+
             identity.gameObject.transform.localScale = scale;
             ObjectDestroyMessage objectDestroyMessage = new()
             {
@@ -586,6 +592,9 @@ namespace Exiled.API.Extensions
         /// <param name="pos">The position to change.</param>
         public static void MoveNetworkIdentityObject(this NetworkIdentity identity, Vector3 pos)
         {
+            if (identity == null)
+                return;
+
             identity.gameObject.transform.position = pos;
             ObjectDestroyMessage objectDestroyMessage = new()
             {
@@ -606,6 +615,9 @@ namespace Exiled.API.Extensions
         /// <param name="scale">The scale the object needs to be set to.</param>
         public static void ScaleNetworkIdentityObject(this NetworkIdentity identity, Vector3 scale)
         {
+            if (identity == null)
+                return;
+
             identity.gameObject.transform.localScale = scale;
             ObjectDestroyMessage objectDestroyMessage = new()
             {
@@ -630,7 +642,7 @@ namespace Exiled.API.Extensions
         /// <param name="value">Value of send to target.</param>
         public static void SendFakeSyncVar<T>(this Player target, NetworkIdentity behaviorOwner, Type targetType, string propertyName, T value)
         {
-            if (!target.IsConnected)
+            if (!target.IsConnected || behaviorOwner == null)
                 return;
 
             NetworkWriterPooled writer = NetworkWriterPool.Get();
@@ -674,7 +686,12 @@ namespace Exiled.API.Extensions
         /// <param name="behaviorOwner"><see cref="NetworkIdentity"/> of object that owns <see cref="NetworkBehaviour"/>.</param>
         /// <param name="targetType"><see cref="NetworkBehaviour"/>'s type.</param>
         /// <param name="propertyName">Property name starting with Network.</param>
-        public static void ResyncSyncVar(NetworkIdentity behaviorOwner, Type targetType, string propertyName) => SetDirtyBitsMethodInfo.Invoke(behaviorOwner.gameObject.GetComponent(targetType), new object[] { SyncVarDirtyBits[$"{targetType.Name}.{propertyName}"] });
+        public static void ResyncSyncVar(NetworkIdentity behaviorOwner, Type targetType, string propertyName)
+        {
+            if (behaviorOwner == null)
+                return;
+            SetDirtyBitsMethodInfo.Invoke(behaviorOwner.gameObject.GetComponent(targetType), new object[] { SyncVarDirtyBits[$"{targetType.Name}.{propertyName}"] });
+        }
 
         /// <summary>
         /// Send fake values to client's <see cref="ClientRpcAttribute"/>.
@@ -686,7 +703,7 @@ namespace Exiled.API.Extensions
         /// <param name="values">Values of send to target.</param>
         public static void SendFakeTargetRpc(Player target, NetworkIdentity behaviorOwner, Type targetType, string rpcName, params object[] values)
         {
-            if (!target.IsConnected)
+            if (!target.IsConnected || behaviorOwner == null)
                 return;
 
             NetworkWriterPooled writer = NetworkWriterPool.Get();

@@ -15,6 +15,7 @@ namespace Exiled.API.Extensions
     using CustomPlayerEffects;
     using CustomRendering;
     using Enums;
+    using Exiled.API.Features;
     using InventorySystem.Items.MarshmallowMan;
     using InventorySystem.Items.Usables.Scp244.Hypothermia;
     using PlayerRoles.FirstPersonControl;

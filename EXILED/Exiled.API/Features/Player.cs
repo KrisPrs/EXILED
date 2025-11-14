@@ -559,7 +559,11 @@ namespace Exiled.API.Features
         public PlayerPermissions RemoteAdminPermissions
         {
             get => (PlayerPermissions)ReferenceHub.serverRoles.Permissions;
-            set => ReferenceHub.serverRoles.Permissions = (ulong)value;
+            set
+            {
+                ReferenceHub.serverRoles.Permissions = (ulong)value;
+                ReferenceHub.serverRoles.FinalizeSetGroup();
+            }
         }
 
         /// <summary>
@@ -1913,7 +1917,7 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
-        /// Sets the player's rank.
+        /// Receives an existing rank(group) or, if it doesn't exist, creates a new one and assigns it to this player.
         /// </summary>
         /// <param name="name">The rank name to be set.</param>
         /// <param name="group">The group to be set.</param>
@@ -1921,17 +1925,11 @@ namespace Exiled.API.Features
         {
             if (ServerStatic.PermissionsHandler.Groups.TryGetValue(name, out UserGroup userGroup))
             {
-                userGroup.BadgeColor = group.BadgeColor;
-                userGroup.BadgeText = name;
-                userGroup.HiddenByDefault = !group.Cover;
-                userGroup.Cover = group.Cover;
-
                 ReferenceHub.serverRoles.SetGroup(userGroup, false, false);
             }
             else
             {
                 ServerStatic.PermissionsHandler.Groups.Add(name, group);
-
                 ReferenceHub.serverRoles.SetGroup(group, false, false);
             }
 
@@ -2926,14 +2924,14 @@ namespace Exiled.API.Features
 
                 Inventory.UserInventory.Items[item.Serial] = itemBase;
 
+                typeof(InventoryExtensions).InvokeStaticEvent(nameof(InventoryExtensions.OnItemAdded), new object[] { ReferenceHub, itemBase, null });
+
                 item.ChangeOwner(item.Owner, this);
 
                 if (itemBase is IAcquisitionConfirmationTrigger acquisitionConfirmationTrigger)
                 {
                     acquisitionConfirmationTrigger.AcquisitionAlreadyReceived = false;
                 }
-
-                typeof(InventoryExtensions).InvokeStaticEvent(nameof(InventoryExtensions.OnItemAdded), new object[] { ReferenceHub, itemBase, null });
 
                 Inventory.SendItemsNextFrame = true;
                 return item;
