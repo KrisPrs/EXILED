@@ -37,7 +37,7 @@ namespace Exiled.Loader
     /// </summary>
     public class Loader
     {
-        private static readonly MethodInfo FilePathSetter = typeof(LabPlugin).GetProperty("FilePath", BindingFlags.Public | BindingFlags.Instance)?.GetSetMethod(true);
+        private static readonly MethodInfo FilePathSetter = typeof(LabPlugin).GetProperty("FilePath", BindingFlags.Public | BindingFlags.Instance)?.GetSetMethod(true) !;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Loader"/> class.
@@ -256,12 +256,12 @@ namespace Exiled.Loader
                 Log.Error("Failed to resolve embedded resources for assembly '" + path + "'");
                 string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
                 if (!missingDependencies.Any())
-                    return null;
+                    return null!;
                 Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
                 Log.Error(ex);
             }
 
-            LabPlugin plugin = null;
+            LabPlugin plugin = null!;
 
             if (FilePathSetter is null)
             {
@@ -285,7 +285,7 @@ namespace Exiled.Loader
                 Log.Error(" Couldn't load the LabAPI plugin inside '" + path + "'");
                 string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
                 if (!missingDependencies.Any())
-                    return null;
+                    return null!;
                 Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
                 Log.Error(ex);
             }
@@ -342,7 +342,7 @@ namespace Exiled.Loader
                 {
                     if (ConfigManager.LoadLabAPIProperties(plugin))
                     {
-                        Properties properties = plugin.Properties;
+                        Properties properties = plugin.Properties!;
                         if (properties is { IsEnabled: true })
                         {
                             // copy pasted from LabAPI plugin enabling
