@@ -18,6 +18,7 @@ namespace Exiled.API.Extensions
 
     using AdminToys;
     using AudioPooling;
+    using Cassie;
     using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Features.Items;
@@ -475,13 +476,12 @@ namespace Exiled.API.Extensions
         /// <param name="isSubtitles">Same on <see cref="Cassie.Message(string, bool, bool, bool)"/>'s isSubtitles.</param>
         public static void PlayCassieAnnouncement(this Player player, string words, bool makeHold = false, bool makeNoise = true, bool isSubtitles = false)
         {
-            foreach (RespawnEffectsController controller in RespawnEffectsController.AllControllers)
-            {
-                if (controller != null)
-                {
-                    SendFakeTargetRpc(player, controller.netIdentity, typeof(RespawnEffectsController), nameof(RespawnEffectsController.RpcCassieAnnouncement), words.ReplaceVars(), makeHold, makeNoise, isSubtitles);
-                }
-            }
+            CassieAnnouncement announcement = new(new CassieTtsPayload(words, isSubtitles, makeHold), 0, makeNoise ? 1 : 0);
+
+            // processes makeNoise
+            announcement.OnStartedPlaying();
+
+            announcement.Payload.SendToHubsConditionally(hub => hub == player.ReferenceHub);
         }
 
         /// <summary>
@@ -495,23 +495,12 @@ namespace Exiled.API.Extensions
         /// <param name="isSubtitles">Same on <see cref="Cassie.MessageTranslated(string, string, bool, bool, bool)"/>'s isSubtitles.</param>
         public static void MessageTranslated(this Player player, string words, string translation, bool makeHold = false, bool makeNoise = true, bool isSubtitles = true)
         {
-            StringBuilder announcement = StringBuilderPool.Pool.Get();
+            CassieAnnouncement announcement = new(new CassieTtsPayload(words, customSubtitles, makeHold), 0, makeNoise ? 1 : 0);
 
-            string[] cassies = words.ReplaceVars().Split('\n');
-            string[] translations = translation.ReplaceVars().Split('\n');
+            // processes makeNoise
+            announcement.OnStartedPlaying();
 
-            for (int i = 0; i < cassies.Length; i++)
-                announcement.Append($"{translations[i].Replace(' ', ' ')}<size=0> {cassies[i]} </size><split>");
-
-            string message = StringBuilderPool.Pool.ToStringReturn(announcement);
-
-            foreach (RespawnEffectsController controller in RespawnEffectsController.AllControllers)
-            {
-                if (!controller)
-                    continue;
-
-                SendFakeTargetRpc(player, controller.netIdentity, typeof(RespawnEffectsController), nameof(RespawnEffectsController.RpcCassieAnnouncement), message, makeHold, makeNoise, isSubtitles);
-            }
+            announcement.Payload.SendToHubsConditionally(hub => hub == player.ReferenceHub);
         }
 
         /// <summary>
