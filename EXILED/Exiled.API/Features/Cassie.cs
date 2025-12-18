@@ -107,36 +107,7 @@ namespace Exiled.API.Features
         /// <param name="obsolete1">An obsolete parameter.</param>
         /// <param name="obsolete2">Another obsolete parameter.</param>
         /// <returns>Duration (in seconds) of specified message.</returns>
-        public static float CalculateDuration(string message, bool obsolete1, float obsolete2)
-        {
-            if (!CassieTtsAnnouncer.TryGetDatabase(out CassieLineDatabase cassieLineDatabase))
-            {
-                return 0;
-            }
-
-            float value = 0;
-            string[] lines = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            CassiePlaybackModifiers modifiers = new();
-            StringBuilder builder = StringBuilderPool.Pool.Get();
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                foreach (CassieInterpreter interpreter in CassieTtsAnnouncer.Interpreters)
-                {
-                    bool halt;
-                    foreach (CassieInterpreter.Result result in interpreter.GetResults(cassieLineDatabase, ref modifiers, lines[i], builder, out halt))
-                    {
-                        value += (float)result.Modifiers.GetTimeUntilNextWord(result.Line);
-                    }
-
-                    if (halt)
-                        break;
-                }
-            }
-
-            return value;
-        }
+        public static float CalculateDuration(string message, bool obsolete1, float obsolete2) => (float)LabApi.Features.Wrappers.Cassie.CalculateDuration(message, new());
 
         /// <summary>
         /// Converts a <see cref="Team"/> into a Cassie-Readable <c>CONTAINMENTUNIT</c>.
@@ -160,24 +131,7 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="num">Number to convert.</param>
         /// <returns>A CASSIE-readable <see cref="string"/> representing the number.</returns>
-        public static string ConvertNumber(int num)
-        {
-            if (!CassieTtsAnnouncer.TryGetDatabase(out CassieLineDatabase cassieLineDatabase))
-            {
-                return string.Empty;
-            }
-
-            NumberInterpreter numberInterpreter = (NumberInterpreter)CassieTtsAnnouncer.Interpreters.FirstOrDefault((CassieInterpreter x) => x is NumberInterpreter);
-            if (numberInterpreter == null)
-            {
-                return string.Empty;
-            }
-
-            CassiePlaybackModifiers cassiePlaybackModifiers = default;
-            StringBuilder stringBuilder = new();
-            numberInterpreter.GetResults(cassieLineDatabase, ref cassiePlaybackModifiers, num.ToString(), stringBuilder, out bool flag);
-            return stringBuilder.ToString();
-        }
+        public static string ConvertNumber(int num) => LabApi.Features.Wrappers.Cassie.ConvertNumber(num);
 
         /// <summary>
         /// Announce a SCP Termination.
