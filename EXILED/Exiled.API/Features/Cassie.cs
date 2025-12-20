@@ -60,14 +60,7 @@ namespace Exiled.API.Features
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
         public static void MessageTranslated(string message, string translation, bool isHeld = false, bool isNoisy = true, bool isSubtitles = true)
         {
-            StringBuilder announcement = StringBuilderPool.Pool.Get();
-            string[] cassies = message.Split('\n');
-            string[] translations = translation.Split('\n');
-            for (int i = 0; i < cassies.Length; i++)
-                announcement.Append($"{translations[i].Replace(' ', ' ')}<size=0> {cassies[i]} </size><split>");
-
-            new CassieAnnouncement(new CassieTtsPayload(message, isSubtitles, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
-            StringBuilderPool.Pool.Return(announcement);
+            new CassieAnnouncement(new CassieTtsPayload(message, translation, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
         }
 
         /// <summary>
@@ -107,7 +100,44 @@ namespace Exiled.API.Features
         /// <param name="obsolete1">An obsolete parameter.</param>
         /// <param name="obsolete2">Another obsolete parameter.</param>
         /// <returns>Duration (in seconds) of specified message.</returns>
-        public static float CalculateDuration(string message, bool obsolete1, float obsolete2) => (float)LabApi.Features.Wrappers.Cassie.CalculateDuration(message, new());
+        [Obsolete("Please use CalculateDuration(string)", true)]
+        public static float CalculateDuration(string message, bool obsolete1, float obsolete2) => CalculateDuration(message);
+
+        /// <summary>
+        /// Calculates the duration of a C.A.S.S.I.E message.
+        /// </summary>
+        /// <param name="message">The message, which duration will be calculated.</param>
+        /// <returns>Duration (in seconds) of specified message.</returns>
+        public static float CalculateDuration(string message)
+        {
+            if (!CassieTtsAnnouncer.TryGetDatabase(out CassieLineDatabase cassieLineDatabase))
+            {
+                return 0;
+            }
+
+            float value = 0;
+            string[] lines = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            CassiePlaybackModifiers modifiers = new();
+            StringBuilder builder = StringBuilderPool.Pool.Get();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                foreach (CassieInterpreter interpreter in CassieTtsAnnouncer.Interpreters)
+                {
+                    bool halt;
+                    foreach (CassieInterpreter.Result result in interpreter.GetResults(cassieLineDatabase, ref modifiers, lines[i], builder, out halt))
+                    {
+                        value += (float)result.Modifiers.GetTimeUntilNextWord(result.Line);
+                    }
+
+                    if (halt)
+                        break;
+                }
+            }
+
+            return value;
+        }
 
         /// <summary>
         /// Converts a <see cref="Team"/> into a Cassie-Readable <c>CONTAINMENTUNIT</c>.
