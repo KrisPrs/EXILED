@@ -32,12 +32,18 @@
           <HintPath>$(EXILED_REFERENCES)\FLXLib.dll</HintPath>
         </Reference>
         <Reference Include="LabApi" HintPath="$(EXILED_REFERENCES)\LabApi.dll" Private="false" />
+        <Reference Include="mscorlib">
+          <HintPath>$(EXILED_REFERENCES)\mscorlib.dll</HintPath>
+        </Reference>
         <Reference Include="Pooling" HintPath="$(EXILED_REFERENCES)\Pooling.dll" Private="false" />
         <Reference Include="Mirror" HintPath="$(EXILED_REFERENCES)\Mirror.dll" Private="false" />
         <Reference Include="NorthwoodLib" HintPath="$(EXILED_REFERENCES)\NorthwoodLib.dll" Private="false" />
         <Reference Include="Snake" HintPath="$(EXILED_REFERENCES)\Snake.dll" Private="false" />
         <Reference Include="Unity.TextMeshPro" HintPath="$(EXILED_REFERENCES)\Unity.TextMeshPro.dll" Private="false" />
         <Reference Include="UnityEngine" HintPath="$(EXILED_REFERENCES)\UnityEngine.dll" Private="false" />
+        <Reference Include="UnityEngine.AnimationModule">
+          <HintPath>$(EXILED_REFERENCES)\UnityEngine.AnimationModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.AudioModule">
           <HintPath>$(EXILED_REFERENCES)\UnityEngine.AudioModule.dll</HintPath>
         </Reference>
