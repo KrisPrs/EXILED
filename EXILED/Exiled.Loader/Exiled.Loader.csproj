@@ -57,9 +57,6 @@
 
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
         <PostBuildEvent>
-            if not "$(EXILED_DEV_REFERENCES)"=="" copy /y "$(OutputPath)$(AssemblyName).dll" "$(EXILED_DEV_REFERENCES)\"
-            if not "$(EXILED_REFERENCES)"=="" copy /y "$(OutputPath)$(AssemblyName).dll" "$(EXILED_REFERENCES)\"
-            if not "$(EXILED_REFERENCES)"=="" copy /y "$(OutputPath)$(AssemblyName).xml" "$(EXILED_REFERENCES)\"
-        </PostBuildEvent>
+            copy /Y "$(AssemblyName).dll" "$(EXILED_REFERENCES)"</PostBuildEvent>
     </PropertyGroup>
 </Project>
