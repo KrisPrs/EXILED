@@ -108,6 +108,16 @@ namespace Exiled.Events.Handlers.Internal
             }
         }
 
+        /// <inheritdoc cref="Handlers.Player.OnSpawningRagdoll(SpawningRagdollEventArgs)" />
+        public static void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
+        {
+            if (ev.Role.IsDead() || !ev.Role.IsFpcRole())
+                ev.IsAllowed = false;
+
+            if (ev.DamageHandlerBase is Exiled.Events.Patches.Fixes.FixMarshmallowManFF fixMarshamllowManFf)
+                ev.DamageHandlerBase = fixMarshamllowManFf.MarshmallowItem.NewDamageHandler;
+        }
+
         /// <inheritdoc cref="Scp049.OnActivatingSense(ActivatingSenseEventArgs)" />
         public static void OnActivatingSense(ActivatingSenseEventArgs ev)
         {
@@ -132,10 +142,10 @@ namespace Exiled.Events.Handlers.Internal
                 ev.Player.SendFakeSyncVar(room.RoomLightControllerNetIdentity, typeof(RoomLightController), nameof(RoomLightController.NetworkLightsEnabled), false);
             }
 
-            // TODO: Remove if this has been fixed for https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/947
-            if (ev.Player.TryGetEffect(out Hypothermia hypothermia))
+            // Fix bug that player that Join do not receive information about other players Scale
+            foreach (Player player in ReferenceHub.AllHubs.Select(Player.Get))
             {
-                hypothermia.SubEffects = hypothermia.SubEffects.Where(x => x.GetType() != typeof(PostProcessSubEffect)).ToArray();
+                player.SetFakeScale(player.Scale, new List<Player>() { ev.Player });
             }
         }
 

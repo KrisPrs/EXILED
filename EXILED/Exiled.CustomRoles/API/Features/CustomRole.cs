@@ -800,6 +800,13 @@ namespace Exiled.CustomRoles.API.Features
         }
 
         /// <summary>
+        /// Returns the CustomRole in a human-readable format.
+        /// </summary>
+        /// <returns>A string containing CustomRole-related data.</returns>
+        public override string ToString() => $"{Name} ({Id})";
+
+        /// <summary>
+        /// Tries to register this role.
         ///     Called after the role has been added to the player.
         /// </summary>
         /// <param name="player">The <see cref="Player" /> the role was added to.</param>
