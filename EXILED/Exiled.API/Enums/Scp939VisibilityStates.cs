@@ -35,6 +35,11 @@ namespace Exiled.API.Enums
         SeenByDetonation,
 
         /// <summary>
+        /// SCP-939 sees an other player due the LastHumanTracker logic.
+        /// </summary>
+        SeenByLastTracker,
+
+        /// <summary>
         /// SCP-939 sees an other player, due the base-game vision range logic.
         /// </summary>
         SeenByRange,
