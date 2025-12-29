@@ -342,6 +342,14 @@ namespace Exiled.API.Features
             => Camera.Get(cam => (position - cam.Position).sqrMagnitude <= toleration * toleration);
 
         /// <summary>
+        /// Gets the nearest camera.
+        /// </summary>
+        /// <param name="position">The position from which starting to search cameras.</param>
+        /// <returns>The nearest <see cref="Camera"/> camera.</returns>
+        public static Camera GetNearestCamera(Vector3 position)
+            => Camera.List.OrderBy(cam => (position - cam.Position).sqrMagnitude).First();
+
+        /// <summary>
         /// Explode.
         /// </summary>
         /// <param name="position">The position where explosion will be created.</param>
