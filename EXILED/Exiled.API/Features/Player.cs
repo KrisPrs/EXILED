@@ -3274,7 +3274,7 @@ namespace Exiled.API.Features
         public void DisableAllEffects()
         {
             foreach (StatusEffectBase effect in ReferenceHub.playerEffectsController.AllEffects)
-                effect.IsEnabled = false;
+                effect.ServerSetState(0);
         }
 
         /// <summary>
@@ -3308,7 +3308,7 @@ namespace Exiled.API.Features
         public void DisableEffect(EffectType effect)
         {
             if (TryGetEffect(effect, out StatusEffectBase playerEffect))
-                playerEffect.IsEnabled = false;
+                playerEffect.ServerSetState(0);
         }
 
         /// <summary>
