@@ -10,9 +10,9 @@ namespace Exiled.CustomRoles.API
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
 
     using Exiled.API.Features;
-
     using Features;
 
     /// <summary>
@@ -56,6 +56,40 @@ namespace Exiled.CustomRoles.API
             }
 
             return roles.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Gets a specific <see cref="CustomAbility"/> by type of the custom role.
+        /// </summary>
+        /// <param name="customRole">The <see cref="CustomRole"/> to check for ability.</param>
+        /// <typeparam name="T">The specified <see cref="CustomAbility"/> type.</typeparam>
+        /// <returns>A target <see cref="CustomAbility"/> (can be null).</returns>
+        public static T? GetCustomAbility<T>(this CustomRole customRole)
+            where T : CustomAbility => customRole.CustomAbilities!.OfType<T>().FirstOrDefault();
+
+        /// <summary>
+        /// Gets a specific <see cref="CustomAbility"/> by type of the custom role.
+        /// </summary>
+        /// <param name="customRole">The <see cref="CustomRole"/> to check for ability.</param>
+        /// <param name="customAbility">A target <see cref="CustomAbility"/>.</param>
+        /// <typeparam name="T">The specified <see cref="CustomAbility"/> type.</typeparam>
+        /// <returns>A boolean indicating whether or not a custom ability was found.</returns>
+        public static bool TryGetCustomAbility<T>(this CustomRole customRole, out T customAbility)
+            where T : CustomAbility
+        {
+            return (customAbility = GetCustomAbility<T>(customRole) !) is not null;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not custom abukuty has a specific <see cref="CustomAbility"/> by type.
+        /// </summary>
+        /// <param name="customRole">The <see cref="CustomRole"/> to check for ability.</param>
+        /// <typeparam name="T">The specified <see cref="CustomAbility"/> type.</typeparam>
+        /// <returns>A boolean indicating whether or not custom role has specific <see cref="CustomAbility"/>.</returns>
+        public static bool HasCustomAbility<T>(this CustomRole customRole)
+            where T : CustomAbility
+        {
+            return customRole.GetCustomAbility<T>() is not null;
         }
 
         /// <summary>
