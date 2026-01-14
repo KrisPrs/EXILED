@@ -1933,10 +1933,24 @@ namespace Exiled.API.Features
                 ReferenceHub.serverRoles.SetGroup(group, false, false);
             }
 
-            if (ServerStatic.PermissionsHandler.Members.ContainsKey(UserId))
+            ServerStatic.PermissionsHandler.Members[UserId] = name;
+        }
+
+        /// <summary>
+        /// If the rank(group) exists in the remote admin config, it will assign it to the player.
+        /// </summary>
+        /// <param name="name">The rank name to be set.</param>
+        /// <returns><see langword="true"/> if the rank(group) was found and successfully assigned, <see langword="false"/> otherwise.</returns>
+        public bool TrySetRank(string name)
+        {
+            if (ServerStatic.PermissionsHandler.Groups.TryGetValue(name, out UserGroup userGroup))
+            {
+                ReferenceHub.serverRoles.SetGroup(userGroup, false, false);
                 ServerStatic.PermissionsHandler.Members[UserId] = name;
-            else
-                ServerStatic.PermissionsHandler.Members.Add(UserId, name);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -3419,10 +3433,7 @@ namespace Exiled.API.Features
         {
             if (effect.IsEnabled)
             {
-                EnableEffect(effect.Type, effect.Duration, effect.AddDurationIfActive);
-
-                if (effect.Intensity > 0)
-                    ChangeEffectIntensity(effect.Type, effect.Intensity, effect.Duration);
+                EnableEffect(effect.Type, effect.Intensity, effect.Duration, effect.AddDurationIfActive);
             }
         }
 
@@ -3550,8 +3561,7 @@ namespace Exiled.API.Features
         {
             if (ReferenceHub.playerEffectsController.TryGetEffect(out T statusEffect))
             {
-                statusEffect.Intensity = intensity;
-                statusEffect.ServerChangeDuration(duration, true);
+                statusEffect.ServerSetState(intensity, duration, false);
             }
         }
 
@@ -3578,8 +3588,7 @@ namespace Exiled.API.Features
         {
             if (TryGetEffect(type, out StatusEffectBase statusEffect))
             {
-                statusEffect.Intensity = intensity;
-                statusEffect.ServerChangeDuration(duration, false);
+                statusEffect.ServerSetState(intensity, duration, false);
             }
         }
 

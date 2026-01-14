@@ -538,7 +538,7 @@ namespace Exiled.Loader
             EnablePlugins();
             CommandTranslationManager.Reload();
 
-            BuildInfoCommand.ModDescription = string.Join(
+            BuildInfoCommand.ModDescription += string.Join(
                 "\n",
                 AppDomain.CurrentDomain.GetAssemblies()
                     .Where(a => a.FullName.StartsWith("Exiled.", StringComparison.OrdinalIgnoreCase))
@@ -654,7 +654,10 @@ namespace Exiled.Loader
                     continue;
 
                 if (PluginLoader.EnabledPlugins.Any(p => p.Name == plugin.Name) || Plugins.Any(p => p.Name == plugin.Name) || LabAPIPlugins.Keys.Any(p => p.Name == plugin.Name))
+                {
+                    Log.Info("Skipping loading duplicate LabAPI plugin " + plugin.Name);
                     continue;
+                }
 
                 Log.Info("Successfully loaded LabAPI plugin " + plugin.Name);
                 LabAPIPlugins.Add(plugin, attempt);
