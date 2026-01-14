@@ -46,6 +46,7 @@ namespace Exiled.CustomRoles.Commands
         public string Description => "Gets the specified player(s)' current custom role(s).";
 
         /// <inheritdoc/>
+        [Obsolete("Obsolete")]
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("customroles.get"))
