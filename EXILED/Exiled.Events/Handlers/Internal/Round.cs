@@ -86,7 +86,7 @@ namespace Exiled.Events.Handlers.Internal
 
             ev.Player.InfoArea = Events.Instance.Config.DefaultPlayerInfoArea;
 
-            if (!ev.Player.IsHost && ev.NewRole == RoleTypeId.Spectator && ev.Reason != API.Enums.SpawnReason.Destroyed && Events.Instance.Config.ShouldDropInventory)
+            if (!ev.Player.IsHost && ev.NewRole == RoleTypeId.Spectator && ev.Reason is not SpawnReason.Destroyed && Events.Instance.Config.ShouldDropInventory)
                 ev.Player.Inventory.ServerDropEverything();
         }
 
