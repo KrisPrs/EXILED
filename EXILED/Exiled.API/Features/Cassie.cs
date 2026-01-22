@@ -47,7 +47,7 @@ namespace Exiled.API.Features
         /// <param name="isHeld">Indicates whether C.A.S.S.I.E has to hold the message.</param>
         /// <param name="isNoisy">Indicates whether C.A.S.S.I.E has to make noises during the message.</param>
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
-        public static void Message(string message, bool isHeld = false, bool isNoisy = true, bool isSubtitles = false) =>
+        public static void Message(string message, bool isHeld = false, bool isNoisy = false, bool isSubtitles = false) =>
             new CassieAnnouncement(new CassieTtsPayload(message, isSubtitles, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Exiled.API.Features
         /// <param name="isHeld">Indicates whether C.A.S.S.I.E has to hold the message.</param>
         /// <param name="isNoisy">Indicates whether C.A.S.S.I.E has to make noises during the message.</param>
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
-        public static void MessageTranslated(string message, string translation, bool isHeld = false, bool isNoisy = true, bool isSubtitles = true)
+        public static void MessageTranslated(string message, string translation, bool isHeld = false, bool isNoisy = false, bool isSubtitles = true)
         {
             new CassieAnnouncement(new CassieTtsPayload(message, translation, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
         }
@@ -80,7 +80,7 @@ namespace Exiled.API.Features
         /// <param name="isHeld">Indicates whether C.A.S.S.I.E has to hold the message.</param>
         /// <param name="isNoisy">Indicates whether C.A.S.S.I.E has to make noises during the message.</param>
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
-        public static void DelayedMessage(string message, float delay, bool isHeld = false, bool isNoisy = true, bool isSubtitles = false) =>
+        public static void DelayedMessage(string message, float delay, bool isHeld = false, bool isNoisy = false, bool isSubtitles = false) =>
             Timing.CallDelayed(delay, () => new CassieAnnouncement(new CassieTtsPayload(message, isSubtitles, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue());
 
         /// <summary>

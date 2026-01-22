@@ -34,7 +34,7 @@ namespace Exiled.API.Features
         /// <param name="isHeld">Indicates whether C.A.S.S.I.E has to hold the message.</param>
         /// <param name="isNoisy">Indicates whether C.A.S.S.I.E has to make noises or not during the message.</param>
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
-        public CassieMessage(string message, string subtitles, bool isHeld = false, bool isNoisy = true, bool isSubtitles = true)
+        public CassieMessage(string message, string subtitles, bool isHeld = false, bool isNoisy = false, bool isSubtitles = true)
         {
             Message = message;
             Subtitles = subtitles;
