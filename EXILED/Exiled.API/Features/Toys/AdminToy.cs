@@ -170,6 +170,7 @@ namespace Exiled.API.Features.Toys
                 Scp079CameraToy scp079CameraToy => new CameraToy(scp079CameraToy),
                 InvisibleInteractableToy invisibleInteractableToy => new InteractableToy(invisibleInteractableToy),
                 TextToy textToy => new Text(textToy),
+                WaypointToy waypointToy => new Waypoint(waypointToy),
                 _ => throw new System.NotImplementedException()
             };
         }
