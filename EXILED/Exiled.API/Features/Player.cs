@@ -16,23 +16,18 @@ namespace Exiled.API.Features
     using Core;
     using CustomPlayerEffects;
     using CustomPlayerEffects.Danger;
+    using CustomStats;
     using DamageHandlers;
+    using Doors;
     using Enums;
     using Exiled.API.Features.Core.Interfaces;
-    using Exiled.API.Features.CustomStats;
-    using Exiled.API.Features.Doors;
-    using Exiled.API.Features.Hazards;
-    using Exiled.API.Features.Items;
-    using Exiled.API.Features.Pickups;
-    using Exiled.API.Features.Pools;
-    using Exiled.API.Features.Roles;
-    using Exiled.API.Interfaces;
-    using Exiled.API.Structs;
     using Extensions;
     using Footprinting;
     using global::Scp914;
+    using Hazards;
     using Hints;
     using Interactables.Interobjects;
+    using Interfaces;
     using InventorySystem;
     using InventorySystem.Disarming;
     using InventorySystem.Items;
@@ -42,11 +37,14 @@ namespace Exiled.API.Features
     using InventorySystem.Items.Firearms.ShotEvents;
     using InventorySystem.Items.Usables;
     using InventorySystem.Items.Usables.Scp330;
+    using Items;
+    using MapGeneration;
     using MapGeneration.Distributors;
     using MapGeneration.Rooms;
     using MEC;
     using Mirror;
     using Mirror.LiteNetLib4Mirror;
+    using Pickups;
     using PlayerRoles;
     using PlayerRoles.FirstPersonControl;
     using PlayerRoles.FirstPersonControl.Thirdperson.Subcontrollers;
@@ -54,9 +52,12 @@ namespace Exiled.API.Features
     using PlayerRoles.Spectating;
     using PlayerRoles.Voice;
     using PlayerStatsSystem;
+    using Pools;
     using RelativePositioning;
     using RemoteAdmin;
+    using Roles;
     using RoundRestarting;
+    using Structs;
     using UnityEngine;
     using Utils;
     using Utils.Networking;
@@ -1043,7 +1044,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the current <see cref="Room"/> the player is in.
         /// </summary>
-        public Room CurrentRoom => Room.FindParentRoom(GameObject);
+        public Room CurrentRoom => !Position.TryGetRoom(out RoomIdentifier room1) ? null : Room.Get(room1);
 
         /// <summary>
         /// Gets the current zone the player is in.
