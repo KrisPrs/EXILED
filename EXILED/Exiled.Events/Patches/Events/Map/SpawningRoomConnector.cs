@@ -75,31 +75,4 @@ namespace Exiled.Events.Patches.Events.Map
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
     }
-
-    /// <summary>
-    /// Patches <see cref="SeedSynchronizer.GenerateLevel"/>.
-    /// Adds the <see cref="Handlers.Map.OnSpawningRoomConnector"/> event.
-    /// </summary>
-    [EventPatch(typeof(Handlers.Map), nameof(Handlers.Map.SpawningRoomConnector))]
-    [HarmonyPatch(typeof(SeedSynchronizer), nameof(SeedSynchronizer.GenerateLevel))]
-    internal static class SpawningRoomConnectorFix
-    {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        {
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
-
-            int index = newInstructions.FindIndex(i => i.Calls(Method(typeof(RoomConnectorSpawnpointBase), nameof(RoomConnectorSpawnpointBase.SetupAllRoomConnectors))));
-            List<Label> labels = newInstructions[index].ExtractLabels();
-            List<CodeInstruction> codeInstructionsCopy = newInstructions.GetRange(index, 4);
-            newInstructions.RemoveRange(index, 4);
-            newInstructions[index].labels.AddRange(labels);
-
-            index = newInstructions.FindIndex(x => x.OperandIs(Field(typeof(SeedSynchronizer), nameof(SeedSynchronizer.MapGenerated))));
-            newInstructions.InsertRange(index, codeInstructionsCopy);
-            for (int z = 0; z < newInstructions.Count; z++)
-                yield return newInstructions[z];
-
-            ListPool<CodeInstruction>.Pool.Return(newInstructions);
-        }
-    }
 }
