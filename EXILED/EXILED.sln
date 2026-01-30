@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exiled.CreditTags", "Exiled
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exiled.CustomRoles", "Exiled.CustomRoles\Exiled.CustomRoles.csproj", "{417C3309-8B93-4218-A1D1-D4BB7B09BE0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exiled.Starter", "Exiled.Starter\Exiled.Starter.csproj", "{290794B1-EABF-4416-A36E-57F341B68372}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,12 +71,6 @@ Global
 		{417C3309-8B93-4218-A1D1-D4BB7B09BE0F}.Installer|Any CPU.ActiveCfg = Installer|Any CPU
 		{417C3309-8B93-4218-A1D1-D4BB7B09BE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{417C3309-8B93-4218-A1D1-D4BB7B09BE0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Installer|Any CPU.ActiveCfg = Debug|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Installer|Any CPU.Build.0 = Debug|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{290794B1-EABF-4416-A36E-57F341B68372}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
