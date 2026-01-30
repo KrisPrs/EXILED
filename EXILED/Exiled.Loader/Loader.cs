@@ -28,6 +28,7 @@ namespace Exiled.Loader
     using LabApi.Loader;
     using LabApi.Loader.Features.Misc;
     using LabApi.Loader.Features.Plugins.Configuration;
+    using MEC;
     using YamlDotNet.Serialization;
 
     using LabPlugin = LabApi.Loader.Features.Plugins.Plugin;
@@ -468,6 +469,8 @@ namespace Exiled.Loader
                 Log.Info($"Loading dep&plug");
 
                 LoadDependencies();
+                ExecuteDepsValidation();
+
                 LoadPlugins();
 
                 Log.Info($"Loaded dep&plug");
@@ -839,6 +842,25 @@ namespace Exiled.Loader
             {
                 Log.Error($"An error has occurred while loading dependencies! {exception}");
             }
+        }
+
+        /// <summary>
+        /// Осуществляет проверку версий.
+        /// </summary>
+        private static void ExecuteDepsValidation()
+        {
+            if (!VersionControl.ProceedHashChecks())
+            {
+                Log.SendRaw("Зависимости последней версии. Всё нормально", ConsoleColor.Yellow);
+                return;
+            }
+
+            Log.SendRaw("Внимание, обнаружены устаревшие зависимости. Сервер будет обновлён и перезапущен через 10 секунд", ConsoleColor.Yellow);
+            Timing.CallDelayed(10f, () =>
+            {
+                VersionControl.Update();
+                Server.Restart();
+            });
         }
     }
 }
