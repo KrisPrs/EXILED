@@ -5,734 +5,739 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Exiled.Loader
-{
+namespace Exiled.Loader;
+
 #nullable enable
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Security.Principal;
-    using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Threading;
 
-    using API.Interfaces;
-    using CommandSystem.Commands.Shared;
-    using Exiled.API.Features;
-    using Exiled.API.Features.Pools;
-    using Features;
-    using Features.Configs;
-    using Features.Configs.CustomConverters;
-    using LabApi.Loader;
-    using LabApi.Loader.Features.Misc;
-    using LabApi.Loader.Features.Plugins.Configuration;
-    using MEC;
-    using YamlDotNet.Serialization;
+using API.Interfaces;
+using CommandSystem.Commands.Shared;
+using Exiled.API.Features;
+using Exiled.API.Features.Pools;
+using Features;
+using Features.Configs;
+using Features.Configs.CustomConverters;
+using LabApi.Loader;
+using LabApi.Loader.Features.Misc;
+using LabApi.Loader.Features.Plugins.Configuration;
+using MEC;
+using YamlDotNet.Serialization;
 
-    using LabPlugin = LabApi.Loader.Features.Plugins.Plugin;
+using LabPlugin = LabApi.Loader.Features.Plugins.Plugin;
+
+/// <summary>
+/// Used to handle plugins.
+/// </summary>
+public class Loader
+{
+    private static readonly MethodInfo FilePathSetter = typeof(LabPlugin).GetProperty("FilePath", BindingFlags.Public | BindingFlags.Instance)?.GetSetMethod(true) !;
 
     /// <summary>
-    /// Used to handle plugins.
+    /// Initializes a new instance of the <see cref="Loader"/> class.
     /// </summary>
-    public class Loader
+    public Loader()
     {
-        private static readonly MethodInfo FilePathSetter = typeof(LabPlugin).GetProperty("FilePath", BindingFlags.Public | BindingFlags.Instance)?.GetSetMethod(true) !;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Loader"/> class.
-        /// </summary>
-        public Loader()
-        {
-            Log.Info($"Initializing at {Environment.CurrentDirectory}");
+        Log.Info($"Initializing at {Environment.CurrentDirectory}");
 
 #if PUBLIC_BETA
             Log.Warn("You are running a public beta build. It is not compatible with another version of the game.");
 #endif
 
-            Log.SendRaw($"Exiled.API - Version {LabApi.Loader.PluginLoader.Dependencies.FirstOrDefault(x => x.GetName().Name == "Exiled.API").GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}", ConsoleColor.DarkRed);
-            Log.SendRaw($"{Assembly.GetExecutingAssembly().GetName().Name} - Version {Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}", ConsoleColor.DarkRed);
+        Log.SendRaw($"Exiled.API - Version {LabApi.Loader.PluginLoader.Dependencies.FirstOrDefault(x => x.GetName().Name == "Exiled.API").GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}", ConsoleColor.DarkRed);
+        Log.SendRaw($"{Assembly.GetExecutingAssembly().GetName().Name} - Version {Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion}", ConsoleColor.DarkRed);
 
-            if (MultiAdminFeatures.MultiAdminUsed)
-            {
-                Log.SendRaw($"Detected MultiAdmin! Version: {MultiAdminFeatures.MultiAdminVersion} | Features: {MultiAdminFeatures.MultiAdminModFeatures}", ConsoleColor.Cyan);
+        if (MultiAdminFeatures.MultiAdminUsed)
+        {
+            Log.SendRaw($"Detected MultiAdmin! Version: {MultiAdminFeatures.MultiAdminVersion} | Features: {MultiAdminFeatures.MultiAdminModFeatures}", ConsoleColor.Cyan);
 
-                MultiAdminFeatures.CallEvent(MultiAdminFeatures.EventType.SERVER_START);
-                MultiAdminFeatures.CallAction(MultiAdminFeatures.ActionType.SET_SUPPORTED_FEATURES, MultiAdminFeatures.ModFeatures.All);
-            }
-
-            CustomNetworkManager.Modded = true;
+            MultiAdminFeatures.CallEvent(MultiAdminFeatures.EventType.SERVER_START);
+            MultiAdminFeatures.CallAction(MultiAdminFeatures.ActionType.SET_SUPPORTED_FEATURES, MultiAdminFeatures.ModFeatures.All);
         }
 
-        /// <summary>
-        /// Gets the plugins list.
-        /// </summary>
-        public static SortedSet<IPlugin<IConfig>> Plugins { get; } = new(PluginPriorityComparer.Instance);
+        CustomNetworkManager.Modded = true;
+    }
 
-        /// <summary>
-        /// Gets the plugins list.
-        /// </summary>
-        public static Dictionary<LabPlugin, Assembly> LabAPIPlugins { get; } = new();
+    /// <summary>
+    /// Gets the plugins list.
+    /// </summary>
+    public static SortedSet<IPlugin<IConfig>> Plugins { get; } = new(PluginPriorityComparer.Instance);
 
-        /// <summary>
-        /// Gets a dictionary containing the file paths of assemblies.
-        /// </summary>
-        public static Dictionary<Assembly, string> Locations { get; } = new();
+    /// <summary>
+    /// Gets the plugins list.
+    /// </summary>
+    public static Dictionary<LabPlugin, Assembly> LabAPIPlugins { get; } = new();
 
-        /// <summary>
-        /// Gets the initialized global random class.
-        /// </summary>
-        public static Random Random { get; } = new();
+    /// <summary>
+    /// Gets a dictionary containing the file paths of assemblies.
+    /// </summary>
+    public static Dictionary<Assembly, string> Locations { get; } = new();
 
-        /// <summary>
-        /// Gets the version of the assembly.
-        /// </summary>
-        public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
+    /// <summary>
+    /// Gets the initialized global random class.
+    /// </summary>
+    public static Random Random { get; } = new();
 
-        /// <summary>
-        /// Gets plugin dependencies.
-        /// </summary>
-        public static List<Assembly> Dependencies { get; } = new();
+    /// <summary>
+    /// Gets the version of the assembly.
+    /// </summary>
+    public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
-        /// <summary>
-        /// Gets or sets the serializer for configs and translations.
-        /// </summary>
-        public static ISerializer Serializer { get; set; } = null!;
+    /// <summary>
+    /// Gets plugin dependencies.
+    /// </summary>
+    public static List<Assembly> Dependencies { get; } = new();
 
-        /// <summary>
-        /// Gets or sets the deserializer for configs and translations.
-        /// </summary>
-        public static IDeserializer Deserializer { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the serializer for configs and translations.
+    /// </summary>
+    public static ISerializer Serializer { get; set; } = null!;
 
-        /// <summary>
-        /// Loads all plugins, both globals and locals.
-        /// </summary>
-        public static void LoadPlugins()
+    /// <summary>
+    /// Gets or sets the deserializer for configs and translations.
+    /// </summary>
+    public static IDeserializer Deserializer { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets пути к зависимостям.
+    /// </summary>
+    public static List<string> DepsPaths { get; set; } = new();
+
+    /// <summary>
+    /// Loads all plugins, both globals and locals.
+    /// </summary>
+    public static void LoadPlugins()
+    {
+        File.Delete(Path.Combine(Paths.Plugins, "Exiled.Updater.dll"));
+
+        foreach (string assemblyPath in Directory.GetFiles(Paths.Plugins, "*.dll"))
         {
-            File.Delete(Path.Combine(Paths.Plugins, "Exiled.Updater.dll"));
+            Assembly? assembly = LoadAssembly(assemblyPath);
 
-            foreach (string assemblyPath in Directory.GetFiles(Paths.Plugins, "*.dll"))
+            if (assembly is null)
+                continue;
+
+            Locations[assembly] = assemblyPath;
+        }
+
+        foreach (Assembly assembly in Locations.Keys)
+        {
+            if (Locations[assembly].Contains("dependencies"))
+                continue;
+
+            IPlugin<IConfig>? plugin = CreatePlugin(assembly);
+
+            if (plugin is null)
+                continue;
+
+            AssemblyInformationalVersionAttribute attribute = plugin.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+
+            Log.Info($"Loaded plugin {plugin.Name}@{(plugin.Version is not null ? $"{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build}" : attribute is not null ? attribute.InformationalVersion : string.Empty)}");
+
+            Server.PluginAssemblies.Add(assembly, plugin);
+            Plugins.Add(plugin);
+        }
+    }
+
+    /// <summary>
+    /// Loads an assembly.
+    /// </summary>
+    /// <param name="path">The path to load the assembly from.</param>
+    /// <returns>Returns the loaded assembly or <see langword="null"/>.</returns>
+    public static Assembly? LoadAssembly(string path)
+    {
+        try
+        {
+            Assembly assembly = Assembly.Load(File.ReadAllBytes(path));
+
+            ResolveAssemblyEmbeddedResources(assembly);
+
+            return assembly;
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"Error while loading an assembly at {path}! {exception}");
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Create a plugin instance.
+    /// </summary>
+    /// <param name="assembly">The plugin assembly.</param>
+    /// <returns>Returns the created plugin instance or <see langword="null"/>.</returns>
+    public static IPlugin<IConfig>? CreatePlugin(Assembly assembly)
+    {
+        try
+        {
+            foreach (Type type in assembly.GetTypes())
             {
-                Assembly? assembly = LoadAssembly(assemblyPath);
-
-                if (assembly is null)
+                if (type.IsAbstract || type.IsInterface)
+                {
+                    Log.Debug($"\"{type.FullName}\" is an interface or abstract class, skipping.");
                     continue;
+                }
 
-                Locations[assembly] = assemblyPath;
-            }
-
-            foreach (Assembly assembly in Locations.Keys)
-            {
-                if (Locations[assembly].Contains("dependencies"))
+                if (!IsDerivedFromPlugin(type))
+                {
+                    Log.Debug($"\"{type.FullName}\" does not inherit from Plugin<TConfig>, skipping.");
                     continue;
+                }
 
-                IPlugin<IConfig>? plugin = CreatePlugin(assembly);
+                Log.Debug($"Loading type {type.FullName}");
+
+                IPlugin<IConfig>? plugin = null;
+
+                ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
+                if (constructor is not null)
+                {
+                    Log.Debug("Public default constructor found, creating instance...");
+
+                    plugin = constructor.Invoke(null) as IPlugin<IConfig>;
+                }
+                else
+                {
+                    Log.Debug($"Constructor wasn't found, searching for a property with the {type.FullName} type...");
+
+                    object? value = Array.Find(type.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public), property => property.PropertyType == type)?.GetValue(null);
+
+                    if (value is not null)
+                        plugin = value as IPlugin<IConfig>;
+                }
 
                 if (plugin is null)
+                {
+                    Log.Error($"{type.FullName} is a valid plugin, but it cannot be instantiated! It either doesn't have a public default constructor without any arguments or a static property of the {type.FullName} type!");
+
+                    continue;
+                }
+
+                Log.Debug($"Instantiated type {type.FullName}");
+
+                if (CheckPluginRequiredExiledVersion(plugin, assembly.GetReferencedAssemblies()?.FirstOrDefault(x => x?.Name is "Exiled.Loader")?.Version ?? new()))
                     continue;
 
-                AssemblyInformationalVersionAttribute attribute = plugin.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-
-                Log.Info($"Loaded plugin {plugin.Name}@{(plugin.Version is not null ? $"{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build}" : attribute is not null ? attribute.InformationalVersion : string.Empty)}");
-
-                Server.PluginAssemblies.Add(assembly, plugin);
-                Plugins.Add(plugin);
+                return plugin;
             }
         }
+        catch (ReflectionTypeLoadException reflectionTypeLoadException)
+        {
+            Log.Error($"Error while initializing plugin {assembly.GetName().Name} (at {assembly.Location})! {reflectionTypeLoadException}");
 
-        /// <summary>
-        /// Loads an assembly.
-        /// </summary>
-        /// <param name="path">The path to load the assembly from.</param>
-        /// <returns>Returns the loaded assembly or <see langword="null"/>.</returns>
-        public static Assembly? LoadAssembly(string path)
+            foreach (Exception loaderException in reflectionTypeLoadException.LoaderExceptions)
+            {
+                Log.Error(loaderException);
+            }
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"Error while initializing plugin {assembly.GetName().Name} (at {assembly.Location})! {exception}");
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Create a plugin instance.
+    /// </summary>
+    /// <param name="assembly">The plugin assembly.</param>
+    /// <param name="path">The path of the assembly.</param>
+    /// <returns>Returns the created plugin instance or <see langword="null"/>.</returns>
+    public static LabPlugin CreateLabAPIPlugin(Assembly assembly, string path)
+    {
+        try
+        {
+            AssemblyUtils.ResolveEmbeddedResources(assembly);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Failed to resolve embedded resources for assembly '" + path + "'");
+            string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
+            if (!missingDependencies.Any())
+                return null!;
+            Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
+            Log.Error(ex);
+        }
+
+        LabPlugin plugin = null!;
+
+        if (FilePathSetter is null)
+        {
+            Log.Error("FilePath setter for LabAPI Plugin type is null!");
+        }
+
+        try
+        {
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (!type.IsSubclassOf(typeof(LabPlugin)) || type.IsAbstract || Activator.CreateInstance(type) is not LabPlugin instance)
+                    continue;
+
+                FilePathSetter?.Invoke(instance, new object[] { path });
+
+                plugin = instance;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(" Couldn't load the LabAPI plugin inside '" + path + "'");
+            string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
+            if (!missingDependencies.Any())
+                return null!;
+            Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
+            Log.Error(ex);
+        }
+
+        return plugin;
+    }
+
+    /// <summary>
+    /// Enables all plugins.
+    /// </summary>
+    public static void EnablePlugins()
+    {
+        List<IPlugin<IConfig>> toLoad = Plugins.ToList();
+
+        foreach (IPlugin<IConfig> plugin in toLoad.ToList())
         {
             try
             {
-                Assembly assembly = Assembly.Load(File.ReadAllBytes(path));
+                if (plugin.Name.StartsWith("Exiled") && plugin.Config.IsEnabled)
+                {
+                    plugin.OnEnabled();
+                    plugin.OnRegisteringCommands();
+                    toLoad.Remove(plugin);
+                }
 
-                ResolveAssemblyEmbeddedResources(assembly);
-
-                return assembly;
+                if (plugin.Config.Debug)
+                    Log.DebugEnabled.Add(plugin.Assembly);
             }
             catch (Exception exception)
             {
-                Log.Error($"Error while loading an assembly at {path}! {exception}");
+                Log.Error($"Plugin \"{plugin.Name}\" threw an exeption while enabling: {exception}");
             }
-
-            return null;
         }
 
-        /// <summary>
-        /// Create a plugin instance.
-        /// </summary>
-        /// <param name="assembly">The plugin assembly.</param>
-        /// <returns>Returns the created plugin instance or <see langword="null"/>.</returns>
-        public static IPlugin<IConfig>? CreatePlugin(Assembly assembly)
+        foreach (IPlugin<IConfig> plugin in toLoad)
         {
             try
             {
-                foreach (Type type in assembly.GetTypes())
+                if (plugin.Config.IsEnabled)
                 {
-                    if (type.IsAbstract || type.IsInterface)
-                    {
-                        Log.Debug($"\"{type.FullName}\" is an interface or abstract class, skipping.");
-                        continue;
-                    }
-
-                    if (!IsDerivedFromPlugin(type))
-                    {
-                        Log.Debug($"\"{type.FullName}\" does not inherit from Plugin<TConfig>, skipping.");
-                        continue;
-                    }
-
-                    Log.Debug($"Loading type {type.FullName}");
-
-                    IPlugin<IConfig>? plugin = null;
-
-                    ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
-                    if (constructor is not null)
-                    {
-                        Log.Debug("Public default constructor found, creating instance...");
-
-                        plugin = constructor.Invoke(null) as IPlugin<IConfig>;
-                    }
-                    else
-                    {
-                        Log.Debug($"Constructor wasn't found, searching for a property with the {type.FullName} type...");
-
-                        object? value = Array.Find(type.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public), property => property.PropertyType == type)?.GetValue(null);
-
-                        if (value is not null)
-                            plugin = value as IPlugin<IConfig>;
-                    }
-
-                    if (plugin is null)
-                    {
-                        Log.Error($"{type.FullName} is a valid plugin, but it cannot be instantiated! It either doesn't have a public default constructor without any arguments or a static property of the {type.FullName} type!");
-
-                        continue;
-                    }
-
-                    Log.Debug($"Instantiated type {type.FullName}");
-
-                    if (CheckPluginRequiredExiledVersion(plugin, assembly.GetReferencedAssemblies()?.FirstOrDefault(x => x?.Name is "Exiled.Loader")?.Version ?? new()))
-                        continue;
-
-                    return plugin;
-                }
-            }
-            catch (ReflectionTypeLoadException reflectionTypeLoadException)
-            {
-                Log.Error($"Error while initializing plugin {assembly.GetName().Name} (at {assembly.Location})! {reflectionTypeLoadException}");
-
-                foreach (Exception loaderException in reflectionTypeLoadException.LoaderExceptions)
-                {
-                    Log.Error(loaderException);
+                    plugin.OnEnabled();
+                    plugin.OnRegisteringCommands();
                 }
             }
             catch (Exception exception)
             {
-                Log.Error($"Error while initializing plugin {assembly.GetName().Name} (at {assembly.Location})! {exception}");
+                Log.Error($"Plugin \"{plugin.Name}\" threw an exception while enabling: {exception}");
             }
-
-            return null;
         }
 
-        /// <summary>
-        /// Create a plugin instance.
-        /// </summary>
-        /// <param name="assembly">The plugin assembly.</param>
-        /// <param name="path">The path of the assembly.</param>
-        /// <returns>Returns the created plugin instance or <see langword="null"/>.</returns>
-        public static LabPlugin CreateLabAPIPlugin(Assembly assembly, string path)
+        foreach (LabPlugin plugin in LabAPIPlugins.Keys.OrderBy(plugin => plugin.Priority))
         {
             try
             {
-                AssemblyUtils.ResolveEmbeddedResources(assembly);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to resolve embedded resources for assembly '" + path + "'");
-                string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
-                if (!missingDependencies.Any())
-                    return null!;
-                Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
-                Log.Error(ex);
-            }
-
-            LabPlugin plugin = null!;
-
-            if (FilePathSetter is null)
-            {
-                Log.Error("FilePath setter for LabAPI Plugin type is null!");
-            }
-
-            try
-            {
-                foreach (Type type in assembly.GetTypes())
+                if (ConfigManager.LoadLabAPIProperties(plugin))
                 {
-                    if (!type.IsSubclassOf(typeof(LabPlugin)) || type.IsAbstract || Activator.CreateInstance(type) is not LabPlugin instance)
-                        continue;
-
-                    FilePathSetter?.Invoke(instance, new object[] { path });
-
-                    plugin = instance;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(" Couldn't load the LabAPI plugin inside '" + path + "'");
-                string[] missingDependencies = AssemblyUtils.GetMissingDependencies(assembly).ToArray();
-                if (!missingDependencies.Any())
-                    return null!;
-                Log.Error("Missing dependencies:\n" + string.Join("\n", missingDependencies.Select(x => "-\t " + x)));
-                Log.Error(ex);
-            }
-
-            return plugin;
-        }
-
-        /// <summary>
-        /// Enables all plugins.
-        /// </summary>
-        public static void EnablePlugins()
-        {
-            List<IPlugin<IConfig>> toLoad = Plugins.ToList();
-
-            foreach (IPlugin<IConfig> plugin in toLoad.ToList())
-            {
-                try
-                {
-                    if (plugin.Name.StartsWith("Exiled") && plugin.Config.IsEnabled)
+                    Properties properties = plugin.Properties!;
+                    if (properties is { IsEnabled: true })
                     {
-                        plugin.OnEnabled();
-                        plugin.OnRegisteringCommands();
-                        toLoad.Remove(plugin);
-                    }
-
-                    if (plugin.Config.Debug)
-                        Log.DebugEnabled.Add(plugin.Assembly);
-                }
-                catch (Exception exception)
-                {
-                    Log.Error($"Plugin \"{plugin.Name}\" threw an exeption while enabling: {exception}");
-                }
-            }
-
-            foreach (IPlugin<IConfig> plugin in toLoad)
-            {
-                try
-                {
-                    if (plugin.Config.IsEnabled)
-                    {
-                        plugin.OnEnabled();
-                        plugin.OnRegisteringCommands();
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Log.Error($"Plugin \"{plugin.Name}\" threw an exception while enabling: {exception}");
-                }
-            }
-
-            foreach (LabPlugin plugin in LabAPIPlugins.Keys.OrderBy(plugin => plugin.Priority))
-            {
-                try
-                {
-                    if (ConfigManager.LoadLabAPIProperties(plugin))
-                    {
-                        Properties properties = plugin.Properties!;
-                        if (properties is { IsEnabled: true })
+                        // copy pasted from LabAPI plugin enabling
+                        try
                         {
-                            // copy pasted from LabAPI plugin enabling
-                            try
-                            {
-                                CustomNetworkManager.Modded = true;
-                                plugin.RegisterCommands();
-                                plugin.Enable();
+                            CustomNetworkManager.Modded = true;
+                            plugin.RegisterCommands();
+                            plugin.Enable();
 
-                                Log.Info($"LabAPI plugin {plugin.Name} v{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build} by {plugin.Author} has been enabled!");
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"Couldn't enable the LabAPI plugin {plugin}");
-                                Log.Error(ex);
-                            }
+                            Log.Info($"LabAPI plugin {plugin.Name} v{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build} by {plugin.Author} has been enabled!");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Couldn't enable the LabAPI plugin {plugin}");
+                            Log.Error(ex);
                         }
                     }
                 }
-                catch (Exception exception)
-                {
-                    Log.Error($"Plugin \"{plugin.Name}\" threw an exception while enabling: {exception}");
-                }
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Plugin \"{plugin.Name}\" threw an exception while enabling: {exception}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Reloads all plugins.
+    /// </summary>
+    public static void ReloadPlugins()
+    {
+        foreach (IPlugin<IConfig> plugin in Plugins)
+        {
+            try
+            {
+                plugin.OnReloaded();
+
+                plugin.Config.IsEnabled = false;
+
+                plugin.OnUnregisteringCommands();
+
+                plugin.OnDisabled();
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Plugin \"{plugin.Name}\" threw an exception while reloading: {exception}");
             }
         }
 
-        /// <summary>
-        /// Reloads all plugins.
-        /// </summary>
-        public static void ReloadPlugins()
+        Plugins.Clear();
+        LabAPIPlugins.Clear();
+        Server.PluginAssemblies.Clear();
+        Locations.Clear();
+
+        LoadPlugins();
+
+        ConfigManager.Reload();
+        ConfigManager.ReloadLabAPIConfigs();
+        TranslationManager.Reload();
+
+        EnablePlugins();
+    }
+
+    /// <summary>
+    /// Disables all plugins.
+    /// </summary>
+    public static void DisablePlugins()
+    {
+        foreach (IPlugin<IConfig> plugin in Plugins)
         {
-            foreach (IPlugin<IConfig> plugin in Plugins)
+            try
             {
-                try
-                {
-                    plugin.OnReloaded();
+                plugin.OnUnregisteringCommands();
+                plugin.OnDisabled();
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Plugin \"{plugin.Name}\" threw an exception while disabling: {exception}");
+            }
+        }
 
-                    plugin.Config.IsEnabled = false;
+        foreach (LabPlugin plugin in LabAPIPlugins.Keys)
+        {
+            plugin.UnregisterCommands();
+            plugin.Disable();
+        }
+    }
 
-                    plugin.OnUnregisteringCommands();
+    /// <summary>
+    /// Gets a plugin with its prefix or name.
+    /// </summary>
+    /// <param name="args">The name or prefix of the plugin (Using the prefix is recommended).</param>
+    /// <returns>The desired plugin, null if not found.</returns>
+    public static IPlugin<IConfig> GetPlugin(string args) => Plugins.FirstOrDefault(x => x.Name == args || x.Prefix == args);
 
-                    plugin.OnDisabled();
-                }
-                catch (Exception exception)
-                {
-                    Log.Error($"Plugin \"{plugin.Name}\" threw an exception while reloading: {exception}");
-                }
+    /// <summary>
+    /// Gets a LabAPI plugin Exiled loaded by its name.
+    /// </summary>
+    /// <param name="args">The name of the plugin.</param>
+    /// <returns>The desired plugin, null if not found.</returns>
+    /// <remarks>This method does not check LabAPI's loaded plugins, only LabAPI plugins EXILED loaded.</remarks>
+    public static LabPlugin GetLabAPIPlugin(string args) => LabAPIPlugins.Keys.FirstOrDefault(x => x.Name == args);
+
+    /// <summary>
+    /// Runs the plugin manager, by loading all dependencies, plugins, configs and then enables all plugins.
+    /// </summary>
+    /// <param name="dependencies">The dependencies that could have been loaded by Exiled.Bootstrap.</param>
+    public void Run(Assembly[] dependencies)
+    {
+        try
+        {
+            Log.Info("Run Exiled Loader!");
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CheckUAC() : geteuid() == 0)
+            {
+                ServerConsole.AddLog("YOU ARE RUNNING THE SERVER AS ROOT / ADMINISTRATOR. THIS IS HIGHLY UNRECOMMENDED. PLEASE INSTALL YOUR SERVER AS A NON-ROOT/ADMIN USER.", ConsoleColor.DarkRed);
+                Thread.Sleep(5000);
             }
 
-            Plugins.Clear();
-            LabAPIPlugins.Clear();
-            Server.PluginAssemblies.Clear();
-            Locations.Clear();
+            if (dependencies?.Length > 0)
+                Dependencies.AddRange(dependencies);
+
+            Log.Info($"Loading dep&plug");
+            VersionControl.SelfUpdateIfNeed();
+            LoadDependencies();
+            ExecuteDepsValidation();
 
             LoadPlugins();
 
-            ConfigManager.Reload();
-            ConfigManager.ReloadLabAPIConfigs();
-            TranslationManager.Reload();
-
-            EnablePlugins();
+            Log.Info($"Loaded dep&plug");
         }
-
-        /// <summary>
-        /// Disables all plugins.
-        /// </summary>
-        public static void DisablePlugins()
+        catch (Exception e)
         {
-            foreach (IPlugin<IConfig> plugin in Plugins)
-            {
-                try
-                {
-                    plugin.OnUnregisteringCommands();
-                    plugin.OnDisabled();
-                }
-                catch (Exception exception)
-                {
-                    Log.Error($"Plugin \"{plugin.Name}\" threw an exception while disabling: {exception}");
-                }
-            }
-
-            foreach (LabPlugin plugin in LabAPIPlugins.Keys)
-            {
-                plugin.UnregisterCommands();
-                plugin.Disable();
-            }
+            Log.Error($"First try catch - {e}");
         }
 
-        /// <summary>
-        /// Gets a plugin with its prefix or name.
-        /// </summary>
-        /// <param name="args">The name or prefix of the plugin (Using the prefix is recommended).</param>
-        /// <returns>The desired plugin, null if not found.</returns>
-        public static IPlugin<IConfig> GetPlugin(string args) => Plugins.FirstOrDefault(x => x.Name == args || x.Prefix == args);
+        SerializerBuilder serializerBuilder = new SerializerBuilder()
+            .WithTypeConverter(new VectorsConverter())
+            .WithTypeConverter(new ColorConverter())
+            .WithTypeConverter(new AttachmentIdentifiersConverter())
+            .WithTypeInspector(inner => new CommentGatheringTypeInspector(inner))
+            .WithEmissionPhaseObjectGraphVisitor(args => new CommentsObjectGraphVisitor(args.InnerVisitor))
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .IgnoreFields();
 
-        /// <summary>
-        /// Gets a LabAPI plugin Exiled loaded by its name.
-        /// </summary>
-        /// <param name="args">The name of the plugin.</param>
-        /// <returns>The desired plugin, null if not found.</returns>
-        /// <remarks>This method does not check LabAPI's loaded plugins, only LabAPI plugins EXILED loaded.</remarks>
-        public static LabPlugin GetLabAPIPlugin(string args) => LabAPIPlugins.Keys.FirstOrDefault(x => x.Name == args);
+        DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
+            .WithTypeConverter(new VectorsConverter())
+            .WithTypeConverter(new ColorConverter())
+            .WithTypeConverter(new AttachmentIdentifiersConverter())
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .IgnoreFields()
+            .IgnoreUnmatchedProperties();
 
-        /// <summary>
-        /// Runs the plugin manager, by loading all dependencies, plugins, configs and then enables all plugins.
-        /// </summary>
-        /// <param name="dependencies">The dependencies that could have been loaded by Exiled.Bootstrap.</param>
-        public void Run(Assembly[] dependencies)
+        HashSet<Type> abstractTypeDerives = new HashSet<Type>();
+
+        Log.Info($"Loaded serial");
+
+        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             try
             {
-                Log.Info($"Run Exiled Loader!");
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? CheckUAC() : geteuid() == 0)
+                foreach (Type type in
+                         assembly.GetTypes()
+                             .Where(myType => myType.BaseType != null
+                                              && myType is { IsClass: true, IsAbstract: false }
+                                              && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
                 {
-                    ServerConsole.AddLog("YOU ARE RUNNING THE SERVER AS ROOT / ADMINISTRATOR. THIS IS HIGHLY UNRECOMMENDED. PLEASE INSTALL YOUR SERVER AS A NON-ROOT/ADMIN USER.", ConsoleColor.DarkRed);
-                    Thread.Sleep(5000);
+                    Log.Debug($"Found subclass for tagging: {type.Name}");
+                    abstractTypeDerives.Add(type);
                 }
-
-                if (dependencies?.Length > 0)
-                    Dependencies.AddRange(dependencies);
-
-                Log.Info($"Loading dep&plug");
-
-                LoadDependencies();
-                ExecuteDepsValidation();
-
-                LoadPlugins();
-
-                Log.Info($"Loaded dep&plug");
             }
             catch (Exception e)
             {
-                Log.Error($"First try catch - {e}");
+                Log.Error($"Second try catch - {e}");
             }
-
-            SerializerBuilder serializerBuilder = new SerializerBuilder()
-                .WithTypeConverter(new VectorsConverter())
-                .WithTypeConverter(new ColorConverter())
-                .WithTypeConverter(new AttachmentIdentifiersConverter())
-                .WithTypeInspector(inner => new CommentGatheringTypeInspector(inner))
-                .WithEmissionPhaseObjectGraphVisitor(args => new CommentsObjectGraphVisitor(args.InnerVisitor))
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .IgnoreFields();
-
-            DeserializerBuilder deserializerBuilder = new DeserializerBuilder()
-                .WithTypeConverter(new VectorsConverter())
-                .WithTypeConverter(new ColorConverter())
-                .WithTypeConverter(new AttachmentIdentifiersConverter())
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .IgnoreFields()
-                .IgnoreUnmatchedProperties();
-
-            HashSet<Type> abstractTypeDerives = new HashSet<Type>();
-
-            Log.Info($"Loaded serial");
-
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    foreach (Type type in
-                             assembly.GetTypes()
-                                 .Where(myType => myType.BaseType != null
-                                                  && myType is { IsClass: true, IsAbstract: false }
-                                                  && typeof(IAbstractResolvable).IsAssignableFrom(myType)))
-                    {
-                        Log.Debug($"Found subclass for tagging: {type.Name}");
-                        abstractTypeDerives.Add(type);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Second try catch - {e}");
-                }
-            }
-
-            foreach (Type type in abstractTypeDerives)
-                serializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-            foreach (Type type in abstractTypeDerives)
-                deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
-
-            Log.Info("Loading Serializers");
-
-            Serializer = serializerBuilder.Build();
-            Deserializer = deserializerBuilder.Build();
-
-            Log.Info("Loaded Serializers");
-
-            ConfigManager.Reload();
-            ConfigManager.ReloadLabAPIConfigs();
-            TranslationManager.Reload();
-
-            EnablePlugins();
-            CommandTranslationManager.Reload();
-
-            BuildInfoCommand.ModDescription += string.Join(
-                "\n",
-                AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(a => a.FullName.StartsWith("Exiled.", StringComparison.OrdinalIgnoreCase))
-                    .Select(a => $"{a.GetName().Name} - Version {a.GetName().Version.ToString(3)}"));
-
-            ServerConsole.AddLog($"Welcome to {LoaderMessages.GetMessage()}", ConsoleColor.Green);
         }
 
-        /// <summary>
-        /// Indicates that the passed type is derived from the plugin type.
-        /// </summary>
-        /// <param name="type">Type.</param>
-        /// <returns><see langword="true"/> if passed type is derived from <see cref="Plugin{TConfig}"/> or <see cref="Plugin{TConfig, TTranslation}"/>, otherwise <see langword="false"/>.</returns>
-        private static bool IsDerivedFromPlugin(Type type)
+        foreach (Type type in abstractTypeDerives)
+            serializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+        foreach (Type type in abstractTypeDerives)
+            deserializerBuilder.WithTagMapping($"!{type.FullName}", type);
+
+        Log.Info("Loading Serializers");
+
+        Serializer = serializerBuilder.Build();
+        Deserializer = deserializerBuilder.Build();
+
+        Log.Info("Loaded Serializers");
+
+        ConfigManager.Reload();
+        ConfigManager.ReloadLabAPIConfigs();
+        TranslationManager.Reload();
+
+        EnablePlugins();
+        CommandTranslationManager.Reload();
+
+        BuildInfoCommand.ModDescription += string.Join(
+            "\n",
+            AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => a.FullName.StartsWith("Exiled.", StringComparison.OrdinalIgnoreCase))
+                .Select(a => $"{a.GetName().Name} - Version {a.GetName().Version.ToString(3)}"));
+
+        ServerConsole.AddLog($"Welcome to {LoaderMessages.GetMessage()}", ConsoleColor.Green);
+    }
+
+    /// <summary>
+    /// Indicates that the passed type is derived from the plugin type.
+    /// </summary>
+    /// <param name="type">Type.</param>
+    /// <returns><see langword="true"/> if passed type is derived from <see cref="Plugin{TConfig}"/> or <see cref="Plugin{TConfig, TTranslation}"/>, otherwise <see langword="false"/>.</returns>
+    private static bool IsDerivedFromPlugin(Type type)
+    {
+        while (type is not null)
         {
-            while (type is not null)
+            type = type.BaseType;
+
+            if (type is { IsGenericType: true })
             {
-                type = type.BaseType;
+                Type genericTypeDef = type.GetGenericTypeDefinition();
 
-                if (type is { IsGenericType: true })
-                {
-                    Type genericTypeDef = type.GetGenericTypeDefinition();
-
-                    if (genericTypeDef == typeof(Plugin<>) || genericTypeDef == typeof(Plugin<,>))
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool CheckPluginRequiredExiledVersion(IPlugin<IConfig> plugin, Version pluginVersion)
-        {
-            if (plugin.IgnoreRequiredVersionCheck)
-                return false;
-
-            Version requiredVersion = plugin.RequiredExiledVersion == default ? pluginVersion : pluginVersion;
-            Version actualVersion = Version;
-
-            // Check Major version
-            // It's increased when an incompatible API change was made
-            if (requiredVersion.Major != actualVersion.Major)
-            {
-                // Assume that if the Required Major version is greater than the Actual Major version,
-                // Exiled is outdated
-                if (requiredVersion.Major > actualVersion.Major)
-                {
-                    Log.Error(
-                        $"You're running an older version of Exiled ({Version.ToString(3)})! {plugin.Name} won't be loaded! " +
-                        $"Required version to load it: {plugin.RequiredExiledVersion?.ToString(3)}");
-
+                if (genericTypeDef == typeof(Plugin<>) || genericTypeDef == typeof(Plugin<,>))
                     return true;
-                }
             }
+        }
 
+        return false;
+    }
+
+    private static bool CheckPluginRequiredExiledVersion(IPlugin<IConfig> plugin, Version pluginVersion)
+    {
+        if (plugin.IgnoreRequiredVersionCheck)
             return false;
-        }
 
-        /// <summary>
-        /// Load every plugin inside the given directory, if null it's default EXILED one (global).
-        /// </summary>
-        /// <param name="dir">The sub-directory of the plugin - if null the default EXILED one will be used.</param>
-        private static void LoadPluginsFromDirectory(string? dir = null)
+        Version requiredVersion = plugin.RequiredExiledVersion == default ? pluginVersion : pluginVersion;
+        Version actualVersion = Version;
+
+        // Check Major version
+        // It's increased when an incompatible API change was made
+        if (requiredVersion.Major != actualVersion.Major)
         {
-            string path = Paths.Plugins;
-            if (dir != null)
-                path = Path.Combine(path, dir);
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            foreach (string assemblyPath in Directory.GetFiles(path, "*.dll"))
+            // Assume that if the Required Major version is greater than the Actual Major version,
+            // Exiled is outdated
+            if (requiredVersion.Major > actualVersion.Major)
             {
-                Assembly? assembly = LoadAssembly(assemblyPath);
+                Log.Error(
+                    $"You're running an older version of Exiled ({Version.ToString(3)})! {plugin.Name} won't be loaded! " +
+                    $"Required version to load it: {plugin.RequiredExiledVersion?.ToString(3)}");
 
-                if (assembly == null)
-                    continue;
-
-                Locations[assembly] = assemblyPath;
+                return true;
             }
-
-            List<Assembly> failed = ListPool<Assembly>.Pool.Get();
-            foreach (Assembly assembly in Locations.Keys)
-            {
-                if (Locations[assembly].Contains("dependencies"))
-                    continue;
-
-                IPlugin<IConfig>? plugin = CreatePlugin(assembly);
-
-                if (plugin == null)
-                {
-                    failed.Add(assembly);
-                    continue;
-                }
-
-                if (Plugins.Any(p => p.Name == plugin.Name))
-                    continue;
-
-                AssemblyInformationalVersionAttribute attribute = plugin.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-
-                Log.Info($"Loaded plugin {plugin.Name}@{(attribute is not null ? attribute.InformationalVersion : plugin.Version is not null ? $"{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build}" : string.Empty)}");
-
-                Server.PluginAssemblies.Add(assembly, plugin);
-                Plugins.Add(plugin);
-            }
-
-            // inefficient enumeration (could be forced inside earlier foreach), but a lot easier to read.
-            foreach (Assembly attempt in failed)
-            {
-                LabPlugin plugin = CreateLabAPIPlugin(attempt, Locations[attempt]);
-
-                if (plugin == null)
-                    continue;
-
-                if (PluginLoader.EnabledPlugins.Any(p => p.Name == plugin.Name) || Plugins.Any(p => p.Name == plugin.Name) || LabAPIPlugins.Keys.Any(p => p.Name == plugin.Name))
-                {
-                    Log.Info("Skipping loading duplicate LabAPI plugin " + plugin.Name);
-                    continue;
-                }
-
-                Log.Info("Successfully loaded LabAPI plugin " + plugin.Name);
-                LabAPIPlugins.Add(plugin, attempt);
-            }
-
-            ListPool<Assembly>.Pool.Return(failed);
         }
 
-        /// <summary>
-        /// Attempts to load Embedded (compressed) assemblies from specified Assembly.
-        /// </summary>
-        /// <param name="target">Assembly to check for embedded assemblies.</param>
-        private static void ResolveAssemblyEmbeddedResources(Assembly target)
+        return false;
+    }
+
+    /// <summary>
+    /// Load every plugin inside the given directory, if null it's default EXILED one (global).
+    /// </summary>
+    /// <param name="dir">The sub-directory of the plugin - if null the default EXILED one will be used.</param>
+    private static void LoadPluginsFromDirectory(string? dir = null)
+    {
+        string path = Paths.Plugins;
+        if (dir != null)
+            path = Path.Combine(path, dir);
+
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
+        foreach (string assemblyPath in Directory.GetFiles(path, "*.dll"))
         {
-            try
+            Assembly? assembly = LoadAssembly(assemblyPath);
+
+            if (assembly == null)
+                continue;
+
+            Locations[assembly] = assemblyPath;
+        }
+
+        List<Assembly> failed = ListPool<Assembly>.Pool.Get();
+        foreach (Assembly assembly in Locations.Keys)
+        {
+            if (Locations[assembly].Contains("dependencies"))
+                continue;
+
+            IPlugin<IConfig>? plugin = CreatePlugin(assembly);
+
+            if (plugin == null)
             {
-                Log.Debug($"Attempting to load embedded resources for {target.FullName}");
+                failed.Add(assembly);
+                continue;
+            }
 
-                string[] resourceNames = target.GetManifestResourceNames();
+            if (Plugins.Any(p => p.Name == plugin.Name))
+                continue;
 
-                foreach (string name in resourceNames)
+            AssemblyInformationalVersionAttribute attribute = plugin.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+
+            Log.Info($"Loaded plugin {plugin.Name}@{(attribute is not null ? attribute.InformationalVersion : plugin.Version is not null ? $"{plugin.Version.Major}.{plugin.Version.Minor}.{plugin.Version.Build}" : string.Empty)}");
+
+            Server.PluginAssemblies.Add(assembly, plugin);
+            Plugins.Add(plugin);
+        }
+
+        // inefficient enumeration (could be forced inside earlier foreach), but a lot easier to read.
+        foreach (Assembly attempt in failed)
+        {
+            LabPlugin plugin = CreateLabAPIPlugin(attempt, Locations[attempt]);
+
+            if (plugin == null)
+                continue;
+
+            if (PluginLoader.EnabledPlugins.Any(p => p.Name == plugin.Name) || Plugins.Any(p => p.Name == plugin.Name) || LabAPIPlugins.Keys.Any(p => p.Name == plugin.Name))
+            {
+                Log.Info("Skipping loading duplicate LabAPI plugin " + plugin.Name);
+                continue;
+            }
+
+            Log.Info("Successfully loaded LabAPI plugin " + plugin.Name);
+            LabAPIPlugins.Add(plugin, attempt);
+        }
+
+        ListPool<Assembly>.Pool.Return(failed);
+    }
+
+    /// <summary>
+    /// Attempts to load Embedded (compressed) assemblies from specified Assembly.
+    /// </summary>
+    /// <param name="target">Assembly to check for embedded assemblies.</param>
+    private static void ResolveAssemblyEmbeddedResources(Assembly target)
+    {
+        try
+        {
+            Log.Debug($"Attempting to load embedded resources for {target.FullName}");
+
+            string[] resourceNames = target.GetManifestResourceNames();
+
+            foreach (string name in resourceNames)
+            {
+                Log.Debug($"Found resource {name}");
+
+                if (name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 {
-                    Log.Debug($"Found resource {name}");
+                    using MemoryStream stream = new();
 
-                    if (name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    Log.Debug($"Loading resource {name}");
+
+                    Stream dataStream = target.GetManifestResourceStream(name);
+
+                    if (dataStream == null)
                     {
-                        using MemoryStream stream = new();
-
-                        Log.Debug($"Loading resource {name}");
-
-                        Stream dataStream = target.GetManifestResourceStream(name);
-
-                        if (dataStream == null)
-                        {
-                            Log.Error($"Unable to resolve resource {name} Stream was null");
-                            continue;
-                        }
-
-                        dataStream.CopyTo(stream);
-
-                        Dependencies.Add(Assembly.Load(stream.ToArray()));
-
-                        Log.Debug($"Loaded resource {name}");
+                        Log.Error($"Unable to resolve resource {name} Stream was null");
+                        continue;
                     }
-                    else if (name.EndsWith(".dll.compressed", StringComparison.OrdinalIgnoreCase))
+
+                    dataStream.CopyTo(stream);
+
+                    Dependencies.Add(Assembly.Load(stream.ToArray()));
+
+                    Log.Debug($"Loaded resource {name}");
+                }
+                else if (name.EndsWith(".dll.compressed", StringComparison.OrdinalIgnoreCase))
+                {
+                    Stream dataStream = target.GetManifestResourceStream(name);
+
+                    if (dataStream == null)
                     {
-                        Stream dataStream = target.GetManifestResourceStream(name);
-
-                        if (dataStream == null)
-                        {
-                            Log.Error($"Unable to resolve resource {name} Stream was null");
-                            continue;
-                        }
-
-                        using DeflateStream stream = new(dataStream, CompressionMode.Decompress);
-                        using MemoryStream memStream = new();
-
-                        Log.Debug($"Loading resource {name}");
-
-                        stream.CopyTo(memStream);
-
-                        Dependencies.Add(Assembly.Load(memStream.ToArray()));
-
-                        Log.Debug($"Loaded resource {name}");
+                        Log.Error($"Unable to resolve resource {name} Stream was null");
+                        continue;
                     }
+
+                    using DeflateStream stream = new(dataStream, CompressionMode.Decompress);
+                    using MemoryStream memStream = new();
+
+                    Log.Debug($"Loading resource {name}");
+
+                    stream.CopyTo(memStream);
+
+                    Dependencies.Add(Assembly.Load(memStream.ToArray()));
+
+                    Log.Debug($"Loaded resource {name}");
                 }
             }
-            catch (Exception exception)
-            {
-                Log.Error($"Failed to load embedded resources from {target.FullName}: {exception}");
-            }
         }
+        catch (Exception exception)
+        {
+            Log.Error($"Failed to load embedded resources from {target.FullName}: {exception}");
+        }
+    }
 
 #pragma warning disable SA1201
 #pragma warning disable SA1300
@@ -740,127 +745,118 @@ namespace Exiled.Loader
 #pragma warning disable SA1600
 #pragma warning disable SA1602
 #pragma warning disable CS1591
-        [DllImport("libc")]
-        private static extern uint geteuid();
+    [DllImport("libc")]
+    private static extern uint geteuid();
 
-        [DllImport("advapi32.dll", SetLastError = true)]
-        private static extern bool GetTokenInformation(
-            IntPtr TokenHandle,
-            TOKEN_INFORMATION_CLASS TokenInformationClass,
-            IntPtr TokenInformation,
-            uint TokenInformationLength,
-            out uint ReturnLength);
+    [DllImport("advapi32.dll", SetLastError = true)]
+    private static extern bool GetTokenInformation(
+        IntPtr TokenHandle,
+        TOKEN_INFORMATION_CLASS TokenInformationClass,
+        IntPtr TokenInformation,
+        uint TokenInformationLength,
+        out uint ReturnLength);
 
-        public enum TOKEN_INFORMATION_CLASS
-        {
-            TokenUser = 1,
-            TokenGroups,
-            TokenPrivileges,
-            TokenOwner,
-            TokenPrimaryGroup,
-            TokenDefaultDacl,
-            TokenSource,
-            TokenType,
-            TokenImpersonationLevel,
-            TokenStatistics,
-            TokenRestrictedSids,
-            TokenSessionId,
-            TokenGroupsAndPrivileges,
-            TokenSessionReference,
-            TokenSandBoxInert,
-            TokenAuditPolicy,
-            TokenOrigin,
-            TokenElevationType,
-            TokenLinkedToken,
-            TokenElevation,
-            TokenHasRestrictions,
-            TokenAccessInformation,
-            TokenVirtualizationAllowed,
-            TokenVirtualizationEnabled,
-            TokenIntegrityLevel,
-            TokenUIAccess,
-            TokenMandatoryPolicy,
-            TokenLogonSid,
-            MaxTokenInfoClass,
-        }
+    public enum TOKEN_INFORMATION_CLASS
+    {
+        TokenUser = 1,
+        TokenGroups,
+        TokenPrivileges,
+        TokenOwner,
+        TokenPrimaryGroup,
+        TokenDefaultDacl,
+        TokenSource,
+        TokenType,
+        TokenImpersonationLevel,
+        TokenStatistics,
+        TokenRestrictedSids,
+        TokenSessionId,
+        TokenGroupsAndPrivileges,
+        TokenSessionReference,
+        TokenSandBoxInert,
+        TokenAuditPolicy,
+        TokenOrigin,
+        TokenElevationType,
+        TokenLinkedToken,
+        TokenElevation,
+        TokenHasRestrictions,
+        TokenAccessInformation,
+        TokenVirtualizationAllowed,
+        TokenVirtualizationEnabled,
+        TokenIntegrityLevel,
+        TokenUIAccess,
+        TokenMandatoryPolicy,
+        TokenLogonSid,
+        MaxTokenInfoClass,
+    }
 
-        public enum TOKEN_ELEVATION_TYPE
-        {
-            TokenElevationTypeDefault = 1,
-            TokenElevationTypeFull,
-            TokenElevationTypeLimited,
-        }
+    public enum TOKEN_ELEVATION_TYPE
+    {
+        TokenElevationTypeDefault = 1,
+        TokenElevationTypeFull,
+        TokenElevationTypeLimited,
+    }
 #pragma warning restore
 
-        /// <summary>
-        /// Check UAC elevated (for Windows).
-        /// </summary>
-        private static bool CheckUAC()
+    /// <summary>
+    /// Check UAC elevated (for Windows).
+    /// </summary>
+    private static bool CheckUAC()
+    {
+        TOKEN_ELEVATION_TYPE tet = TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault;
+        uint tetSize = (uint)Marshal.SizeOf((int)tet);
+        IntPtr tetPtr = Marshal.AllocHGlobal((int)tetSize);
+        try
         {
-            TOKEN_ELEVATION_TYPE tet = TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault;
-            uint tetSize = (uint)Marshal.SizeOf((int)tet);
-            IntPtr tetPtr = Marshal.AllocHGlobal((int)tetSize);
-            try
-            {
-                if (GetTokenInformation(WindowsIdentity.GetCurrent().Token, TOKEN_INFORMATION_CLASS.TokenElevationType, tetPtr, tetSize, out _))
-                    tet = (TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(tetPtr);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(tetPtr);
-            }
-
-            return tet == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull;
+            if (GetTokenInformation(WindowsIdentity.GetCurrent().Token, TOKEN_INFORMATION_CLASS.TokenElevationType, tetPtr, tetSize, out _))
+                tet = (TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(tetPtr);
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(tetPtr);
         }
 
-        /// <summary>
-        /// Loads all dependencies.
-        /// </summary>
-        private static void LoadDependencies()
+        return tet == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull;
+    }
+
+    /// <summary>
+    /// Loads all dependencies.
+    /// </summary>
+    private static void LoadDependencies()
+    {
+        try
         {
-            try
+            Log.Info($"Loading dependencies at {Paths.Dependencies}");
+
+            foreach (string dependency in Directory.GetFiles(Paths.Dependencies, "*.dll"))
             {
-                Log.Info($"Loading dependencies at {Paths.Dependencies}");
-
-                foreach (string dependency in Directory.GetFiles(Paths.Dependencies, "*.dll"))
-                {
-                    Assembly? assembly = LoadAssembly(dependency);
-
-                    if (assembly is null)
-                        continue;
-
-                    Locations[assembly] = dependency;
-
-                    Dependencies.Add(assembly);
-
-                    Log.Info($"Loaded dependency {assembly.GetName().Name}@{assembly.GetName().Version.ToString(3)}");
-                }
-
-                Log.Info("Dependencies loaded successfully!");
+                DepsPaths.Add(dependency);
+                Log.Info($"Loaded dependency {new FileInfo(dependency).Name}");
             }
-            catch (Exception exception)
-            {
-                Log.Error($"An error has occurred while loading dependencies! {exception}");
-            }
+
+            Log.Info("Dependencies loaded successfully!");
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"An error has occurred while loading dependencies! {exception}");
+        }
+    }
+
+    /// <summary>
+    /// Осуществляет проверку версий.
+    /// </summary>
+    private static void ExecuteDepsValidation()
+    {
+        if (!VersionControl.ProceedHashChecks())
+        {
+            Log.SendRaw("Зависимости последней версии. Всё нормально", ConsoleColor.Yellow);
+            return;
         }
 
-        /// <summary>
-        /// Осуществляет проверку версий.
-        /// </summary>
-        private static void ExecuteDepsValidation()
+        Log.SendRaw("Внимание, обнаружены устаревшие зависимости. Сервер будет обновлён и перезапущен через 10 секунд", ConsoleColor.Yellow);
+        Timing.CallDelayed(10f, () =>
         {
-            if (!VersionControl.ProceedHashChecks())
-            {
-                Log.SendRaw("Зависимости последней версии. Всё нормально", ConsoleColor.Yellow);
-                return;
-            }
-
-            Log.SendRaw("Внимание, обнаружены устаревшие зависимости. Сервер будет обновлён и перезапущен через 10 секунд", ConsoleColor.Yellow);
-            Timing.CallDelayed(10f, () =>
-            {
-                VersionControl.Update();
-                Server.Restart();
-            });
-        }
+            VersionControl.Update();
+            Server.Restart();
+        });
     }
 }

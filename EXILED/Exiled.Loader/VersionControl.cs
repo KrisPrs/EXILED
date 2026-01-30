@@ -7,12 +7,14 @@
 
 namespace Exiled.Loader;
 
+using System.Linq;
+using LabApi.Loader.Features.Paths;
 using System.Reflection;
 using Exiled.API.Features;
 using System;
+using MEC;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 
 /// <summary>
@@ -20,7 +22,9 @@ using System.Security.Cryptography;
 /// </summary>
 internal static class VersionControl
 {
-    private static string LabApiDeps => LabApi.Loader.Features.Paths.PathManager.Dependencies.ToString();
+    private static string LabApiDeps => PathManager.Dependencies.ToString();
+
+    private static string LabApiPlugins => PathManager.Plugins.ToString();
 
     /// <summary>
     /// Обновляет зависимости.
@@ -33,20 +37,18 @@ internal static class VersionControl
             Log.Info($"{asm} ");
         }
 
-        foreach (Assembly assembly in Loader.Dependencies)
+        foreach (FileInfo fileInfo in Loader.DepsPaths.Select(dep => new FileInfo(dep)))
         {
             try
             {
-                if(string.IsNullOrEmpty(assembly.GetPath()))
-                    continue;
-                string destFile = Path.Combine(labApiDepsDir, $"{assembly.GetName().Name}.dll");
+                string destFile = Path.Combine(labApiDepsDir, $"{fileInfo.Name}.dll");
                 if (File.Exists(destFile))
                     File.Delete(destFile);
-                File.Copy(assembly.GetPath(), destFile);
+                File.Copy(fileInfo.FullName, destFile);
             }
             catch (Exception e)
             {
-                Log.Error($"не удалось переместить dll {assembly}. \n {e}");
+                Log.Error($"не удалось переместить dll {fileInfo.Name}. \n {e}");
             }
         }
     }
@@ -60,8 +62,7 @@ internal static class VersionControl
         string exiledHashPath = Path.Combine(Paths.Dependencies, "version.txt");
         string labApiHashPath = Path.Combine(LabApiDeps, "global", "version.txt");
 
-        List<string> exiledDepsPath = Loader.Dependencies.Select(assembly => assembly.Location).ToList();
-        string hash = GetFilesHash(exiledDepsPath);
+        string hash = GetFilesHash(Loader.DepsPaths);
         File.WriteAllText(exiledHashPath, hash);
 
         if (!File.Exists(labApiHashPath))
@@ -75,6 +76,29 @@ internal static class VersionControl
             File.WriteAllText(labApiHashPath, hash);
 
         return labApiHash != hash;
+    }
+
+    /// <summary>
+    /// Обновляет сам лоадер, если надо.
+    /// </summary>
+    public static void SelfUpdateIfNeed()
+    {
+        using SHA256 sha256 = SHA256.Create();
+
+        FileInfo exiledLoaderPath = new(Path.Combine(Paths.Exiled, "Exiled.Loader.dll"));
+        FileInfo labApiLoaderPath = new(Path.Combine(LabApiPlugins, "global", "Exiled.Loader.dll"));
+
+        string exiledApi = Convert.ToBase64String(File.ReadAllBytes(exiledLoaderPath.FullName));
+        string labApi = Convert.ToBase64String(File.ReadAllBytes(labApiLoaderPath.FullName));
+        if (labApi == exiledApi)
+            return;
+        Log.SendRaw("Устаревшая версия Exiled.Loader.dll. Произвожу обновление через 8 секунд", ConsoleColor.Green);
+        Timing.CallDelayed(8f, () =>
+        {
+            File.Delete(labApiLoaderPath.FullName);
+            File.Copy(exiledLoaderPath.FullName, labApiLoaderPath.FullName);
+            Server.Restart();
+        });
     }
 
     /// <summary>
