@@ -122,7 +122,6 @@ internal static class VersionControl
 
             writer.Write(Path.GetFileName(filePath));
             writer.Write(fileInfo.Length);
-            writer.Write(fileInfo.LastWriteTimeUtc.Ticks);
             byte[] content = File.ReadAllBytes(filePath);
             writer.Write(content);
         }
