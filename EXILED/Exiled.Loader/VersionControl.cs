@@ -41,7 +41,7 @@ internal static class VersionControl
         {
             try
             {
-                string destFile = Path.Combine(labApiDepsDir, $"{fileInfo.Name}.dll");
+                string destFile = Path.Combine(labApiDepsDir, $"{fileInfo.Name}");
                 if (File.Exists(destFile))
                     File.Delete(destFile);
                 File.Copy(fileInfo.FullName, destFile);
@@ -59,23 +59,14 @@ internal static class VersionControl
     /// <returns>Нужно ли обновляться или нет.</returns>
     public static bool ProceedHashChecks()
     {
-        string exiledHashPath = Path.Combine(Paths.Dependencies, "version.txt");
-        string labApiHashPath = Path.Combine(LabApiDeps, "global", "version.txt");
+        string labApiDepsPath = Path.Combine(LabApiDeps, "global");
+        List<string> correctLabApiDeps = Directory.GetFiles(labApiDepsPath, "*dll").ToList();
+        List<string> correctExiledDeps = Directory.GetFiles(Paths.Dependencies, "*.dll").ToList();
 
-        string hash = GetFilesHash(Loader.DepsPaths);
-        File.WriteAllText(exiledHashPath, hash);
+        string depsExiledHash = GetFilesHash(correctExiledDeps);
+        string depLabApiHash = GetFilesHash(correctLabApiDeps);
 
-        if (!File.Exists(labApiHashPath))
-        {
-            File.WriteAllText(labApiHashPath, hash);
-            return true;
-        }
-
-        string labApiHash = File.ReadAllText(labApiHashPath);
-        if (labApiHash != hash)
-            File.WriteAllText(labApiHashPath, hash);
-
-        return labApiHash != hash;
+        return depLabApiHash != depsExiledHash;
     }
 
     /// <summary>
