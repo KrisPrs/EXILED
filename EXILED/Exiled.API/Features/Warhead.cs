@@ -20,8 +20,6 @@ namespace Exiled.API.Features
     /// </summary>
     public static class Warhead
     {
-        private static AlphaWarheadOutsitePanel alphaWarheadOutsitePanel;
-
         /// <summary>
         /// Gets the cached <see cref="AlphaWarheadController"/> component.
         /// </summary>
@@ -35,7 +33,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the cached <see cref="AlphaWarheadOutsitePanel"/> component.
         /// </summary>
-        public static AlphaWarheadOutsitePanel OutsitePanel => alphaWarheadOutsitePanel != null ? alphaWarheadOutsitePanel : (alphaWarheadOutsitePanel = UnityEngine.Object.FindFirstObjectByType<AlphaWarheadOutsitePanel>());
+        public static AlphaWarheadOutsitePanel OutsitePanel => field != null ? field : (field = Object.FindFirstObjectByType<AlphaWarheadOutsitePanel>());
 
         /// <summary>
         /// Gets the <see cref="GameObject"/> of the warhead lever.
@@ -130,6 +128,11 @@ namespace Exiled.API.Features
         public static bool IsInProgress => Controller.Info.InProgress;
 
         /// <summary>
+        /// Gets a value indicating whether the warhead detonation is on cooldown.
+        /// </summary>
+        public static bool IsOnCooldown => Controller.CooldownEndTime > NetworkTime.time;
+
+        /// <summary>
         /// Gets or sets the warhead detonation timer.
         /// </summary>
         public static float DetonationTimer
@@ -164,7 +167,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a value indicating whether the warhead can be started.
         /// </summary>
-        public static bool CanBeStarted => !IsInProgress && !IsDetonated && Controller.CooldownEndTime <= NetworkTime.time;
+        public static bool CanBeStarted => !IsInProgress && !IsDetonated && !IsOnCooldown;
 
         /// <summary>
         /// Closes the surface blast doors.

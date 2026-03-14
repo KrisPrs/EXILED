@@ -16,6 +16,7 @@ namespace Exiled.API.Features.Doors
     using Exiled.API.Features.Core;
     using Exiled.API.Interfaces;
     using Interactables.Interobjects;
+    using Interactables.Interobjects.DoorButtons;
     using Interactables.Interobjects.DoorUtils;
     using MEC;
     using Mirror;
@@ -213,12 +214,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public bool AllowsScp106
         {
-            get => Base is IScp106PassableDoor door && door.IsScp106Passable;
-            set
-            {
-                if (Base is IScp106PassableDoor door)
-                    door.IsScp106Passable = value;
-            }
+            get => Base is not IScp106PassableDoor door || door.IsScp106Passable;
+            set => (Base as IScp106PassableDoor)?.IsScp106Passable = value;
         }
 
         /// <summary>
@@ -309,6 +306,11 @@ namespace Exiled.API.Features.Doors
         /// Gets the door's <see cref="ZoneType"/>.
         /// </summary>
         public ZoneType Zone => Room?.Zone ?? ZoneType.Unspecified;
+
+        /// <summary>
+        /// Gets the door's <see cref="ButtonVariant"/>.
+        /// </summary>
+        public ButtonVariant[] Buttons => Base.Buttons;
 
         /// <summary>
         /// Gets a <see cref="List{T}"/> containing all <see cref="Features.Room"/>'s that are connected with <see cref="Door"/>.

@@ -57,9 +57,6 @@ namespace Exiled.API.Extensions
         private static readonly ReadOnlyDictionary<Type, MethodInfo> ReadOnlyWriterExtensionsValue = new(WriterExtensionsValue);
         private static readonly ReadOnlyDictionary<string, ulong> ReadOnlySyncVarDirtyBitsValue = new(SyncVarDirtyBitsValue);
         private static readonly ReadOnlyDictionary<string, string> ReadOnlyRpcFullNamesValue = new(RpcFullNamesValue);
-        private static MethodInfo setDirtyBitsMethodInfoValue;
-        private static MethodInfo sendSpawnMessageMethodInfoValue;
-        private static string[] adminToyBaseSyncVarsValue;
 
         /// <summary>
         /// Gets <see cref="MethodInfo"/> corresponding to <see cref="Type"/>.
@@ -154,17 +151,17 @@ namespace Exiled.API.Extensions
         /// <summary>
         /// Gets a <see cref="NetworkBehaviour.SetSyncVarDirtyBit(ulong)"/>'s <see cref="MethodInfo"/>.
         /// </summary>
-        public static MethodInfo SetDirtyBitsMethodInfo => setDirtyBitsMethodInfoValue ??= typeof(NetworkBehaviour).GetMethod(nameof(NetworkBehaviour.SetSyncVarDirtyBit));
+        public static MethodInfo SetDirtyBitsMethodInfo => field ??= typeof(NetworkBehaviour).GetMethod(nameof(NetworkBehaviour.SetSyncVarDirtyBit));
 
         /// <summary>
         /// Gets a NetworkServer.SendSpawnMessage's <see cref="MethodInfo"/>.
         /// </summary>
-        public static MethodInfo SendSpawnMessageMethodInfo => sendSpawnMessageMethodInfoValue ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
+        public static MethodInfo SendSpawnMessageMethodInfo => field ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
         /// Gets all <see cref="AdminToyBase"/> sync var names.
         /// </summary>
-        public static string[] AdminToyBaseSyncVars => adminToyBaseSyncVarsValue ??= typeof(AdminToyBase).GetProperties().Where(property => property.Name.Contains("Network")).Select(property => property.Name).ToArray();
+        public static string[] AdminToyBaseSyncVars => field ??= typeof(AdminToyBase).GetProperties().Where(property => property.Name.Contains("Network")).Select(property => property.Name).ToArray();
 
         /// <summary>
         /// Plays a beep sound that only the target <paramref name="player"/> can hear.
@@ -439,8 +436,8 @@ namespace Exiled.API.Extensions
         /// </summary>
         /// <param name="target">The player who will become not spectatable.</param>
         /// <param name="viewer">The viewer who will see this change.</param>
-        /// <param name="value">The faked value.</param>
-        public static void SetFakeSpectatable(Player target, Player viewer, bool value) => viewer.Connection.Send(new SpectatableVisibilityMessages.SpectatableVisibilityMessage(target.ReferenceHub, value));
+        /// <param name="isforceHidden">Determine if the player will be force hidden.</param>
+        public static void SetFakeSpectatable(Player target, Player viewer, bool isforceHidden) => viewer.Connection.Send(new SpectatableVisibilityMessages.SpectatableVisibilityMessage(target.ReferenceHub, isforceHidden));
 
         /// <summary>
         /// Makes the server resend a message to all clients updating a keycards details to current values.

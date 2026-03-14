@@ -30,8 +30,6 @@ namespace Exiled.API.Features
     /// </summary>
     public static class Server
     {
-        private static MethodInfo sendSpawnMessage;
-
         /// <summary>
         /// Gets a dictionary that pairs assemblies with their associated plugins.
         /// </summary>
@@ -51,7 +49,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the cached <see cref="SendSpawnMessage"/> <see cref="MethodInfo"/>.
         /// </summary>
-        public static MethodInfo SendSpawnMessage => sendSpawnMessage ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
+        public static MethodInfo SendSpawnMessage => field ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
         /// Gets or sets the name of the server.

@@ -56,6 +56,9 @@ namespace Exiled.Events.Handlers.Internal
 
             ServerSpecificSettingsSync.ServerOnSettingValueReceived += SettingBase.OnSettingUpdated;
             RoundSummary.RoundLock = false;
+
+            if (Events.Instance.Config.Debug)
+                Patches.Events.Map.Generating.Benchmark();
         }
 
         /// <inheritdoc cref="Handlers.Server.OnRestartingRound" />
