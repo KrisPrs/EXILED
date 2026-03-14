@@ -7,7 +7,6 @@
 
 namespace Exiled.API.Features.Pickups.Projectiles
 {
-    using Exiled.API.Features.Items;
     using Exiled.API.Interfaces;
 
     using InventorySystem.Items.ThrowableProjectiles;
@@ -24,16 +23,20 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="TimeGrenade"/> class.</param>
         internal TimeGrenadeProjectile(TimeGrenade pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeGrenadeProjectile"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal TimeGrenadeProjectile(ItemType type)
-            : base(type) =>
-            this.Base = (TimeGrenade)((Pickup)this).Base;
+            : base(type)
+        {
+            Base = (TimeGrenade)((Pickup)this).Base;
+        }
 
         /// <summary>
         /// Gets the <see cref="TimeGrenade"/> that this class is encapsulating.
@@ -43,19 +46,19 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <summary>
         /// Gets a value indicating whether the grenade has already exploded.
         /// </summary>
-        public bool IsAlreadyDetonated => this.Base._alreadyDetonated;
+        public bool IsAlreadyDetonated => Base._alreadyDetonated;
 
         /// <summary>
         /// Gets or sets FuseTime.
         /// </summary>
         public float FuseTime
         {
-            get => this.Base._fuseTime;
+            get => Base._fuseTime;
             set
             {
-                this.Base._fuseTime = value;
-                if (this.IsActive)
-                    this.Base.TargetTime = NetworkTime.time + value;
+                Base._fuseTime = value;
+                if (IsActive)
+                    Base.TargetTime = NetworkTime.time + value;
             }
         }
 
@@ -64,46 +67,29 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public bool IsActive
         {
-            get => this.Base.TargetTime != 0.0;
+            get => Base.TargetTime != 0.0;
             set
             {
-                if (value && this.Base.TargetTime == 0.0)
-                    this.Base.TargetTime = this.FuseTime;
-                else if (!value && this.Base.TargetTime != 0.0)
-                    this.Base.TargetTime = 0.0;
+                if (value && Base.TargetTime == 0.0)
+                    Base.TargetTime = FuseTime;
+                else if (!value && Base.TargetTime != 0.0)
+                    Base.TargetTime = 0.0;
             }
         }
 
         /// <summary>
         /// Immediately exploding the <see cref="TimeGrenadeProjectile"/>.
         /// </summary>
-        public virtual void Explode()
+        public void Explode()
         {
-            this.Base.ServerFuseEnd();
-            this.Base._alreadyDetonated = true;
+            Base.ServerFuseEnd();
+            Base._alreadyDetonated = true;
         }
 
         /// <summary>
         /// Returns the TimeGrenadePickup in a human readable format.
         /// </summary>
         /// <returns>A string containing TimeGrenadePickup related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}| ={this.IsAlreadyDetonated}=";
-
-        /// <summary>
-        /// Helper method for saving data between <see cref="Projectile"/>'s and <see cref="GrenadePickup"/>'s.
-        /// </summary>
-        /// <param name="pickup"><see cref="GrenadePickup"/>-related data to give to the <see cref="Projectile"/>.</param>
-        internal virtual void ReadGrenadePickupInfo(GrenadePickup pickup)
-        {
-            this.FuseTime = pickup.FuseTime;
-            this.Scale = pickup.Scale;
-        }
-
-        /// <inheritdoc/>
-        internal override void ReadThrowableItemInfo(Throwable throwable)
-        {
-            base.ReadThrowableItemInfo(throwable);
-            this.FuseTime = throwable.FuseTime;
-        }
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}| ={IsAlreadyDetonated}=";
     }
 }

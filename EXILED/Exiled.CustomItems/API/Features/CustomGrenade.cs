@@ -67,26 +67,55 @@ namespace Exiled.CustomItems.API.Features
         {
             Item item = base.CreateItem();
 
-            if (item is Throwable throwable)
+            if (item is Throwable throwable && throwable.Projectile is TimeGrenadeProjectile timeProjectile)
             {
-                throwable.FuseTime = this.FuseTime;
+                timeProjectile.FuseTime = this.FuseTime;
             }
 
             return item;
         }
 
         /// <summary>
-        /// Spawns activated <see cref="CustomGrenade"/> object.
+        /// Throw the CustomGrenade object.
         /// </summary>
-        /// <param name="position">The <see cref="Vector3"/> position to spawn at.</param>
-        /// <param name="player">The <see cref="Player" /> to count as the thrower of the grenade.</param>
+        /// <param name="position">The <see cref="Vector3"/>position to throw at.</param>
+        /// <param name="weight">The <see cref="float"/>Weight of the Grenade.</param>
+        /// <param name="fuseTime">The <see cref="float"/>FuseTime of the grenade.</param>
+        /// <param name="grenadeType">The <see cref="ItemType"/>of the grenade to spawn.</param>
+        /// <param name="player">The <see cref="Player"/> to count as the thrower of the grenade.</param>
         /// <returns>The <see cref="Pickup"/> spawned.</returns>
-        public virtual Projectile Throw(Vector3 position, Player? player = null)
+        public virtual Pickup Throw(Vector3 position, Player? player = null, float weight = 1f, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHE)
         {
-            Projectile projectile = ((Throwable)this.CreateItem()).CreateProjectile(position);
-            projectile.PreviousOwner = player;
-            projectile.Activate();
-            return projectile;
+            if (player is null)
+                player = Server.Host;
+
+            player.Role.Is(out FpcRole fpcRole);
+            Vector3 velocity = fpcRole.FirstPersonController.FpcModule.Motor.Velocity;
+
+            Throwable throwable = (Throwable)Item.Create(grenadeType, player);
+
+            ThrownProjectile thrownProjectile = Object.Instantiate(throwable.Base.Projectile, position, throwable.Owner.CameraTransform.rotation);
+
+            PickupSyncInfo newInfo = new()
+            {
+                ItemId = throwable.Type,
+                Locked = !throwable.Base._repickupable,
+                Serial = ItemSerialGenerator.GenerateNext(),
+                WeightKg = weight,
+            };
+
+            if (thrownProjectile is TimeGrenade time)
+                time._fuseTime = fuseTime;
+
+            thrownProjectile.NetworkInfo = newInfo;
+            thrownProjectile.PreviousOwner = new Footprint(throwable.Owner.ReferenceHub);
+            NetworkServer.Spawn(thrownProjectile.gameObject);
+            thrownProjectile.InfoReceivedHook(default, newInfo);
+            if (thrownProjectile.TryGetComponent(out Rigidbody component))
+                throwable.Base.PropelBody(component, throwable.Base.FullThrowSettings.StartTorque, ThrowableNetworkHandler.GetLimitedVelocity(velocity));
+
+            thrownProjectile.ServerActivate();
+            return Pickup.Get(thrownProjectile);
         }
 
         /// <summary>

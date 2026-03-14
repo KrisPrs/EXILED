@@ -24,16 +24,20 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="ExplosionGrenade"/> class.</param>
         public ExplosionGrenadeProjectile(ExplosionGrenade pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExplosionGrenadeProjectile"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal ExplosionGrenadeProjectile(ItemType type)
-            : base(type) =>
-            this.Base = (ExplosionGrenade)((Pickup)this).Base;
+            : base(type)
+        {
+            Base = (ExplosionGrenade)((Pickup)this).Base;
+        }
 
         /// <summary>
         /// Gets the <see cref="ExplosionGrenade"/> that this class is encapsulating.
@@ -45,8 +49,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float MaxRadius
         {
-            get => this.Base.MaxRadius;
-            set => this.Base.MaxRadius = value;
+            get => Base.MaxRadius;
+            set => Base.MaxRadius = value;
         }
 
         /// <summary>
@@ -54,8 +58,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float MinimalDurationEffect
         {
-            get => this.Base._minimalDuration;
-            set => this.Base._minimalDuration = value;
+            get => Base._minimalDuration;
+            set => Base._minimalDuration = value;
         }
 
         /// <summary>
@@ -63,8 +67,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float BurnDuration
         {
-            get => this.Base._burnedDuration;
-            set => this.Base._burnedDuration = value;
+            get => Base._burnedDuration;
+            set => Base._burnedDuration = value;
         }
 
         /// <summary>
@@ -72,8 +76,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float DeafenDuration
         {
-            get => this.Base._deafenedDuration;
-            set => this.Base._deafenedDuration = value;
+            get => Base._deafenedDuration;
+            set => Base._deafenedDuration = value;
         }
 
         /// <summary>
@@ -81,8 +85,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float ConcussDuration
         {
-            get => this.Base._concussedDuration;
-            set => this.Base._concussedDuration = value;
+            get => Base._concussedDuration;
+            set => Base._concussedDuration = value;
         }
 
         /// <summary>
@@ -90,28 +94,14 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float ScpDamageMultiplier
         {
-            get => this.Base.ScpDamageMultiplier;
-            set => this.Base.ScpDamageMultiplier = value;
+            get => Base.ScpDamageMultiplier;
+            set => Base.ScpDamageMultiplier = value;
         }
 
         /// <summary>
         /// Returns the ExplosionGrenadePickup in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosionGrenadePickup-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Position}| -{this.IsLocked}- ={this.InUse}=";
-
-        /// <inheritdoc/>
-        internal override void ReadGrenadePickupInfo(GrenadePickup pickup)
-        {
-            base.ReadGrenadePickupInfo(pickup);
-            if (pickup is ExplosiveGrenadePickup grenade)
-            {
-                this.MaxRadius = grenade.MaxRadius;
-                this.ScpDamageMultiplier = grenade.ScpDamageMultiplier;
-                this.BurnDuration = grenade.BurnDuration;
-                this.DeafenDuration = grenade.DeafenDuration;
-                this.ConcussDuration = grenade.ConcussDuration;
-            }
-        }
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Position}| -{IsLocked}- ={InUse}=";
     }
 }

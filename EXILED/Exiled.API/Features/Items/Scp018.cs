@@ -7,13 +7,18 @@
 
 namespace Exiled.API.Features.Items
 {
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Pickups.Projectiles;
 
+    using InventorySystem.Items;
+    using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
 
     using UnityEngine;
 
     using BaseScp018Projectile = InventorySystem.Items.ThrowableProjectiles.Scp018Projectile;
+
+    using Object = UnityEngine.Object;
 
     using Scp018Projectile = Pickups.Projectiles.Scp018Projectile;
 
@@ -29,6 +34,7 @@ namespace Exiled.API.Features.Items
         public Scp018(ThrowableItem itemBase)
             : base(itemBase)
         {
+            Projectile = (Scp018Projectile)((Throwable)this).Projectile;
         }
 
         /// <summary>
@@ -43,9 +49,27 @@ namespace Exiled.API.Features.Items
         }
 
         /// <summary>
+        /// Gets a <see cref="ExplosionGrenadeProjectile"/> to change grenade properties.
+        /// </summary>
+        public new Scp018Projectile Projectile { get; }
+
+        /// <summary>
         /// Gets or sets the time for SCP-018 not to ignore the friendly fire.
         /// </summary>
-        public float FriendlyFireTime { get; set; }
+        public float FriendlyFireTime
+        {
+            get => Projectile.FriendlyFireTime;
+            set => Projectile.FriendlyFireTime = value;
+        }
+
+        /// <summary>
+        /// Gets or sets how long the fuse will last.
+        /// </summary>
+        public float FuseTime
+        {
+            get => Projectile.FuseTime;
+            set => Projectile.FuseTime = value;
+        }
 
         /// <summary>
         /// Spawns an active grenade on the map at the specified location.
@@ -56,44 +80,44 @@ namespace Exiled.API.Features.Items
         public Scp018Projectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {this.FuseTime}");
+            Log.Debug($"Spawning active grenade: {FuseTime}");
 #endif
+            ItemPickupBase ipb = Object.Instantiate(Projectile.Base, position, Quaternion.identity);
 
-            Projectile projectile = this.CreateProjectile(position, Quaternion.identity);
+            ipb.Info = new PickupSyncInfo(Type, Weight, ItemSerialGenerator.GenerateNext());
 
-            projectile.PreviousOwner = owner;
+            Scp018Projectile grenade = Pickup.Get<Scp018Projectile>(ipb);
 
-            projectile.Activate();
+            grenade.Base.gameObject.SetActive(true);
 
-            return (Scp018Projectile)projectile;
+            grenade.FriendlyFireTime = FriendlyFireTime;
+            grenade.FuseTime = FuseTime;
+
+            grenade.PreviousOwner = owner ?? Server.Host;
+
+            grenade.Spawn();
+
+            grenade.Base.ServerActivate();
+
+            return grenade;
         }
 
         /// <summary>
         /// Returns the ExplosiveGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosiveGrenade-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
 
         /// <summary>
         /// Clones current <see cref="ExplosiveGrenade"/> object.
         /// </summary>
         /// <returns> New <see cref="ExplosiveGrenade"/> object. </returns>
-        public override Item Clone() => new Scp018(this.Type)
+        public override Item Clone() => new Scp018(Type)
         {
-            FriendlyFireTime = this.FriendlyFireTime,
-            FuseTime = this.FuseTime,
-            PinPullTime = this.PinPullTime,
-            Repickable = this.Repickable,
+            FriendlyFireTime = FriendlyFireTime,
+            FuseTime = FuseTime,
+            PinPullTime = PinPullTime,
+            Repickable = Repickable,
         };
-
-        /// <inheritdoc/>
-        protected override void InitializeProperties(ThrowableItem throwable)
-        {
-            base.InitializeProperties(throwable);
-            if (throwable.Projectile is BaseScp018Projectile grenade)
-            {
-                this.FriendlyFireTime = grenade._friendlyFireTime;
-            }
-        }
     }
 }

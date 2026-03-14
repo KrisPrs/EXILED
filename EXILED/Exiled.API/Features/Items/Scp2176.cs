@@ -7,8 +7,10 @@
 
 namespace Exiled.API.Features.Items
 {
-    using Exiled.API.Features.Pickups.Projectiles;
+    using Exiled.API.Features.Pickups;
 
+    using InventorySystem.Items;
+    using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
 
     using UnityEngine;
@@ -16,7 +18,7 @@ namespace Exiled.API.Features.Items
     using Scp2176Projectile = Pickups.Projectiles.Scp2176Projectile;
 
     /// <summary>
-    /// A wrapper class for <see cref="ItemType.SCP2176"/>.
+    /// A wrapper class for <see cref="Scp2176Projectile"/>.
     /// </summary>
     public class Scp2176 : Throwable
     {
@@ -27,6 +29,7 @@ namespace Exiled.API.Features.Items
         public Scp2176(ThrowableItem itemBase)
             : base(itemBase)
         {
+            Projectile = (Scp2176Projectile)((Throwable)this).Projectile;
         }
 
         /// <summary>
@@ -40,9 +43,18 @@ namespace Exiled.API.Features.Items
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether SCP-2176's next collision will make the dropped sound effect.
+        /// Gets a <see cref="Scp2176Projectile"/> to change grenade properties.
         /// </summary>
-        public bool DropSound { get; set; }
+        public new Scp2176Projectile Projectile { get; }
+
+        /// <summary>
+        /// Gets or sets how long the fuse will last.
+        /// </summary>
+        public float FuseTime
+        {
+            get => Projectile.FuseTime;
+            set => Projectile.FuseTime = value;
+        }
 
         /// <summary>
         /// Spawns an active grenade on the map at the specified location.
@@ -53,16 +65,25 @@ namespace Exiled.API.Features.Items
         public Scp2176Projectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {this.FuseTime}");
+            Log.Debug($"Spawning active grenade: {FuseTime}");
 #endif
+            ItemPickupBase ipb = Object.Instantiate(Projectile.Base, position, Quaternion.identity);
 
-            Projectile projectile = this.CreateProjectile(position, Quaternion.identity);
+            ipb.Info = new PickupSyncInfo(Type, Weight, ItemSerialGenerator.GenerateNext());
 
-            projectile.PreviousOwner = owner;
+            Scp2176Projectile grenade = Pickup.Get<Scp2176Projectile>(ipb);
 
-            projectile.Activate();
+            grenade.Base.gameObject.SetActive(true);
 
-            return (Scp2176Projectile)projectile;
+            grenade.FuseTime = FuseTime;
+
+            grenade.PreviousOwner = owner ?? Server.Host;
+
+            grenade.Spawn();
+
+            grenade.Base.ServerActivate();
+
+            return grenade;
         }
 
         /// <summary>
@@ -71,23 +92,15 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Scp2176"/> object. </returns>
         public override Item Clone() => new Scp2176()
         {
-            FuseTime = this.FuseTime,
-            PinPullTime = this.PinPullTime,
-            Repickable = this.Repickable,
+            FuseTime = FuseTime,
+            PinPullTime = PinPullTime,
+            Repickable = Repickable,
         };
 
         /// <summary>
         /// Returns the ExplosiveGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosiveGrenade-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
-
-        /// <inheritdoc/>
-        protected override void InitializeProperties(ThrowableItem throwable)
-        {
-            base.InitializeProperties(throwable);
-            if (throwable.Projectile is InventorySystem.Items.ThrowableProjectiles.Scp2176Projectile projectile)
-                this.DropSound = projectile._playedDropSound;
-        }
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
     }
 }

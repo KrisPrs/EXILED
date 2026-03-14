@@ -11,14 +11,11 @@ namespace Exiled.API.Features.Pickups.Projectiles
 
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
-    using Exiled.API.Features.Items;
     using Exiled.API.Interfaces;
-
     using InventorySystem;
     using InventorySystem.Items;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
-
     using UnityEngine;
 
     using Object = UnityEngine.Object;
@@ -33,8 +30,10 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="ThrownProjectile"/> class.</param>
         internal Projectile(ThrownProjectile pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Projectile"/> class.
@@ -46,7 +45,7 @@ namespace Exiled.API.Features.Pickups.Projectiles
                 return;
 
             throwable.Projectile.gameObject.SetActive(false);
-            base.Base = this.Base = Object.Instantiate(throwable.Projectile);
+            base.Base = Base = Object.Instantiate(throwable.Projectile);
             throwable.Projectile.gameObject.SetActive(true);
 
             PickupSyncInfo psi = new()
@@ -56,8 +55,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
                 WeightKg = itemBase.Weight,
             };
 
-            this.Info = psi;
-            BaseToPickup.Add(this.Base, this);
+            Info = psi;
+            BaseToPickup.Add(Base, this);
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <summary>
         /// Gets the <see cref="Enums.ProjectileType"/> of the item.
         /// </summary>
-        public ProjectileType ProjectileType => this.Type.GetProjectileType();
+        public ProjectileType ProjectileType => Type.GetProjectileType();
 
         /// <summary>
         /// Creates and returns a new <see cref="Projectile"/> with the proper inherited subclass.
@@ -124,7 +123,7 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <param name="shouldBeActive">Whether the <see cref="Projectile"/> should be in active state after spawn.</param>
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <returns>The <see cref="Projectile"/>. See documentation of <see cref="Create"/> for more information on casting.</returns>
-        public static Projectile CreateAndSpawn(ProjectileType type, Vector3 position, Quaternion rotation, bool shouldBeActive = true, Player previousOwner = null) => Create(type).Spawn(position, rotation, shouldBeActive, previousOwner);
+        public static Projectile CreateAndSpawn(ProjectileType type, Vector3 position, Quaternion? rotation = null, bool shouldBeActive = true, Player previousOwner = null) => Create(type).Spawn(position, rotation, shouldBeActive, previousOwner);
 
         /// <summary>
         /// Creates and spawns a <see cref="Projectile"/>.
@@ -136,13 +135,13 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <typeparam name="T">The specified <see cref="Projectile"/> type.</typeparam>
         /// <returns>The <see cref="Projectile"/>. See documentation of <see cref="Create"/> for more information on casting.</returns>
-        public static T CreateAndSpawn<T>(ProjectileType type, Vector3 position, Quaternion rotation, bool shouldBeActive = true, Player previousOwner = null)
+        public static T CreateAndSpawn<T>(ProjectileType type, Vector3 position, Quaternion? rotation = null, bool shouldBeActive = true, Player previousOwner = null)
             where T : Projectile => CreateAndSpawn(type, position, rotation, shouldBeActive, previousOwner) as T;
 
         /// <summary>
         /// Activates the current <see cref="Projectile"/>.
         /// </summary>
-        public virtual void Activate() => this.Base.ServerActivate();
+        public void Activate() => Base.ServerActivate();
 
         /// <summary>
         /// Spawns a <see cref="Projectile"/>.
@@ -152,15 +151,15 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <param name="shouldBeActive">Whether the <see cref="Projectile"/> should be in active state after spawn.</param>
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <returns>The spawned <see cref="Projectile"/>.</returns>
-        public Projectile Spawn(Vector3 position, Quaternion rotation, bool shouldBeActive = true, Player previousOwner = null)
+        public Projectile Spawn(Vector3 position, Quaternion? rotation = null, bool shouldBeActive = true, Player previousOwner = null)
         {
-            this.Position = position;
-            this.Rotation = rotation;
-            this.PreviousOwner = previousOwner;
-            this.Spawn();
+            Position = position;
+            Rotation = rotation ?? Quaternion.identity;
+            PreviousOwner = previousOwner;
+            Spawn();
 
             if (shouldBeActive)
-                this.Activate();
+                Activate();
 
             return this;
         }
@@ -169,12 +168,6 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// Returns the ProjectilePickup in a human readable format.
         /// </summary>
         /// <returns>A string containing ProjectilePickup-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Position}| -{this.IsLocked}- ={this.InUse}=";
-
-        /// <summary>
-        /// Helper method for saving data between <see cref="Projectile"/>'s and <see cref="Throwable"/>'s.
-        /// </summary>
-        /// <param name="throwable"><see cref="Throwable"/>-related data to give to the <see cref="Projectile"/>.</param>
-        internal virtual void ReadThrowableItemInfo(Throwable throwable) => this.Scale = throwable.Scale;
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Position}| -{IsLocked}- ={InUse}=";
     }
 }

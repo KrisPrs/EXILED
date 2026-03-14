@@ -12,8 +12,12 @@ namespace Exiled.API.Features.Items
     using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Pickups.Projectiles;
 
+    using InventorySystem.Items;
+    using InventorySystem.Items.Pickups;
     using InventorySystem.Items.ThrowableProjectiles;
     using UnityEngine;
+
+    using Object = UnityEngine.Object;
 
     /// <summary>
     /// A wrapper class for <see cref="ExplosionGrenade"/>.
@@ -27,6 +31,7 @@ namespace Exiled.API.Features.Items
         public ExplosiveGrenade(ThrowableItem itemBase)
             : base(itemBase)
         {
+            Projectile = (ExplosionGrenadeProjectile)((Throwable)this).Projectile;
         }
 
         /// <summary>
@@ -41,29 +46,63 @@ namespace Exiled.API.Features.Items
         }
 
         /// <summary>
+        /// Gets a <see cref="ExplosionGrenadeProjectile"/> to change grenade properties.
+        /// </summary>
+        public new ExplosionGrenadeProjectile Projectile { get; }
+
+        /// <summary>
         /// Gets or sets the maximum radius of the grenade.
         /// </summary>
-        public float MaxRadius { get; set; }
+        public float MaxRadius
+        {
+            get => Projectile.MaxRadius;
+            set => Projectile.MaxRadius = value;
+        }
 
         /// <summary>
         /// Gets or sets the multiplier for damage against <see cref="Side.Scp"/> players.
         /// </summary>
-        public float ScpDamageMultiplier { get; set; }
+        public float ScpDamageMultiplier
+        {
+            get => Projectile.ScpDamageMultiplier;
+            set => Projectile.ScpDamageMultiplier = value;
+        }
 
         /// <summary>
         /// Gets or sets how long the <see cref="EffectType.Burned"/> effect will last.
         /// </summary>
-        public float BurnDuration { get; set; }
+        public float BurnDuration
+        {
+            get => Projectile.BurnDuration;
+            set => Projectile.BurnDuration = value;
+        }
 
         /// <summary>
         /// Gets or sets how long the <see cref="EffectType.Deafened"/> effect will last.
         /// </summary>
-        public float DeafenDuration { get; set; }
+        public float DeafenDuration
+        {
+            get => Projectile.DeafenDuration;
+            set => Projectile.DeafenDuration = value;
+        }
 
         /// <summary>
         /// Gets or sets how long the <see cref="EffectType.Concussed"/> effect will last.
         /// </summary>
-        public float ConcussDuration { get; set; }
+        public float ConcussDuration
+        {
+            get => Projectile.ConcussDuration;
+            set => Projectile.ConcussDuration = value;
+        }
+
+        /// <summary>
+        /// Gets or sets how long the fuse will last.
+        /// </summary>
+        public float FuseTime
+        {
+            get => Projectile.FuseTime;
+            set => Projectile.FuseTime = value;
+        }
 
         /// <summary>
         /// Spawns an active grenade on the map at the specified location.
@@ -74,38 +113,52 @@ namespace Exiled.API.Features.Items
         public ExplosionGrenadeProjectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {this.FuseTime}");
+            Log.Debug($"Spawning active grenade: {FuseTime}");
 #endif
+            ItemPickupBase ipb = Object.Instantiate(Projectile.Base, position, Quaternion.identity);
 
-            Projectile projectile = this.CreateProjectile(position, Quaternion.identity);
+            ipb.Info = new PickupSyncInfo(Type, Weight, ItemSerialGenerator.GenerateNext());
 
-            projectile.PreviousOwner = owner;
+            ExplosionGrenadeProjectile grenade = Pickup.Get<ExplosionGrenadeProjectile>(ipb);
 
-            projectile.Activate();
+            grenade.Base.gameObject.SetActive(true);
 
-            return (ExplosionGrenadeProjectile)projectile;
+            grenade.MaxRadius = MaxRadius;
+            grenade.ScpDamageMultiplier = ScpDamageMultiplier;
+            grenade.BurnDuration = BurnDuration;
+            grenade.DeafenDuration = DeafenDuration;
+            grenade.ConcussDuration = ConcussDuration;
+            grenade.FuseTime = FuseTime;
+
+            grenade.PreviousOwner = owner ?? Server.Host;
+
+            grenade.Spawn();
+
+            grenade.Base.ServerActivate();
+
+            return grenade;
         }
 
         /// <summary>
         /// Returns the ExplosiveGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosiveGrenade-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
 
         /// <summary>
         /// Clones current <see cref="ExplosiveGrenade"/> object.
         /// </summary>
         /// <returns> New <see cref="ExplosiveGrenade"/> object. </returns>
-        public override Item Clone() => new ExplosiveGrenade(this.Type)
+        public override Item Clone() => new ExplosiveGrenade(Type)
         {
-            MaxRadius = this.MaxRadius,
-            ScpDamageMultiplier = this.ScpDamageMultiplier,
-            BurnDuration = this.BurnDuration,
-            DeafenDuration = this.DeafenDuration,
-            ConcussDuration = this.ConcussDuration,
-            FuseTime = this.FuseTime,
-            PinPullTime = this.PinPullTime,
-            Repickable = this.Repickable,
+            MaxRadius = MaxRadius,
+            ScpDamageMultiplier = ScpDamageMultiplier,
+            BurnDuration = BurnDuration,
+            DeafenDuration = DeafenDuration,
+            ConcussDuration = ConcussDuration,
+            FuseTime = FuseTime,
+            PinPullTime = PinPullTime,
+            Repickable = Repickable,
         };
 
         /// <inheritdoc/>
@@ -114,27 +167,12 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is ExplosiveGrenadePickup explosiveGrenadePickup)
             {
-                this.MaxRadius = explosiveGrenadePickup.MaxRadius;
-                this.ScpDamageMultiplier = explosiveGrenadePickup.ScpDamageMultiplier;
-                this.BurnDuration = explosiveGrenadePickup.BurnDuration;
-                this.DeafenDuration = explosiveGrenadePickup.DeafenDuration;
-                this.ConcussDuration = explosiveGrenadePickup.ConcussDuration;
-                this.FuseTime = explosiveGrenadePickup.FuseTime;
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void InitializeProperties(ThrowableItem throwable)
-        {
-            base.InitializeProperties(throwable);
-
-            if (throwable.Projectile is ExplosionGrenade grenade)
-            {
-                this.MaxRadius = grenade.MaxRadius;
-                this.ScpDamageMultiplier = grenade.ScpDamageMultiplier;
-                this.BurnDuration = grenade._burnedDuration;
-                this.DeafenDuration = grenade._deafenedDuration;
-                this.ConcussDuration = grenade._concussedDuration;
+                MaxRadius = explosiveGrenadePickup.MaxRadius;
+                ScpDamageMultiplier = explosiveGrenadePickup.ScpDamageMultiplier;
+                BurnDuration = explosiveGrenadePickup.BurnDuration;
+                DeafenDuration = explosiveGrenadePickup.DeafenDuration;
+                ConcussDuration = explosiveGrenadePickup.ConcussDuration;
+                FuseTime = explosiveGrenadePickup.FuseTime;
             }
         }
     }

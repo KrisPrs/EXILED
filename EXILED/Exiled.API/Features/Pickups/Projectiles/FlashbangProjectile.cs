@@ -22,15 +22,19 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="FlashbangGrenade"/> class.</param>
         public FlashbangProjectile(FlashbangGrenade pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FlashbangProjectile"/> class.
         /// </summary>
         internal FlashbangProjectile()
-            : base(ItemType.GrenadeFlash) =>
-            this.Base = (FlashbangGrenade)((Pickup)this).Base;
+            : base(ItemType.GrenadeFlash)
+        {
+            Base = (FlashbangGrenade)((Pickup)this).Base;
+        }
 
         /// <summary>
         /// Gets the <see cref="FlashbangGrenade"/> that this class is encapsulating.
@@ -42,8 +46,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float MinimalDurationEffect
         {
-            get => this.Base._minimalEffectDuration;
-            set => this.Base._minimalEffectDuration = value;
+            get => Base._minimalEffectDuration;
+            set => Base._minimalEffectDuration = value;
         }
 
         /// <summary>
@@ -51,8 +55,8 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float AdditionalBlurredEffect
         {
-            get => this.Base._additionalBlurDuration;
-            set => this.Base._additionalBlurDuration = value;
+            get => Base._additionalBlurDuration;
+            set => Base._additionalBlurDuration = value;
         }
 
         /// <summary>
@@ -60,26 +64,14 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         public float SurfaceDistanceIntensifier
         {
-            get => this.Base._surfaceZoneDistanceIntensifier;
-            set => this.Base._surfaceZoneDistanceIntensifier = value;
+            get => Base._surfaceZoneDistanceIntensifier;
+            set => Base._surfaceZoneDistanceIntensifier = value;
         }
 
         /// <summary>
         /// Returns the FlashbangPickup in a human readable format.
         /// </summary>
         /// <returns>A string containing FlashbangPickup-related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Position}| -{this.IsLocked}- ={this.InUse}=";
-
-        /// <inheritdoc/>
-        internal override void ReadGrenadePickupInfo(GrenadePickup pickup)
-        {
-            base.ReadGrenadePickupInfo(pickup);
-            if (pickup is FlashGrenadePickup grenade)
-            {
-                this.MinimalDurationEffect = grenade.MinimalDurationEffect;
-                this.AdditionalBlurredEffect = grenade.AdditionalBlurredEffect;
-                this.SurfaceDistanceIntensifier = grenade.SurfaceDistanceIntensifier;
-            }
-        }
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Position}| -{IsLocked}- ={InUse}=";
     }
 }
