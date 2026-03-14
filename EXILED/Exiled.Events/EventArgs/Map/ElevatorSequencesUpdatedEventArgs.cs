@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="sequence"><inheritdoc cref="ElevatorChamber.ElevatorSequence"/></param>
         public ElevatorSequencesUpdatedEventArgs(ElevatorChamber elevatorChamber, ElevatorChamber.ElevatorSequence sequence)
         {
-            Elevator = elevatorChamber;
-            Lift = Lift.Get(elevatorChamber);
-            Sequence = sequence;
+            this.Elevator = elevatorChamber;
+            this.Lift = Lift.Get(elevatorChamber);
+            this.Sequence = sequence;
         }
 
         /// <summary>

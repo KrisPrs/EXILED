@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public MakingNoiseEventArgs(Player player, float distance, bool isAllowed = true)
         {
-            Player = player;
-            Distance = distance;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Distance = distance;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

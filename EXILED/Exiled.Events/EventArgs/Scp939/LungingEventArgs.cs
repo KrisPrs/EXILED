@@ -24,8 +24,8 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public LungingEventArgs(Player player)
         {
-            Player = player;
-            Scp939 = Player.Role.As<Scp939Role>();
+            this.Player = player;
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
         }
 
         /// <summary>

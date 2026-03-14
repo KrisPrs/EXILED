@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Item
         /// </param>
         public ChangingMicroHIDPickupStateEventArgs(ItemPickupBase microHID, MicroHidPhase newPhase, bool isAllowed = true)
         {
-            MicroHID = Pickup.Get<MicroHIDPickup>(microHID);
-            NewPhase = newPhase;
-            IsAllowed = isAllowed;
+            this.MicroHID = Pickup.Get<MicroHIDPickup>(microHID);
+            this.NewPhase = newPhase;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -53,6 +53,6 @@ namespace Exiled.Events.EventArgs.Item
         public bool IsAllowed { get; set; }
 
         /// <inheritdoc/>
-        public Pickup Pickup => MicroHID;
+        public Pickup Pickup => this.MicroHID;
     }
 }

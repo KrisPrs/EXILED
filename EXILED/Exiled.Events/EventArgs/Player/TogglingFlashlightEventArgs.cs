@@ -34,10 +34,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TogglingFlashlightEventArgs(ReferenceHub hub, ToggleableLightItemBase flashlight, bool newState)
         {
-            Player = Player.Get(hub);
-            Flashlight = Item.Get<Flashlight>(flashlight);
-            initialState = newState;
-            NewState = newState;
+            this.Player = Player.Get(hub);
+            this.Flashlight = Item.Get<Flashlight>(flashlight);
+            this.initialState = newState;
+            this.NewState = newState;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Exiled.Events.EventArgs.Player
         public Flashlight Flashlight { get; }
 
         /// <inheritdoc/>
-        public Item Item => Flashlight;
+        public Item Item => this.Flashlight;
 
         /// <summary>
         /// Gets or sets a value indicating whether the flashlight should be on.
@@ -58,8 +58,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public bool IsAllowed
         {
-            get => NewState == initialState;
-            set => NewState = value ? initialState : !initialState;
+            get => this.NewState == this.initialState;
+            set => this.NewState = value ? this.initialState : !this.initialState;
         }
 
         /// <summary>

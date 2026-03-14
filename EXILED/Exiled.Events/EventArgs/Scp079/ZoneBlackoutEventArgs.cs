@@ -44,14 +44,14 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public ZoneBlackoutEventArgs(ReferenceHub player, FacilityZone zone, float auxiliaryPowerCost, float blackoutduration, float cooldown, Scp079HudTranslation scp079HudTranslation)
         {
-            Player = Player.Get(player);
-            Scp079 = Player.Role.As<API.Features.Roles.Scp079Role>();
-            Zone = zone.GetZone();
-            AuxiliaryPowerCost = auxiliaryPowerCost;
-            BlackoutDuration = blackoutduration;
-            Cooldown = cooldown;
-            Scp079HudTranslation = scp079HudTranslation;
-            IsAllowed = scp079HudTranslation is Scp079HudTranslation.Zoom;
+            this.Player = Player.Get(player);
+            this.Scp079 = this.Player.Role.As<API.Features.Roles.Scp079Role>();
+            this.Zone = zone.GetZone();
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.BlackoutDuration = blackoutduration;
+            this.Cooldown = cooldown;
+            this.Scp079HudTranslation = scp079HudTranslation;
+            this.IsAllowed = scp079HudTranslation is Scp079HudTranslation.Zoom;
         }
 
         /// <summary>

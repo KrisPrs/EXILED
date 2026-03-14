@@ -24,10 +24,10 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="connectorType">The connector type the game is trying to spawn.</param>
         public SpawningRoomConnectorEventArgs(RoomConnectorSpawnpointBase roomConnectorSpawnpointBase, SpawnableRoomConnectorType connectorType)
         {
-            RoomConnectorSpawnpoint = roomConnectorSpawnpointBase;
-            ConnectorType = connectorType;
-            RoomForward = Room.Get(RoomConnectorSpawnpoint._parentRoom);
-            RoomBackward = Room.Get(RoomConnectorSpawnpoint.transform.position + (RoomConnectorSpawnpoint.transform.forward * -1));
+            this.RoomConnectorSpawnpoint = roomConnectorSpawnpointBase;
+            this.ConnectorType = connectorType;
+            this.RoomForward = Room.Get(this.RoomConnectorSpawnpoint._parentRoom);
+            this.RoomBackward = Room.Get(this.RoomConnectorSpawnpoint.transform.position + (this.RoomConnectorSpawnpoint.transform.forward * -1));
         }
 
         /// <summary>

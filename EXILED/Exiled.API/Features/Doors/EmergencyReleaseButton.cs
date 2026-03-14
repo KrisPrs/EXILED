@@ -30,8 +30,8 @@ namespace Exiled.API.Features.Doors
         /// <param name="base"><inheritdoc cref="Base"/></param>
         internal EmergencyReleaseButton(EmergencyDoorRelease @base)
         {
-            Base = @base;
-            Door = Door.Get(Base._controlledDoor);
+            this.Base = @base;
+            this.Door = Door.Get(this.Base._controlledDoor);
 
             ObjectToWrapper[@base] = this;
         }
@@ -54,8 +54,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public bool IsReady
         {
-            get => Base._isReady;
-            set => Base._isReady = value;
+            get => this.Base._isReady;
+            set => this.Base._isReady = value;
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float InitialTimer
         {
-            get => Base._initialTimer;
-            set => Base._initialTimer = value;
+            get => this.Base._initialTimer;
+            set => this.Base._initialTimer = value;
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float ReleaseTimer
         {
-            get => Base._releaseTimer;
-            set => Base._releaseTimer = value;
+            get => this.Base._releaseTimer;
+            set => this.Base._releaseTimer = value;
         }
 
         /// <summary>

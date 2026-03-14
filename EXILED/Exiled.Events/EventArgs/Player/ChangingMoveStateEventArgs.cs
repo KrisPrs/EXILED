@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingMoveStateEventArgs(Player player, PlayerMovementState oldState, PlayerMovementState newState)
         {
-            Player = player;
-            OldState = oldState;
-            NewState = newState;
+            this.Player = player;
+            this.OldState = oldState;
+            this.NewState = newState;
         }
 
         /// <summary>

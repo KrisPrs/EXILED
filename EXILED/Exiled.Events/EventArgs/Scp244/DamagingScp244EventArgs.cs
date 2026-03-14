@@ -36,9 +36,9 @@ namespace Exiled.Events.EventArgs.Scp244
         /// </param>
         public DamagingScp244EventArgs(Scp244DeployablePickup scp244, float damage, DamageHandlerBase handler)
         {
-            IsAllowed = handler is ExplosionDamageHandler;
-            Pickup = (Scp244Pickup)API.Features.Pickups.Pickup.Get(scp244);
-            Handler = new(handler is AttackerDamageHandler attackerDamageHandler ? Player.Get(attackerDamageHandler.Attacker.Hub) : null, handler)
+            this.IsAllowed = handler is ExplosionDamageHandler;
+            this.Pickup = (Scp244Pickup)API.Features.Pickups.Pickup.Get(scp244);
+            this.Handler = new(handler is AttackerDamageHandler attackerDamageHandler ? Player.Get(attackerDamageHandler.Attacker.Hub) : null, handler)
             {
                 Damage = damage,
             };

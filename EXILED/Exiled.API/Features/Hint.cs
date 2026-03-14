@@ -30,9 +30,9 @@ namespace Exiled.API.Features
         /// <param name="show">Whether the hint should be shown.</param>
         public Hint(string content, float duration = 3, bool show = true)
         {
-            Content = content;
-            Duration = duration;
-            Show = show;
+            this.Content = content;
+            this.Duration = duration;
+            this.Show = show;
         }
 
         /// <summary>
@@ -57,6 +57,6 @@ namespace Exiled.API.Features
         /// Returns the hint in a human-readable format.
         /// </summary>
         /// <returns>A string containing hint-related data.</returns>
-        public override string ToString() => $"({Content}) {Duration}";
+        public override string ToString() => $"({this.Content}) {this.Duration}";
     }
 }

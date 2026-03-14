@@ -45,12 +45,12 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public KickingEventArgs(Player target, Player issuer, ICommandSender commandSender, string reason, string fullMessage, bool isAllowed = true)
         {
-            Target = target;
-            Player = issuer ?? Server.Host;
-            CommandSender = commandSender;
-            Reason = reason;
-            FullMessage = fullMessage;
-            IsAllowed = isAllowed;
+            this.Target = target;
+            this.Player = issuer ?? Server.Host;
+            this.CommandSender = commandSender;
+            this.Reason = reason;
+            this.FullMessage = fullMessage;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -58,16 +58,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public Player Target
         {
-            get => target;
+            get => this.target;
             set
             {
-                if (value is null || target == value)
+                if (value is null || this.target == value)
                     return;
 
-                if (Events.Instance.Config.ShouldLogBans && target is not null)
-                    LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed the banned player from user {target.Nickname} ({target.UserId}) to {value.Nickname} ({value.UserId})");
+                if (Events.Instance.Config.ShouldLogBans && this.target is not null)
+                    this.LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed the banned player from user {this.target.Nickname} ({this.target.UserId}) to {value.Nickname} ({value.UserId})");
 
-                target = value;
+                this.target = value;
             }
         }
 
@@ -86,16 +86,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public bool IsAllowed
         {
-            get => isAllowed;
+            get => this.isAllowed;
             set
             {
-                if (isAllowed == value)
+                if (this.isAllowed == value)
                     return;
 
                 if (Events.Instance.Config.ShouldLogBans)
-                    LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" {(value ? "allowed" : "denied")} banning user with ID: {Target.UserId}");
+                    this.LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" {(value ? "allowed" : "denied")} banning user with ID: {this.Target.UserId}");
 
-                isAllowed = value;
+                this.isAllowed = value;
             }
         }
 
@@ -109,16 +109,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public ICommandSender Sender
         {
-            get => sender;
+            get => this.sender;
             set
             {
-                if (value is null || sender == value)
+                if (value is null || this.sender == value)
                     return;
 
-                if (Events.Instance.Config.ShouldLogBans && sender is not null)
-                    LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed the ban sender from user {sender.LogName} to {value.LogName}");
+                if (Events.Instance.Config.ShouldLogBans && this.sender is not null)
+                    this.LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed the ban sender from user {this.sender.LogName} to {value.LogName}");
 
-                sender = value;
+                this.sender = value;
             }
         }
 

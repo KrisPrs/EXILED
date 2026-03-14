@@ -32,7 +32,7 @@ namespace Exiled.API.Features.Core
         protected EObject()
             : base()
         {
-            IsEditable = true;
+            this.IsEditable = true;
             InternalObjects.Add(this);
         }
 
@@ -44,7 +44,7 @@ namespace Exiled.API.Features.Core
             : this()
         {
             if (gameObject)
-                Base = gameObject;
+                this.Base = gameObject;
         }
 
         /// <summary>
@@ -762,7 +762,7 @@ namespace Exiled.API.Features.Core
         /// </summary>
         public void Destroy()
         {
-            Destroy(true);
+            this.Destroy(true);
             GC.SuppressFinalize(this);
         }
 
@@ -772,9 +772,9 @@ namespace Exiled.API.Features.Core
             unchecked
             {
                 int hash = 23;
-                hash = (hash * 29) + Base.GetHashCode();
-                hash = (hash * 29) + Name.GetHashCode();
-                hash = (hash * 29) + Tag.GetHashCode();
+                hash = (hash * 29) + this.Base.GetHashCode();
+                hash = (hash * 29) + this.Name.GetHashCode();
+                hash = (hash * 29) + this.Tag.GetHashCode();
                 return hash;
             }
         }
@@ -785,16 +785,16 @@ namespace Exiled.API.Features.Core
         /// <inheritdoc cref="Destroy()"/>
         protected virtual void Destroy(bool destroying)
         {
-            if (!destroyedValue)
+            if (!this.destroyedValue)
             {
                 if (destroying)
                 {
-                    OnBeginDestroy();
+                    this.OnBeginDestroy();
                     InternalObjects.Remove(this);
                 }
 
-                OnDestroyed();
-                destroyedValue = true;
+                this.OnDestroyed();
+                this.destroyedValue = true;
             }
         }
 

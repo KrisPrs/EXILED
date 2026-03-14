@@ -28,14 +28,14 @@ namespace Exiled.API.Features.Core.Generic
         public Singleton(T value)
         {
             Destroy(value);
-            Value = value;
+            this.Value = value;
             Instances.Add(value, this);
         }
 
         /// <summary>
         /// Finalizes an instance of the <see cref="Singleton{T}"/> class.
         /// </summary>
-        ~Singleton() => Instances.Remove(Value);
+        ~Singleton() => Instances.Remove(this.Value);
 
         /// <summary>
         /// Gets the relative value.

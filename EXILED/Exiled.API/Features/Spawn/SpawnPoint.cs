@@ -37,8 +37,8 @@ namespace Exiled.API.Features.Spawn
         /// <param name="position"><inheritdoc cref="Position"/></param>
         public void Deconstruct(out float chance, out Vector3 position)
         {
-            chance = Chance;
-            position = Position;
+            chance = this.Chance;
+            position = this.Position;
         }
     }
 }

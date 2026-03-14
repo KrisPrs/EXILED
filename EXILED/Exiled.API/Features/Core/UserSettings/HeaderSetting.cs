@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="padding"><inheritdoc cref="ReducedPaddling"/></param>
         public HeaderSetting(string name, string hintDescription = "", bool padding = false)
-            : this(new SSGroupHeader(0, name, padding, hintDescription))
-        {
-            Base = (SSGroupHeader)base.Base;
-        }
+            : this(new SSGroupHeader(0, name, padding, hintDescription)) =>
+            this.Base = (SSGroupHeader)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
@@ -36,8 +34,8 @@ namespace Exiled.API.Features.Core.UserSettings
         internal HeaderSetting(SSGroupHeader settingBase)
             : base(settingBase)
         {
-            Base = settingBase;
-            Base.SetId(0, settingBase.Label);
+            this.Base = settingBase;
+            this.Base.SetId(0, settingBase.Label);
         }
 
         /// <inheritdoc/>
@@ -49,18 +47,15 @@ namespace Exiled.API.Features.Core.UserSettings
         // TODO: change to ReducedPadding (thanks Valera)
         public bool ReducedPaddling
         {
-            get => Base.ReducedPadding;
-            set => Base.ReducedPadding = value;
+            get => this.Base.ReducedPadding;
+            set => this.Base.ReducedPadding = value;
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="HeaderSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{ReducedPaddling}/";
-        }
+        public override string ToString() => base.ToString() + $" /{this.ReducedPaddling}/";
 
         /// <summary>
         /// Represents a config for KeybindSetting.
@@ -75,9 +70,9 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="paddling"><inheritdoc cref="Paddling"/></param>
             public HeaderConfig(string name = null, string description = null, bool paddling = false)
             {
-                Name = name;
-                Description = description;
-                Paddling = paddling;
+                this.Name = name;
+                this.Description = description;
+                this.Paddling = paddling;
             }
 
             /// <summary>
@@ -106,7 +101,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a HeaderSetting instanse.
             /// </summary>
             /// <returns>HeaderSetting.</returns>
-            public override HeaderSetting Create() => new(Name, Description, Paddling);
+            public override HeaderSetting Create() => new(this.Name, this.Description, this.Paddling);
         }
     }
 }

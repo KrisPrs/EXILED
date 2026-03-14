@@ -27,20 +27,20 @@ namespace Exiled.Loader.Features.Configs
         public CommentsPropertyDescriptor(IPropertyDescriptor baseDescriptor)
         {
             this.baseDescriptor = baseDescriptor;
-            Name = baseDescriptor.Name;
+            this.Name = baseDescriptor.Name;
         }
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
         public string Name { get; set; }
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
-        public Type Type => baseDescriptor.Type;
+        public Type Type => this.baseDescriptor.Type;
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
         public Type TypeOverride
         {
-            get => baseDescriptor.TypeOverride;
-            set => baseDescriptor.TypeOverride = value;
+            get => this.baseDescriptor.TypeOverride;
+            set => this.baseDescriptor.TypeOverride = value;
         }
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
@@ -49,30 +49,27 @@ namespace Exiled.Loader.Features.Configs
         /// <inheritdoc cref="IPropertyDescriptor"/>
         public ScalarStyle ScalarStyle
         {
-            get => baseDescriptor.ScalarStyle;
-            set => baseDescriptor.ScalarStyle = value;
+            get => this.baseDescriptor.ScalarStyle;
+            set => this.baseDescriptor.ScalarStyle = value;
         }
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
-        public bool CanWrite => baseDescriptor.CanWrite;
+        public bool CanWrite => this.baseDescriptor.CanWrite;
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
-        public void Write(object target, object value)
-        {
-            baseDescriptor.Write(target, value);
-        }
+        public void Write(object target, object value) => this.baseDescriptor.Write(target, value);
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
         public T GetCustomAttribute<T>()
-            where T : Attribute => baseDescriptor.GetCustomAttribute<T>();
+            where T : Attribute => this.baseDescriptor.GetCustomAttribute<T>();
 
         /// <inheritdoc cref="IPropertyDescriptor"/>
         public IObjectDescriptor Read(object target)
         {
-            DescriptionAttribute description = baseDescriptor.GetCustomAttribute<DescriptionAttribute>();
+            DescriptionAttribute description = this.baseDescriptor.GetCustomAttribute<DescriptionAttribute>();
             return description is not null
-                ? new CommentsObjectDescriptor(baseDescriptor.Read(target), description.Description)
-                : baseDescriptor.Read(target);
+                ? new CommentsObjectDescriptor(this.baseDescriptor.Read(target), description.Description)
+                : this.baseDescriptor.Read(target);
         }
     }
 }

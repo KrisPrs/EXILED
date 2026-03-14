@@ -26,10 +26,10 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public DisruptorFiringEventArgs(Pickup disruptor, API.Features.Player attacker, DisruptorActionModule.FiringState state, bool isAllowed = true)
         {
-            Pickup = disruptor;
-            Attacker = attacker;
-            State = state;
-            IsAllowed = isAllowed;
+            this.Pickup = disruptor;
+            this.Attacker = attacker;
+            this.State = state;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

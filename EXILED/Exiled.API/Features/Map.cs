@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features.Pickups.Projectiles;
+
 namespace Exiled.API.Features
 {
 #pragma warning disable SA1401

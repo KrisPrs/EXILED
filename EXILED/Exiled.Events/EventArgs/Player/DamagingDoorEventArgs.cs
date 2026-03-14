@@ -33,14 +33,14 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DamagingDoorEventArgs(DoorVariant door, float damage, DoorDamageType doorDamageType, Footprint footprint)
         {
-            Door = Door.Get(door);
-            Damage = damage;
-            DamageType = doorDamageType;
-            Footprint = footprint;
-            Player = Player.Get(footprint);
+            this.Door = Door.Get(door);
+            this.Damage = damage;
+            this.DamageType = doorDamageType;
+            this.Footprint = footprint;
+            this.Player = Player.Get(footprint);
 
             // TODO: Remove when NW fix https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/817
-            IsAllowed = damage > 0;
+            this.IsAllowed = damage > 0;
         }
 
         /// <summary>

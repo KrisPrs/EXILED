@@ -61,9 +61,9 @@ namespace Exiled.CustomRoles.Commands.Admin.List
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission(Permission))
+            if (!sender.CheckPermission(this.Permission))
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
@@ -77,22 +77,22 @@ namespace Exiled.CustomRoles.Commands.Admin.List
                     continue;
 
                 message.AppendLine()
-                    .AppendFormat(CustomRoleFormat, customRole.Id, customRole.Name, customRole.Role, customRole.TrackedPlayers.Count)
+                    .AppendFormat(this.CustomRoleFormat, customRole.Id, customRole.Name, customRole.Role, customRole.TrackedPlayers.Count)
                     .AppendLine();
 
                 count += customRole.TrackedPlayers.Count;
 
                 foreach (Player owner in customRole.TrackedPlayers)
                 {
-                    message.AppendFormat(PlayerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role.Type)
+                    message.AppendFormat(this.PlayerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role.Type)
                         .AppendLine();
                 }
             }
 
             if (message.Length == 0)
-                message.Append(NoCustomRolesMessage);
+                message.Append(this.NoCustomRolesMessage);
             else
-                message.Insert(0, string.Format(CustomRolesHeaderFormat, count, Environment.NewLine));
+                message.Insert(0, string.Format(this.CustomRolesHeaderFormat, count, Environment.NewLine));
 
             response = StringBuilderPool.Shared.ToStringReturn(message);
             return true;

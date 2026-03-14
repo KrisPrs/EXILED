@@ -37,9 +37,9 @@ namespace Exiled.API.Features.Lockers
         /// <param name="locker"><see cref="Lockers.Locker"/> where this chamber is located.</param>
         public Chamber(LockerChamber chamber, Locker locker)
         {
-            Base = chamber;
-            Locker = locker;
-            Id = (byte)Array.IndexOf(locker.Base.Chambers, chamber);
+            this.Base = chamber;
+            this.Locker = locker;
+            this.Id = (byte)Array.IndexOf(locker.Base.Chambers, chamber);
 
             Chambers.Add(chamber, this);
         }
@@ -58,33 +58,33 @@ namespace Exiled.API.Features.Lockers
         public Locker Locker { get; }
 
         /// <inheritdoc/>
-        public Vector3 Position => Base.transform.position;
+        public Vector3 Position => this.Base.transform.position;
 
         /// <inheritdoc/>
-        public Quaternion Rotation => Base.transform.rotation;
+        public Quaternion Rotation => this.Base.transform.rotation;
 
         /// <summary>
         /// Gets the <see cref="Chamber"/> <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the <see cref="Chamber"/> <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets or sets all pickups that should be spawned when the door is initially opened.
         /// </summary>
         public IEnumerable<Pickup> ToBeSpawned
         {
-            get => Base.ToBeSpawned.Select(Pickup.Get);
+            get => this.Base.ToBeSpawned.Select(Pickup.Get);
             set
             {
-                Base.ToBeSpawned.Clear();
+                this.Base.ToBeSpawned.Clear();
 
                 foreach (Pickup pickup in value)
-                    Base.ToBeSpawned.Add(pickup.Base);
+                    this.Base.ToBeSpawned.Add(pickup.Base);
             }
         }
 
@@ -96,8 +96,8 @@ namespace Exiled.API.Features.Lockers
         /// </remarks>
         public IEnumerable<Transform> Spawnpoints
         {
-            get => Base._spawnpoints;
-            set => Base._spawnpoints = value.ToArray();
+            get => this.Base._spawnpoints;
+            set => this.Base._spawnpoints = value.ToArray();
         }
 
         /// <summary>
@@ -105,8 +105,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public IEnumerable<ItemType> AcceptableTypes
         {
-            get => Base.AcceptableItems;
-            set => Base.AcceptableItems = value.ToArray();
+            get => this.Base.AcceptableItems;
+            set => this.Base.AcceptableItems = value.ToArray();
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public KeycardPermissions Permissions
         {
-            get => (KeycardPermissions)Base.RequiredPermissions;
-            set => Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.Base.RequiredPermissions;
+            set => this.Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace Exiled.API.Features.Lockers
         [Obsolete]
         public KeycardPermissions RequiredPermissions
         {
-            get => (KeycardPermissions)Base.RequiredPermissions;
-            set => Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.Base.RequiredPermissions;
+            set => this.Base.RequiredPermissions = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace Exiled.API.Features.Lockers
         /// </remarks>
         public bool UseMultipleSpawnpoints
         {
-            get => Base._useMultipleSpawnpoints;
-            set => Base._useMultipleSpawnpoints = value;
+            get => this.Base._useMultipleSpawnpoints;
+            set => this.Base._useMultipleSpawnpoints = value;
         }
 
         /// <summary>
@@ -148,8 +148,8 @@ namespace Exiled.API.Features.Lockers
         /// </remarks>
         public Transform Spawnpoint
         {
-            get => Base.Spawnpoint;
-            set => Base.Spawnpoint = value;
+            get => this.Base.Spawnpoint;
+            set => this.Base.Spawnpoint = value;
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public bool InitiallySpawn
         {
-            get => Base.SpawnOnFirstChamberOpening;
-            set => Base.SpawnOnFirstChamberOpening = value;
+            get => this.Base.SpawnOnFirstChamberOpening;
+            set => this.Base.SpawnOnFirstChamberOpening = value;
         }
 
         /// <summary>
@@ -166,8 +166,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public float Cooldown
         {
-            get => Base.TargetCooldown;
-            set => Base.TargetCooldown = value;
+            get => this.Base.TargetCooldown;
+            set => this.Base.TargetCooldown = value;
         }
 
         /// <summary>
@@ -175,11 +175,11 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public bool IsOpen
         {
-            get => Base.IsOpen;
+            get => this.Base.IsOpen;
             set
             {
-                Base.SetDoor(value, null);
-                Locker.Base.RefreshOpenedSyncvar();
+                this.Base.SetDoor(value, null);
+                this.Locker.Base.RefreshOpenedSyncvar();
             }
         }
 
@@ -192,12 +192,12 @@ namespace Exiled.API.Features.Lockers
         /// Gets the <see cref="Stopwatch"/> of current cooldown.
         /// </summary>
         /// <remarks>Used in <see cref="CanInteract"/> check.</remarks>
-        public Stopwatch CurrentCooldown => Base._stopwatch;
+        public Stopwatch CurrentCooldown => this.Base._stopwatch;
 
         /// <summary>
         /// Gets a value indicating whether the chamber is interactable.
         /// </summary>
-        public bool CanInteract => Base.CanInteract;
+        public bool CanInteract => this.Base.CanInteract;
 
         /// <summary>
         /// Adds an item to the current chamber.
@@ -205,11 +205,11 @@ namespace Exiled.API.Features.Lockers
         /// <param name="item">The pickup to add.</param>
         public void AddItem(Pickup item)
         {
-            Transform parent = UseMultipleSpawnpoints && Spawnpoints.Any()
-                ? Spawnpoints.GetRandomValue()
-                : Spawnpoint;
+            Transform parent = this.UseMultipleSpawnpoints && this.Spawnpoints.Any()
+                ? this.Spawnpoints.GetRandomValue()
+                : this.Spawnpoint;
 
-            if (IsOpen)
+            if (this.IsOpen)
             {
                 item.Transform.SetParent(parent);
 
@@ -243,9 +243,9 @@ namespace Exiled.API.Features.Lockers
                 SpawnablesDistributorBase.BodiesToUnfreeze.Add(item.Rigidbody);
             }
 
-            Base.Content.Add(item.Base);
+            this.Base.Content.Add(item.Base);
             item.Spawn();
-            if (Base.WasEverOpened)
+            if (this.Base.WasEverOpened)
                 item.IsLocked = false;
         }
 
@@ -254,7 +254,7 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         /// <param name="type"><see cref="ItemType"/> from <see cref="AcceptableTypes"/>.</param>
         /// <param name="amount">Amount of items that should be spawned.</param>
-        public void SpawnItem(ItemType type, int amount) => Base.SpawnItem(type, amount);
+        public void SpawnItem(ItemType type, int amount) => this.Base.SpawnItem(type, amount);
 
         /// <summary>
         /// Adds an item of the specified type to the chamber's spawn list.
@@ -273,14 +273,14 @@ namespace Exiled.API.Features.Lockers
             {
                 Pickup pickup = Pickup.Create(itemType);
 
-                if (spawnIfIsOpen && IsOpen)
+                if (spawnIfIsOpen && this.IsOpen)
                 {
-                    pickup.Position = GetRandomSpawnPoint();
+                    pickup.Position = this.GetRandomSpawnPoint();
                     pickup.Spawn();
                     continue;
                 }
 
-                Base.ToBeSpawned.Add(pickup.Base);
+                this.Base.ToBeSpawned.Add(pickup.Base);
             }
         }
 
@@ -293,19 +293,19 @@ namespace Exiled.API.Features.Lockers
         /// <returns>A <see cref="Vector3"/> representing the position of the selected spawn point.</returns>
         public Vector3 GetRandomSpawnPoint()
         {
-            if (UseMultipleSpawnpoints && Spawnpoints.Any())
+            if (this.UseMultipleSpawnpoints && this.Spawnpoints.Any())
             {
-                return Spawnpoints.GetRandomValue().position;
+                return this.Spawnpoints.GetRandomValue().position;
             }
 
-            return Spawnpoint.position;
+            return this.Spawnpoint.position;
         }
 
         /// <summary>
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"({string.Join(",", AcceptableTypes)}) [{string.Join(",", ToBeSpawned)}] *{Cooldown}* ={IsOpen}=";
+        public override string ToString() => $"({string.Join(",", this.AcceptableTypes)}) [{string.Join(",", this.ToBeSpawned)}] *{this.Cooldown}* ={this.IsOpen}=";
 
         /// <summary>
         /// Gets the chamber by its <see cref="LockerChamber"/>.

@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public SpawningItemEventArgs(ItemPickupBase pickupBase, bool shouldInitiallySpawn, DoorVariant door)
         {
-            Pickup = Pickup.Get(pickupBase);
-            TriggerDoor = Door.Get(door);
-            ShouldInitiallySpawn = shouldInitiallySpawn;
+            this.Pickup = Pickup.Get(pickupBase);
+            this.TriggerDoor = Door.Get(door);
+            this.ShouldInitiallySpawn = shouldInitiallySpawn;
         }
 
         /// <summary>

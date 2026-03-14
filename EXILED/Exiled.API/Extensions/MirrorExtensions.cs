@@ -324,10 +324,7 @@ namespace Exiled.API.Extensions
         /// <param name="target">Only this player can see the name changed.</param>
         /// <param name="player">Player that will desync the CustomName.</param>
         /// <param name="name">Nickname to set.</param>
-        public static void SetName(this Player target, Player player, string name)
-        {
-            target.SendFakeSyncVar(player.NetworkIdentity, typeof(NicknameSync), nameof(NicknameSync.Network_displayName), name);
-        }
+        public static void SetName(this Player target, Player player, string name) => target.SendFakeSyncVar(player.NetworkIdentity, typeof(NicknameSync), nameof(NicknameSync.Network_displayName), name);
 
         /// <summary>
         /// Change <see cref="Player"/> character model for appearance.
@@ -411,8 +408,7 @@ namespace Exiled.API.Extensions
         /// <param name="target">The target player to whom the effect will be sent.</param>
         /// <param name="effect">The type of effect to be sent.</param>
         /// <param name="intensity">The intensity of the effect.</param>
-        public static void SendFakeEffectTo(this Player effectOwner, Player target, EffectType effect, byte intensity)
-        {
+        public static void SendFakeEffectTo(this Player effectOwner, Player target, EffectType effect, byte intensity) =>
             SendFakeSyncObject(target, effectOwner.NetworkIdentity, typeof(PlayerEffectsController), (writer) =>
             {
                 StatusEffectBase foundEffect = effectOwner.GetEffect(effect);
@@ -429,7 +425,6 @@ namespace Exiled.API.Extensions
                 writer.WriteUInt((uint)foundIndex);
                 writer.WriteByte(intensity);
             });
-        }
 
         /// <summary>
         /// Makes a player not spectatable to another player.
@@ -763,10 +758,7 @@ namespace Exiled.API.Extensions
         }
 
         // Get components index in identity.(private)
-        private static int GetComponentIndex(NetworkIdentity identity, Type type)
-        {
-            return Array.FindIndex(identity.NetworkBehaviours, (x) => x.GetType() == type);
-        }
+        private static int GetComponentIndex(NetworkIdentity identity, Type type) => Array.FindIndex(identity.NetworkBehaviours, (x) => x.GetType() == type);
 
         // Make custom writer(private)
         private static void MakeCustomSyncWriter(NetworkIdentity behaviorOwner, Type targetType, Action<NetworkWriter> customSyncObject, Action<NetworkWriter> customSyncVar, NetworkWriter owner, NetworkWriter observer)

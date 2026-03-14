@@ -22,10 +22,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="KeycardItem"/> class.</param>
         public Keycard(KeycardItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Keycard"/> class.
@@ -49,7 +47,7 @@ namespace Exiled.API.Features.Items
         {
             get
             {
-                foreach (DetailBase detail in Base.Details)
+                foreach (DetailBase detail in this.Base.Details)
                 {
                     if (detail is IDoorPermissionProvider doorPermissionProvider)
                         return (KeycardPermissions)doorPermissionProvider.GetPermissions(null);
@@ -60,7 +58,7 @@ namespace Exiled.API.Features.Items
 
             set
             {
-                foreach (DetailBase detail in Base.Details)
+                foreach (DetailBase detail in this.Base.Details)
                 {
                     if (detail is PredefinedPermsDetail doorPermissionProvider)
                     {
@@ -77,6 +75,6 @@ namespace Exiled.API.Features.Items
         /// Returns the Keycard in a human readable format.
         /// </summary>
         /// <returns>A string containing Keycard-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Permissions}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Permissions}|";
     }
 }

@@ -56,10 +56,10 @@ namespace Exiled.API.Features.Items
         public Scp018Projectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {FuseTime}");
+            Log.Debug($"Spawning active grenade: {this.FuseTime}");
 #endif
 
-            Projectile projectile = CreateProjectile(position, Quaternion.identity);
+            Projectile projectile = this.CreateProjectile(position, Quaternion.identity);
 
             projectile.PreviousOwner = owner;
 
@@ -72,18 +72,18 @@ namespace Exiled.API.Features.Items
         /// Returns the ExplosiveGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosiveGrenade-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
 
         /// <summary>
         /// Clones current <see cref="ExplosiveGrenade"/> object.
         /// </summary>
         /// <returns> New <see cref="ExplosiveGrenade"/> object. </returns>
-        public override Item Clone() => new Scp018(Type)
+        public override Item Clone() => new Scp018(this.Type)
         {
-            FriendlyFireTime = FriendlyFireTime,
-            FuseTime = FuseTime,
-            PinPullTime = PinPullTime,
-            Repickable = Repickable,
+            FriendlyFireTime = this.FriendlyFireTime,
+            FuseTime = this.FuseTime,
+            PinPullTime = this.PinPullTime,
+            Repickable = this.Repickable,
         };
 
         /// <inheritdoc/>
@@ -92,7 +92,7 @@ namespace Exiled.API.Features.Items
             base.InitializeProperties(throwable);
             if (throwable.Projectile is BaseScp018Projectile grenade)
             {
-                FriendlyFireTime = grenade._friendlyFireTime;
+                this.FriendlyFireTime = grenade._friendlyFireTime;
             }
         }
     }

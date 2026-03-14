@@ -42,35 +42,35 @@ namespace Exiled.API.Features.Items.Keycards
         /// <inheritdoc cref="INameTagKeycard.NameTag"/>
         public string NameTag
         {
-            get => DataDict[Serial].NameTag;
+            get => DataDict[this.Serial].NameTag;
             set
             {
-                DataDict[Serial].NameTag = value;
-                Resync();
+                DataDict[this.Serial].NameTag = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ISerialNumberKeycard.SerialNumber"/>
         public string SerialNumber
         {
-            get => DataDict[Serial].SerialNumber;
+            get => DataDict[this.Serial].SerialNumber;
             set
             {
-                DataDict[Serial].SerialNumber = value;
+                DataDict[this.Serial].SerialNumber = value;
 
-                Resync();
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="IRankKeycard.Rank"/>
         public byte Rank
         {
-            get => DataDict[Serial].Rank;
+            get => DataDict[this.Serial].Rank;
             set
             {
-                DataDict[Serial].Rank = value;
+                DataDict[this.Serial].Rank = value;
 
-                Resync();
+                this.Resync();
             }
         }
 

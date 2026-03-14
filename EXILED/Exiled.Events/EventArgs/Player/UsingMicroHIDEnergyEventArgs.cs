@@ -33,9 +33,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UsingMicroHIDEnergyEventArgs(MicroHIDItem microHIDitem, float newEnergy, bool isAllowed = true)
         {
-            MicroHID = Item.Get<MicroHid>(microHIDitem);
-            Drain = MicroHID.Energy - newEnergy;
-            IsAllowed = isAllowed;
+            this.MicroHID = Item.Get<MicroHid>(microHIDitem);
+            this.Drain = this.MicroHID.Energy - newEnergy;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Exiled.Events.EventArgs.Player
         public MicroHid MicroHID { get; }
 
         /// <inheritdoc/>
-        public Item Item => MicroHID;
+        public Item Item => this.MicroHID;
 
         /// <summary>
         /// Gets or sets the MicroHID energy drain.
@@ -57,6 +57,6 @@ namespace Exiled.Events.EventArgs.Player
         public bool IsAllowed { get; set; }
 
         /// <inheritdoc/>
-        public Player Player => MicroHID.Owner;
+        public Player Player => this.MicroHID.Owner;
     }
 }

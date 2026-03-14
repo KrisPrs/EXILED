@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="uncuffReason">The reason for removing the handcuffs.</param>
         public RemovedHandcuffsEventArgs(Player cuffer, Player target, UncuffReason uncuffReason)
         {
-            Player = cuffer;
-            Target = target;
-            UncuffReason = uncuffReason;
+            this.Player = cuffer;
+            this.Target = target;
+            this.UncuffReason = uncuffReason;
         }
 
         /// <summary>

@@ -45,14 +45,14 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public PingingEventArgs(ReferenceHub hub, RelativePosition position, int powerCost, byte proccesorindex, Vector3 syncNormal, bool isAllowed = true)
         {
-            Player = Player.Get(hub);
-            Scp079 = Player.Role.As<Scp079Role>();
-            Position = position.Position;
-            Room = Room.Get(Position);
-            AuxiliaryPowerCost = powerCost;
-            Type = (PingType)proccesorindex;
-            SyncNormal = syncNormal;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(hub);
+            this.Scp079 = this.Player.Role.As<Scp079Role>();
+            this.Position = position.Position;
+            this.Room = Room.Get(this.Position);
+            this.AuxiliaryPowerCost = powerCost;
+            this.Type = (PingType)proccesorindex;
+            this.SyncNormal = syncNormal;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

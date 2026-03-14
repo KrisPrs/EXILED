@@ -30,11 +30,11 @@ namespace Exiled.Events.EventArgs.Scp049
         /// </param>
         public StartingRecallEventArgs(Player player, Ragdoll ragdoll, bool isAllowed = true)
         {
-            Ragdoll = ragdoll;
-            Target = Ragdoll.Owner;
-            Scp049 = player.Role.As<Scp049Role>();
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Ragdoll = ragdoll;
+            this.Target = this.Ragdoll.Owner;
+            this.Scp049 = player.Role.As<Scp049Role>();
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

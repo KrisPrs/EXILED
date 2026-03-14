@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp096
         /// </param>
         public ChargingEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp096 = player.Role.As<Scp096Role>();
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp096 = player.Role.As<Scp096Role>();
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

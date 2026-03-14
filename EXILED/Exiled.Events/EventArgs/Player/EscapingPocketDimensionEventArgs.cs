@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public EscapingPocketDimensionEventArgs(PocketDimensionTeleport pocketDimensionTeleport, ReferenceHub hub, Vector3 position)
         {
-            Teleporter = pocketDimensionTeleport;
-            Player = Player.Get(hub);
-            TeleportPosition = position;
+            this.Teleporter = pocketDimensionTeleport;
+            this.Player = Player.Get(hub);
+            this.TeleportPosition = position;
         }
 
         /// <summary>

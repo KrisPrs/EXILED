@@ -21,8 +21,8 @@ namespace Exiled.Events.EventArgs.Server
         /// <param name="banType"><inheritdoc cref="BanType"/></param>
         public UnbannedEventArgs(string id, BanHandler.BanType banType)
         {
-            TargetId = id;
-            BanType = banType;
+            this.TargetId = id;
+            this.BanType = banType;
         }
 
         /// <summary>

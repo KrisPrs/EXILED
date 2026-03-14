@@ -25,10 +25,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed">Indicates whether the event can be executed.</param>
         public RemovingHandcuffsEventArgs(Player cuffer, Player target, UncuffReason uncuffReason, bool isAllowed = true)
         {
-            Player = cuffer;
-            Target = target;
-            UncuffReason = uncuffReason;
-            IsAllowed = isAllowed;
+            this.Player = cuffer;
+            this.Target = target;
+            this.UncuffReason = uncuffReason;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

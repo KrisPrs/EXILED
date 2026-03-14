@@ -26,12 +26,12 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public DancingEventArgs(bool newState, Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp3114 = player.Role.As<Scp3114Role>();
-            IsDancing = newState;
-            DanceType = newState ? (Scp3114.NextDanceType ?? (DanceType)UnityEngine.Random.Range(0, Scp3114.Dance._danceVariants)) : (DanceType)byte.MaxValue;
-            Scp3114.NextDanceType = null;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp3114 = player.Role.As<Scp3114Role>();
+            this.IsDancing = newState;
+            this.DanceType = newState ? (this.Scp3114.NextDanceType ?? (DanceType)UnityEngine.Random.Range(0, this.Scp3114.Dance._danceVariants)) : (DanceType)byte.MaxValue;
+            this.Scp3114.NextDanceType = null;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
@@ -47,8 +47,8 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </summary>
         public DanceType DanceType
         {
-            get => Scp3114.DanceType;
-            set => Scp3114.DanceType = value;
+            get => this.Scp3114.DanceType;
+            set => this.Scp3114.DanceType = value;
         }
 
         /// <inheritdoc/>

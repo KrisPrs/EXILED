@@ -29,8 +29,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public GeneratorActivatingEventArgs(Scp079Generator generator, bool isAllowed = true)
         {
-            Generator = Generator.Get(generator);
-            IsAllowed = isAllowed;
+            this.Generator = Generator.Get(generator);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

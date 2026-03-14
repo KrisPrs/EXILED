@@ -34,9 +34,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ActivatingWorkstationEventArgs(Player player, WorkstationController controller, bool isAllowed = true)
         {
-            Player = player;
-            WorkstationController = controller;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.WorkstationController = controller;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

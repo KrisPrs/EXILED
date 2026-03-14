@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ActivatingWarheadPanelEventArgs(Player player, bool isAllowed)
         {
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

@@ -57,10 +57,10 @@ namespace Exiled.API.Features.Roles
         protected Role(PlayerRoleBase baseRole)
         {
             if (baseRole.TryGetOwner(out ReferenceHub hub))
-                Owner = Player.Get(hub);
+                this.Owner = Player.Get(hub);
 
-            Base = baseRole;
-            fakeAppearance = baseRole.RoleTypeId;
+            this.Base = baseRole;
+            this.fakeAppearance = baseRole.RoleTypeId;
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         ~Role()
         {
-            DictionaryPool<Player, RoleTypeId>.Pool.Return(individualAppearances);
-            DictionaryPool<Team, RoleTypeId>.Pool.Return(teamAppearances);
+            DictionaryPool<Player, RoleTypeId>.Pool.Return(this.individualAppearances);
+            DictionaryPool<Team, RoleTypeId>.Pool.Return(this.teamAppearances);
         }
 
         /// <summary>
@@ -90,83 +90,83 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Gets the <see cref="RoleChangeReason"/>.
         /// </summary>
-        public RoleChangeReason SpawnReason => Base.ServerSpawnReason;
+        public RoleChangeReason SpawnReason => this.Base.ServerSpawnReason;
 
         /// <summary>
         /// Gets the <see cref="RoleSpawnFlags"/>.
         /// </summary>
-        public RoleSpawnFlags SpawnFlags => Base.ServerSpawnFlags;
+        public RoleSpawnFlags SpawnFlags => this.Base.ServerSpawnFlags;
 
         /// <summary>
         /// Gets the <see cref="PlayerRoles.Team"/> of this <see cref="Role"/>.
         /// </summary>
-        public Team Team => Base.Team;
+        public Team Team => this.Base.Team;
 
         /// <summary>
         /// Gets the <see cref="Enums.Side"/> of this <see cref="Role"/>.
         /// </summary>
-        public Side Side => Base.Team.GetSide();
+        public Side Side => this.Base.Team.GetSide();
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Color"/> of this <see cref="Role"/>.
         /// </summary>
-        public Color Color => Base.RoleColor;
+        public Color Color => this.Base.RoleColor;
 
         /// <summary>
         /// Gets the <see cref="Role"/> full name.
         /// </summary>
-        public string Name => Base.RoleName;
+        public string Name => this.Base.RoleName;
 
         /// <summary>
         /// Gets the last time the <see cref="Role"/> was active.
         /// </summary>
-        public TimeSpan ActiveTime => TimeSpan.FromSeconds(Base.ActiveTime);
+        public TimeSpan ActiveTime => TimeSpan.FromSeconds(this.Base.ActiveTime);
 
         /// <summary>
         /// Gets a value indicating whether this role represents a dead role.
         /// </summary>
-        public bool IsDead => Team is Team.Dead;
+        public bool IsDead => this.Team is Team.Dead;
 
         /// <summary>
         /// Gets a value indicating whether this role represents a living role.
         /// </summary>
-        public bool IsAlive => !IsDead;
+        public bool IsAlive => !this.IsDead;
 
         /// <summary>
         /// Gets a value indicating whether this role is still valid. This will only ever be <see langword="false"/> if the Role is stored and accessed at a later date.
         /// </summary>
-        public bool IsValid => Owner != null && Owner.IsConnected && Base == Owner.RoleManager.CurrentRole;
+        public bool IsValid => this.Owner != null && this.Owner.IsConnected && this.Base == this.Owner.RoleManager.CurrentRole;
 
         /// <summary>
         /// Gets the life identifier for the role.
         /// </summary>
-        public int LifeIdentifier => Base.UniqueLifeIdentifier;
+        public int LifeIdentifier => this.Base.UniqueLifeIdentifier;
 
         /// <summary>
         /// Gets an overriden global <see cref="RoleTypeId"/> appearance.
         /// </summary>
-        public RoleTypeId GlobalAppearance => fakeAppearance;
+        public RoleTypeId GlobalAppearance => this.fakeAppearance;
 
         /// <summary>
         /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Team"/>'s.
         /// </summary>
-        public IReadOnlyDictionary<Team, RoleTypeId> TeamAppearances => teamAppearances;
+        public IReadOnlyDictionary<Team, RoleTypeId> TeamAppearances => this.teamAppearances;
 
         /// <summary>
         /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Team"/>'s.
         /// </summary>
-        public IReadOnlyDictionary<string, RoleTypeId> RoleAppearances => roleAppearances;
+        public IReadOnlyDictionary<string, RoleTypeId> RoleAppearances => this.roleAppearances;
 
         /// <summary>
         /// Gets an overriden <see cref="RoleTypeId"/> appearance for specific <see cref="Player"/>'s.
         /// </summary>
-        public IReadOnlyDictionary<Player, RoleTypeId> IndividualAppearances => individualAppearances;
+        public IReadOnlyDictionary<Player, RoleTypeId> IndividualAppearances => this.individualAppearances;
 
         /// <summary>
         /// Gets a random spawn position of this role.
         /// </summary>
         /// <returns>The spawn position.</returns>
-        public virtual SpawnLocation RandomSpawnLocation => Type.GetRandomSpawnLocation();
+        public virtual SpawnLocation RandomSpawnLocation => this.Type.GetRandomSpawnLocation();
 
         /// <summary>
         /// Converts a role to its appropriate <see cref="RoleTypeId"/>.
@@ -229,7 +229,7 @@ namespace Exiled.API.Features.Roles
         /// Returns the role in a human-readable format.
         /// </summary>
         /// <returns>A string containing role-related data.</returns>
-        public override string ToString() => $"{Side} {Team} {Type} {IsValid}";
+        public override string ToString() => $"{this.Side} {this.Team} {this.Type} {this.IsValid}";
 
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
@@ -239,14 +239,14 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="newRole">The new <see cref="RoleTypeId"/> to be set.</param>
         /// <param name="reason">The <see cref="Enums.SpawnReason"/> defining why the player's role was changed.</param>
-        public virtual void Set(RoleTypeId newRole, SpawnReason reason = Enums.SpawnReason.ForceClass) => Set(newRole, reason, RoleSpawnFlags.All);
+        public virtual void Set(RoleTypeId newRole, SpawnReason reason = Enums.SpawnReason.ForceClass) => this.Set(newRole, reason, RoleSpawnFlags.All);
 
         /// <summary>
         /// Sets the player's <see cref="RoleTypeId"/>.
         /// </summary>
         /// <param name="newRole">The new <see cref="RoleTypeId"/> to be set.</param>
         /// <param name="spawnFlags">The <see cref="RoleSpawnFlags"/> defining player spawn logic.</param>
-        public virtual void Set(RoleTypeId newRole, RoleSpawnFlags spawnFlags) => Owner.RoleManager.ServerSetRole(newRole, (RoleChangeReason)Enums.SpawnReason.ForceClass, spawnFlags);
+        public virtual void Set(RoleTypeId newRole, RoleSpawnFlags spawnFlags) => this.Owner.RoleManager.ServerSetRole(newRole, (RoleChangeReason)Enums.SpawnReason.ForceClass, spawnFlags);
 
         /// <summary>
         /// Sets the player's <see cref="RoleTypeId"/>.
@@ -255,7 +255,7 @@ namespace Exiled.API.Features.Roles
         /// <param name="reason">The <see cref="Enums.SpawnReason"/> defining why the player's role was changed.</param>
         /// <param name="spawnFlags">The <see cref="RoleSpawnFlags"/> defining player spawn logic.</param>
         public virtual void Set(RoleTypeId newRole, SpawnReason reason, RoleSpawnFlags spawnFlags) =>
-            Owner.RoleManager.ServerSetRole(newRole, (RoleChangeReason)reason, spawnFlags);
+            this.Owner.RoleManager.ServerSetRole(newRole, (RoleChangeReason)reason, spawnFlags);
 
         /// <summary>
         /// Try-set a new global appearance for current <see cref="Role"/>.
@@ -265,17 +265,17 @@ namespace Exiled.API.Features.Roles
         /// <returns>A boolean indicating whether or not a target <see cref="RoleTypeId"/> will be used as new appearance.</returns>
         public bool TrySetGlobalAppearance(RoleTypeId newAppearance, bool update = true)
         {
-            if (!CheckAppearanceCompatibility(newAppearance))
+            if (!this.CheckAppearanceCompatibility(newAppearance))
             {
-                Log.Error($"Prevent Seld-Desync of {Owner.Nickname} ({Type}) with {newAppearance}");
+                Log.Error($"Prevent Seld-Desync of {this.Owner.Nickname} ({this.Type}) with {newAppearance}");
                 return false;
             }
 
-            fakeAppearance = newAppearance;
+            this.fakeAppearance = newAppearance;
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
 
             return true;
@@ -290,17 +290,17 @@ namespace Exiled.API.Features.Roles
         /// <returns>A boolean indicating whether or not a target <see cref="RoleTypeId"/> will be used as new appearance.</returns>
         public bool TrySetTeamAppearance(Team team, RoleTypeId newAppearance, bool update = true)
         {
-            if (!CheckAppearanceCompatibility(newAppearance))
+            if (!this.CheckAppearanceCompatibility(newAppearance))
             {
-                Log.Error($"Prevent Seld-Desync of {Owner.Nickname} ({Type}) with {newAppearance}");
+                Log.Error($"Prevent Seld-Desync of {this.Owner.Nickname} ({this.Type}) with {newAppearance}");
                 return false;
             }
 
-            teamAppearances[team] = newAppearance;
+            this.teamAppearances[team] = newAppearance;
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
 
             return true;
@@ -315,17 +315,17 @@ namespace Exiled.API.Features.Roles
         /// <returns>A boolean indicating whether or not a target <see cref="RoleTypeId"/> will be used as new appearance.</returns>
         public bool TrySetRoleAppearance(string role, RoleTypeId newAppearance, bool update = true)
         {
-            if (!CheckAppearanceCompatibility(newAppearance))
+            if (!this.CheckAppearanceCompatibility(newAppearance))
             {
-                Log.Error($"Prevent Seld-Desync of {Owner.Nickname} ({Type}) with {newAppearance}");
+                Log.Error($"Prevent Seld-Desync of {this.Owner.Nickname} ({this.Type}) with {newAppearance}");
                 return false;
             }
 
-            roleAppearances[role] = newAppearance;
+            this.roleAppearances[role] = newAppearance;
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
 
             return true;
@@ -340,17 +340,17 @@ namespace Exiled.API.Features.Roles
         /// <returns>A boolean indicating whether or not a target <see cref="RoleTypeId"/> will be used as new appearance.</returns>
         public bool TrySetIndividualAppearance(Player player, RoleTypeId newAppearance, bool update = true)
         {
-            if (!CheckAppearanceCompatibility(newAppearance))
+            if (!this.CheckAppearanceCompatibility(newAppearance))
             {
-                Log.Error($"Prevent Seld-Desync of {Owner.Nickname} ({Type}) with {newAppearance}");
+                Log.Error($"Prevent Seld-Desync of {this.Owner.Nickname} ({this.Type}) with {newAppearance}");
                 return false;
             }
 
-            individualAppearances[player] = newAppearance;
+            this.individualAppearances[player] = newAppearance;
 
             if (update)
             {
-                UpdateAppearanceFor(player);
+                this.UpdateAppearanceFor(player);
             }
 
             return true;
@@ -362,11 +362,11 @@ namespace Exiled.API.Features.Roles
         /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
         public void ClearGlobalAppearance(bool update = true)
         {
-            fakeAppearance = Type;
+            this.fakeAppearance = this.Type;
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
         }
 
@@ -376,11 +376,11 @@ namespace Exiled.API.Features.Roles
         /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
         public void ClearTeamAppearances(bool update = true)
         {
-            teamAppearances.Clear();
+            this.teamAppearances.Clear();
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
         }
 
@@ -390,11 +390,11 @@ namespace Exiled.API.Features.Roles
         /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
         public void ClearRoleAppearances(bool update = true)
         {
-            roleAppearances.Clear();
+            this.roleAppearances.Clear();
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
         }
 
@@ -404,11 +404,11 @@ namespace Exiled.API.Features.Roles
         /// <param name="update">Whether or not the change-role requect should sent imidiately.</param>
         public void ClearIndividualAppearances(bool update = true)
         {
-            individualAppearances.Clear();
+            this.individualAppearances.Clear();
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
         }
 
@@ -419,14 +419,14 @@ namespace Exiled.API.Features.Roles
         /// <remarks>Clears <see cref="IndividualAppearances"/>, <see cref="TeamAppearances"/> and <see cref="GlobalAppearance"/>.</remarks>
         public void ResetAppearance(bool update = true)
         {
-            ClearGlobalAppearance(false);
-            ClearTeamAppearances(false);
-            ClearIndividualAppearances(false);
-            ClearRoleAppearances(false);
+            this.ClearGlobalAppearance(false);
+            this.ClearTeamAppearances(false);
+            this.ClearIndividualAppearances(false);
+            this.ClearRoleAppearances(false);
 
             if (update)
             {
-                UpdateAppearance();
+                this.UpdateAppearance();
             }
         }
 
@@ -435,8 +435,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void UpdateAppearance()
         {
-            if (Owner != null)
-              Owner.RoleManager.SendNewRoleInfo();
+            if (this.Owner != null)
+              this.Owner.RoleManager.SendNewRoleInfo();
         }
 
         /// <summary>
@@ -445,14 +445,14 @@ namespace Exiled.API.Features.Roles
         /// <param name="player">Target <see cref="Player"/>.</param>
         public void UpdateAppearanceFor(Player player)
         {
-            RoleTypeId roleTypeId = Type;
-            if (Base is IObfuscatedRole obfuscatedRole)
+            RoleTypeId roleTypeId = this.Type;
+            if (this.Base is IObfuscatedRole obfuscatedRole)
             {
                 roleTypeId = obfuscatedRole.GetRoleForUser(player.ReferenceHub);
             }
 
-            player.Connection.Send(new RoleSyncInfo(Owner.ReferenceHub, roleTypeId, player.ReferenceHub, null));
-            Owner.RoleManager.PreviouslySentRole[player.NetId] = roleTypeId;
+            player.Connection.Send(new RoleSyncInfo(this.Owner.ReferenceHub, roleTypeId, player.ReferenceHub, null));
+            this.Owner.RoleManager.PreviouslySentRole[player.NetId] = roleTypeId;
         }
 
         /// <summary>

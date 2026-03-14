@@ -26,13 +26,13 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="hitboxType">The hitbox that was hit.</param>
         public SavingByAntiScp207EventArgs(ReferenceHub player, float damageAmount, DamageHandlerBase handler, HitboxType hitboxType)
         {
-            Player = Player.Get(player);
+            this.Player = Player.Get(player);
 
-            Handler = handler;
-            HitboxType = hitboxType;
-            DamageAmount = damageAmount;
-            DamageMultiplier = (Player.Health + Player.ArtificialHealth - AntiScp207.DeathSaveHealth) / damageAmount;
-            IsAllowed = true;
+            this.Handler = handler;
+            this.HitboxType = hitboxType;
+            this.DamageAmount = damageAmount;
+            this.DamageMultiplier = (this.Player.Health + this.Player.ArtificialHealth - AntiScp207.DeathSaveHealth) / damageAmount;
+            this.IsAllowed = true;
         }
 
         /// <summary>

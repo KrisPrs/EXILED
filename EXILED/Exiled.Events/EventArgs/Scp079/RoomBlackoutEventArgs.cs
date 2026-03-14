@@ -41,13 +41,13 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public RoomBlackoutEventArgs(ReferenceHub player, RoomIdentifier roomIdentifier, float auxiliaryPowerCost, float blackoutduration, float cooldown, bool isAllowed)
         {
-            Player = Player.Get(player);
-            Scp079 = Player.Role.As<API.Features.Roles.Scp079Role>();
-            Room = Room.Get(roomIdentifier);
-            AuxiliaryPowerCost = auxiliaryPowerCost;
-            BlackoutDuration = blackoutduration;
-            Cooldown = cooldown;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(player);
+            this.Scp079 = this.Player.Role.As<API.Features.Roles.Scp079Role>();
+            this.Room = Room.Get(roomIdentifier);
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.BlackoutDuration = blackoutduration;
+            this.Cooldown = cooldown;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

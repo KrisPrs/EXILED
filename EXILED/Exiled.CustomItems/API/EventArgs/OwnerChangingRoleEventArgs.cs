@@ -41,8 +41,8 @@ namespace Exiled.CustomItems.API.EventArgs
         public OwnerChangingRoleEventArgs(ItemBase item, Player player, RoleTypeId newRole, bool shouldPreserveInventory, RoleChangeReason reason)
             : base(player, newRole, reason, RoleSpawnFlags.All)
         {
-            Item = item;
-            ShouldPreserveInventory = shouldPreserveInventory;
+            this.Item = item;
+            this.ShouldPreserveInventory = shouldPreserveInventory;
         }
 
         /// <summary>

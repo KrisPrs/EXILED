@@ -27,10 +27,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         /// </summary>
         /// <param name="pumpModule">Target <see cref="PumpActionModule"/>.</param>
         public PumpBarrelMagazine(PumpActionModule pumpModule)
-            : base(pumpModule)
-        {
-            PumpBarrel = pumpModule;
-        }
+            : base(pumpModule) =>
+            this.PumpBarrel = pumpModule;
 
         /// <summary>
         /// Gets an original <see cref="IAmmoContainerModule"/>.
@@ -38,17 +36,17 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         public PumpActionModule PumpBarrel { get; }
 
         /// <inheritdoc/>
-        public override Firearm Firearm => Item.Get<Firearm>(PumpBarrel.Firearm);
+        public override Firearm Firearm => Item.Get<Firearm>(this.PumpBarrel.Firearm);
 
         /// <inheritdoc/>
         public override int Ammo
         {
-            get => PumpBarrel.SyncChambered;
+            get => this.PumpBarrel.SyncChambered;
 
             set
             {
-                PumpBarrel.SyncChambered = Mathf.Max(value, 0);
-                Resync();
+                this.PumpBarrel.SyncChambered = Mathf.Max(value, 0);
+                this.Resync();
             }
         }
 
@@ -57,35 +55,35 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         /// </summary>
         public int CockedAmmo
         {
-            get => PumpBarrel.SyncCocked;
+            get => this.PumpBarrel.SyncCocked;
 
             set
             {
-                PumpBarrel.SyncCocked = Mathf.Max(value, 0);
-                Resync();
+                this.PumpBarrel.SyncCocked = Mathf.Max(value, 0);
+                this.Resync();
             }
         }
 
         /// <inheritdoc/>
         public override int MaxAmmo
         {
-            get => PumpBarrel._numberOfBarrels;
-            set => PumpBarrel._numberOfBarrels = Mathf.Max(value, 0);
+            get => this.PumpBarrel._numberOfBarrels;
+            set => this.PumpBarrel._numberOfBarrels = Mathf.Max(value, 0);
         }
 
         /// <inheritdoc/>
         public override bool IsCocked
         {
-            get => PumpBarrel.SyncCocked > 0;
+            get => this.PumpBarrel.SyncCocked > 0;
 
             set
             {
-                PumpBarrel.SyncCocked = value ? MaxAmmo : 0;
-                Resync();
+                this.PumpBarrel.SyncCocked = value ? this.MaxAmmo : 0;
+                this.Resync();
             }
         }
 
         /// <inheritdoc/>
-        public override void Resync() => PumpBarrel.ServerResync();
+        public override void Resync() => this.PumpBarrel.ServerResync();
     }
 }

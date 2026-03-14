@@ -33,10 +33,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public InteractingLockerEventArgs(Player player, MapGeneration.Distributors.Locker locker, byte colliderId, bool isAllowed)
         {
-            Player = player;
-            InteractingLocker = Locker.Get(locker);
-            InteractingChamber = Chamber.Get(locker.Chambers[colliderId]);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.InteractingLocker = Locker.Get(locker);
+            this.InteractingChamber = Chamber.Get(locker.Chambers[colliderId]);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

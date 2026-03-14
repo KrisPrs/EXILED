@@ -26,17 +26,17 @@ namespace Exiled.Events.EventArgs.Scp127
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public TalkingEventArgs(Scp127 scp127, Scp127VoiceLinesTranslation voiceLine, Scp127VoiceTriggerBase.VoiceLinePriority voiceLinePriority, bool isAllowed = true)
         {
-            Scp127 = scp127;
-            VoiceLine = voiceLine;
-            Priority = voiceLinePriority;
-            IsAllowed = isAllowed;
+            this.Scp127 = scp127;
+            this.VoiceLine = voiceLine;
+            this.Priority = voiceLinePriority;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
-        public Player Player => Scp127.Owner;
+        public Player Player => this.Scp127.Owner;
 
         /// <inheritdoc/>
-        public Item Item => Scp127;
+        public Item Item => this.Scp127;
 
         /// <inheritdoc/>
         public Scp127 Scp127 { get; }

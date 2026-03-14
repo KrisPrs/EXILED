@@ -30,12 +30,12 @@ namespace Exiled.Events.EventArgs.Scp096
         /// </param>
         public TryingNotToCryEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp096 = player.Role.As<Scp096Role>();
-            GameObject = Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out RaycastHit hit, 1f) ?
+            this.Player = player;
+            this.Scp096 = player.Role.As<Scp096Role>();
+            this.GameObject = Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out RaycastHit hit, 1f) ?
                         hit.collider.gameObject : null;
-            Door = Door.Get(GameObject);
-            IsAllowed = isAllowed;
+            this.Door = Door.Get(this.GameObject);
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

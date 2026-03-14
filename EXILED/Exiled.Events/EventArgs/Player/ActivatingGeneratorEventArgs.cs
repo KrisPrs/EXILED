@@ -29,9 +29,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ActivatingGeneratorEventArgs(Player player, Scp079Generator generator)
         {
-            Player = player;
-            Generator = Generator.Get(generator);
-            IsAllowed = true;
+            this.Player = player;
+            this.Generator = Generator.Get(generator);
+            this.IsAllowed = true;
         }
 
         /// <summary>

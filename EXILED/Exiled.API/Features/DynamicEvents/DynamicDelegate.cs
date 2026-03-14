@@ -30,8 +30,8 @@ namespace Exiled.API.Features.DynamicEvents
         /// <param name="delegate"><inheritdoc cref="Delegate"/></param>
         public DynamicDelegate(object target, Action @delegate)
         {
-            Target = target;
-            Delegate = @delegate;
+            this.Target = target;
+            this.Delegate = @delegate;
         }
 
         /// <summary>

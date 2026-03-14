@@ -31,10 +31,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public TwoButtonsSetting(int id, string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", byte collectionId = byte.MaxValue, bool isServerOnly = false, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription, collectionId, isServerOnly), header, onChanged)
-        {
-            Base = (SSTwoButtonsSetting)base.Base;
-        }
+            : base(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription, collectionId, isServerOnly), header, onChanged) =>
+            this.Base = (SSTwoButtonsSetting)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoButtonsSetting"/> class.
@@ -43,12 +41,12 @@ namespace Exiled.API.Features.Core.UserSettings
         internal TwoButtonsSetting(SSTwoButtonsSetting settingBase)
             : base(settingBase)
         {
-            Base = settingBase;
+            this.Base = settingBase;
 
-            if (OriginalDefinition != null && OriginalDefinition.Is(out TwoButtonsSetting setting))
+            if (this.OriginalDefinition != null && this.OriginalDefinition.Is(out TwoButtonsSetting setting))
             {
-                FirstOption = setting.FirstOption;
-                SecondOption = setting.SecondOption;
+                this.FirstOption = setting.FirstOption;
+                this.SecondOption = setting.SecondOption;
             }
         }
 
@@ -60,8 +58,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public bool IsSecond
         {
-            get => Base.SyncIsB;
-            set => Base.SyncIsB = value;
+            get => this.Base.SyncIsB;
+            set => this.Base.SyncIsB = value;
         }
 
         /// <summary>
@@ -69,8 +67,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public bool IsFirst
         {
-            get => Base.SyncIsA;
-            set => Base.SyncIsB = !value;
+            get => this.Base.SyncIsA;
+            set => this.Base.SyncIsB = !value;
         }
 
         /// <summary>
@@ -78,8 +76,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public bool IsSecondDefault
         {
-            get => Base.DefaultIsB;
-            set => Base.DefaultIsB = value;
+            get => this.Base.DefaultIsB;
+            set => this.Base.DefaultIsB = value;
         }
 
         /// <summary>
@@ -87,8 +85,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string FirstOption
         {
-            get => Base.OptionA;
-            set => Base.OptionA = value;
+            get => this.Base.OptionA;
+            set => this.Base.OptionA = value;
         }
 
         /// <summary>
@@ -96,8 +94,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string SecondOption
         {
-            get => Base.OptionB;
-            set => Base.OptionB = value;
+            get => this.Base.OptionB;
+            set => this.Base.OptionB = value;
         }
 
         /// <summary>
@@ -110,7 +108,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateSetting(string firstOption, string secondOption, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendTwoButtonUpdate(firstOption, secondOption, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendTwoButtonUpdate(firstOption, secondOption, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
@@ -122,17 +120,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateValue(bool isSecond, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendValueUpdate(isSecond, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendValueUpdate(isSecond, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="ButtonSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{FirstOption}/ *{SecondOption}* +{IsSecondDefault}+ '{IsFirst}'";
-        }
+        public override string ToString() => base.ToString() + $" /{this.FirstOption}/ *{this.SecondOption}* +{this.IsSecondDefault}+ '{this.IsFirst}'";
 
         /// <summary>
         /// Represents a config for TextInputSetting.
@@ -153,15 +148,15 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="secondOption"></param>
             public TwoButtonsConfig(string label, string firstOption, string secondOption, bool isServerOnly, bool defaultIsSecond = false, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                FirstOption = firstOption;
-                IsServerOnly = isServerOnly;
-                SecondOption = secondOption;
-                DefaultIsSecond = defaultIsSecond;
-                HintDescription = hintDescription;
-                HeaderName = headerName;
-                HeaderPaddling = headerPaddling;
-                HeaderDescription = headerDescription;
+                this.Label = label;
+                this.FirstOption = firstOption;
+                this.IsServerOnly = isServerOnly;
+                this.SecondOption = secondOption;
+                this.DefaultIsSecond = defaultIsSecond;
+                this.HintDescription = hintDescription;
+                this.HeaderName = headerName;
+                this.HeaderPaddling = headerPaddling;
+                this.HeaderDescription = headerDescription;
             }
 
             /// <summary>
@@ -220,7 +215,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TwoButtonsSetting instanse.
             /// </summary>
             /// <returns>TwoButtonsSetting.</returns>
-            public override TwoButtonsSetting Create() => new(++IdIncrementor, Label, FirstOption, SecondOption, DefaultIsSecond, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override TwoButtonsSetting Create() => new(++IdIncrementor, this.Label, this.FirstOption, this.SecondOption, this.DefaultIsSecond, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

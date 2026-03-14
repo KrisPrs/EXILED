@@ -49,13 +49,13 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">The <see cref="Player" /> using the ability.</param>
         public virtual void UseAbility(Player player)
         {
-            ActivePlayers.Add(player);
-            LastUsed[player] = DateTime.Now;
-            ShowMessage(player);
-            AbilityUsed(player);
-            Timing.CallDelayed(Cooldown, () => RemindAbility(player));
-            if (Duration > 0)
-                Timing.CallDelayed(Duration, () => EndAbility(player));
+            this.ActivePlayers.Add(player);
+            this.LastUsed[player] = DateTime.Now;
+            this.ShowMessage(player);
+            this.AbilityUsed(player);
+            Timing.CallDelayed(this.Cooldown, () => this.RemindAbility(player));
+            if (this.Duration > 0)
+                Timing.CallDelayed(this.Duration, () => this.EndAbility(player));
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">The <see cref="Player" /> the ability is ready for.</param>
         public void RemindAbility(Player player)
         {
-            if (!base.Check(player) || !player.IsConnected || !LastUsed.TryGetValue(player, out DateTime dateTime) || Math.Abs((DateTime.Now - dateTime).TotalSeconds - Cooldown) > 1f || !CustomRoles.Instance!.Config.AbilityReadyHint.Show)
+            if (!base.Check(player) || !player.IsConnected || !this.LastUsed.TryGetValue(player, out DateTime dateTime) || Math.Abs((DateTime.Now - dateTime).TotalSeconds - this.Cooldown) > 1f || !CustomRoles.Instance!.Config.AbilityReadyHint.Show)
                 return;
 
-            player.ShowHint(string.Format(CustomRoles.Instance!.Config.AbilityReadyHint.Content, Name, Description), CustomRoles.Instance.Config.AbilityReadyHint.Duration);
+            player.ShowHint(string.Format(CustomRoles.Instance!.Config.AbilityReadyHint.Content, this.Name, this.Description), CustomRoles.Instance.Config.AbilityReadyHint.Duration);
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">The <see cref="Player" /> the ability is ended for.</param>
         public void EndAbility(Player player)
         {
-            if (!ActivePlayers.Contains(player))
+            if (!this.ActivePlayers.Contains(player))
                 return;
 
-            ActivePlayers.Remove(player);
-            AbilityEnded(player);
+            this.ActivePlayers.Remove(player);
+            this.AbilityEnded(player);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player" /> to check.</param>
         /// <returns>True if the player is actively using the ability.</returns>
-        public override bool Check(Player player) => player is not null && ActivePlayers.Contains(player);
+        public override bool Check(Player player) => player is not null && this.ActivePlayers.Contains(player);
 
         /// <summary>
         ///     Checks to see if the ability is usable by the player.
@@ -98,13 +98,13 @@ namespace Exiled.CustomRoles.API.Features
         /// <returns>True if the ability is usable.</returns>
         public virtual bool CanUseAbility(Player player, out string response)
         {
-            if (!LastUsed.TryGetValue(player, out DateTime lastUsed))
+            if (!this.LastUsed.TryGetValue(player, out DateTime lastUsed))
             {
                 response = string.Empty;
                 return true;
             }
 
-            DateTime usableTime = lastUsed + TimeSpan.FromSeconds(Cooldown);
+            DateTime usableTime = lastUsed + TimeSpan.FromSeconds(this.Cooldown);
             if (DateTime.Now > usableTime)
             {
                 response = string.Empty;
@@ -112,7 +112,7 @@ namespace Exiled.CustomRoles.API.Features
             }
 
             Hint hint = CustomRoles.Instance!.Config.AbilityOnCooldownHint;
-            response = string.Format(hint.Content, Math.Round((usableTime - DateTime.Now).TotalSeconds, 2), Name);
+            response = string.Format(hint.Content, Math.Round((usableTime - DateTime.Now).TotalSeconds, 2), this.Name);
             if (hint.Show)
                 player.ShowHint(response, hint.Duration);
 
@@ -122,7 +122,7 @@ namespace Exiled.CustomRoles.API.Features
         /// <inheritdoc/>
         protected override void AbilityRemoved(Player player)
         {
-            LastUsed.Remove(player);
+            this.LastUsed.Remove(player);
             base.AbilityRemoved(player);
         }
 
@@ -147,6 +147,6 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player" /> using the ability.</param>
         protected virtual void ShowMessage(Player player) =>
-            player.ShowHint(string.Format(CustomRoles.Instance!.Config.UsedAbilityHint.Content, Name, Description), CustomRoles.Instance.Config.UsedAbilityHint.Duration);
+            player.ShowHint(string.Format(CustomRoles.Instance!.Config.UsedAbilityHint.Content, this.Name, this.Description), CustomRoles.Instance.Config.UsedAbilityHint.Duration);
     }
 }

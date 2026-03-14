@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         /// <param name="magazine">target <see cref="IPrimaryAmmoContainerModule"/>.</param>
         public PrimaryMagazine(IPrimaryAmmoContainerModule magazine)
-            : base(magazine)
-        {
-            Magazine = magazine;
-        }
+            : base(magazine) =>
+            this.Magazine = magazine;
 
         /// <summary>
         /// Gets an original <see cref="IPrimaryAmmoContainerModule"/>.
@@ -35,7 +33,7 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         public IPrimaryAmmoContainerModule Magazine { get; }
 
         /// <inheritdoc/>
-        public override int MaxAmmo => Magazine.AmmoMax;
+        public override int MaxAmmo => this.Magazine.AmmoMax;
 
         /// <summary>
         /// Gets or sets a max avaible ammo count in magazine without attachments.
@@ -45,12 +43,12 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// <inheritdoc/>
         public override int Ammo
         {
-            get => Magazine.AmmoStored;
+            get => this.Magazine.AmmoStored;
 
             set
             {
-                int modifyCount = Math.Max(0, value) - Ammo;
-                Magazine.ServerModifyAmmo(modifyCount);
+                int modifyCount = Math.Max(0, value) - this.Ammo;
+                this.Magazine.ServerModifyAmmo(modifyCount);
             }
         }
 

@@ -48,7 +48,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override string Name
         {
-            get => Zone.ToString();
+            get => this.Zone.ToString();
             set => throw new InvalidOperationException("The name of this type of SpawnPoint cannot be changed.");
         }
 
@@ -58,7 +58,7 @@ namespace Exiled.API.Features.Spawn
         {
             get
             {
-                GetSpawningInfo(out _, out _, out Vector3 position);
+                this.GetSpawningInfo(out _, out _, out Vector3 position);
                 return position;
             }
             set => throw new InvalidOperationException("The position of this type of SpawnPoint cannot be changed.");
@@ -73,9 +73,9 @@ namespace Exiled.API.Features.Spawn
         /// <exception cref="NullReferenceException">No locker was found.</exception>
         public void GetSpawningInfo(out Locker locker, out Chamber chamber, out Vector3 position)
         {
-            locker = Locker.Random(Zone, Type) ?? throw new NullReferenceException($"No locker found of type {Type} in {Zone}.");
-            chamber = UseChamber ? locker.Chambers.GetRandomValue() : null;
-            position = chamber?.GetRandomSpawnPoint() ?? (Offset == Vector3.zero ? locker.Position : locker.Transform.TransformPoint(Offset));
+            locker = Locker.Random(this.Zone, this.Type) ?? throw new NullReferenceException($"No locker found of type {this.Type} in {this.Zone}.");
+            chamber = this.UseChamber ? locker.Chambers.GetRandomValue() : null;
+            position = chamber?.GetRandomSpawnPoint() ?? (this.Offset == Vector3.zero ? locker.Position : locker.Transform.TransformPoint(this.Offset));
         }
     }
 }

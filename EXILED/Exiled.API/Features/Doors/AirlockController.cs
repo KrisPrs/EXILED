@@ -28,7 +28,7 @@ namespace Exiled.API.Features.Doors
         /// <param name="controller">Base-game controller.</param>
         public AirlockController(BaseController controller)
         {
-            Base = controller;
+            this.Base = controller;
 
             BaseToExiledControllers.Add(controller, this);
         }
@@ -46,20 +46,20 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the first subdoor.
         /// </summary>
-        public Door DoorA => Door.Get(Base._doorA);
+        public Door DoorA => Door.Get(this.Base._doorA);
 
         /// <summary>
         /// Gets the second subdoor.
         /// </summary>
-        public Door DoorB => Door.Get(Base._doorB);
+        public Door DoorB => Door.Get(this.Base._doorB);
 
         /// <summary>
         /// Gets or sets a value indicating whether both subdoors are locked.
         /// </summary>
         public bool DoorsLocked
         {
-            get => Base._doorsLocked;
-            set => Base._doorsLocked = value;
+            get => this.Base._doorsLocked;
+            set => this.Base._doorsLocked = value;
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public bool AirlockDisabled
         {
-            get => Base.AirlockDisabled;
-            set => Base.AirlockDisabled = value;
+            get => this.Base.AirlockDisabled;
+            set => this.Base.AirlockDisabled = value;
         }
 
         /// <summary>
@@ -88,12 +88,12 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Toggles airlock.
         /// </summary>
-        public void Toggle() => Base.ToggleAirlock();
+        public void Toggle() => this.Base.ToggleAirlock();
 
         /// <summary>
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"|{DoorA}| /{DoorB}/ *{DoorsLocked}* ={AirlockDisabled}=";
+        public override string ToString() => $"|{this.DoorA}| /{this.DoorB}/ *{this.DoorsLocked}* ={this.AirlockDisabled}=";
     }
 }

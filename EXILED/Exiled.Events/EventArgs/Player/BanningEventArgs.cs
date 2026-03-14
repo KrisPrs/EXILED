@@ -28,10 +28,8 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="fullMessage">The ban full message.</param>
         /// <param name="isAllowed">Indicates whether the event can be executed or not.</param>
         public BanningEventArgs(Player target, Player issuer, ICommandSender commandSender, long duration, string reason, string fullMessage, bool isAllowed = true)
-            : base(target, issuer, commandSender, reason, fullMessage, isAllowed)
-        {
-            Duration = duration;
-        }
+            : base(target, issuer, commandSender, reason, fullMessage, isAllowed) =>
+            this.Duration = duration;
 
         /// <summary>
         /// Gets or sets the ban duration.
@@ -45,7 +43,7 @@ namespace Exiled.Events.EventArgs.Player
                     return;
 
                 if (Events.Instance.Config.ShouldLogBans)
-                    LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed Ban duration: {field} to {value} for ID: {Target.UserId}");
+                    this.LogBanChange(Assembly.GetCallingAssembly().GetName().Name, $" changed Ban duration: {field} to {value} for ID: {this.Target.UserId}");
 
                 field = value;
             }

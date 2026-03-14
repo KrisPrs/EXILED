@@ -26,11 +26,11 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isForced"><inheritdoc cref="IsForced" /></param>
         public BannedEventArgs(Player target, Player issuer, BanDetails details, BanHandler.BanType type, bool isForced)
         {
-            Target = target;
-            Player = issuer;
-            Details = details;
-            Type = type;
-            IsForced = isForced;
+            this.Target = target;
+            this.Player = issuer;
+            this.Details = details;
+            this.Type = type;
+            this.IsForced = isForced;
         }
 
         /// <summary>

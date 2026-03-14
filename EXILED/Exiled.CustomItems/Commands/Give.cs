@@ -93,19 +93,19 @@ namespace Exiled.CustomItems.Commands
         {
             if (!sender.CheckPermission("customitems.give"))
             {
-                response = PermissionRequiredMessage;
+                response = this.PermissionRequiredMessage;
                 return false;
             }
 
             if (arguments.Count == 0)
             {
-                response = UsageMessage;
+                response = this.UsageMessage;
                 return false;
             }
 
             if (!CustomItem.TryGet(arguments.At(0), out CustomItem? item))
             {
-                response = string.Format(ItemNotFoundMessage, arguments.At(0));
+                response = string.Format(this.ItemNotFoundMessage, arguments.At(0));
                 return false;
             }
 
@@ -115,18 +115,18 @@ namespace Exiled.CustomItems.Commands
                 {
                     Player player = Player.Get(playerCommandSender.SenderId);
 
-                    if (!CheckEligible(player))
+                    if (!this.CheckEligible(player))
                     {
-                        response = NotEligibleMessage;
+                        response = this.NotEligibleMessage;
                         return false;
                     }
 
                     item?.Give(player);
-                    response = string.Format(ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
+                    response = string.Format(this.ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
                     return true;
                 }
 
-                response = PlayerNotFoundMessage;
+                response = this.PlayerNotFoundMessage;
                 return false;
             }
 
@@ -136,27 +136,27 @@ namespace Exiled.CustomItems.Commands
             {
                 case "*":
                 case "all":
-                    List<Player> eligiblePlayers = Player.List.Where(CheckEligible).ToList();
+                    List<Player> eligiblePlayers = Player.List.Where(this.CheckEligible).ToList();
                     foreach (Player ply in eligiblePlayers)
                         item?.Give(ply);
 
-                    response = string.Format(ItemGivenToAllMessage, item?.Name, eligiblePlayers.Count);
+                    response = string.Format(this.ItemGivenToAllMessage, item?.Name, eligiblePlayers.Count);
                     return true;
                 default:
                     if (Player.Get(identifier) is not { } player)
                     {
-                        response = string.Format(PlayerNotFoundByIdentifierMessage, identifier);
+                        response = string.Format(this.PlayerNotFoundByIdentifierMessage, identifier);
                         return false;
                     }
 
-                    if (!CheckEligible(player))
+                    if (!this.CheckEligible(player))
                     {
-                        response = PlayerNotEligibleMessage;
+                        response = this.PlayerNotEligibleMessage;
                         return false;
                     }
 
                     item?.Give(player);
-                    response = string.Format(ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
+                    response = string.Format(this.ItemGivenMessage, item?.Name, player.Nickname, player.UserId);
                     return true;
             }
         }

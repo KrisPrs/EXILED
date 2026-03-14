@@ -57,10 +57,10 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is FlashGrenade flashGrenadeitem)
             {
-                MinimalDurationEffect = flashGrenadeitem.MinimalDurationEffect;
-                AdditionalBlurredEffect = flashGrenadeitem.AdditionalBlurredEffect;
-                SurfaceDistanceIntensifier = flashGrenadeitem.SurfaceDistanceIntensifier;
-                FuseTime = flashGrenadeitem.FuseTime;
+                this.MinimalDurationEffect = flashGrenadeitem.MinimalDurationEffect;
+                this.AdditionalBlurredEffect = flashGrenadeitem.AdditionalBlurredEffect;
+                this.SurfaceDistanceIntensifier = flashGrenadeitem.SurfaceDistanceIntensifier;
+                this.FuseTime = flashGrenadeitem.FuseTime;
             }
         }
 
@@ -69,10 +69,10 @@ namespace Exiled.API.Features.Pickups
         {
             if (projectile is FlashbangProjectile flashbangProjectile)
             {
-                flashbangProjectile.MinimalDurationEffect = MinimalDurationEffect;
-                flashbangProjectile.AdditionalBlurredEffect = AdditionalBlurredEffect;
-                flashbangProjectile.SurfaceDistanceIntensifier = SurfaceDistanceIntensifier;
-                flashbangProjectile.FuseTime = FuseTime;
+                flashbangProjectile.MinimalDurationEffect = this.MinimalDurationEffect;
+                flashbangProjectile.AdditionalBlurredEffect = this.AdditionalBlurredEffect;
+                flashbangProjectile.SurfaceDistanceIntensifier = this.SurfaceDistanceIntensifier;
+                flashbangProjectile.FuseTime = this.FuseTime;
             }
         }
 
@@ -82,9 +82,9 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is ThrowableItem throwable && throwable.Projectile is FlashbangGrenade flashGrenade)
             {
-                MinimalDurationEffect = flashGrenade._minimalEffectDuration;
-                AdditionalBlurredEffect = flashGrenade._additionalBlurDuration;
-                SurfaceDistanceIntensifier = flashGrenade._surfaceZoneDistanceIntensifier;
+                this.MinimalDurationEffect = flashGrenade._minimalEffectDuration;
+                this.AdditionalBlurredEffect = flashGrenade._additionalBlurDuration;
+                this.SurfaceDistanceIntensifier = flashGrenade._surfaceZoneDistanceIntensifier;
             }
         }
     }

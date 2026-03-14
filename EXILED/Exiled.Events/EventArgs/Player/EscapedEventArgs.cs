@@ -27,10 +27,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="role"><inheritdoc cref="Role"/></param>
         public EscapedEventArgs(Player player, EscapeScenario escapeScenario, Role role)
         {
-            Player = player;
-            EscapeScenario = escapeScenario;
-            OldRole = role;
-            EscapeTime = (int)Math.Ceiling(role.ActiveTime.TotalSeconds);
+            this.Player = player;
+            this.EscapeScenario = escapeScenario;
+            this.OldRole = role;
+            this.EscapeTime = (int)Math.Ceiling(role.ActiveTime.TotalSeconds);
         }
 
         /// <inheritdoc/>

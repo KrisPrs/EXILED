@@ -40,14 +40,14 @@ namespace Exiled.API.Features.Lockers
         /// <param name="locker">The encapsulated <see cref="BaseLocker"/>.</param>
         public Locker(BaseLocker locker)
         {
-            Base = locker;
-            PositionSync = locker.GetComponent<StructurePositionSync>();
+            this.Base = locker;
+            this.PositionSync = locker.GetComponent<StructurePositionSync>();
             BaseToExiledLockers.Add(locker, this);
 
-            Chambers = locker.Chambers.Select(x => new Chamber(x, this)).ToList();
-            Type = locker.GetLockerType();
-            if (Type == LockerType.Unknown)
-                Log.Warn($"[LockerType.Unknown] {Base}");
+            this.Chambers = locker.Chambers.Select(x => new Chamber(x, this)).ToList();
+            this.Type = locker.GetLockerType();
+            if (this.Type == LockerType.Unknown)
+                Log.Warn($"[LockerType.Unknown] {this.Base}");
         }
 
         /// <summary>
@@ -66,23 +66,23 @@ namespace Exiled.API.Features.Lockers
         /// <summary>
         /// Gets the <see cref="Locker"/> <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the <see cref="Locker"/> <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets or sets the position of the locker.
         /// </summary>
         public Vector3 Position
         {
-            get => Base.transform.position;
+            get => this.Base.transform.position;
             set
             {
-                Base.transform.position = value;
-                PositionSync.Network_position = value;
+                this.Base.transform.position = value;
+                this.PositionSync.Network_position = value;
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -93,11 +93,11 @@ namespace Exiled.API.Features.Lockers
         /// <remarks>The setter only works in the y-axis (left to right) due to base game limitations.</remarks>
         public Quaternion Rotation
         {
-            get => Base.transform.rotation;
+            get => this.Base.transform.rotation;
             set
             {
-                Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
-                PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
+                this.Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
+                this.PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -108,12 +108,12 @@ namespace Exiled.API.Features.Lockers
         /// <summary>
         /// Gets the <see cref="Features.Room"/> in which the <see cref="Locker"/> is located.
         /// </summary>
-        public Room? Room => Room.Get(Position);
+        public Room? Room => Room.Get(this.Position);
 
         /// <summary>
         /// Gets the <see cref="ZoneType"/> in which the locker is located.
         /// </summary>
-        public ZoneType Zone => Room?.Zone ?? ZoneType.Unspecified;
+        public ZoneType Zone => this.Room?.Zone ?? ZoneType.Unspecified;
 
         /// <summary>
         /// Gets the all <see cref="Chambers"/> in this locker.
@@ -125,8 +125,8 @@ namespace Exiled.API.Features.Lockers
         /// </summary>
         public ushort OpenedChambers
         {
-            get => Base.OpenedChambers;
-            set => Base.NetworkOpenedChambers = value;
+            get => this.Base.OpenedChambers;
+            set => this.Base.NetworkOpenedChambers = value;
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Exiled.API.Features.Lockers
         {
             get
             {
-                Chamber randomChamber = Chambers.GetRandomValue();
+                Chamber randomChamber = this.Chambers.GetRandomValue();
 
                 // Determine if the chamber uses multiple spawn points and has at least one available spawn point.
                 if (randomChamber.UseMultipleSpawnpoints && randomChamber.Spawnpoints.Any())
@@ -202,19 +202,19 @@ namespace Exiled.API.Features.Lockers
         /// Adds an item to a randomly selected locker chamber.
         /// </summary>
         /// <param name="item">The <see cref="Pickup"/> to be added to the locker chamber.</param>
-        public void AddItem(Pickup item) => Chambers.GetRandomValue().AddItem(item);
+        public void AddItem(Pickup item) => this.Chambers.GetRandomValue().AddItem(item);
 
         /// <summary>
         /// Spawns an item of the specified <see cref="ItemType"/> to the locker by creating a new <see cref="Pickup"/>.
         /// </summary>
         /// <param name="type">The type of item to be added.</param>
-        public void AddItem(ItemType type) => AddItem(Pickup.Create(type));
+        public void AddItem(ItemType type) => this.AddItem(Pickup.Create(type));
 
         /// <summary>
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"{Type} [{Room}] *{Chambers.Count}*";
+        public override string ToString() => $"{this.Type} [{this.Room}] *{this.Chambers.Count}*";
 
         /// <summary>
         /// Clears the cached lockers in the <see cref="BaseToExiledLockers"/> dictionary.

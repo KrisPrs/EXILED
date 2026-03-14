@@ -39,7 +39,7 @@ namespace Exiled.API.Features.Core.Generic
         {
             values ??= new();
 
-            Value = value;
+            this.Value = value;
             values.Add(value, (TObject)this);
         }
 
@@ -61,7 +61,7 @@ namespace Exiled.API.Features.Core.Generic
             get
             {
                 if (isDefined)
-                    return name;
+                    return this.name;
 
                 IEnumerable<FieldInfo> fields = typeof(TObject)
                     .GetFields(BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public)
@@ -74,7 +74,7 @@ namespace Exiled.API.Features.Core.Generic
                 }
 
                 isDefined = true;
-                return name;
+                return this.name;
             }
         }
 
@@ -204,7 +204,7 @@ namespace Exiled.API.Features.Core.Generic
         /// Converts the <see cref="UnmanagedEnumClass{TSource, TObject}"/> instance to a human-readable <see cref="string"/> representation.
         /// </summary>
         /// <returns>A human-readable <see cref="string"/> representation of the <see cref="UnmanagedEnumClass{TSource, TObject}"/> instance.</returns>
-        public override string ToString() => name;
+        public override string ToString() => this.name;
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
@@ -212,20 +212,20 @@ namespace Exiled.API.Features.Core.Generic
         /// <param name="obj">The object to compare.</param>
         /// <returns><see langword="true"/> if the object was equal; otherwise, <see langword="false"/>.</returns>
         public override bool Equals(object obj) =>
-            obj != null && (obj is TSource value ? Value.Equals(value) : obj is TObject derived && Value.Equals(derived.Value));
+            obj != null && (obj is TSource value ? this.Value.Equals(value) : obj is TObject derived && this.Value.Equals(derived.Value));
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="other">The object to compare.</param>
         /// <returns><see langword="true"/> if the object was equal; otherwise, <see langword="false"/>.</returns>
-        public bool Equals(TObject other) => Value.Equals(other.Value);
+        public bool Equals(TObject other) => this.Value.Equals(other.Value);
 
         /// <summary>
         /// Returns a the 32-bit signed hash code of the current object instance.
         /// </summary>
         /// <returns>The 32-bit signed hash code of the current object instance.</returns>
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => this.Value.GetHashCode();
 
         /// <summary>
         /// Compares the current instance with another object of the same type and returns
@@ -239,7 +239,7 @@ namespace Exiled.API.Features.Core.Generic
         /// Zero This instance occurs in the same position in the sort order as other.
         /// Greater than zero This instance follows other in the sort order.
         /// </returns>
-        public int CompareTo(TObject other) => Value.CompareTo(other.Value);
+        public int CompareTo(TObject other) => this.Value.CompareTo(other.Value);
 
         /// <summary>
         /// Compares the current instance with another object of the same type and returns
@@ -254,7 +254,7 @@ namespace Exiled.API.Features.Core.Generic
         /// Greater than zero This instance follows other in the sort order.
         /// </returns>
         public int CompareTo(object obj) =>
-            obj == null ? -1 : obj is TSource value ? Value.CompareTo(value) : obj is TObject derived ? Value.CompareTo(derived.Value) : -1;
+            obj == null ? -1 : obj is TSource value ? this.Value.CompareTo(value) : obj is TObject derived ? this.Value.CompareTo(derived.Value) : -1;
 
         /// <summary>
         /// Compares the specified object instance with another object of the same type and returns

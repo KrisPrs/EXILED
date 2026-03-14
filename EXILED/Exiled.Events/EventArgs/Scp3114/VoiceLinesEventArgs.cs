@@ -32,10 +32,10 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public VoiceLinesEventArgs(ReferenceHub player, VoiceLinesDefinition voiceLine, bool isAllowed = true)
         {
-            Player = Player.Get(player);
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            VoiceLine = voiceLine;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(player);
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.VoiceLine = voiceLine;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

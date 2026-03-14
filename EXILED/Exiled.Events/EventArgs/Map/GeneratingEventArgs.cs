@@ -26,16 +26,16 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="ez"><inheritdoc cref="TargetEzLayout"/></param>
         public GeneratingEventArgs(int seed, LczFacilityLayout lcz, HczFacilityLayout hcz, EzFacilityLayout ez)
         {
-            LczLayout = lcz;
-            HczLayout = hcz;
-            EzLayout = ez;
+            this.LczLayout = lcz;
+            this.HczLayout = hcz;
+            this.EzLayout = ez;
 
-            TargetLczLayout = LczFacilityLayout.Unknown;
-            TargetHczLayout = HczFacilityLayout.Unknown;
-            TargetEzLayout = EzFacilityLayout.Unknown;
+            this.TargetLczLayout = LczFacilityLayout.Unknown;
+            this.TargetHczLayout = HczFacilityLayout.Unknown;
+            this.TargetEzLayout = EzFacilityLayout.Unknown;
 
-            Seed = seed;
-            IsAllowed = true;
+            this.Seed = seed;
+            this.IsAllowed = true;
         }
 
         /// <summary>

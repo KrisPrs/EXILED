@@ -26,9 +26,9 @@ namespace Exiled.Events.EventArgs.Scp330
         /// <param name="candy"><inheritdoc cref="Candy" />.</param>
         public EatenScp330EventArgs(Player player, Scp330Bag scp330, ICandy candy)
         {
-            Player = player;
-            Scp330 = (Scp330)Item.Get(scp330);
-            Candy = candy;
+            this.Player = player;
+            this.Scp330 = (Scp330)Item.Get(scp330);
+            this.Candy = candy;
         }
 
         /// <summary>
@@ -45,6 +45,6 @@ namespace Exiled.Events.EventArgs.Scp330
         public Scp330 Scp330 { get; }
 
         /// <inheritdoc/>
-        public Item Item => Scp330;
+        public Item Item => this.Scp330;
     }
 }

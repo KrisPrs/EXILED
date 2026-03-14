@@ -38,13 +38,13 @@ namespace Exiled.API.Features.Roles
         internal Scp1507Role(Scp1507GameRole baseRole)
             : base(baseRole)
         {
-            Base = baseRole;
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
         }
 
         /// <inheritdoc/>
-        public override RoleTypeId Type => Base._roleTypeId;
+        public override RoleTypeId Type => this.Base._roleTypeId;
 
         /// <inheritdoc/>
         public SubroutineManagerModule SubroutineModule { get; }
@@ -72,7 +72,7 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="alreadySpawned">The List of Roles already spawned.</param>
         /// <returns>The Spawn Chance.</returns>
-        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => Base is ISpawnableScp spawnableScp ? spawnableScp.GetSpawnChance(alreadySpawned) : 0;
+        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => this.Base is ISpawnableScp spawnableScp ? spawnableScp.GetSpawnChance(alreadySpawned) : 0;
 
         /// <inheritdoc/>
         internal override void SendAppearanceSpawnMessage(NetworkWriter writer, PlayerRoleBase basicRole)

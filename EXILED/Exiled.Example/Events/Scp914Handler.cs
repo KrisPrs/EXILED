@@ -16,9 +16,6 @@ namespace Exiled.Example.Events
     internal sealed class Scp914Handler
     {
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp914.OnUpgradingPickup(UpgradingPickupEventArgs)"/>
-        public void OnUpgradingItem(UpgradingPickupEventArgs ev)
-        {
-            Log.Info($"Item being upgraded\n[Type]: {ev.Pickup.Type}\n[Weight]: {ev.Pickup.Weight}\n[Output Position]: {ev.OutputPosition}\n[Knob Setting]: {ev.KnobSetting}");
-        }
+        public void OnUpgradingItem(UpgradingPickupEventArgs ev) => Log.Info($"Item being upgraded\n[Type]: {ev.Pickup.Type}\n[Weight]: {ev.Pickup.Weight}\n[Output Position]: {ev.OutputPosition}\n[Knob Setting]: {ev.KnobSetting}");
     }
 }

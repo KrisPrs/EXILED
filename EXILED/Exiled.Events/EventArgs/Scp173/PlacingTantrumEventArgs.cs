@@ -39,13 +39,13 @@ namespace Exiled.Events.EventArgs.Scp173
         /// </param>
         public PlacingTantrumEventArgs(Player player, TantrumEnvironmentalHazard tantrumHazard, AbilityCooldown cooldown, bool isAllowed = true)
         {
-            Player = player;
-            Scp173 = Player.Role.As<Scp173Role>();
+            this.Player = player;
+            this.Scp173 = this.Player.Role.As<Scp173Role>();
 #pragma warning disable CS0618
-            TantrumHazard = tantrumHazard;
+            this.TantrumHazard = tantrumHazard;
 #pragma warning restore CS0618
-            Cooldown = cooldown;
-            IsAllowed = isAllowed;
+            this.Cooldown = cooldown;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

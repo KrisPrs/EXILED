@@ -24,8 +24,8 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="scp1576Item"><inheritdoc cref="Scp1576"/></param>
         public Scp1576TransmissionEndedEventArgs(Player player, Scp1576Item scp1576Item)
         {
-            Player = player;
-            Scp1576 = Item.Get<Scp1576>(scp1576Item);
+            this.Player = player;
+            this.Scp1576 = Item.Get<Scp1576>(scp1576Item);
         }
 
         /// <summary>

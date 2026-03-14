@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Server
         /// </param>
         public RoundEndedEventArgs(LeadingTeam leadingTeam, RoundSummary.SumInfo_ClassList classList, int timeToRestart)
         {
-            LeadingTeam = leadingTeam;
-            ClassList = classList;
-            TimeToRestart = timeToRestart;
+            this.LeadingTeam = leadingTeam;
+            this.ClassList = classList;
+            this.TimeToRestart = timeToRestart;
         }
 
         /// <summary>

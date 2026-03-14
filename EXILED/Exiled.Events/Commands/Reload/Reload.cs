@@ -46,7 +46,7 @@ namespace Exiled.Events.Commands.Reload
             if (arguments.At(0).ToLower() != "all")
                 return base.ExecuteParent(arguments, sender, out response);
 
-            foreach (ICommand child in Commands.Values)
+            foreach (ICommand child in this.Commands.Values)
             {
                 bool done = child.Execute(arguments, sender, out string localResponse);
                 sender.Respond(localResponse, done);

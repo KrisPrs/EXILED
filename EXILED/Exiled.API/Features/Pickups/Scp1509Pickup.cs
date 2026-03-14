@@ -24,19 +24,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseScp1509"/> class.</param>
         internal Scp1509Pickup(BaseScp1509 pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp1509Pickup"/> class.
         /// </summary>
         internal Scp1509Pickup()
-            : base(ItemType.SCP1509)
-        {
-            Base = (BaseScp1509)((Pickup)this).Base;
-        }
+            : base(ItemType.SCP1509) =>
+            this.Base = (BaseScp1509)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseScp1509"/> that this class is encapsulating.
@@ -67,7 +63,7 @@ namespace Exiled.API.Features.Pickups
         /// Returns the Scp1509Pickup in a human readable format.
         /// </summary>
         /// <returns>A string containing Scp1509Pickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{ShieldRegenRate}| -{ShieldDecayRate}- /{ShieldOnDamagePause}/ ^{UnequipDecayDelay}^";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.ShieldRegenRate}| -{this.ShieldDecayRate}- /{this.ShieldOnDamagePause}/ ^{this.UnequipDecayDelay}^";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Item item)
@@ -75,10 +71,10 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is Scp1509 scp1509Item)
             {
-                ShieldRegenRate = scp1509Item.ShieldRegenRate;
-                ShieldDecayRate = scp1509Item.ShieldDecayRate;
-                ShieldOnDamagePause = scp1509Item.ShieldOnDamagePause;
-                UnequipDecayDelay = scp1509Item.UnequipDecayDelay;
+                this.ShieldRegenRate = scp1509Item.ShieldRegenRate;
+                this.ShieldDecayRate = scp1509Item.ShieldDecayRate;
+                this.ShieldOnDamagePause = scp1509Item.ShieldOnDamagePause;
+                this.UnequipDecayDelay = scp1509Item.UnequipDecayDelay;
             }
         }
 
@@ -88,10 +84,10 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is Scp1509Item scp1509Item)
             {
-                ShieldRegenRate = scp1509Item.ShieldRegenRate;
-                ShieldDecayRate = scp1509Item.ShieldDecayRate;
-                ShieldOnDamagePause = scp1509Item.ShieldOnDamagePause;
-                UnequipDecayDelay = scp1509Item.UnequipDecayDelay;
+                this.ShieldRegenRate = scp1509Item.ShieldRegenRate;
+                this.ShieldDecayRate = scp1509Item.ShieldDecayRate;
+                this.ShieldOnDamagePause = scp1509Item.ShieldOnDamagePause;
+                this.UnequipDecayDelay = scp1509Item.UnequipDecayDelay;
             }
         }
     }

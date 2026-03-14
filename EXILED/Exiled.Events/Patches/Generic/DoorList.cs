@@ -100,9 +100,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(DoorVariant), nameof(DoorVariant.OnDestroy))]
     internal class DoorListRemove
     {
-        private static void Prefix(DoorVariant __instance)
-        {
-            Door.DoorVariantToDoor.Remove(__instance);
-        }
+        private static void Prefix(DoorVariant __instance) => Door.DoorVariantToDoor.Remove(__instance);
     }
 }

@@ -33,10 +33,10 @@ namespace Exiled.Events.EventArgs.Server
         /// </param>
         public LocalReportingEventArgs(Player issuer, Player target, string reason, bool isAllowed = true)
         {
-            Player = issuer;
-            Target = target;
-            Reason = reason;
-            IsAllowed = isAllowed;
+            this.Player = issuer;
+            this.Target = target;
+            this.Reason = reason;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

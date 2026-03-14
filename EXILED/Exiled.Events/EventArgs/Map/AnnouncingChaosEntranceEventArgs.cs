@@ -25,8 +25,8 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="builder"><inheritdoc cref="Words"/></param>
         public AnnouncingChaosEntranceEventArgs(WaveAnnouncementBase announcement, StringBuilder builder)
         {
-            Wave = TimedWave.GetTimedWaves().Find(x => x.Announcement == announcement);
-            Words = builder;
+            this.Wave = TimedWave.GetTimedWaves().Find(x => x.Announcement == announcement);
+            this.Words = builder;
         }
 
         /// <summary>

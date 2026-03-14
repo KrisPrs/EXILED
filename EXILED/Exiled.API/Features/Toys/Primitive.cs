@@ -29,7 +29,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="toyAdminToyBase">The <see cref="PrimitiveObjectToy"/> of the toy.</param>
         internal Primitive(PrimitiveObjectToy toyAdminToyBase)
-            : base(toyAdminToyBase, AdminToyType.PrimitiveObject) => Base = toyAdminToyBase;
+            : base(toyAdminToyBase, AdminToyType.PrimitiveObject) => this.Base = toyAdminToyBase;
 
         /// <summary>
         /// Gets the prefab.
@@ -46,8 +46,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public PrimitiveType Type
         {
-            get => Base.NetworkPrimitiveType;
-            set => Base.NetworkPrimitiveType = value;
+            get => this.Base.NetworkPrimitiveType;
+            set => this.Base.NetworkPrimitiveType = value;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Color Color
         {
-            get => Base.NetworkMaterialColor;
-            set => Base.NetworkMaterialColor = value;
+            get => this.Base.NetworkMaterialColor;
+            set => this.Base.NetworkMaterialColor = value;
         }
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool Collidable
         {
-            get => Flags.HasFlag(PrimitiveFlags.Collidable);
-            set => Flags = value ? (Flags | PrimitiveFlags.Collidable) : (Flags & ~PrimitiveFlags.Collidable);
+            get => this.Flags.HasFlag(PrimitiveFlags.Collidable);
+            set => this.Flags = value ? (this.Flags | PrimitiveFlags.Collidable) : (this.Flags & ~PrimitiveFlags.Collidable);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool Visible
         {
-            get => Flags.HasFlag(PrimitiveFlags.Visible);
-            set => Flags = value ? (Flags | PrimitiveFlags.Visible) : (Flags & ~PrimitiveFlags.Visible);
+            get => this.Flags.HasFlag(PrimitiveFlags.Visible);
+            set => this.Flags = value ? (this.Flags | PrimitiveFlags.Visible) : (this.Flags & ~PrimitiveFlags.Visible);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public PrimitiveFlags Flags
         {
-            get => Base.NetworkPrimitiveFlags;
-            set => Base.NetworkPrimitiveFlags = value;
+            get => this.Base.NetworkPrimitiveFlags;
+            set => this.Base.NetworkPrimitiveFlags = value;
         }
 
         /// <summary>

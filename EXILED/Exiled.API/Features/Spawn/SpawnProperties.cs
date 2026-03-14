@@ -48,6 +48,6 @@ namespace Exiled.API.Features.Spawn
         /// Counts how many spawn points are in this instance.
         /// </summary>
         /// <returns>How many spawn points there are.</returns>
-        public int Count() => DynamicSpawnPoints.Count + StaticSpawnPoints.Count + RoleSpawnPoints.Count + RoomSpawnPoints.Count + LockerSpawnPoints.Count;
+        public int Count() => this.DynamicSpawnPoints.Count + this.StaticSpawnPoints.Count + this.RoleSpawnPoints.Count + this.RoomSpawnPoints.Count + this.LockerSpawnPoints.Count;
     }
 }

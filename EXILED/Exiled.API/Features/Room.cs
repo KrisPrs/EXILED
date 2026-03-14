@@ -44,27 +44,27 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="Room"/> name.
         /// </summary>
-        public string Name => name;
+        public string Name => this.name;
 
         /// <summary>
         /// Gets the <see cref="Room"/> <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => gameObject;
+        public GameObject GameObject => this.gameObject;
 
         /// <summary>
         /// Gets the <see cref="Room"/> <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => transform;
+        public Transform Transform => this.transform;
 
         /// <summary>
         /// Gets the <see cref="Room"/> position.
         /// </summary>
-        public Vector3 Position => transform.position;
+        public Vector3 Position => this.transform.position;
 
         /// <summary>
         /// Gets the <see cref="Room"/> rotation.
         /// </summary>
-        public Quaternion Rotation => transform.rotation;
+        public Quaternion Rotation => this.transform.rotation;
 
         /// <summary>
         /// Gets the <see cref="ZoneType"/> in which the room is located.
@@ -76,18 +76,18 @@ namespace Exiled.API.Features
         /// </summary>
         /// <remarks>This property is the internal <see cref="MapGeneration.RoomName"/> of the room. For the actual string of the Room's name, see <see cref="Name"/>.</remarks>
         /// <seealso cref="Name"/>
-        public RoomName RoomName => Identifier.Name;
+        public RoomName RoomName => this.Identifier.Name;
 
         /// <summary>
         /// Gets the room's <see cref="MapGeneration.RoomShape"/>.
         /// </summary>
         /// <remarks>Will return null if the Room is not a <see cref="MultiLevelRoomIdentifier"/>.</remarks>
-        public RoomLevelName? LevelName => Identifier is MultiLevelRoomIdentifier multiLevelRoomIdentifier ? (RoomLevelName?)multiLevelRoomIdentifier.Name : null;
+        public RoomLevelName? LevelName => this.Identifier is MultiLevelRoomIdentifier multiLevelRoomIdentifier ? (RoomLevelName?)multiLevelRoomIdentifier.Name : null;
 
         /// <summary>
         /// Gets the room's <see cref="MapGeneration.RoomShape"/>.
         /// </summary>
-        public RoomShape RoomShape => Identifier.Shape;
+        public RoomShape RoomShape => this.Identifier.Shape;
 
         /// <summary>
         /// Gets the <see cref="RoomType"/>.
@@ -107,7 +107,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Player"/> in the <see cref="Room"/>.
         /// </summary>
-        public IEnumerable<Player> Players => Player.List.Where(player => player.IsAlive && player.CurrentRoom is not null && (player.CurrentRoom.Transform == Transform));
+        public IEnumerable<Player> Players => Player.List.Where(player => player.IsAlive && player.CurrentRoom is not null && (player.CurrentRoom.Transform == this.Transform));
 
         /// <summary>
         /// Gets a <see cref="IReadOnlyCollection{T}"/> of <see cref="Window"/> in the <see cref="Room"/>.
@@ -144,10 +144,10 @@ namespace Exiled.API.Features
         {
             get
             {
-                if (NearestRoomsValue.Count == 0 && Identifier.ConnectedRooms.Count > 0)
-                    NearestRoomsValue.AddRange(Identifier.ConnectedRooms.Select(Get));
+                if (this.NearestRoomsValue.Count == 0 && this.Identifier.ConnectedRooms.Count > 0)
+                    this.NearestRoomsValue.AddRange(this.Identifier.ConnectedRooms.Select(Get));
 
-                return NearestRoomsValue;
+                return this.NearestRoomsValue;
             }
         }
 
@@ -162,10 +162,10 @@ namespace Exiled.API.Features
         /// <remarks>Will return <see cref="Color.clear"/> when <see cref="RoomLightController"/> is <see langword="null"/>.</remarks>
         public Color Color
         {
-            get => RoomLightController == null ? Color.clear : RoomLightController.NetworkOverrideColor;
+            get => this.RoomLightController == null ? Color.clear : this.RoomLightController.NetworkOverrideColor;
             set
             {
-                foreach (RoomLightController light in RoomLightControllers)
+                foreach (RoomLightController light in this.RoomLightControllers)
                 {
                     light.NetworkOverrideColor = value;
                 }
@@ -177,10 +177,10 @@ namespace Exiled.API.Features
         /// </summary>
         public bool AreLightsOff
         {
-            get => RoomLightController != null && !RoomLightController.NetworkLightsEnabled;
+            get => this.RoomLightController != null && !this.RoomLightController.NetworkLightsEnabled;
             set
             {
-                foreach (RoomLightController light in RoomLightControllers)
+                foreach (RoomLightController light in this.RoomLightControllers)
                 {
                     light.NetworkLightsEnabled = !value;
                 }
@@ -190,12 +190,12 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the FlickerableLightController's NetworkIdentity.
         /// </summary>
-        public NetworkIdentity RoomLightControllerNetIdentity => RoomLightController?.netIdentity;
+        public NetworkIdentity RoomLightControllerNetIdentity => this.RoomLightController?.netIdentity;
 
         /// <summary>
         /// Gets the room's FlickerableLightController.
         /// </summary>
-        public RoomLightController RoomLightController => RoomLightControllers.FirstOrDefault();
+        public RoomLightController RoomLightController => this.RoomLightControllers.FirstOrDefault();
 
         /// <summary>
         /// Gets a <see cref="List{T}"/> containing all known <see cref="Window"/>s in that <see cref="Room"/>.
@@ -325,14 +325,14 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="position">World position.</param>
         /// <returns>Local position, based on the room.</returns>
-        public Vector3 LocalPosition(Vector3 position) => Transform.InverseTransformPoint(position);
+        public Vector3 LocalPosition(Vector3 position) => this.Transform.InverseTransformPoint(position);
 
         /// <summary>
         /// Returns the World position, based on a local space position.
         /// </summary>
         /// <param name="offset">Local position.</param>
         /// <returns>World position, based on the room.</returns>
-        public Vector3 WorldPosition(Vector3 offset) => Transform.TransformPoint(offset);
+        public Vector3 WorldPosition(Vector3 offset) => this.Transform.TransformPoint(offset);
 
         /// <summary>
         /// Flickers the room's lights off for a duration.
@@ -342,7 +342,7 @@ namespace Exiled.API.Features
         {
             if (duration == -1)
             {
-                foreach (RoomLightController light in RoomLightControllers)
+                foreach (RoomLightController light in this.RoomLightControllers)
                 {
                     light.SetLights(false);
                 }
@@ -350,7 +350,7 @@ namespace Exiled.API.Features
                 return;
             }
 
-            foreach (RoomLightController light in RoomLightControllers)
+            foreach (RoomLightController light in this.RoomLightControllers)
             {
                 light.ServerFlickerLights(duration);
             }
@@ -365,7 +365,7 @@ namespace Exiled.API.Features
         /// <seealso cref="Door.LockAll(float, IEnumerable{ZoneType}, DoorLockType)"/>
         public void LockDown(float duration, DoorLockType lockType = DoorLockType.Regular079)
         {
-            foreach (Door door in Doors)
+            foreach (Door door in this.Doors)
             {
                 door.ChangeLock(lockType);
                 door.IsOpen = false;
@@ -374,7 +374,7 @@ namespace Exiled.API.Features
             if (duration < 0)
                 return;
 
-            Timing.CallDelayed(duration, UnlockAll);
+            Timing.CallDelayed(duration, this.UnlockAll);
         }
 
         /// <summary>
@@ -386,8 +386,8 @@ namespace Exiled.API.Features
         /// <seealso cref="Map.TurnOffAllLights(float, IEnumerable{ZoneType})"/>
         public void Blackout(float duration, DoorLockType lockType = DoorLockType.Regular079)
         {
-            LockDown(duration, lockType);
-            TurnOffLights(duration);
+            this.LockDown(duration, lockType);
+            this.TurnOffLights(duration);
         }
 
         /// <summary>
@@ -399,20 +399,20 @@ namespace Exiled.API.Features
         /// <seealso cref="Door.UnlockAll(Func{Door, bool})"/>
         public void UnlockAll()
         {
-            foreach (Door door in Doors)
+            foreach (Door door in this.Doors)
                 door.Unlock();
         }
 
         /// <summary>
         /// Resets the room color to default.
         /// </summary>
-        public void ResetColor() => Color = Color.clear;
+        public void ResetColor() => this.Color = Color.clear;
 
         /// <summary>
         /// Returns the Room in a human-readable format.
         /// </summary>
         /// <returns>A string containing Room-related data.</returns>
-        public override string ToString() => $"{Type} ({Zone}) [{Doors?.Count}] *{Cameras?.Count}* |{TeslaGate != null}|";
+        public override string ToString() => $"{this.Type} ({this.Zone}) [{this.Doors?.Count}] *{this.Cameras?.Count}* |{this.TeslaGate != null}|";
 
         /// <summary>
         /// Factory method to create and add a <see cref="Room"/> component to a Transform.
@@ -426,42 +426,41 @@ namespace Exiled.API.Features
         /// </summary>
         internal void InternalCreate()
         {
-            Identifier = gameObject.GetComponent<RoomIdentifier>();
-            RoomIdentifierToRoom.Add(Identifier, this);
+            this.Identifier = this.gameObject.GetComponent<RoomIdentifier>();
+            RoomIdentifierToRoom.Add(this.Identifier, this);
 
-            Zone = Identifier.Zone.GetZone();
+            this.Zone = this.Identifier.Zone.GetZone();
 
-            if (Zone is ZoneType.Unspecified)
-                Log.Warn($"[ZONETYPE UNKNOWN] {Identifier} Zone : {Identifier?.Zone}");
+            if (this.Zone is ZoneType.Unspecified)
+                Log.Warn($"[ZONETYPE UNKNOWN] {this.Identifier} Zone : {this.Identifier?.Zone}");
 
-            Type = FindType(gameObject);
+            this.Type = FindType(this.gameObject);
 
-            if (Type is RoomType.Unknown)
-                Log.Warn($"[ROOMTYPE UNKNOWN] {Identifier} Name : {gameObject?.name.RemoveBracketsOnEndOfName()} Shape : {Identifier?.Shape}");
+            if (this.Type is RoomType.Unknown)
+                Log.Warn($"[ROOMTYPE UNKNOWN] {this.Identifier} Name : {this.gameObject?.name.RemoveBracketsOnEndOfName()} Shape : {this.Identifier?.Shape}");
 
-            RoomLightControllers = RoomLightControllersValue.AsReadOnly();
+            this.RoomLightControllers = this.RoomLightControllersValue.AsReadOnly();
 
-            GetComponentsInChildren<BreakableWindow>().ForEach(component =>
+            this.GetComponentsInChildren<BreakableWindow>().ForEach(component =>
             {
                 Window window = new(component, this);
                 window.Room.WindowsValue.Add(window);
             });
 
-            if (GetComponentInChildren<global::TeslaGate>() is global::TeslaGate tesla)
+            if (this.GetComponentInChildren<global::TeslaGate>() is global::TeslaGate tesla)
             {
-                TeslaGate = new TeslaGate(tesla, this);
+                this.TeslaGate = new TeslaGate(tesla, this);
             }
 
-            Windows = WindowsValue.AsReadOnly();
-            Doors = DoorsValue.AsReadOnly();
-            Speakers = SpeakersValue.AsReadOnly();
-            Cameras = CamerasValue.AsReadOnly();
+            this.Windows = this.WindowsValue.AsReadOnly();
+            this.Doors = this.DoorsValue.AsReadOnly();
+            this.Speakers = this.SpeakersValue.AsReadOnly();
+            this.Cameras = this.CamerasValue.AsReadOnly();
         }
 
-        private static RoomType FindType(GameObject gameObject)
-        {
+        private static RoomType FindType(GameObject gameObject) =>
             // Try to remove brackets if they exist.
-            return TryRemovePostfixes(gameObject.name.RemoveBracketsOnEndOfName()) switch
+            TryRemovePostfixes(gameObject.name.RemoveBracketsOnEndOfName()) switch
             {
                 "PocketWorld" => RoomType.Pocket,
                 "Outside" => RoomType.Surface,
@@ -537,7 +536,6 @@ namespace Exiled.API.Features
                 },
                 _ => RoomType.Unknown,
             };
-        }
 
         private static string TryRemovePostfixes(string str)
         {

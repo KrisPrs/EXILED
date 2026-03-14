@@ -30,11 +30,11 @@ namespace Exiled.Events.EventArgs.Item
             if (item is not Firearm firearmItem)
                 return;
 
-            Player = firearmItem.Owner;
-            Firearm = firearmItem;
-            OldAmmo = oldAmmo;
-            NewAmmo = newAmmo;
-            IsAllowed = isAllowed;
+            this.Player = firearmItem.Owner;
+            this.Firearm = firearmItem;
+            this.OldAmmo = oldAmmo;
+            this.NewAmmo = newAmmo;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Exiled.Events.EventArgs.Item
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the old ammo.

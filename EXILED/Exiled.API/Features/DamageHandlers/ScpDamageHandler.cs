@@ -36,7 +36,7 @@ namespace Exiled.API.Features.DamageHandlers
         {
             get
             {
-                switch (Base)
+                switch (this.Base)
                 {
                     case Scp096DamageHandler:
                         return DamageType.Scp096;

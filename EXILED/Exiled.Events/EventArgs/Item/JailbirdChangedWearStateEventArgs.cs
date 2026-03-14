@@ -25,10 +25,10 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="oldWearState">The current <see cref="JailbirdWearState"/> the Jailbird was at.</param>
         public JailbirdChangedWearStateEventArgs(InventorySystem.Items.ItemBase jailbird, JailbirdWearState newWearState, JailbirdWearState oldWearState)
         {
-            Jailbird = Item.Get<Jailbird>(jailbird);
-            Player = Jailbird.Owner;
-            NewWearState = newWearState;
-            OldWearState = oldWearState;
+            this.Jailbird = Item.Get<Jailbird>(jailbird);
+            this.Player = this.Jailbird.Owner;
+            this.NewWearState = newWearState;
+            this.OldWearState = oldWearState;
         }
 
         /// <summary>
@@ -54,6 +54,6 @@ namespace Exiled.Events.EventArgs.Item
         /// <summary>
         /// Gets the <see cref="API.Features.Items.Item"/> associated with the Jailbird.
         /// </summary>
-        public Item Item => Jailbird;
+        public Item Item => this.Jailbird;
     }
 }

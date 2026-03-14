@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public ChangingFocusEventArgs(ReferenceHub player, bool state, bool isAllowed = true)
         {
-            Player = Player.Get(player);
-            Scp939 = Player.Role.As<Scp939Role>();
-            State = state;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(player);
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.State = state;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

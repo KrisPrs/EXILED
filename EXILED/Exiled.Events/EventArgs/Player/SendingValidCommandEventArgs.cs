@@ -39,11 +39,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SendingValidCommandEventArgs(Player player, ICommand command, CommandType commandType, string query, string response)
         {
-            Player = player;
-            Command = command;
-            Type = commandType;
-            Query = query;
-            Response = response;
+            this.Player = player;
+            this.Command = command;
+            this.Type = commandType;
+            this.Query = query;
+            this.Response = response;
         }
 
         /// <summary>

@@ -22,9 +22,9 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public TurningOffLightsEventArgs(RoomLightController flickerableLightControllerHandler, float duration, bool isAllowed = true)
         {
-            RoomLightController = flickerableLightControllerHandler;
-            Duration = duration;
-            IsAllowed = isAllowed;
+            this.RoomLightController = flickerableLightControllerHandler;
+            this.Duration = duration;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

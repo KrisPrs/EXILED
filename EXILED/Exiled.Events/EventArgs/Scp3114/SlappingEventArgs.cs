@@ -24,8 +24,8 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public SlappingEventArgs(Player player)
         {
-            Player = player;
-            Scp3114 = Player.Role.As<Scp3114Role>();
+            this.Player = player;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
         }
 
         /// <inheritdoc/>

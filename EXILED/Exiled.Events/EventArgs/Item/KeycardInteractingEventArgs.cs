@@ -30,16 +30,16 @@ namespace Exiled.Events.EventArgs.Item
         /// <seealso cref="EventArgs.Player.InteractingDoorEventArgs"/>
         public KeycardInteractingEventArgs(BaseKeycardPickup pickup, Player player, DoorVariant door, bool isAllowed = true)
         {
-            KeycardPickup = Pickup.Get<KeycardPickup>(pickup);
-            Player = player;
-            Door = Door.Get(door);
-            IsAllowed = isAllowed;
+            this.KeycardPickup = Pickup.Get<KeycardPickup>(pickup);
+            this.Player = player;
+            this.Door = Door.Get(door);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
         /// Gets the item that's interacting with the door.
         /// </summary>
-        public Pickup Pickup => KeycardPickup;
+        public Pickup Pickup => this.KeycardPickup;
 
         /// <inheritdoc cref="Pickup"/>
         public KeycardPickup KeycardPickup { get; }

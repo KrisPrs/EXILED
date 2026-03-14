@@ -28,12 +28,12 @@ namespace Exiled.Events.EventArgs.Server
         /// </param>
         public ChoosingStartTeamQueueEventArgs(string teamRespawnQueue)
         {
-            TeamRespawnQueue = new();
+            this.TeamRespawnQueue = new();
             foreach (char ch in teamRespawnQueue)
             {
                 Team team = (Team)(ch - '0');
                 if (Enum.IsDefined(typeof(Team), team))
-                    TeamRespawnQueue.Add(team);
+                    this.TeamRespawnQueue.Add(team);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Exiled.Events.EventArgs.Server
         {
             StringBuilder teamRespawnQueue = StringBuilderPool.Pool.Get();
 
-            foreach (Team team in TeamRespawnQueue)
+            foreach (Team team in this.TeamRespawnQueue)
                 teamRespawnQueue.Append((int)team);
 
             return StringBuilderPool.Pool.ToStringReturn(teamRespawnQueue);

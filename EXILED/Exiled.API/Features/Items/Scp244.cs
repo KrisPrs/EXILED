@@ -29,11 +29,11 @@ namespace Exiled.API.Features.Items
         public Scp244(Scp244Item itemBase)
             : base(itemBase)
         {
-            Base = itemBase;
-            Scp244DeployablePickup scp244Pickup = (Scp244DeployablePickup)Type.GetPickupBase();
-            Health = scp244Pickup._health;
-            ActivationDot = scp244Pickup._activationDot;
-            MaxDiameter = scp244Pickup.MaxDiameter;
+            this.Base = itemBase;
+            Scp244DeployablePickup scp244Pickup = (Scp244DeployablePickup)this.Type.GetPickupBase();
+            this.Health = scp244Pickup._health;
+            this.ActivationDot = scp244Pickup._activationDot;
+            this.MaxDiameter = scp244Pickup.MaxDiameter;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public bool Primed
         {
-            get => Base._primed;
-            set => Base._primed = value;
+            get => this.Base._primed;
+            set => this.Base._primed = value;
         }
 
         /// <summary>
@@ -84,13 +84,13 @@ namespace Exiled.API.Features.Items
         /// <returns>The created <see cref="Pickup"/>.</returns>
         public override Pickup CreatePickup(Vector3 position, Quaternion rotation = default, bool spawn = true)
         {
-            PickupSyncInfo info = new(Type, Weight, Serial);
+            PickupSyncInfo info = new(this.Type, this.Weight, this.Serial);
 
-            Scp244DeployablePickup ipb = (Scp244DeployablePickup)InventoryExtensions.ServerCreatePickup(Base, info, position, rotation);
+            Scp244DeployablePickup ipb = (Scp244DeployablePickup)InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation);
 
-            Base.OnRemoved(ipb);
+            this.Base.OnRemoved(ipb);
 
-            ipb.State = Base._primed ? Scp244State.Active : Scp244State.Idle;
+            ipb.State = this.Base._primed ? Scp244State.Active : Scp244State.Idle;
 
             Pickup pickup = Pickup.Get(ipb);
 
@@ -104,19 +104,19 @@ namespace Exiled.API.Features.Items
         /// Clones current <see cref="Scp244"/> object.
         /// </summary>
         /// <returns> New <see cref="Scp244"/> object. </returns>
-        public override Item Clone() => new Scp244(Type)
+        public override Item Clone() => new Scp244(this.Type)
         {
-            Primed = Primed,
-            MaxDiameter = MaxDiameter,
-            Health = Health,
-            ActivationDot = ActivationDot,
+            Primed = this.Primed,
+            MaxDiameter = this.MaxDiameter,
+            Health = this.Health,
+            ActivationDot = this.ActivationDot,
         };
 
         /// <summary>
         /// Returns the SCP-244 in a human readable format.
         /// </summary>
         /// <returns>A string containing SCP-244 related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* -{Primed}-";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* -{this.Primed}-";
 
         /// <inheritdoc/>
         internal override void ReadPickupInfoBefore(Pickup pickup)
@@ -124,9 +124,9 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is Scp244Pickup scp244)
             {
-                Health = scp244.Health;
-                ActivationDot = scp244.ActivationDot;
-                MaxDiameter = scp244.MaxDiameter;
+                this.Health = scp244.Health;
+                this.ActivationDot = scp244.ActivationDot;
+                this.MaxDiameter = scp244.MaxDiameter;
             }
         }
     }

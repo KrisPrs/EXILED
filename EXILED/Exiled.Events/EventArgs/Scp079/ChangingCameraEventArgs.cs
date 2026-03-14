@@ -32,11 +32,11 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public ChangingCameraEventArgs(Player player, Scp079Camera camera, float auxiliaryPowerCost)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Camera = Camera.Get(camera);
-            AuxiliaryPowerCost = auxiliaryPowerCost;
-            IsAllowed = auxiliaryPowerCost <= Scp079.Energy;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Camera = Camera.Get(camera);
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.IsAllowed = auxiliaryPowerCost <= this.Scp079.Energy;
         }
 
         /// <summary>

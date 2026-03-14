@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public SavingVoiceEventArgs(ReferenceHub player, ReferenceHub stolen, bool isAllowed = true)
         {
-            Player = Player.Get(player);
-            Scp939 = Player.Role.As<Scp939Role>();
-            Stolen = Player.Get(stolen);
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(player);
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.Stolen = Player.Get(stolen);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

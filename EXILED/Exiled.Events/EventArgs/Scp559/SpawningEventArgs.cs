@@ -28,10 +28,10 @@ namespace Exiled.Events.EventArgs.Scp559
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public SpawningEventArgs(Scp559 scp559, Vector3 oldPosition, Vector3 newPosition, bool isAllowed = true)
         {
-            Scp559 = scp559;
-            NextPosition = newPosition;
-            PreviousPosition = oldPosition;
-            IsAllowed = isAllowed;
+            this.Scp559 = scp559;
+            this.NextPosition = newPosition;
+            this.PreviousPosition = oldPosition;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

@@ -53,26 +53,26 @@ namespace Exiled.API.Features.Items
         public Firearm(BaseFirearm itemBase)
             : base(itemBase)
         {
-            Base = itemBase;
+            this.Base = itemBase;
 
-            foreach (ModuleBase module in Base.Modules)
+            foreach (ModuleBase module in this.Base.Modules)
             {
                 switch (module)
                 {
                     case IPrimaryAmmoContainerModule primaryAmmoModule:
-                        PrimaryMagazine ??= (PrimaryMagazine)Magazine.Get(primaryAmmoModule);
+                        this.PrimaryMagazine ??= (PrimaryMagazine)Magazine.Get(primaryAmmoModule);
                         break;
 
                     case IAmmoContainerModule ammoModule:
-                        BarrelMagazine ??= (BarrelMagazine)Magazine.Get(ammoModule);
+                        this.BarrelMagazine ??= (BarrelMagazine)Magazine.Get(ammoModule);
                         break;
 
                     case HitscanHitregModuleBase hitregModule:
-                        HitscanHitregModule = hitregModule;
+                        this.HitscanHitregModule = hitregModule;
                         break;
 
                     case AnimatorReloaderModuleBase animatorReloaderModule:
-                        AnimatorReloaderModule = animatorReloaderModule;
+                        this.AnimatorReloaderModule = animatorReloaderModule;
                         break;
 
                     default:
@@ -88,7 +88,7 @@ namespace Exiled.API.Features.Items
         internal Firearm(ItemType type)
             : this((BaseFirearm)Server.Host.Inventory.CreateItemInstance(new(type, 0), false))
         {
-            FlashlightAttachment flashlight = Attachments.OfType<FlashlightAttachment>().FirstOrDefault();
+            FlashlightAttachment flashlight = this.Attachments.OfType<FlashlightAttachment>().FirstOrDefault();
 
             if (flashlight != null && flashlight.IsEnabled)
                 flashlight.ServerSendStatus(true);
@@ -156,8 +156,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public int MagazineAmmo
         {
-            get => PrimaryMagazine.Ammo;
-            set => PrimaryMagazine.Ammo = value;
+            get => this.PrimaryMagazine.Ammo;
+            set => this.PrimaryMagazine.Ammo = value;
         }
 
         /// <summary>
@@ -168,27 +168,27 @@ namespace Exiled.API.Features.Items
         /// </remarks>
         public int BarrelAmmo
         {
-            get => BarrelMagazine?.Ammo ?? 0;
+            get => this.BarrelMagazine?.Ammo ?? 0;
 
             set
             {
-                if (BarrelMagazine != null)
-                    BarrelMagazine.Ammo = value;
+                if (this.BarrelMagazine != null)
+                    this.BarrelMagazine.Ammo = value;
             }
         }
 
         /// <summary>
         /// Gets the total amount of ammo in the firearm.
         /// </summary>
-        public int TotalAmmo => Base.GetTotalStoredAmmo();
+        public int TotalAmmo => this.Base.GetTotalStoredAmmo();
 
         /// <summary>
         /// Gets or sets the max ammo for this firearm.
         /// </summary>
         public int MaxMagazineAmmo
         {
-            get => PrimaryMagazine.MaxAmmo;
-            set => PrimaryMagazine.MaxAmmo = value;
+            get => this.PrimaryMagazine.MaxAmmo;
+            set => this.PrimaryMagazine.MaxAmmo = value;
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float Damage
         {
-            get => HitscanHitregModule.BaseDamage;
-            set => HitscanHitregModule.BaseDamage = value;
+            get => this.HitscanHitregModule.BaseDamage;
+            set => this.HitscanHitregModule.BaseDamage = value;
         }
 
         /// <summary>
@@ -205,8 +205,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float Inaccuracy
         {
-            get => HitscanHitregModule.BaseBulletInaccuracy;
-            set => HitscanHitregModule.BaseBulletInaccuracy = value;
+            get => this.HitscanHitregModule.BaseBulletInaccuracy;
+            set => this.HitscanHitregModule.BaseBulletInaccuracy = value;
         }
 
         /// <summary>
@@ -214,8 +214,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float Penetration
         {
-            get => HitscanHitregModule.BasePenetration;
-            set => HitscanHitregModule.BasePenetration = value;
+            get => this.HitscanHitregModule.BasePenetration;
+            set => this.HitscanHitregModule.BasePenetration = value;
         }
 
         /// <summary>
@@ -223,24 +223,24 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float DamageFalloffDistance
         {
-            get => HitscanHitregModule.DamageFalloffDistance;
-            set => HitscanHitregModule.DamageFalloffDistance = value;
+            get => this.HitscanHitregModule.DamageFalloffDistance;
+            set => this.HitscanHitregModule.DamageFalloffDistance = value;
         }
 
         /// <summary>
         /// Gets the damage for this firearm with attachement modifier.
         /// </summary>
-        public float EffectiveDamage => HitscanHitregModule.EffectiveDamage;
+        public float EffectiveDamage => this.HitscanHitregModule.EffectiveDamage;
 
         /// <summary>
         /// Gets the inaccuracy for this firearm with attachement modifier.
         /// </summary>
-        public float EffectiveInaccuracy => HitscanHitregModule.CurrentInaccuracy;
+        public float EffectiveInaccuracy => this.HitscanHitregModule.CurrentInaccuracy;
 
         /// <summary>
         /// Gets the penetration for this firearm with attachement modifier.
         /// </summary>
-        public float EffectivePenetration => HitscanHitregModule.DisplayPenetration;
+        public float EffectivePenetration => this.HitscanHitregModule.DisplayPenetration;
 
         /// <summary>
         /// Gets or sets the amount of max ammo in the firearm barrel.
@@ -250,19 +250,19 @@ namespace Exiled.API.Features.Items
         /// </remarks>
         public int MaxBarrelAmmo
         {
-            get => BarrelMagazine?.MaxAmmo ?? 0;
+            get => this.BarrelMagazine?.MaxAmmo ?? 0;
 
             set
             {
-                if (BarrelMagazine != null)
-                    BarrelMagazine.MaxAmmo = value;
+                if (this.BarrelMagazine != null)
+                    this.BarrelMagazine.MaxAmmo = value;
             }
         }
 
         /// <summary>
         /// Gets the total amount of ammo in the firearm.
         /// </summary>
-        public int TotalMaxAmmo => Base.GetTotalMaxAmmo();
+        public int TotalMaxAmmo => this.Base.GetTotalMaxAmmo();
 
         /// <summary>
         /// Gets or sets a ammo drain per shoot.
@@ -276,47 +276,47 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether the weapon is reloading.
         /// </summary>
-        public bool IsReloading => Base.TryGetModule(out IReloaderModule module) && module.IsReloading;
+        public bool IsReloading => this.Base.TryGetModule(out IReloaderModule module) && module.IsReloading;
 
         /// <summary>
         /// Gets the <see cref="Enums.FirearmType"/> of the firearm.
         /// </summary>
-        public FirearmType FirearmType => Type.GetFirearmType();
+        public FirearmType FirearmType => this.Type.GetFirearmType();
 
         /// <summary>
         /// Gets the <see cref="Enums.AmmoType"/> of the firearm.
         /// </summary>
-        public AmmoType AmmoType => PrimaryMagazine.AmmoType;
+        public AmmoType AmmoType => this.PrimaryMagazine.AmmoType;
 
         /// <summary>
         /// Gets a value indicating whether the firearm is being aimed.
         /// </summary>
-        public bool Aiming => Base.TryGetModule(out IAdsModule module) && module.AdsTarget;
+        public bool Aiming => this.Base.TryGetModule(out IAdsModule module) && module.AdsTarget;
 
         /// <summary>
         /// Gets a value indicating whether the firearm's flashlight module is enabled.
         /// </summary>
-        public bool FlashlightEnabled => Base.IsEmittingLight;
+        public bool FlashlightEnabled => this.Base.IsEmittingLight;
 
         /// <summary>
         /// Gets a value indicating whether the firearm's NightVision is being used.
         /// </summary>
-        public bool NightVisionEnabled => Aiming && Base.HasAdvantageFlag(AttachmentDescriptiveAdvantages.NightVision);
+        public bool NightVisionEnabled => this.Aiming && this.Base.HasAdvantageFlag(AttachmentDescriptiveAdvantages.NightVision);
 
         /// <summary>
         /// Gets a value indicating whether the firearm's flashlight module is enabled or NightVision is being used.
         /// </summary>
-        public bool CanSeeThroughDark => FlashlightEnabled || NightVisionEnabled;
+        public bool CanSeeThroughDark => this.FlashlightEnabled || this.NightVisionEnabled;
 
         /// <summary>
         /// Gets a value indicating whether the firearm is automatic.
         /// </summary>
-        public bool IsAutomatic => BarrelMagazine is AutomaticBarrelMagazine;
+        public bool IsAutomatic => this.BarrelMagazine is AutomaticBarrelMagazine;
 
         /// <summary>
         /// Gets the <see cref="Attachment"/>s of the firearm.
         /// </summary>
-        public Attachment[] Attachments => Base.Attachments;
+        public Attachment[] Attachments => this.Base.Attachments;
 
         /// <summary>
         /// Gets the <see cref="AttachmentIdentifier"/>s of the firearm.
@@ -325,15 +325,15 @@ namespace Exiled.API.Features.Items
         {
             get
             {
-                foreach (Attachment attachment in Attachments.Where(att => att.IsEnabled))
-                    yield return AvailableAttachments[FirearmType].FirstOrDefault(att => att == attachment);
+                foreach (Attachment attachment in this.Attachments.Where(att => att.IsEnabled))
+                    yield return AvailableAttachments[this.FirearmType].FirstOrDefault(att => att == attachment);
             }
         }
 
         /// <summary>
         /// Gets the base code of the firearm.
         /// </summary>
-        public uint BaseCode => BaseCodesValue[FirearmType];
+        public uint BaseCode => BaseCodesValue[this.FirearmType];
 
         /// <summary>
         /// Gets or sets the recoil settings of the firearm, if it's an automatic weapon.
@@ -342,10 +342,10 @@ namespace Exiled.API.Features.Items
         /// <seealso cref="IsAutomatic"/>
         public RecoilSettings Recoil
         {
-            get => Base.TryGetModule(out RecoilPatternModule module) ? module.BaseRecoil : default;
+            get => this.Base.TryGetModule(out RecoilPatternModule module) ? module.BaseRecoil : default;
             set
             {
-                if (Base.TryGetModule(out RecoilPatternModule module))
+                if (this.Base.TryGetModule(out RecoilPatternModule module))
                     module.BaseRecoil = value;
             }
         }
@@ -371,14 +371,14 @@ namespace Exiled.API.Features.Items
         {
             // Fallback addedCode onto AvailableAttachments' code in case it's 0
             uint addedCode = identifier.Code == 0
-                ? AvailableAttachments[FirearmType].FirstOrDefault(attId => attId.Name == identifier.Name).Code
+                ? AvailableAttachments[this.FirearmType].FirstOrDefault(attId => attId.Name == identifier.Name).Code
                 : identifier.Code;
 
             // Look for conflicting attachment (attachment that occupies the same slot)
             uint conflicting = 0;
             uint current = 1;
 
-            foreach (Attachment attachment in Base.Attachments)
+            foreach (Attachment attachment in this.Base.Attachments)
             {
                 if (attachment.Slot == identifier.Slot && attachment.IsEnabled)
                 {
@@ -389,16 +389,16 @@ namespace Exiled.API.Features.Items
                 current *= 2;
             }
 
-            uint code = Base.ValidateAttachmentsCode((Base.GetCurrentAttachmentsCode() & ~conflicting) | addedCode);
-            Base.ApplyAttachmentsCode(code, false);
-            AttachmentCodeSync.ServerSetCode(Serial, code);
+            uint code = this.Base.ValidateAttachmentsCode((this.Base.GetCurrentAttachmentsCode() & ~conflicting) | addedCode);
+            this.Base.ApplyAttachmentsCode(code, false);
+            AttachmentCodeSync.ServerSetCode(this.Serial, code);
         }
 
         /// <summary>
         /// Adds a <see cref="Attachment"/> of the specified <see cref="AttachmentName"/> to the firearm.
         /// </summary>
         /// <param name="attachmentName">The <see cref="AttachmentName"/> to add.</param>
-        public void AddAttachment(AttachmentName attachmentName) => AddAttachment(AttachmentIdentifier.Get(FirearmType, attachmentName));
+        public void AddAttachment(AttachmentName attachmentName) => this.AddAttachment(AttachmentIdentifier.Get(this.FirearmType, attachmentName));
 
         /// <summary>
         /// Adds a <see cref="IEnumerable{T}"/> of <see cref="AttachmentIdentifier"/> to the firearm.
@@ -407,7 +407,7 @@ namespace Exiled.API.Features.Items
         public void AddAttachment(IEnumerable<AttachmentIdentifier> identifiers)
         {
             foreach (AttachmentIdentifier identifier in identifiers)
-                AddAttachment(identifier);
+                this.AddAttachment(identifier);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Exiled.API.Features.Items
         public void AddAttachment(IEnumerable<AttachmentName> attachmentNames)
         {
             foreach (AttachmentName attachmentName in attachmentNames)
-                AddAttachment(attachmentName);
+                this.AddAttachment(attachmentName);
         }
 
         /// <summary>
@@ -426,12 +426,12 @@ namespace Exiled.API.Features.Items
         /// <param name="identifier">The <see cref="AttachmentIdentifier"/> to remove.</param>
         public void RemoveAttachment(AttachmentIdentifier identifier)
         {
-            if (!Attachments.Any(attachment => (attachment.Name == identifier.Name) && attachment.IsEnabled))
+            if (!this.Attachments.Any(attachment => (attachment.Name == identifier.Name) && attachment.IsEnabled))
                 return;
 
             uint code = identifier.Code;
 
-            Base.ApplyAttachmentsCode(Base.GetCurrentAttachmentsCode() & ~code, true);
+            this.Base.ApplyAttachmentsCode(this.Base.GetCurrentAttachmentsCode() & ~code, true);
 
             // TODO: Not finish
             /*
@@ -447,9 +447,9 @@ namespace Exiled.API.Features.Items
         /// <param name="attachmentName">The <see cref="AttachmentName"/> to remove.</param>
         public void RemoveAttachment(AttachmentName attachmentName)
         {
-            uint code = AttachmentIdentifier.Get(FirearmType, attachmentName).Code;
+            uint code = AttachmentIdentifier.Get(this.FirearmType, attachmentName).Code;
 
-            Base.ApplyAttachmentsCode(Base.GetCurrentAttachmentsCode() & ~code, true);
+            this.Base.ApplyAttachmentsCode(this.Base.GetCurrentAttachmentsCode() & ~code, true);
 
             // TODO Not finish
             /*
@@ -465,14 +465,14 @@ namespace Exiled.API.Features.Items
         /// <param name="attachmentSlot">The <see cref="AttachmentSlot"/> to remove.</param>
         public void RemoveAttachment(AttachmentSlot attachmentSlot)
         {
-            Attachment firearmAttachment = Attachments.FirstOrDefault(att => (att.Slot == attachmentSlot) && att.IsEnabled);
+            Attachment firearmAttachment = this.Attachments.FirstOrDefault(att => (att.Slot == attachmentSlot) && att.IsEnabled);
 
             if (firearmAttachment is null)
                 return;
 
-            uint code = AvailableAttachments[FirearmType].FirstOrDefault(attId => attId == firearmAttachment).Code;
+            uint code = AvailableAttachments[this.FirearmType].FirstOrDefault(attId => attId == firearmAttachment).Code;
 
-            Base.ApplyAttachmentsCode(Base.GetCurrentAttachmentsCode() & ~code, true);
+            this.Base.ApplyAttachmentsCode(this.Base.GetCurrentAttachmentsCode() & ~code, true);
 
             // TODO Not finish
             /*
@@ -489,7 +489,7 @@ namespace Exiled.API.Features.Items
         public void RemoveAttachment(IEnumerable<AttachmentIdentifier> identifiers)
         {
             foreach (AttachmentIdentifier identifier in identifiers)
-                RemoveAttachment(identifier);
+                this.RemoveAttachment(identifier);
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace Exiled.API.Features.Items
         public void RemoveAttachment(IEnumerable<AttachmentName> attachmentNames)
         {
             foreach (AttachmentName attachmentName in attachmentNames)
-                RemoveAttachment(attachmentName);
+                this.RemoveAttachment(attachmentName);
         }
 
         /// <summary>
@@ -509,20 +509,20 @@ namespace Exiled.API.Features.Items
         public void RemoveAttachment(IEnumerable<AttachmentSlot> attachmentSlots)
         {
             foreach (AttachmentSlot attachmentSlot in attachmentSlots)
-                RemoveAttachment(attachmentSlot);
+                this.RemoveAttachment(attachmentSlot);
         }
 
         /// <summary>
         /// Removes all attachments from the firearm.
         /// </summary>
-        public void ClearAttachments() => Base.ApplyAttachmentsCode(BaseCode, true);
+        public void ClearAttachments() => this.Base.ApplyAttachmentsCode(this.BaseCode, true);
 
         /// <summary>
         /// Gets a <see cref="Attachment"/> of the specified <see cref="AttachmentIdentifier"/>.
         /// </summary>
         /// <param name="identifier">The <see cref="AttachmentIdentifier"/> to check.</param>
         /// <returns>The corresponding <see cref="Attachment"/>.</returns>
-        public Attachment GetAttachment(AttachmentIdentifier identifier) => Attachments.FirstOrDefault(attachment => attachment == identifier);
+        public Attachment GetAttachment(AttachmentIdentifier identifier) => this.Attachments.FirstOrDefault(attachment => attachment == identifier);
 
         /// <summary>
         /// Tries to get a <see cref="Attachment"/> of the specified <see cref="AttachmentIdentifier"/>.
@@ -534,10 +534,10 @@ namespace Exiled.API.Features.Items
         {
             firearmAttachment = default;
 
-            if (!Attachments.Any(attachment => attachment.Name == identifier.Name))
+            if (!this.Attachments.Any(attachment => attachment.Name == identifier.Name))
                 return false;
 
-            firearmAttachment = GetAttachment(identifier);
+            firearmAttachment = this.GetAttachment(identifier);
 
             return true;
         }
@@ -552,10 +552,10 @@ namespace Exiled.API.Features.Items
         {
             firearmAttachment = default;
 
-            if (Attachments.All(attachment => attachment.Name != attachmentName))
+            if (this.Attachments.All(attachment => attachment.Name != attachmentName))
                 return false;
 
-            firearmAttachment = GetAttachment(AttachmentIdentifier.Get(FirearmType, attachmentName));
+            firearmAttachment = this.GetAttachment(AttachmentIdentifier.Get(this.FirearmType, attachmentName));
 
             return true;
         }
@@ -583,7 +583,7 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="player">The <see cref="Player"/> of which must be added.</param>
         /// <param name="preference">The <see cref="KeyValuePair{TKey, TValue}"/> of <see cref="Enums.FirearmType"/> and <see cref="AttachmentIdentifier"/>[] to add.</param>
-        public void AddPreference(Player player, KeyValuePair<FirearmType, AttachmentIdentifier[]> preference) => AddPreference(player, preference.Key, preference.Value);
+        public void AddPreference(Player player, KeyValuePair<FirearmType, AttachmentIdentifier[]> preference) => this.AddPreference(player, preference.Key, preference.Value);
 
         /// <summary>
         /// Adds or replaces an existing preference to the <see cref="PlayerPreferences"/>.
@@ -593,7 +593,7 @@ namespace Exiled.API.Features.Items
         public void AddPreference(Player player, Dictionary<FirearmType, AttachmentIdentifier[]> preference)
         {
             foreach (KeyValuePair<FirearmType, AttachmentIdentifier[]> kvp in preference)
-                AddPreference(player, kvp);
+                this.AddPreference(player, kvp);
         }
 
         /// <summary>
@@ -605,7 +605,7 @@ namespace Exiled.API.Features.Items
         public void AddPreference(IEnumerable<Player> players, FirearmType type, AttachmentIdentifier[] attachments)
         {
             foreach (Player player in players)
-                AddPreference(player, type, attachments);
+                this.AddPreference(player, type, attachments);
         }
 
         /// <summary>
@@ -616,7 +616,7 @@ namespace Exiled.API.Features.Items
         public void AddPreference(IEnumerable<Player> players, KeyValuePair<FirearmType, AttachmentIdentifier[]> preference)
         {
             foreach (Player player in players)
-                AddPreference(player, preference.Key, preference.Value);
+                this.AddPreference(player, preference.Key, preference.Value);
         }
 
         /// <summary>
@@ -627,7 +627,7 @@ namespace Exiled.API.Features.Items
         public void AddPreference(IEnumerable<Player> players, Dictionary<FirearmType, AttachmentIdentifier[]> preference)
         {
             foreach ((Player player, KeyValuePair<FirearmType, AttachmentIdentifier[]> kvp) in players.SelectMany(player => preference.Select(kvp => (player, kvp))))
-                AddPreference(player, kvp);
+                this.AddPreference(player, kvp);
         }
 
         /// <summary>
@@ -655,7 +655,7 @@ namespace Exiled.API.Features.Items
         public void RemovePreference(IEnumerable<Player> players, FirearmType type)
         {
             foreach (Player player in players)
-                RemovePreference(player, type);
+                this.RemovePreference(player, type);
         }
 
         /// <summary>
@@ -666,7 +666,7 @@ namespace Exiled.API.Features.Items
         public void RemovePreference(Player player, IEnumerable<FirearmType> types)
         {
             foreach (FirearmType itemType in types)
-                RemovePreference(player, itemType);
+                this.RemovePreference(player, itemType);
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace Exiled.API.Features.Items
         public void RemovePreference(IEnumerable<Player> players, IEnumerable<FirearmType> types)
         {
             foreach ((Player player, FirearmType firearmType) in players.SelectMany(player => types.Select(itemType => (player, itemType))))
-                RemovePreference(player, firearmType);
+                this.RemovePreference(player, firearmType);
         }
 
         /// <summary>
@@ -700,7 +700,7 @@ namespace Exiled.API.Features.Items
         public void ClearPreferences(IEnumerable<Player> players)
         {
             foreach (Player player in players)
-                ClearPreferences(player);
+                this.ClearPreferences(player);
         }
 
         /// <summary>
@@ -709,7 +709,7 @@ namespace Exiled.API.Features.Items
         public void ClearPreferences()
         {
             foreach (Player player in Player.List)
-                ClearPreferences(player);
+                this.ClearPreferences(player);
         }
 
         /// <summary>
@@ -720,11 +720,11 @@ namespace Exiled.API.Features.Items
         /// </remarks>
         public void Reload()
         {
-            if (AnimatorReloaderModule == null)
+            if (this.AnimatorReloaderModule == null)
                 return;
 
-            AnimatorReloaderModule.IsReloading = true;
-            AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Reload);
+            this.AnimatorReloaderModule.IsReloading = true;
+            this.AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Reload);
         }
 
         /// <summary>
@@ -733,10 +733,10 @@ namespace Exiled.API.Features.Items
         /// <returns><see langword="true"/> if the firearm was successfully reloaded. Otherwise, <see langword="false"/>.</returns>
         public bool TryReload()
         {
-            if (AnimatorReloaderModule == null)
+            if (this.AnimatorReloaderModule == null)
                 return false;
 
-            return AnimatorReloaderModule.ServerTryReload();
+            return this.AnimatorReloaderModule.ServerTryReload();
         }
 
         /// <summary>
@@ -745,10 +745,10 @@ namespace Exiled.API.Features.Items
         /// <returns><see langword="true"/> if the firearm was successfully unload. Otherwise, <see langword="false"/>.</returns>
         public bool TryUnload()
         {
-            if (AnimatorReloaderModule == null)
+            if (this.AnimatorReloaderModule == null)
                 return false;
 
-            return AnimatorReloaderModule.ServerTryUnload();
+            return this.AnimatorReloaderModule.ServerTryUnload();
         }
 
         /// <summary>
@@ -759,11 +759,11 @@ namespace Exiled.API.Features.Items
         /// </remarks>
         public void Unload()
         {
-            if (AnimatorReloaderModule == null)
+            if (this.AnimatorReloaderModule == null)
                 return;
 
-            AnimatorReloaderModule.IsUnloading = true;
-            AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Unload);
+            this.AnimatorReloaderModule.IsUnloading = true;
+            this.AnimatorReloaderModule.SendRpcHeaderWithRandomByte(ReloaderMessageHeader.Unload);
         }
 
         /// <summary>
@@ -772,7 +772,7 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Firearm"/> object. </returns>
         public override Item Clone()
         {
-            Firearm cloneableItem = new(Type)
+            Firearm cloneableItem = new(this.Type)
             {
             };
 
@@ -784,7 +784,7 @@ namespace Exiled.API.Features.Items
                 cloneableItem.Recoil = Recoil;
             }*/
 
-            cloneableItem.AddAttachment(AttachmentIdentifiers);
+            cloneableItem.AddAttachment(this.AttachmentIdentifiers);
 
             return cloneableItem;
         }
@@ -796,10 +796,10 @@ namespace Exiled.API.Features.Items
         /// <param name="newOwner">new <see cref="Firearm"/> owner.</param>
         internal override void ChangeOwner(Player oldOwner, Player newOwner)
         {
-            Base.InstantiationStatus = newOwner == Server.Host ? AutosyncInstantiationStatus.SimulatedInstance : AutosyncInstantiationStatus.InventoryInstance;
-            Base.Owner = newOwner.ReferenceHub;
-            Base._footprintCacheSet = false;
-            foreach (ModuleBase module in Base.Modules)
+            this.Base.InstantiationStatus = newOwner == Server.Host ? AutosyncInstantiationStatus.SimulatedInstance : AutosyncInstantiationStatus.InventoryInstance;
+            this.Base.Owner = newOwner.ReferenceHub;
+            this.Base._footprintCacheSet = false;
+            foreach (ModuleBase module in this.Base.Modules)
             {
                 module.OnAdded();
             }
@@ -812,8 +812,8 @@ namespace Exiled.API.Features.Items
 
             if (pickup is FirearmPickup firearmPickup)
             {
-                PrimaryMagazine.ConstantMaxAmmo = firearmPickup.MaxAmmo;
-                AmmoDrain = firearmPickup.AmmoDrain;
+                this.PrimaryMagazine.ConstantMaxAmmo = firearmPickup.MaxAmmo;
+                this.AmmoDrain = firearmPickup.AmmoDrain;
             }
         }
     }

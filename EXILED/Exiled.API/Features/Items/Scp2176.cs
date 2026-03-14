@@ -53,10 +53,10 @@ namespace Exiled.API.Features.Items
         public Scp2176Projectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {FuseTime}");
+            Log.Debug($"Spawning active grenade: {this.FuseTime}");
 #endif
 
-            Projectile projectile = CreateProjectile(position, Quaternion.identity);
+            Projectile projectile = this.CreateProjectile(position, Quaternion.identity);
 
             projectile.PreviousOwner = owner;
 
@@ -71,23 +71,23 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Scp2176"/> object. </returns>
         public override Item Clone() => new Scp2176()
         {
-            FuseTime = FuseTime,
-            PinPullTime = PinPullTime,
-            Repickable = Repickable,
+            FuseTime = this.FuseTime,
+            PinPullTime = this.PinPullTime,
+            Repickable = this.Repickable,
         };
 
         /// <summary>
         /// Returns the ExplosiveGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing ExplosiveGrenade-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
 
         /// <inheritdoc/>
         protected override void InitializeProperties(ThrowableItem throwable)
         {
             base.InitializeProperties(throwable);
             if (throwable.Projectile is InventorySystem.Items.ThrowableProjectiles.Scp2176Projectile projectile)
-                DropSound = projectile._playedDropSound;
+                this.DropSound = projectile._playedDropSound;
         }
     }
 }

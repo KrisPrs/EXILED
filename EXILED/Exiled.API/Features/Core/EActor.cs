@@ -38,12 +38,12 @@ namespace Exiled.API.Features.Core
         protected EActor()
             : base()
         {
-            IsEditable = true;
-            CanEverTick = true;
-            FixedTickRate = DefaultFixedTickRate;
-            PostInitialize();
-            Timing.CallDelayed(FixedTickRate, OnBeginPlay);
-            Timing.CallDelayed(FixedTickRate * 2, () => serverTick = Timing.RunCoroutine(ServerTick()));
+            this.IsEditable = true;
+            this.CanEverTick = true;
+            this.FixedTickRate = DefaultFixedTickRate;
+            this.PostInitialize();
+            Timing.CallDelayed(this.FixedTickRate, this.OnBeginPlay);
+            Timing.CallDelayed(this.FixedTickRate * 2, () => this.serverTick = Timing.RunCoroutine(this.ServerTick()));
         }
 
         /// <summary>
@@ -54,24 +54,24 @@ namespace Exiled.API.Features.Core
             : this()
         {
             if (gameObject)
-                Base = gameObject;
+                this.Base = gameObject;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<EActor> ComponentsInChildren => componentsInChildren;
+        public IReadOnlyCollection<EActor> ComponentsInChildren => this.componentsInChildren;
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets or sets the <see cref="Vector3">position</see>.
         /// </summary>
         public virtual Vector3 Position
         {
-            get => Transform.position;
-            set => Transform.position = value;
+            get => this.Transform.position;
+            set => this.Transform.position = value;
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace Exiled.API.Features.Core
         /// </summary>
         public virtual Quaternion Rotation
         {
-            get => Transform.rotation;
-            set => Transform.rotation = value;
+            get => this.Transform.rotation;
+            set => this.Transform.rotation = value;
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace Exiled.API.Features.Core
         /// </summary>
         public virtual Vector3 Scale
         {
-            get => Transform.localScale;
-            set => Transform.localScale = value;
+            get => this.Transform.localScale;
+            set => this.Transform.localScale = value;
         }
 
         /// <summary>
@@ -100,18 +100,18 @@ namespace Exiled.API.Features.Core
             get;
             set
             {
-                if (!IsEditable)
+                if (!this.IsEditable)
                     return;
 
                 field = value;
 
                 if (field)
                 {
-                    Timing.ResumeCoroutines(serverTick);
+                    Timing.ResumeCoroutines(this.serverTick);
                     return;
                 }
 
-                Timing.PauseCoroutines(serverTick);
+                Timing.PauseCoroutines(this.serverTick);
             }
         }
 
@@ -123,7 +123,7 @@ namespace Exiled.API.Features.Core
             get;
             set
             {
-                if (!IsEditable)
+                if (!this.IsEditable)
                     return;
 
                 field = value;
@@ -153,45 +153,45 @@ namespace Exiled.API.Features.Core
         public T AddComponent<T>(string name = "")
             where T : EActor
         {
-            T component = CreateDefaultSubobject<T>(Base, string.IsNullOrEmpty(name) ? $"{GetType().Name}-Component#{ComponentsInChildren.Count}" : name).Cast<T>();
+            T component = CreateDefaultSubobject<T>(this.Base, string.IsNullOrEmpty(name) ? $"{this.GetType().Name}-Component#{this.ComponentsInChildren.Count}" : name).Cast<T>();
             if (component is null)
                 return null;
 
-            componentsInChildren.Add(component);
+            this.componentsInChildren.Add(component);
             return component.Cast<T>();
         }
 
         /// <inheritdoc/>
         public EActor AddComponent(Type type, string name = "")
         {
-            EActor component = CreateDefaultSubobject(type, Base, string.IsNullOrEmpty(name) ? $"{GetType().Name}-Component#{ComponentsInChildren.Count}" : name).Cast<EActor>();
+            EActor component = CreateDefaultSubobject(type, this.Base, string.IsNullOrEmpty(name) ? $"{this.GetType().Name}-Component#{this.ComponentsInChildren.Count}" : name).Cast<EActor>();
             if (component is null)
                 return null;
 
-            componentsInChildren.Add(component);
+            this.componentsInChildren.Add(component);
             return component;
         }
 
         /// <inheritdoc/>
         public T AddComponent<T>(Type type, string name = "")
-            where T : EActor => ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType()).Cast<T>();
+            where T : EActor => this.ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType()).Cast<T>();
 
         /// <inheritdoc/>
-        public EActor GetComponent(Type type) => ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType());
+        public EActor GetComponent(Type type) => this.ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType());
 
         /// <inheritdoc/>
         public T GetComponent<T>()
-            where T : EActor => ComponentsInChildren.FirstOrDefault(comp => typeof(T) == comp.GetType()).Cast<T>();
+            where T : EActor => this.ComponentsInChildren.FirstOrDefault(comp => typeof(T) == comp.GetType()).Cast<T>();
 
         /// <inheritdoc/>
         public T GetComponent<T>(Type type)
-            where T : EActor => ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType()).Cast<T>();
+            where T : EActor => this.ComponentsInChildren.FirstOrDefault(comp => type == comp.GetType()).Cast<T>();
 
         /// <inheritdoc/>
         public bool TryGetComponent<T>(Type type, out T component)
             where T : EActor
         {
-            EActor actor = GetComponent(type);
+            EActor actor = this.GetComponent(type);
 
             if (actor.Cast(out component))
                 component = actor.Cast<T>();
@@ -205,8 +205,8 @@ namespace Exiled.API.Features.Core
         {
             component = null;
 
-            if (HasComponent<T>())
-                component = GetComponent<T>().Cast<T>();
+            if (this.HasComponent<T>())
+                component = this.GetComponent<T>().Cast<T>();
 
             return component is not null;
         }
@@ -216,21 +216,21 @@ namespace Exiled.API.Features.Core
         {
             component = null;
 
-            if (HasComponent(type))
-                component = GetComponent(type);
+            if (this.HasComponent(type))
+                component = this.GetComponent(type);
 
             return component is not null;
         }
 
         /// <inheritdoc/>
         public bool HasComponent<T>(bool depthInheritance = false) => depthInheritance
-            ? ComponentsInChildren.Any(comp => typeof(T).IsSubclassOf(comp.GetType()))
-            : ComponentsInChildren.Any(comp => typeof(T) == comp.GetType());
+            ? this.ComponentsInChildren.Any(comp => typeof(T).IsSubclassOf(comp.GetType()))
+            : this.ComponentsInChildren.Any(comp => typeof(T) == comp.GetType());
 
         /// <inheritdoc/>
         public bool HasComponent(Type type, bool depthInheritance = false) => depthInheritance
-            ? ComponentsInChildren.Any(comp => type.IsSubclassOf(comp.GetType()))
-            : ComponentsInChildren.Any(comp => type == comp.GetType());
+            ? this.ComponentsInChildren.Any(comp => type.IsSubclassOf(comp.GetType()))
+            : this.ComponentsInChildren.Any(comp => type == comp.GetType());
 
         /// <summary>
         /// Fired after the <see cref="EActor"/> instance is created.
@@ -242,10 +242,7 @@ namespace Exiled.API.Features.Core
         /// <summary>
         /// Fired after the first fixed tick.
         /// </summary>
-        protected virtual void OnBeginPlay()
-        {
-            SubscribeEvents();
-        }
+        protected virtual void OnBeginPlay() => this.SubscribeEvents();
 
         /// <summary>
         /// Fired every tick.
@@ -257,45 +254,36 @@ namespace Exiled.API.Features.Core
         /// <summary>
         /// Fired before the current <see cref="EActor"/> instance is destroyed.
         /// </summary>
-        protected virtual void OnEndPlay()
-        {
-            UnsubscribeEvents();
-        }
+        protected virtual void OnEndPlay() => this.UnsubscribeEvents();
 
         /// <summary>
         /// Subscribes all the events.
         /// </summary>
-        protected virtual void SubscribeEvents()
-        {
-            StaticActor.Get<DynamicEventManager>().BindAllFromTypeInstance(this);
-        }
+        protected virtual void SubscribeEvents() => StaticActor.Get<DynamicEventManager>().BindAllFromTypeInstance(this);
 
         /// <summary>
         /// Unsubscribes all the events.
         /// </summary>
-        protected virtual void UnsubscribeEvents()
-        {
-            StaticActor.Get<DynamicEventManager>().UnbindAllFromTypeInstance(this);
-        }
+        protected virtual void UnsubscribeEvents() => StaticActor.Get<DynamicEventManager>().UnbindAllFromTypeInstance(this);
 
         /// <inheritdoc/>
         protected override void OnBeginDestroy()
         {
             base.OnBeginDestroy();
 
-            HashSetPool<EActor>.Pool.Return(componentsInChildren);
-            Timing.KillCoroutines(serverTick);
+            HashSetPool<EActor>.Pool.Return(this.componentsInChildren);
+            Timing.KillCoroutines(this.serverTick);
 
-            OnEndPlay();
+            this.OnEndPlay();
         }
 
         private IEnumerator<float> ServerTick()
         {
             while (true)
             {
-                yield return Timing.WaitForSeconds(FixedTickRate);
+                yield return Timing.WaitForSeconds(this.FixedTickRate);
 
-                Tick();
+                this.Tick();
             }
         }
     }

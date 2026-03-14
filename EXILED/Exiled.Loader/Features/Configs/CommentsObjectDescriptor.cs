@@ -27,7 +27,7 @@ namespace Exiled.Loader.Features.Configs
         public CommentsObjectDescriptor(IObjectDescriptor innerDescriptor, string comment)
         {
             this.innerDescriptor = innerDescriptor;
-            Comment = comment;
+            this.Comment = comment;
         }
 
         /// <summary>
@@ -36,15 +36,15 @@ namespace Exiled.Loader.Features.Configs
         public string Comment { get; private set; }
 
         /// <inheritdoc cref="IObjectDescriptor" />
-        public object Value => innerDescriptor.Value;
+        public object Value => this.innerDescriptor.Value;
 
         /// <inheritdoc cref="IObjectDescriptor" />
-        public Type Type => innerDescriptor.Type;
+        public Type Type => this.innerDescriptor.Type;
 
         /// <inheritdoc cref="IObjectDescriptor" />
-        public Type StaticType => innerDescriptor.StaticType;
+        public Type StaticType => this.innerDescriptor.StaticType;
 
         /// <inheritdoc cref="IObjectDescriptor" />
-        public ScalarStyle ScalarStyle => innerDescriptor.ScalarStyle;
+        public ScalarStyle ScalarStyle => this.innerDescriptor.ScalarStyle;
     }
 }

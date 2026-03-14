@@ -25,19 +25,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseScp330"/> class.</param>
         internal Scp330Pickup(BaseScp330 pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp330Pickup"/> class.
         /// </summary>
         internal Scp330Pickup()
-            : base(ItemType.SCP330)
-        {
-            Base = (BaseScp330)((Pickup)this).Base;
-        }
+            : base(ItemType.SCP330) =>
+            this.Base = (BaseScp330)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseScp330"/> that this class is encapsulating.
@@ -49,8 +45,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public CandyKindID ExposedCandy
         {
-            get => Base.NetworkExposedCandy;
-            set => Base.NetworkExposedCandy = value;
+            get => this.Base.NetworkExposedCandy;
+            set => this.Base.NetworkExposedCandy = value;
         }
 
         /// <summary>
@@ -58,14 +54,14 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public List<CandyKindID> Candies
         {
-            get => Base.StoredCandies;
-            set => Base.StoredCandies = value;
+            get => this.Base.StoredCandies;
+            set => this.Base.StoredCandies = value;
         }
 
         /// <summary>
         /// Returns the Scp330Pickup in a human readable format.
         /// </summary>
         /// <returns>A string containing Scp330Pickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{ExposedCandy}| -{Candies}-";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.ExposedCandy}| -{this.Candies}-";
     }
 }

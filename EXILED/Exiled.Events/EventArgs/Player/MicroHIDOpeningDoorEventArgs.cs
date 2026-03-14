@@ -27,16 +27,16 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="door"><inheritdoc cref="Door"/></param>
         public MicroHIDOpeningDoorEventArgs(MicroHIDItem item, DoorVariant door, bool isAllowed = true)
         {
-            MicroHID = Item.Get<MicroHid>(item);
-            Player = MicroHID.Owner;
-            IsAllowed = !isAllowed;
-            Door = Door.Get(door);
+            this.MicroHID = Item.Get<MicroHid>(item);
+            this.Player = this.MicroHID.Owner;
+            this.IsAllowed = !isAllowed;
+            this.Door = Door.Get(door);
         }
 
         /// <summary>
         /// Gets the item.
         /// </summary>
-        public Item Item => MicroHID;
+        public Item Item => this.MicroHID;
 
         /// <summary>
         /// Gets the player in owner of the item.

@@ -43,7 +43,7 @@ namespace Exiled.CustomItems.API.Features
             set
             {
                 if (!value.IsWeapon(false) && value != ItemType.None)
-                    throw new ArgumentOutOfRangeException($"{nameof(Type)}", value, "Invalid weapon type.");
+                    throw new ArgumentOutOfRangeException($"{nameof(this.Type)}", value, "Invalid weapon type.");
 
                 base.Type = value;
             }
@@ -151,11 +151,11 @@ namespace Exiled.CustomItems.API.Features
 
             if (item is Firearm firearm)
             {
-                if (!Attachments.IsEmpty())
-                    firearm.AddAttachment(Attachments);
+                if (!this.Attachments.IsEmpty())
+                    firearm.AddAttachment(this.Attachments);
 
-                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = ClipSize;
-                firearm.AmmoDrain = AmmoUsage;
+                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = this.ClipSize;
+                firearm.AmmoDrain = this.AmmoUsage;
             }
 
             return item;
@@ -164,12 +164,12 @@ namespace Exiled.CustomItems.API.Features
         /// <inheritdoc />
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ReloadingWeapon += OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting += OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot += OnInternalShot;
-            Exiled.Events.Handlers.Player.Hurting += OnInternalHurting;
-            Exiled.Events.Handlers.Player.UnloadingWeapon += OnInternalUnloading;
-            Exiled.Events.Handlers.Item.ChangingAttachments += OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.ReloadingWeapon += this.OnInternalReloading;
+            Exiled.Events.Handlers.Player.Shooting += this.OnInternalShooting;
+            Exiled.Events.Handlers.Player.Shot += this.OnInternalShot;
+            Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
+            Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
+            Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
 
             base.SubscribeEvents();
         }
@@ -177,12 +177,12 @@ namespace Exiled.CustomItems.API.Features
         /// <inheritdoc />
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ReloadingWeapon -= OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting -= OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot -= OnInternalShot;
-            Exiled.Events.Handlers.Player.Hurting -= OnInternalHurting;
-            Exiled.Events.Handlers.Player.UnloadingWeapon -= OnInternalUnloading;
-            Exiled.Events.Handlers.Item.ChangingAttachments -= OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.ReloadingWeapon -= this.OnInternalReloading;
+            Exiled.Events.Handlers.Player.Shooting -= this.OnInternalShooting;
+            Exiled.Events.Handlers.Player.Shot -= this.OnInternalShot;
+            Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
+            Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
+            Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
 
             base.UnsubscribeEvents();
         }
@@ -237,66 +237,66 @@ namespace Exiled.CustomItems.API.Features
 
         private void OnInternalChangingAttachments(ChangingAttachmentsEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
+            if (!this.Check(ev.Player.CurrentItem))
                 return;
 
             IEnumerable<AttachmentIdentifier> newAttachments = ev.NewAttachmentIdentifiers.Except(ev.CurrentAttachmentIdentifiers);
-            if (!AllowAttachmentsChange || newAttachments.Any(x => BannedAttachments.Contains(x.Name)))
+            if (!this.AllowAttachmentsChange || newAttachments.Any(x => this.BannedAttachments.Contains(x.Name)))
                 ev.IsAllowed = false;
         }
 
         private void OnInternalReloading(ReloadingWeaponEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
+            if (!this.Check(ev.Player.CurrentItem))
                 return;
 
-            if (cooldownedPlayers.Contains(ev.Player))
+            if (this.cooldownedPlayers.Contains(ev.Player))
             {
                 ev.IsAllowed = false;
-                ev.Player.ShowHint(string.Format(WeaponNotReady, FireCooldown));
+                ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
                 return;
             }
 
-            Log.Debug($"{nameof(Name)}.{nameof(OnInternalReloading)}: Reloading weapon. Calling external reload event..");
-            OnReloading(ev);
+            Log.Debug($"{nameof(this.Name)}.{nameof(this.OnInternalReloading)}: Reloading weapon. Calling external reload event..");
+            this.OnReloading(ev);
 
-            Log.Debug($"{nameof(Name)}.{nameof(OnInternalReloading)}: External event ended. {ev.IsAllowed}");
+            Log.Debug($"{nameof(this.Name)}.{nameof(this.OnInternalReloading)}: External event ended. {ev.IsAllowed}");
         }
 
         private void OnInternalShooting(ShootingEventArgs ev)
         {
-            if (!Check(ev.Player))
+            if (!this.Check(ev.Player))
                 return;
 
-            if (cooldownedPlayers.Contains(ev.Player))
+            if (this.cooldownedPlayers.Contains(ev.Player))
             {
                 ev.IsAllowed = false;
-                ev.Player.ShowHint(string.Format(WeaponNotReady, FireCooldown));
-                Log.Debug($"Disallowed shot from cooldowned on {Name} player {ev.Player.Nickname}");
+                ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
+                Log.Debug($"Disallowed shot from cooldowned on {this.Name} player {ev.Player.Nickname}");
                 return;
             }
 
-            if (!AllowDoubleShot)
-                cooldownedPlayers.Add(ev.Player);
+            if (!this.AllowDoubleShot)
+                this.cooldownedPlayers.Add(ev.Player);
 
-            Timing.CallDelayed(FireCooldown, () =>
+            Timing.CallDelayed(this.FireCooldown, () =>
             {
-                cooldownedPlayers.Remove(ev.Player);
-                Log.Debug($"Cooldown of {Name} removed from player {ev.Player.Nickname}");
+                this.cooldownedPlayers.Remove(ev.Player);
+                Log.Debug($"Cooldown of {this.Name} removed from player {ev.Player.Nickname}");
             });
 
-            OnShooting(ev);
+            this.OnShooting(ev);
         }
 
         private void OnInternalShot(ShotEventArgs ev)
         {
             Item curItem = ev.Player.CurrentItem;
-            if (!Check(curItem))
+            if (!this.Check(curItem))
                 return;
 
-            OnShot(ev);
-            if (ForceResetWeaponOnShot)
-                Timing.RunCoroutine(ResetWeapon(ev.Player));
+            this.OnShot(ev);
+            if (this.ForceResetWeaponOnShot)
+                Timing.RunCoroutine(this.ResetWeapon(ev.Player));
         }
 
         private IEnumerator<float> ResetWeapon(Player player)
@@ -310,46 +310,46 @@ namespace Exiled.CustomItems.API.Features
 
         private void OnInternalHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker is null || ev.Player is null || ev.Attacker == ev.Player || !Check(ev.Attacker.CurrentItem) || ev.DamageHandler == null)
+            if (ev.Attacker is null || ev.Player is null || ev.Attacker == ev.Player || !this.Check(ev.Attacker.CurrentItem) || ev.DamageHandler == null)
                 return;
 
             if (!ev.DamageHandler.CustomBase.BaseIs(out FirearmDamageHandler firearmDamageHandler))
             {
-                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: Handler not firearm");
+                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Handler not firearm");
                 return;
             }
 
-            if (!Check(firearmDamageHandler.Item))
+            if (!this.Check(firearmDamageHandler.Item))
             {
-                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: type != type");
+                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: type != type");
                 return;
             }
 
-            ev.Amount = Damage;
-            if (ev.Player.IsHuman && ArmorAndZoneDamageMultipliers.TryGetValue(ev.Player.CurrentArmor?.Type ?? ItemType.None, out Dictionary<HitboxType, float> dic) &&
+            ev.Amount = this.Damage;
+            if (ev.Player.IsHuman && this.ArmorAndZoneDamageMultipliers.TryGetValue(ev.Player.CurrentArmor?.Type ?? ItemType.None, out Dictionary<HitboxType, float> dic) &&
                 dic.TryGetValue(firearmDamageHandler.Hitbox, out float multiplier))
             {
-                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: Found damage muptiplier for armor/hitbox {multiplier}");
+                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Found damage muptiplier for armor/hitbox {multiplier}");
                 ev.Amount *= multiplier;
             }
 
-            if (RoleDamageMultipliers.TryGetValue(ev.Player.Role.Type, out multiplier))
+            if (this.RoleDamageMultipliers.TryGetValue(ev.Player.Role.Type, out multiplier))
             {
-                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: Found damage muptiplier for target role: {multiplier}");
+                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Found damage muptiplier for target role: {multiplier}");
                 ev.Amount *= multiplier;
             }
 
-            OnHurting(ev);
+            this.OnHurting(ev);
         }
 
         private void OnInternalUnloading(UnloadingWeaponEventArgs ev)
         {
-            if (!Check(ev.Firearm))
+            if (!this.Check(ev.Firearm))
                 return;
 
-            ev.IsAllowed = CanUnload;
+            ev.IsAllowed = this.CanUnload;
 
-            OnUnloading(ev);
+            this.OnUnloading(ev);
         }
     }
 }

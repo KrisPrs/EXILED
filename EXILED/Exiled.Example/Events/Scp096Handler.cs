@@ -16,9 +16,6 @@ namespace Exiled.Example.Events
     internal sealed class Scp096Handler
     {
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp096.OnAddingTarget(AddingTargetEventArgs)"/>
-        public void OnAddingTarget(AddingTargetEventArgs ev)
-        {
-            Log.Info($"{ev.Target.Nickname} is being added to {ev.Player.Nickname} targets!");
-        }
+        public void OnAddingTarget(AddingTargetEventArgs ev) => Log.Info($"{ev.Target.Nickname} is being added to {ev.Player.Nickname} targets!");
     }
 }

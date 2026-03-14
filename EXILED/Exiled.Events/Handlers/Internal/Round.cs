@@ -153,11 +153,9 @@ namespace Exiled.Events.Handlers.Internal
         }
 
         /// <inheritdoc cref="Handlers.Warhead.OnDetonated()"/>
-        public static void OnWarheadDetonated()
-        {
+        public static void OnWarheadDetonated() =>
             // fix for black candy
             CandyBlack.Outcomes.RemoveAll(outcome => outcome is TeleportOutcome);
-        }
 
         private static void GenerateAttachments()
         {

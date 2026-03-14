@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Server
         /// <param name="isAllowed">The value indicating whether the unit name can be added.</param>
         public AddingUnitNameEventArgs(UnitNamingRule unitNamingRule, bool isAllowed = true)
         {
-            UnitNamingRule = unitNamingRule;
-            IsAllowed = isAllowed;
+            this.UnitNamingRule = unitNamingRule;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

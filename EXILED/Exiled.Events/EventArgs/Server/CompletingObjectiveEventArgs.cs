@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Server
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public CompletingObjectiveEventArgs(FactionObjectiveBase objective, bool isAllowed = true)
         {
-            Objective = Objective.Get(objective);
-            IsAllowed = isAllowed;
+            this.Objective = Objective.Get(objective);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

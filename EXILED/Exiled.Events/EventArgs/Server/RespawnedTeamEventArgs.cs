@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Server
         /// <param name="wave"><inheritdoc cref="Wave"/></param>
         public RespawnedTeamEventArgs(SpawnableWaveBase wave, IEnumerable<ReferenceHub> hubs)
         {
-            Players = hubs.Select(Player.Get);
-            Wave = wave;
+            this.Players = hubs.Select(Player.Get);
+            this.Wave = wave;
         }
 
         /// <summary>

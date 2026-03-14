@@ -35,10 +35,8 @@ namespace Exiled.CustomItems.API.EventArgs
         /// <param name="target"><inheritdoc cref="HandcuffingEventArgs.Target"/></param>
         /// <param name="isAllowed"><inheritdoc cref="HandcuffingEventArgs.IsAllowed"/></param>
         public OwnerHandcuffingEventArgs(Item item, Player cuffer, Player target, bool isAllowed = true)
-            : base(cuffer, target, isAllowed)
-        {
-            Item = item;
-        }
+            : base(cuffer, target, isAllowed) =>
+            this.Item = item;
 
         /// <summary>
         /// Gets the item in the player's inventory.

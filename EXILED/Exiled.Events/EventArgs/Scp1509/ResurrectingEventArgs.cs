@@ -28,12 +28,12 @@ namespace Exiled.Events.EventArgs.Scp1509
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public ResurrectingEventArgs(Player target, Player victim, RoleTypeId newRole, Scp1509Item scp1509, bool isAllowed = true)
         {
-            Target = target;
-            Victim = victim;
-            NewRole = newRole;
-            Scp1509 = Item.Get<Scp1509>(scp1509);
-            Player = Scp1509.Owner;
-            IsAllowed = isAllowed;
+            this.Target = target;
+            this.Victim = victim;
+            this.NewRole = newRole;
+            this.Scp1509 = Item.Get<Scp1509>(scp1509);
+            this.Player = this.Scp1509.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Exiled.Events.EventArgs.Scp1509
         public Scp1509 Scp1509 { get; }
 
         /// <inheritdoc/>
-        public Item Item => Scp1509;
+        public Item Item => this.Scp1509;
 
         /// <inheritdoc/>
         public bool IsAllowed { get; set; }

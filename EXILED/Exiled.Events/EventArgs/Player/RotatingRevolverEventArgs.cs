@@ -34,9 +34,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public RotatingRevolverEventArgs(FirearmBase firearm, int rotations)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
-            Rotations = rotations;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
+            this.Rotations = rotations;
         }
 
         /// <summary>
@@ -50,13 +50,13 @@ namespace Exiled.Events.EventArgs.Player
         /// <remarks>
         /// checks rotations and chambers counts equality by mod of chambers counts. <code>Rotations % Chambers.Length == 0</code>
         /// </remarks>
-        public bool HasEffect => Firearm.PrimaryMagazine.MaxAmmo % Rotations == 0;
+        public bool HasEffect => this.Firearm.PrimaryMagazine.MaxAmmo % this.Rotations == 0;
 
         /// <inheritdoc/>
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <inheritdoc/>
         public Player Player { get; }

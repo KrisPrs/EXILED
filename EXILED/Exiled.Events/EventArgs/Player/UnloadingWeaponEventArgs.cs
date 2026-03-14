@@ -28,9 +28,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UnloadingWeaponEventArgs(InventorySystem.Items.Firearms.Firearm firearm, bool isAllowed)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
-            IsAllowed = isAllowed;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the player who's unloading the weapon.

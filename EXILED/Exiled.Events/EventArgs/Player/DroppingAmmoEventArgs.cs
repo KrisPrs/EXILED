@@ -36,11 +36,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DroppingAmmoEventArgs(Player player, ItemType itemType, ushort amount, bool isAllowed = true)
         {
-            Player = player;
-            ItemType = itemType;
-            AmmoType = ItemExtensions.GetAmmoType(itemType);
-            Amount = amount;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.ItemType = itemType;
+            this.AmmoType = ItemExtensions.GetAmmoType(itemType);
+            this.Amount = amount;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Exiled.Events.EventArgs.Player
             get;
             set
             {
-                if (Player.Role == RoleTypeId.Spectator)
+                if (this.Player.Role == RoleTypeId.Spectator)
                     return;
                 field = value;
             }

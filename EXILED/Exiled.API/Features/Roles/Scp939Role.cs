@@ -38,57 +38,57 @@ namespace Exiled.API.Features.Roles
         internal Scp939Role(Scp939GameRole baseRole)
             : base(baseRole)
         {
-            Base = baseRole;
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp939ClawAbility sp939ClawAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp939ClawAbility sp939ClawAbility))
                 Log.Error("Scp939ClawAbility not found in Scp939Role::ctor");
 
-            ClawAbility = sp939ClawAbility;
+            this.ClawAbility = sp939ClawAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp939FocusAbility scp939FocusAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp939FocusAbility scp939FocusAbility))
                 Log.Error("Scp939FocusAbility not found in Scp939Role::ctor");
 
-            FocusAbility = scp939FocusAbility;
+            this.FocusAbility = scp939FocusAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp939LungeAbility scp939LungeAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp939LungeAbility scp939LungeAbility))
                 Log.Error("Scp939LungeAbility not found in Scp939Role::ctor");
 
-            LungeAbility = scp939LungeAbility;
+            this.LungeAbility = scp939LungeAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp939AmnesticCloudAbility scp939AmnesticCloudAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp939AmnesticCloudAbility scp939AmnesticCloudAbility))
                 Log.Error("Scp939AmnesticCloudAbility not found in Scp939Role::ctor");
 
-            AmnesticCloudAbility = scp939AmnesticCloudAbility;
+            this.AmnesticCloudAbility = scp939AmnesticCloudAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out EnvironmentalMimicry environmentalMimicry))
+            if (!this.SubroutineModule.TryGetSubroutine(out EnvironmentalMimicry environmentalMimicry))
                 Log.Error("EnvironmentalMimicry not found in Scp939Role::ctor");
 
-            EnvironmentalMimicry = environmentalMimicry;
+            this.EnvironmentalMimicry = environmentalMimicry;
 
-            if (!SubroutineModule.TryGetSubroutine(out MimicryRecorder mimicryRecorder))
+            if (!this.SubroutineModule.TryGetSubroutine(out MimicryRecorder mimicryRecorder))
                 Log.Error("MimicryRecorder not found in Scp939Role::ctor");
 
-            MimicryRecorder = mimicryRecorder;
+            this.MimicryRecorder = mimicryRecorder;
 
-            if (!SubroutineModule.TryGetSubroutine(out FootstepRippleTrigger footstepRippleTrigger))
+            if (!this.SubroutineModule.TryGetSubroutine(out FootstepRippleTrigger footstepRippleTrigger))
                 Log.Error("FootstepRippleTrigger not found in Scp939Role::ctor");
 
-            FootstepRippleTrigger = footstepRippleTrigger;
+            this.FootstepRippleTrigger = footstepRippleTrigger;
 
-            if (!SubroutineModule.TryGetSubroutine(out FirearmRippleTrigger firearmRippleTrigger))
+            if (!this.SubroutineModule.TryGetSubroutine(out FirearmRippleTrigger firearmRippleTrigger))
                 Log.Error("FirearmRippleTrigger not found in Scp939Role::ctor");
 
-            FirearmRippleTrigger = firearmRippleTrigger;
+            this.FirearmRippleTrigger = firearmRippleTrigger;
 
-            MimicPointController = EnvironmentalMimicry._mimicPoint;
+            this.MimicPointController = this.EnvironmentalMimicry._mimicPoint;
         }
 
         /// <summary>
         /// Finalizes an instance of the <see cref="Scp939Role"/> class.
         /// </summary>
-        ~Scp939Role() => ListPool<Player>.Pool.Return(VisiblePlayers);
+        ~Scp939Role() => ListPool<Player>.Pool.Return(this.VisiblePlayers);
 
         /// <inheritdoc/>
         public override RoleTypeId Type { get; } = RoleTypeId.Scp939;
@@ -159,39 +159,39 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float AttackCooldown
         {
-            get => ClawAbility.Cooldown.Remaining;
+            get => this.ClawAbility.Cooldown.Remaining;
             set
             {
-                ClawAbility.Cooldown.Remaining = value;
-                ClawAbility.ServerSendRpc(true);
+                this.ClawAbility.Cooldown.Remaining = value;
+                this.ClawAbility.ServerSendRpc(true);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether SCP-939 is currently using its focus ability.
         /// </summary>
-        public bool IsFocused => FocusAbility.TargetState;
+        public bool IsFocused => this.FocusAbility.TargetState;
 
         /// <summary>
         /// Gets a value indicating whether SCP-939 is currently lunging.
         /// </summary>
-        public bool IsLunging => LungeAbility.State is not Scp939LungeState.None;
+        public bool IsLunging => this.LungeAbility.State is not Scp939LungeState.None;
 
         /// <summary>
         /// Gets SCP-939's <see cref="Scp939LungeState"/>.
         /// </summary>
-        public Scp939LungeState LungeState => LungeAbility.State;
+        public Scp939LungeState LungeState => this.LungeAbility.State;
 
         /// <summary>
         /// Gets or sets the amount of time before SCP-939 can use its amnestic cloud ability again.
         /// </summary>
         public float AmnesticCloudCooldown
         {
-            get => AmnesticCloudAbility.Cooldown.Remaining;
+            get => this.AmnesticCloudAbility.Cooldown.Remaining;
             set
             {
-                AmnesticCloudAbility.Cooldown.Remaining = value;
-                AmnesticCloudAbility.ServerSendRpc(true);
+                this.AmnesticCloudAbility.Cooldown.Remaining = value;
+                this.AmnesticCloudAbility.ServerSendRpc(true);
             }
         }
 
@@ -200,11 +200,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float AmnesticCloudDuration
         {
-            get => AmnesticCloudAbility.Duration.Remaining;
+            get => this.AmnesticCloudAbility.Duration.Remaining;
             set
             {
-                AmnesticCloudAbility.Duration.Remaining = value;
-                AmnesticCloudAbility.ServerSendRpc(true);
+                this.AmnesticCloudAbility.Duration.Remaining = value;
+                this.AmnesticCloudAbility.ServerSendRpc(true);
             }
         }
 
@@ -213,28 +213,28 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float MimicryCooldown
         {
-            get => EnvironmentalMimicry.Cooldown.Remaining;
+            get => this.EnvironmentalMimicry.Cooldown.Remaining;
             set
             {
-                EnvironmentalMimicry.Cooldown.Remaining = value;
-                EnvironmentalMimicry.ServerSendRpc(true);
+                this.EnvironmentalMimicry.Cooldown.Remaining = value;
+                this.EnvironmentalMimicry.ServerSendRpc(true);
             }
         }
 
         /// <summary>
         /// Gets a value indicating the amount of voices that SCP-939 has saved.
         /// </summary>
-        public int SavedVoices => MimicryRecorder.SavedVoices.Count;
+        public int SavedVoices => this.MimicryRecorder.SavedVoices.Count;
 
         /// <summary>
         /// Gets a value indicating whether SCP-939 has a placed mimic point.
         /// </summary>
-        public bool MimicryPointActive => MimicPointController.Active;
+        public bool MimicryPointActive => this.MimicPointController.Active;
 
         /// <summary>
         /// Gets a value indicating the position of SCP-939's mimic point. May be <see langword="null"/> if <see cref="MimicryPointActive"/> is <see langword="false"/>.
         /// </summary>
-        public Vector3? MimicryPointPosition => MimicPointController.Active ? MimicPointController.MimicPointTransform.position : null;
+        public Vector3? MimicryPointPosition => this.MimicPointController.Active ? this.MimicPointController.MimicPointTransform.position : null;
 
         /// <summary>
         /// Gets a list of players this SCP-939 instance can see regardless of their movement.
@@ -254,7 +254,7 @@ namespace Exiled.API.Features.Roles
         {
             if (target is null)
                 return;
-            MimicryRecorder.RemoveRecordingsOfPlayer(target.ReferenceHub);
+            this.MimicryRecorder.RemoveRecordingsOfPlayer(target.ReferenceHub);
         }
 
         /// <summary>
@@ -262,8 +262,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void ClearRecordings()
         {
-            MimicryRecorder.SavedVoices.Clear();
-            MimicryRecorder._serverSentVoices.Clear();
+            this.MimicryRecorder.SavedVoices.Clear();
+            this.MimicryRecorder._serverSentVoices.Clear();
         }
 
         /// <summary>
@@ -279,13 +279,13 @@ namespace Exiled.API.Features.Roles
             switch (ripple)
             {
                 case UsableRippleType.Footstep:
-                    FootstepRippleTrigger._syncPos = new RelativePosition(position);
-                    FootstepRippleTrigger.ServerSendRpc(playerToSend.ReferenceHub);
+                    this.FootstepRippleTrigger._syncPos = new RelativePosition(position);
+                    this.FootstepRippleTrigger.ServerSendRpc(playerToSend.ReferenceHub);
                     break;
                 case UsableRippleType.FireArm:
-                    FirearmRippleTrigger._syncRoleColor = RoleTypeId.ClassD;
-                    FirearmRippleTrigger._syncRipplePos = new RelativePosition(position);
-                    FirearmRippleTrigger.ServerSendRpc(playerToSend.ReferenceHub);
+                    this.FirearmRippleTrigger._syncRoleColor = RoleTypeId.ClassD;
+                    this.FirearmRippleTrigger._syncRipplePos = new RelativePosition(position);
+                    this.FirearmRippleTrigger.ServerSendRpc(playerToSend.ReferenceHub);
                     break;
             }
         }
@@ -296,8 +296,8 @@ namespace Exiled.API.Features.Roles
         /// <param name="duration">The duration of the Amnestic cloud.</param>
         public void CreateCloud(float duration)
         {
-            AmnesticCloudAbility.OnStateEnabled();
-            AmnesticCloudAbility.ServerConfirmPlacement(duration);
+            this.AmnesticCloudAbility.OnStateEnabled();
+            this.AmnesticCloudAbility.ServerConfirmPlacement(duration);
         }
 
         /// <summary>
@@ -306,10 +306,10 @@ namespace Exiled.API.Features.Roles
         /// <param name="mimicPointPosition">The Position of the Mimic Point.</param>
         public void PlaceMimicPoint(Vector3 mimicPointPosition)
         {
-            MimicPointController._syncPos = new RelativePosition(mimicPointPosition);
-            MimicPointController._syncMessage = MimicPointController.RpcStateMsg.PlacedByUser;
-            MimicPointController.Active = true;
-            MimicPointController.ServerSendRpc(true);
+            this.MimicPointController._syncPos = new RelativePosition(mimicPointPosition);
+            this.MimicPointController._syncMessage = MimicPointController.RpcStateMsg.PlacedByUser;
+            this.MimicPointController.Active = true;
+            this.MimicPointController.ServerSendRpc(true);
         }
 
         /// <summary>
@@ -317,9 +317,9 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void DestroyCurrentMimicPoint()
         {
-            MimicPointController._syncMessage = MimicPointController.RpcStateMsg.RemovedByUser;
-            MimicPointController.Active = false;
-            MimicPointController.ServerSendRpc(true);
+            this.MimicPointController._syncMessage = MimicPointController.RpcStateMsg.RemovedByUser;
+            this.MimicPointController.Active = false;
+            this.MimicPointController.ServerSendRpc(true);
         }
 
         /// <summary>
@@ -327,6 +327,6 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="alreadySpawned">The List of Roles already spawned.</param>
         /// <returns>The Spawn Chance.</returns>
-        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => Base.GetSpawnChance(alreadySpawned);
+        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => this.Base.GetSpawnChance(alreadySpawned);
     }
 }

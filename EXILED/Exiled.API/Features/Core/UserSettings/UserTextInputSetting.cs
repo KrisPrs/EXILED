@@ -32,20 +32,16 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public UserTextInputSetting(int id, string label, string placeHolder = "", int characterLimit = 64, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard, string hintDescription = null, byte collectionId = byte.MaxValue, bool isServerOnly = false, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSPlaintextSetting(id, label, placeHolder, characterLimit, contentType, hintDescription, collectionId, isServerOnly), header, onChanged)
-        {
-            Base = (SSPlaintextSetting)base.Base;
-        }
+            : base(new SSPlaintextSetting(id, label, placeHolder, characterLimit, contentType, hintDescription, collectionId, isServerOnly), header, onChanged) =>
+            this.Base = (SSPlaintextSetting)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserTextInputSetting"/> class.
         /// </summary>
         /// <param name="settingBase">A <see cref="SSPlaintextSetting"/> instance.</param>
         internal UserTextInputSetting(SSPlaintextSetting settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-        }
+            : base(settingBase) =>
+            this.Base = settingBase;
 
         /// <inheritdoc/>
         public new SSPlaintextSetting Base { get; }
@@ -53,15 +49,15 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets the value of the text entered by a client.
         /// </summary>
-        public string Text => Base.SyncInputText;
+        public string Text => this.Base.SyncInputText;
 
         /// <summary>
         /// Gets or sets a value indicating the placeholder shown within the PlainTextSetting.
         /// </summary>
         public string PlaceHolder
         {
-            get => Base.Placeholder;
-            set => Base.Placeholder = value;
+            get => this.Base.Placeholder;
+            set => this.Base.Placeholder = value;
         }
 
         /// <summary>
@@ -69,8 +65,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public TMP_InputField.ContentType ContentType
         {
-            get => Base.ContentType;
-            set => Base.ContentType = value;
+            get => this.Base.ContentType;
+            set => this.Base.ContentType = value;
         }
 
         /// <summary>
@@ -78,8 +74,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public int CharacterLimit
         {
-            get => Base.CharacterLimit;
-            set => Base.CharacterLimit = value;
+            get => this.Base.CharacterLimit;
+            set => this.Base.CharacterLimit = value;
         }
 
         /// <summary>
@@ -89,7 +85,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public void RequestClear(Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendClearRequest(hub => filter(Player.Get(hub)));
+            this.Base.SendClearRequest(hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
@@ -103,7 +99,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateSetting(string placeholder, ushort characterLimit, TMP_InputField.ContentType contentType, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendPlaintextUpdate(placeholder, characterLimit, contentType, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendPlaintextUpdate(placeholder, characterLimit, contentType, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
@@ -115,17 +111,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateValue(string value, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendValueUpdate(value, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendValueUpdate(value, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="UserTextInputSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{Text}/ *{ContentType}* +{CharacterLimit}+";
-        }
+        public override string ToString() => base.ToString() + $" /{this.Text}/ *{this.ContentType}* +{this.CharacterLimit}+";
 
         /// <summary>
         /// Represents a config for UserTextInputSetting.
@@ -146,15 +139,15 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="contentType"></param><inheritdoc cref="ContentType"/>
             public TextInputConfig(string label, bool isServerOnly, string placeHolder = "", int characterLimit = 64, TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                PlaceHolder = placeHolder;
-                CharacterLimit = characterLimit;
-                IsServerOnly = isServerOnly;
-                ContentType = contentType;
-                HintDescription = hintDescription;
-                HeaderName = headerName;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.PlaceHolder = placeHolder;
+                this.CharacterLimit = characterLimit;
+                this.IsServerOnly = isServerOnly;
+                this.ContentType = contentType;
+                this.HintDescription = hintDescription;
+                this.HeaderName = headerName;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -213,7 +206,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TextInputSetting instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
-            public override UserTextInputSetting Create() => new(++IdIncrementor, Label, PlaceHolder, CharacterLimit, ContentType, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override UserTextInputSetting Create() => new(++IdIncrementor, this.Label, this.PlaceHolder, this.CharacterLimit, this.ContentType, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Doors
         /// <param name="door">The base <see cref="Interactables.Interobjects.BasicNonInteractableDoor"/> for this door.</param>
         /// <param name="room">The <see cref="Room"/>'s for this door.</param>
         public BasicNonInteractableDoor(Basegame door, List<Room> room)
-            : base(door, room)
-        {
-            Base = door;
-        }
+            : base(door, room) =>
+            this.Base = door;
 
         /// <summary>
         /// Gets the base <see cref="Basegame"/>.
@@ -37,15 +35,15 @@ namespace Exiled.API.Features.Doors
         /// <inheritdoc/>
         public bool IgnoreLockdowns
         {
-            get => Base._ignoreLockdowns;
-            set => Base._ignoreLockdowns = value;
+            get => this.Base._ignoreLockdowns;
+            set => this.Base._ignoreLockdowns = value;
         }
 
         /// <inheritdoc/>
         public bool IgnoreRemoteAdmin
         {
-            get => Base._ignoreRemoteAdmin;
-            set => Base._ignoreRemoteAdmin = value;
+            get => this.Base._ignoreRemoteAdmin;
+            set => this.Base._ignoreRemoteAdmin = value;
         }
     }
 }

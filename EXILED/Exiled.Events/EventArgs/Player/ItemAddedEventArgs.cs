@@ -30,11 +30,11 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="pickupBase">The <see cref="ItemPickupBase"/> the <see cref="ItemBase"/> originated from, or <see langword="null"/> if the item was not picked up.</param>
         public ItemAddedEventArgs(ReferenceHub referenceHub, ItemBase itemBase, ItemPickupBase pickupBase)
         {
-            Player = Player.Get(referenceHub);
-            Item = Item.Get(itemBase);
-            Pickup = Pickup.Get(pickupBase);
-            Log.Assert(Item != null, $"ItemAddedEventArgs ctor: Item is null! Base: '{itemBase}'");
-            Log.Assert(Player != null, $"ItemAddedEventArgs ctor: Player is null! Base: '{referenceHub} {new StackTrace()}'");
+            this.Player = Player.Get(referenceHub);
+            this.Item = Item.Get(itemBase);
+            this.Pickup = Pickup.Get(pickupBase);
+            Log.Assert(this.Item != null, $"ItemAddedEventArgs ctor: Item is null! Base: '{itemBase}'");
+            Log.Assert(this.Player != null, $"ItemAddedEventArgs ctor: Player is null! Base: '{referenceHub} {new StackTrace()}'");
         }
 
         /// <summary>

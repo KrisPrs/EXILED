@@ -57,7 +57,7 @@ namespace Exiled.API.Features.Pickups.Keycards
         /// Returns the Keycard in a human readable format.
         /// </summary>
         /// <returns>A string containing Keycard-related data.</returns>
-        public override string ToString() => $"{Type} ={AllowClosingDoors}= ({Serial}) [{Weight}] *{Scale}* |{Permissions}|";
+        public override string ToString() => $"{this.Type} ={this.AllowClosingDoors}= ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Permissions}|";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Item item)
@@ -65,10 +65,10 @@ namespace Exiled.API.Features.Pickups.Keycards
             base.ReadItemInfo(item);
             if (item is SingleUseKeycard singleUseKeycardItem)
             {
-                Uses = singleUseKeycardItem.Uses;
-                TimeToDestroy = singleUseKeycardItem.TimeToDestroy;
-                Permissions = singleUseKeycardItem.Permissions;
-                AllowClosingDoors = singleUseKeycardItem.AllowClosingDoors;
+                this.Uses = singleUseKeycardItem.Uses;
+                this.TimeToDestroy = singleUseKeycardItem.TimeToDestroy;
+                this.Permissions = singleUseKeycardItem.Permissions;
+                this.AllowClosingDoors = singleUseKeycardItem.AllowClosingDoors;
             }
         }
 
@@ -78,9 +78,9 @@ namespace Exiled.API.Features.Pickups.Keycards
             base.InitializeProperties(itemBase);
             if (itemBase is SingleUseKeycardItem singleUseKeycardItem)
             {
-                TimeToDestroy = singleUseKeycardItem._timeToDestroy;
-                Permissions = (KeycardPermissions)singleUseKeycardItem._singleUsePermissions;
-                AllowClosingDoors = singleUseKeycardItem._allowClosingDoors;
+                this.TimeToDestroy = singleUseKeycardItem._timeToDestroy;
+                this.Permissions = (KeycardPermissions)singleUseKeycardItem._singleUsePermissions;
+                this.AllowClosingDoors = singleUseKeycardItem._allowClosingDoors;
             }
         }
     }

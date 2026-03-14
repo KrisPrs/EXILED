@@ -29,10 +29,10 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public ChangingSpeakerStatusEventArgs(Player player, bool isAllowed)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Room = Room.Get(Scp079.Speaker.Room);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Room = Room.Get(this.Scp079.Speaker.Room);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

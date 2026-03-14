@@ -24,7 +24,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="textToy">The <see cref="TextToy"/> of the toy.</param>
         internal Text(TextToy textToy)
-            : base(textToy, AdminToyType.TextToy) => Base = textToy;
+            : base(textToy, AdminToyType.TextToy) => this.Base = textToy;
 
         /// <summary>
         /// Gets the prefab.
@@ -41,8 +41,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public string TextFormat
         {
-            get => Base.Network_textFormat;
-            set => Base.Network_textFormat = value;
+            get => this.Base.Network_textFormat;
+            set => this.Base.Network_textFormat = value;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector2 DisplaySize
         {
-            get => Base.Network_displaySize;
-            set => Base.Network_displaySize = value;
+            get => this.Base.Network_displaySize;
+            set => this.Base.Network_displaySize = value;
         }
 
         /// <summary>

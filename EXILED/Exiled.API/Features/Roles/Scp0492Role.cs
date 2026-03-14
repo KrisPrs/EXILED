@@ -28,23 +28,23 @@ namespace Exiled.API.Features.Roles
         internal Scp0492Role(ZombieRole baseRole)
             : base(baseRole)
         {
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
 
-            if (!SubroutineModule.TryGetSubroutine(out ZombieAttackAbility zombieAttackAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out ZombieAttackAbility zombieAttackAbility))
                 Log.Error("ZombieAttackAbility subroutine not found in Scp0492Role::ctor");
 
-            AttackAbility = zombieAttackAbility;
+            this.AttackAbility = zombieAttackAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out ZombieBloodlustAbility zombieBloodlustAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out ZombieBloodlustAbility zombieBloodlustAbility))
                 Log.Error("ZombieBloodlustAbility subroutine not found in Scp0492Role::ctor");
 
-            BloodlustAbility = zombieBloodlustAbility;
+            this.BloodlustAbility = zombieBloodlustAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out ZombieConsumeAbility zombieConsumeAbility492))
+            if (!this.SubroutineModule.TryGetSubroutine(out ZombieConsumeAbility zombieConsumeAbility492))
                 Log.Error("ZombieConsumeAbility subroutine not found in Scp0492Role::ctor");
 
-            ConsumeAbility = zombieConsumeAbility492;
+            this.ConsumeAbility = zombieConsumeAbility492;
         }
 
         /// <inheritdoc/>
@@ -76,43 +76,43 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public int ResurrectNumber
         {
-            get => Scp049ResurrectAbility.GetResurrectionsNumber(Owner.ReferenceHub);
-            set => Scp049ResurrectAbility.ResurrectedPlayers[Owner.ReferenceHub.netId] = value;
+            get => Scp049ResurrectAbility.GetResurrectionsNumber(this.Owner.ReferenceHub);
+            set => Scp049ResurrectAbility.ResurrectedPlayers[this.Owner.ReferenceHub.netId] = value;
         }
 
         /// <summary>
         /// Gets the SCP-049-2 attack damage.
         /// </summary>
-        public float AttackDamage => AttackAbility.DamageAmount;
+        public float AttackDamage => this.AttackAbility.DamageAmount;
 
         /// <summary>
         /// Gets or sets a value indicating the amount of time to simulate SCP-049-2's Bloodlust ability.
         /// </summary>
         public float SimulatedStare
         {
-            get => BloodlustAbility.SimulatedStare;
-            set => BloodlustAbility.SimulatedStare = value;
+            get => this.BloodlustAbility.SimulatedStare;
+            set => this.BloodlustAbility.SimulatedStare = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether SCP-049-2 is currently pursuing a target (Bloodlust ability).
         /// </summary>
-        public bool BloodlustActive => BloodlustAbility.LookingAtTarget;
+        public bool BloodlustActive => this.BloodlustAbility.LookingAtTarget;
 
         /// <summary>
         /// Gets a value indicating whether SCP-049-2 is consuming a ragdoll.
         /// </summary>
-        public bool IsConsuming => ConsumeAbility.IsInProgress;
+        public bool IsConsuming => this.ConsumeAbility.IsInProgress;
 
         /// <summary>
         /// Gets the <see cref="Ragdoll"/> that SCP-049-2 is currently consuming. Will be <see langword="null"/> if <see cref="IsConsuming"/> is <see langword="false"/>.
         /// </summary>
-        public Ragdoll RagdollConsuming => Features.Ragdoll.Get(ConsumeAbility.CurRagdoll);
+        public Ragdoll RagdollConsuming => Features.Ragdoll.Get(this.ConsumeAbility.CurRagdoll);
 
         /// <summary>
         /// Gets the amount of time in between SCP-049-2 attacks.
         /// </summary>
-        public float AttackCooldown => AttackAbility.BaseCooldown;
+        public float AttackCooldown => this.AttackAbility.BaseCooldown;
 
         /// <summary>
         /// Returns a <see langword="bool"/> indicating whether SCP-049-2 is close enough to a ragdoll to consume it.
@@ -120,7 +120,7 @@ namespace Exiled.API.Features.Roles
         /// <remarks>This method only returns whether SCP-049-2 is close enough to the body to consume it; the body may have been consumed previously. Make sure to check <see cref="Ragdoll.IsConsumed"/> to ensure the body can be consumed.</remarks>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if close enough to consume the body; otherwise, <see langword="false"/>.</returns>
-        public bool IsInConsumeRange(BasicRagdoll ragdoll) => ragdoll != null && ConsumeAbility.IsCloseEnough(Owner.Position, ragdoll.transform.position);
+        public bool IsInConsumeRange(BasicRagdoll ragdoll) => ragdoll != null && this.ConsumeAbility.IsCloseEnough(this.Owner.Position, ragdoll.transform.position);
 
         /// <summary>
         /// Returns a <see langword="bool"/> indicating whether SCP-049-2 is close enough to a ragdoll to consume it.
@@ -128,7 +128,7 @@ namespace Exiled.API.Features.Roles
         /// <remarks>This method only returns whether SCP-049-2 is close enough to the body to consume it; the body may have been consumed previously. Make sure to check <see cref="Ragdoll.IsConsumed"/> to ensure the body can be consumed.</remarks>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if close enough to consume the body; otherwise, <see langword="false"/>.</returns>
-        public bool IsInConsumeRange(Ragdoll ragdoll) => ragdoll is not null && IsInConsumeRange(ragdoll.Base);
+        public bool IsInConsumeRange(Ragdoll ragdoll) => ragdoll is not null && this.IsInConsumeRange(ragdoll.Base);
 
         /// <inheritdoc/>
         internal override void SendAppearanceSpawnMessage(NetworkWriter writer, PlayerRoleBase basicRole)

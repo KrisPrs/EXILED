@@ -34,28 +34,24 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public SliderSetting(int id, string label, float minValue, float maxValue, float defaultValue, bool isInteger = false, string stringFormat = "0.##", string displayFormat = "{0}", string hintDescription = null, byte collectionId = byte.MaxValue, bool isServerOnly = false, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSSliderSetting(id, label, minValue, maxValue, defaultValue, isInteger, stringFormat, displayFormat, hintDescription, collectionId, isServerOnly), header, onChanged)
-        {
-            Base = (SSSliderSetting)base.Base;
-        }
+            : base(new SSSliderSetting(id, label, minValue, maxValue, defaultValue, isInteger, stringFormat, displayFormat, hintDescription, collectionId, isServerOnly), header, onChanged) =>
+            this.Base = (SSSliderSetting)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SliderSetting"/> class.
         /// </summary>
         /// <param name="settingBase">A <see cref="SSSliderSetting"/> instance.</param>
         internal SliderSetting(SSSliderSetting settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-        }
+            : base(settingBase) =>
+            this.Base = settingBase;
 
         /// <summary>
         /// Gets or sets the minimum value of the slider.
         /// </summary>
         public float MinimumValue
         {
-            get => Base.MinValue;
-            set => Base.MinValue = value;
+            get => this.Base.MinValue;
+            set => this.Base.MinValue = value;
         }
 
         /// <summary>
@@ -63,8 +59,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public float MaximumValue
         {
-            get => Base.MaxValue;
-            set => Base.MaxValue = value;
+            get => this.Base.MaxValue;
+            set => this.Base.MaxValue = value;
         }
 
         /// <summary>
@@ -72,8 +68,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public float DefaultValue
         {
-            get => Base.DefaultValue;
-            set => Base.DefaultValue = value;
+            get => this.Base.DefaultValue;
+            set => this.Base.DefaultValue = value;
         }
 
         /// <summary>
@@ -81,27 +77,27 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public bool IsInteger
         {
-            get => Base.Integer;
-            set => Base.Integer = value;
+            get => this.Base.Integer;
+            set => this.Base.Integer = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether the slider is currently being dragged.
         /// </summary>
-        public bool IsBeingDragged => Base.SyncDragging;
+        public bool IsBeingDragged => this.Base.SyncDragging;
 
         /// <summary>
         /// Gets a float that represents the current value of the slider.
         /// </summary>
-        public float SliderValue => Base.Integer ? Base.SyncIntValue : Base.SyncFloatValue;
+        public float SliderValue => this.Base.Integer ? this.Base.SyncIntValue : this.Base.SyncFloatValue;
 
         /// <summary>
         /// Gets or sets the formatting used for the number in the slider.
         /// </summary>
         public string StringFormat
         {
-            get => Base.ValueToStringFormat;
-            set => Base.ValueToStringFormat = value;
+            get => this.Base.ValueToStringFormat;
+            set => this.Base.ValueToStringFormat = value;
         }
 
         /// <summary>
@@ -109,8 +105,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string DisplayFormat
         {
-            get => Base.FinalDisplayFormat;
-            set => Base.FinalDisplayFormat = value;
+            get => this.Base.FinalDisplayFormat;
+            set => this.Base.FinalDisplayFormat = value;
         }
 
         /// <inheritdoc/>
@@ -129,7 +125,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateSetting(float min, float max, bool isInteger, string stringFormat, string displayFormat, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendSliderUpdate(min, max, isInteger, stringFormat, displayFormat, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendSliderUpdate(min, max, isInteger, stringFormat, displayFormat, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
@@ -141,17 +137,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateValue(float value, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendValueUpdate(value, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendValueUpdate(value, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="SliderSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{MinimumValue}/ *{MaximumValue}* +{DefaultValue}+ '{SliderValue}'";
-        }
+        public override string ToString() => base.ToString() + $" /{this.MinimumValue}/ *{this.MaximumValue}* +{this.DefaultValue}+ '{this.SliderValue}'";
 
         /// <summary>
         /// Represents a config for SliderSetting.
@@ -174,17 +167,17 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
             public SliderConfig(string label, float minValue, float maxValue, float defaultValue, bool isInteger = false, string stringFormat = "0.##", string displayFormat = "{0}",  bool isServerOnly = false, string hintDescription = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                MinimumValue = minValue;
-                MaximumValue = maxValue;
-                DefaultValue = defaultValue;
-                IsInteger = isInteger;
-                DisplayFormat = displayFormat;
-                StringFormat = stringFormat;
-                IsServerOnly = isServerOnly;
-                HintDescription = hintDescription;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.MinimumValue = minValue;
+                this.MaximumValue = maxValue;
+                this.DefaultValue = defaultValue;
+                this.IsInteger = isInteger;
+                this.DisplayFormat = displayFormat;
+                this.StringFormat = stringFormat;
+                this.IsServerOnly = isServerOnly;
+                this.HintDescription = hintDescription;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -258,8 +251,8 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override SliderSetting Create() => new(++IdIncrementor, Label, MinimumValue, MaximumValue, DefaultValue, IsInteger, StringFormat, DisplayFormat,
-                HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override SliderSetting Create() => new(++IdIncrementor, this.Label, this.MinimumValue, this.MaximumValue, this.DefaultValue, this.IsInteger, this.StringFormat, this.DisplayFormat,
+                this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

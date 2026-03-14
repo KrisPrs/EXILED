@@ -25,10 +25,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="Scp1509Item"/> class.</param>
         public Scp1509(Scp1509Item itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp1509"/> class.
@@ -46,15 +44,15 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets the <see cref="Scp1509RespawnEligibility"/> instance.
         /// </summary>
-        public Scp1509RespawnEligibility RespawnEligibility => Base._respawnEligibility;
+        public Scp1509RespawnEligibility RespawnEligibility => this.Base._respawnEligibility;
 
         /// <summary>
         /// Gets or sets the shield regeneration rate.
         /// </summary>
         public float ShieldRegenRate
         {
-            get => Base.ShieldRegenRate;
-            set => Base.ShieldRegenRate = value;
+            get => this.Base.ShieldRegenRate;
+            set => this.Base.ShieldRegenRate = value;
         }
 
         /// <summary>
@@ -62,8 +60,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ShieldDecayRate
         {
-            get => Base.ShieldDecayRate;
-            set => Base.ShieldDecayRate = value;
+            get => this.Base.ShieldDecayRate;
+            set => this.Base.ShieldDecayRate = value;
         }
 
         /// <summary>
@@ -71,8 +69,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ShieldOnDamagePause
         {
-            get => Base.ShieldOnDamagePause;
-            set => Base.ShieldOnDamagePause = value;
+            get => this.Base.ShieldOnDamagePause;
+            set => this.Base.ShieldOnDamagePause = value;
         }
 
         /// <summary>
@@ -80,8 +78,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float UnequipDecayDelay
         {
-            get => Base.UnequipDecayDelay;
-            set => Base.UnequipDecayDelay = value;
+            get => this.Base.UnequipDecayDelay;
+            set => this.Base.UnequipDecayDelay = value;
         }
 
         /// <summary>
@@ -89,8 +87,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public double NextResurrectTime
         {
-            get => Base._nextResurrectTime;
-            set => Base._nextResurrectTime = value;
+            get => this.Base._nextResurrectTime;
+            set => this.Base._nextResurrectTime = value;
         }
 
         /// <summary>
@@ -98,8 +96,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MeleeCooldown
         {
-            get => Base._meleeCooldown;
-            set => Base._meleeCooldown = value; // TODO not syned with clients, tests required
+            get => this.Base._meleeCooldown;
+            set => this.Base._meleeCooldown = value; // TODO not syned with clients, tests required
         }
 
         /// <summary>
@@ -107,8 +105,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedAhpBonus
         {
-            get => Base._revivedPlayerAOEBonusAHP;
-            set => Base._revivedPlayerAOEBonusAHP = value;
+            get => this.Base._revivedPlayerAOEBonusAHP;
+            set => this.Base._revivedPlayerAOEBonusAHP = value;
         }
 
         /// <summary>
@@ -116,8 +114,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedAhpBonusDistance
         {
-            get => Base._revivedPlayerAOEBonusAHPDistance;
-            set => Base._revivedPlayerAOEBonusAHPDistance = value;
+            get => this.Base._revivedPlayerAOEBonusAHPDistance;
+            set => this.Base._revivedPlayerAOEBonusAHPDistance = value;
         }
 
         /// <summary>
@@ -125,8 +123,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MaxHs
         {
-            get => Base._equippedHS;
-            set => Base._equippedHS = value;
+            get => this.Base._equippedHS;
+            set => this.Base._equippedHS = value;
         }
 
         /// <summary>
@@ -134,8 +132,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedBlurTime
         {
-            get => Base._revivedPlayerBlurTime;
-            set => Base._revivedPlayerBlurTime = value;
+            get => this.Base._revivedPlayerBlurTime;
+            set => this.Base._revivedPlayerBlurTime = value;
         }
 
         /// <summary>
@@ -143,8 +141,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public IEnumerable<Player> RevivedPlayers
         {
-            get => Base._revivedPlayers.Select(Player.Get);
-            set => Base._revivedPlayers = value.Select(x => x.ReferenceHub).ToList();
+            get => this.Base._revivedPlayers.Select(Player.Get);
+            set => this.Base._revivedPlayers = value.Select(x => x.ReferenceHub).ToList();
         }
 
         /// <summary>
@@ -152,13 +150,13 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="roleTypeId">Role to respawn.</param>
         /// <returns>Found player or <c>null</c>.</returns>
-        public Player GetEligibleSpectator(RoleTypeId roleTypeId) => Player.Get(RespawnEligibility.GetEligibleSpectator(roleTypeId));
+        public Player GetEligibleSpectator(RoleTypeId roleTypeId) => Player.Get(this.RespawnEligibility.GetEligibleSpectator(roleTypeId));
 
         /// <summary>
         /// Checks if there is any eligible spectator for spawn.
         /// </summary>
         /// <returns><c>true</c> if any spectator is found. Otherwise, <c>false</c>.</returns>
-        public bool IsAnyEligibleSpectators() => RespawnEligibility.IsAnyEligibleSpectators();
+        public bool IsAnyEligibleSpectators() => this.RespawnEligibility.IsAnyEligibleSpectators();
 
         /// <summary>
         /// Clones current <see cref="Scp1509"/> object.
@@ -166,10 +164,10 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Scp1509"/> object. </returns>
         public override Item Clone() => new Scp1509()
         {
-            ShieldRegenRate = ShieldRegenRate,
-            ShieldDecayRate = ShieldDecayRate,
-            ShieldOnDamagePause = ShieldOnDamagePause,
-            UnequipDecayDelay = UnequipDecayDelay,
+            ShieldRegenRate = this.ShieldRegenRate,
+            ShieldDecayRate = this.ShieldDecayRate,
+            ShieldOnDamagePause = this.ShieldOnDamagePause,
+            UnequipDecayDelay = this.UnequipDecayDelay,
         };
     }
 }

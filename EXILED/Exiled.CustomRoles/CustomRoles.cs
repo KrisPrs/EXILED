@@ -36,15 +36,15 @@ namespace Exiled.CustomRoles
         public override void OnEnabled()
         {
             Instance = this;
-            playerHandler = new PlayerHandler();
+            this.playerHandler = new PlayerHandler();
 
-            Server.WaitingForPlayers += playerHandler.OnWaitingForPlayers;
+            Server.WaitingForPlayers += this.playerHandler.OnWaitingForPlayers;
 
-            Player.Spawned += playerHandler.OnSpawned;
+            Player.Spawned += this.playerHandler.OnSpawned;
 
-            Player.ChangingRole += playerHandler.OnChangingRole;
-            Player.SendingRole += playerHandler.OnSendingRole;
-            Player.ChangedNickname += playerHandler.OnChangedNickname;
+            Player.ChangingRole += this.playerHandler.OnChangingRole;
+            Player.SendingRole += this.playerHandler.OnSendingRole;
+            Player.ChangedNickname += this.playerHandler.OnChangedNickname;
 
             base.OnEnabled();
         }
@@ -52,13 +52,13 @@ namespace Exiled.CustomRoles
         /// <inheritdoc />
         public override void OnDisabled()
         {
-            Server.WaitingForPlayers -= playerHandler.OnWaitingForPlayers;
+            Server.WaitingForPlayers -= this.playerHandler.OnWaitingForPlayers;
 
-            Player.Spawned -= playerHandler.OnSpawned;
+            Player.Spawned -= this.playerHandler.OnSpawned;
 
-            Player.ChangingRole -= playerHandler.OnChangingRole;
-            Player.SendingRole -= playerHandler.OnSendingRole;
-            Player.ChangedNickname -= playerHandler.OnChangedNickname;
+            Player.ChangingRole -= this.playerHandler.OnChangingRole;
+            Player.SendingRole -= this.playerHandler.OnSendingRole;
+            Player.ChangedNickname -= this.playerHandler.OnChangedNickname;
 
             Instance = null;
             base.OnDisabled();

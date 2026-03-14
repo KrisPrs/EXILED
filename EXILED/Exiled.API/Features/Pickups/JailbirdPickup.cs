@@ -25,19 +25,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseJailbirdPickup"/> class.</param>
         internal JailbirdPickup(BaseJailbirdPickup pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JailbirdPickup"/> class.
         /// </summary>
         internal JailbirdPickup()
-            : base(ItemType.Jailbird)
-        {
-            Base = (BaseJailbirdPickup)((Pickup)this).Base;
-        }
+            : base(ItemType.Jailbird) =>
+            this.Base = (BaseJailbirdPickup)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseJailbirdPickup"/> that this class is encapsulating.
@@ -74,8 +70,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public float TotalDamageDealt
         {
-            get => Base.TotalMelee;
-            set => Base.TotalMelee = value;
+            get => this.Base.TotalMelee;
+            set => this.Base.TotalMelee = value;
         }
 
         /// <summary>
@@ -83,8 +79,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public int TotalCharges
         {
-            get => Base.TotalCharges;
-            set => Base.TotalCharges = value;
+            get => this.Base.TotalCharges;
+            set => this.Base.TotalCharges = value;
         }
 
         /// <summary>
@@ -92,15 +88,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public JailbirdWearState WearState
         {
-            get => Base.NetworkWear;
-            set => Base.NetworkWear = value;
+            get => this.Base.NetworkWear;
+            set => this.Base.NetworkWear = value;
         }
 
         /// <summary>
         /// Returns the jailbird in a human readable format.
         /// </summary>
         /// <returns>A string containing jailbird related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}*";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}*";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Item item)
@@ -109,11 +105,11 @@ namespace Exiled.API.Features.Pickups
 
             if (item is Jailbird jailBirditem)
             {
-                MeleeDamage = jailBirditem.MeleeDamage;
-                ChargeDamage = jailBirditem.ChargeDamage;
-                FlashDuration = jailBirditem.FlashDuration;
-                ConcussionDuration = jailBirditem.ConcussionDuration;
-                Radius = jailBirditem.Radius;
+                this.MeleeDamage = jailBirditem.MeleeDamage;
+                this.ChargeDamage = jailBirditem.ChargeDamage;
+                this.FlashDuration = jailBirditem.FlashDuration;
+                this.ConcussionDuration = jailBirditem.ConcussionDuration;
+                this.Radius = jailBirditem.Radius;
             }
         }
 
@@ -123,11 +119,11 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is JailbirdItem jailbirdItem)
             {
-                MeleeDamage = jailbirdItem.MeleeDamage;
-                ChargeDamage = jailbirdItem._chargeDamage;
-                FlashDuration = jailbirdItem._flashedDuration;
-                ConcussionDuration = jailbirdItem._concussionDuration;
-                Radius = Radius;
+                this.MeleeDamage = jailbirdItem.MeleeDamage;
+                this.ChargeDamage = jailbirdItem._chargeDamage;
+                this.FlashDuration = jailbirdItem._flashedDuration;
+                this.ConcussionDuration = jailbirdItem._concussionDuration;
+                this.Radius = this.Radius;
             }
         }
     }

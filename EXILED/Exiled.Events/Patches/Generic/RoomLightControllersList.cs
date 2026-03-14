@@ -18,9 +18,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(RoomLightController), nameof(RoomLightController.Start))]
     internal class RoomLightControllersList
     {
-        private static void Postfix(RoomLightController __instance)
-        {
-            Room.Get(__instance.Room).RoomLightControllersValue.Add(__instance);
-        }
+        private static void Postfix(RoomLightController __instance) => Room.Get(__instance.Room).RoomLightControllersValue.Add(__instance);
     }
 }

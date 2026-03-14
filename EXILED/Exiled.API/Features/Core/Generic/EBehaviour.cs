@@ -29,10 +29,10 @@ namespace Exiled.API.Features.Core.Generic
         {
             base.PostInitialize();
 
-            Owner = Player.Get(Base).Cast<T>();
-            if (Owner is null)
+            this.Owner = Player.Get(this.Base).Cast<T>();
+            if (this.Owner is null)
             {
-                Destroy();
+                this.Destroy();
                 return;
             }
         }
@@ -42,7 +42,7 @@ namespace Exiled.API.Features.Core.Generic
         {
             base.Tick();
 
-            BehaviourUpdate_Implementation();
+            this.BehaviourUpdate_Implementation();
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace Exiled.API.Features.Core.Generic
         {
             base.OnEndPlay();
 
-            if (Owner is null)
+            if (this.Owner is null)
                 return;
         }
 
@@ -65,13 +65,13 @@ namespace Exiled.API.Features.Core.Generic
         /// <inheritdoc cref="BehaviourUpdate"/>
         private protected virtual void BehaviourUpdate_Implementation()
         {
-            if (Owner is null)
+            if (this.Owner is null)
             {
-                Destroy();
+                this.Destroy();
                 return;
             }
 
-            BehaviourUpdate();
+            this.BehaviourUpdate();
         }
     }
 }

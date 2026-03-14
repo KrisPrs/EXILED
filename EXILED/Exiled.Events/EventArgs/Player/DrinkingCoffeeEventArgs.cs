@@ -26,9 +26,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public DrinkingCoffeeEventArgs(Player player, Coffee coffee, bool isAllowed = true)
         {
-            Player = player;
-            Coffee = coffee;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Coffee = coffee;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

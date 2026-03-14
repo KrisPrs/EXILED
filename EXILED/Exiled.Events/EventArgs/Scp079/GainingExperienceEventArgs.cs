@@ -39,12 +39,12 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public GainingExperienceEventArgs(Player player, Scp079HudTranslation gainType, int amount, RoleTypeId roleType, bool isAllowed = true)
         {
-            Player = player;
-            Scp079 = player.Role.As<API.Features.Roles.Scp079Role>();
-            GainType = gainType;
-            RoleType = roleType;
-            Amount = amount;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp079 = player.Role.As<API.Features.Roles.Scp079Role>();
+            this.GainType = gainType;
+            this.RoleType = roleType;
+            this.Amount = amount;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

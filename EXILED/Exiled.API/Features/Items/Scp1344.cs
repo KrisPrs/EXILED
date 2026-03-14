@@ -23,10 +23,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="Scp1344Item"/> class.</param>
         public Scp1344(Scp1344Item itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp1344"/> class.
@@ -44,20 +42,20 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether the item is worn.
         /// </summary>
-        public bool IsWorn => Base.IsWorn;
+        public bool IsWorn => this.Base.IsWorn;
 
         /// <summary>
         /// Gets a value indicating whether it can be started to use.
         /// </summary>
-        public bool CanStartUsing => Base.CanStartUsing;
+        public bool CanStartUsing => this.Base.CanStartUsing;
 
         /// <summary>
         /// Gets or sets the status of Scp1344.
         /// </summary>
         public Scp1344Status Status
         {
-            get => Base.Status;
-            set => Base.Status = value;
+            get => this.Base.Status;
+            set => this.Base.Status = value;
         }
 
         /// <summary>
@@ -66,24 +64,24 @@ namespace Exiled.API.Features.Items
         /// <param name="dropItem">Whether or not 1344 should be dropped.</param>
         public void Deactivate(bool dropItem = false)
         {
-            if (Status is not(Scp1344Status.Active or Scp1344Status.Stabbing or Scp1344Status.Dropping))
+            if (this.Status is not(Scp1344Status.Active or Scp1344Status.Stabbing or Scp1344Status.Dropping))
             {
                 return;
             }
 
-            Base.Owner.DisableWearables(WearableElements.Scp1344Goggles);
-            Base.ActivateFinalEffects();
-            Status = Scp1344Status.Idle;
+            this.Base.Owner.DisableWearables(WearableElements.Scp1344Goggles);
+            this.Base.ActivateFinalEffects();
+            this.Status = Scp1344Status.Idle;
 
             if (dropItem)
             {
-                Base.ServerDropItem(true);
+                this.Base.ServerDropItem(true);
             }
         }
 
         /// <summary>
         /// Forcefully activated SCP-1344.
         /// </summary>
-        public void Actived() => Status = Scp1344Status.Stabbing;
+        public void Actived() => this.Status = Scp1344Status.Stabbing;
     }
 }

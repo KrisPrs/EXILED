@@ -29,9 +29,9 @@ namespace Exiled.API.Structs
         /// <param name="slot">The slot of the attachment.</param>
         internal AttachmentIdentifier(uint code, AttachmentName name, AttachmentSlot slot)
         {
-            Code = code;
-            Name = name;
-            Slot = slot;
+            this.Code = code;
+            this.Name = name;
+            this.Slot = slot;
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Exiled.API.Structs
         public override bool Equals(object obj) => base.Equals(obj);
 
         /// <inheritdoc/>
-        public override string ToString() => Name.ToString();
+        public override string ToString() => this.Name.ToString();
 
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();

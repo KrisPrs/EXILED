@@ -101,9 +101,6 @@ namespace Exiled.Events.Patches.Events.Scp330
             return scp330Bag.Candies[index];
         }
 
-        private static int GetIDCandy(Scp330Bag scp330Bag, CandyKindID candyKindId)
-        {
-            return scp330Bag.Candies.FindIndex(x => candyKindId == x);
-        }
+        private static int GetIDCandy(Scp330Bag scp330Bag, CandyKindID candyKindId) => scp330Bag.Candies.FindIndex(x => candyKindId == x);
     }
 }

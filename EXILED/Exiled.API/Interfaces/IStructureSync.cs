@@ -33,11 +33,11 @@ namespace Exiled.API.Interfaces
             if (this is Features.Lockers.Locker { Type: LockerType.MicroHid or LockerType.Scp127Pedestal })
                 return;
 
-            if (!NetworkServer.spawned.ContainsKey(PositionSync.netId))
+            if (!NetworkServer.spawned.ContainsKey(this.PositionSync.netId))
                 return;
 
-            NetworkServer.UnSpawn(PositionSync.gameObject);
-            NetworkServer.Spawn(PositionSync.gameObject);
+            NetworkServer.UnSpawn(this.PositionSync.gameObject);
+            NetworkServer.Spawn(this.PositionSync.gameObject);
         }
     }
 }

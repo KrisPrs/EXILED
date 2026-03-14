@@ -33,10 +33,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UsingRadioBatteryEventArgs(RadioItem radio, float drain, bool isAllowed = true)
         {
-            Radio = Item.Get<Radio>(radio);
-            Player = Radio.Owner;
-            Drain = drain;
-            IsAllowed = isAllowed;
+            this.Radio = Item.Get<Radio>(radio);
+            this.Player = this.Radio.Owner;
+            this.Drain = drain;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Exiled.Events.EventArgs.Player
         public Radio Radio { get; }
 
         /// <inheritdoc/>
-        public Item Item => Radio;
+        public Item Item => this.Radio;
 
         /// <summary>
         /// Gets or sets the radio battery drain per second.

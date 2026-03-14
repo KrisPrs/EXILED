@@ -74,34 +74,19 @@ namespace Exiled.Example.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp106.OnTeleporting(TeleportingEventArgs)"/>
-        public void OnTeleporting(TeleportingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is teleporting to {ev.Position} as SCP-106!");
-        }
+        public void OnTeleporting(TeleportingEventArgs ev) => Log.Info($"{ev.Player.Nickname} is teleporting to {ev.Position} as SCP-106!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp914.OnActivating(ActivatingEventArgs)"/>
-        public void OnActivating(ActivatingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is activating SCP-914!");
-        }
+        public void OnActivating(ActivatingEventArgs ev) => Log.Info($"{ev.Player.Nickname} is activating SCP-914!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnFailingEscapePocketDimension(FailingEscapePocketDimensionEventArgs)"/>
-        public void OnFailingEscapePocketDimension(FailingEscapePocketDimensionEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is failing to escape from the pocket dimension!");
-        }
+        public void OnFailingEscapePocketDimension(FailingEscapePocketDimensionEventArgs ev) => Log.Info($"{ev.Player.Nickname} is failing to escape from the pocket dimension!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEscapingPocketDimension(EscapingPocketDimensionEventArgs)"/>
-        public void OnEscapingPocketDimension(EscapingPocketDimensionEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is escaping from the pocket dimension and will be teleported at {ev.TeleportPosition}");
-        }
+        public void OnEscapingPocketDimension(EscapingPocketDimensionEventArgs ev) => Log.Info($"{ev.Player.Nickname} is escaping from the pocket dimension and will be teleported at {ev.TeleportPosition}");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp914.OnChangingKnobSetting(ChangingKnobSettingEventArgs)"/>
-        public void OnChangingKnobSetting(ChangingKnobSettingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is changing the knob setting of SCP-914 to {ev.KnobSetting}");
-        }
+        public void OnChangingKnobSetting(ChangingKnobSettingEventArgs ev) => Log.Info($"{ev.Player.Nickname} is changing the knob setting of SCP-914 to {ev.KnobSetting}");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.Joined"/>
         public void OnVerified(VerifiedEventArgs ev)
@@ -115,28 +100,16 @@ namespace Exiled.Example.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.UnlockingGenerator"/>
-        public void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is trying to unlock a generator in {ev.Player.CurrentRoom} room");
-        }
+        public void OnUnlockingGenerator(UnlockingGeneratorEventArgs ev) => Log.Info($"{ev.Player.Nickname} is trying to unlock a generator in {ev.Player.CurrentRoom} room");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.Destroying"/>
-        public void OnDestroying(DestroyingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} ({ev.Player.Role}) is leaving the server!");
-        }
+        public void OnDestroying(DestroyingEventArgs ev) => Log.Info($"{ev.Player.Nickname} ({ev.Player.Role}) is leaving the server!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.Dying"/>
-        public void OnDying(DyingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} ({ev.Player.Role}) is getting killed by {ev.Attacker?.Nickname ?? "None"} ({ev.Attacker?.Role?.ToString() ?? "None"})!");
-        }
+        public void OnDying(DyingEventArgs ev) => Log.Info($"{ev.Player.Nickname} ({ev.Player.Role}) is getting killed by {ev.Attacker?.Nickname ?? "None"} ({ev.Attacker?.Role?.ToString() ?? "None"})!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.PreAuthenticating"/>
-        public void OnPreAuthenticating(PreAuthenticatingEventArgs ev)
-        {
-            Log.Info($"{ev.UserId} is pre-authenticating from {ev.Country} ({ev.Request.RemoteEndPoint}) with flags {ev.Flags}!");
-        }
+        public void OnPreAuthenticating(PreAuthenticatingEventArgs ev) => Log.Info($"{ev.UserId} is pre-authenticating from {ev.Country} ({ev.Request.RemoteEndPoint}) with flags {ev.Flags}!");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnPickingUpItem(PickingUpItemEventArgs)"/>
         public void OnPickingUpItem(PickingUpItemEventArgs ev)
@@ -158,16 +131,10 @@ namespace Exiled.Example.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShooting(ShootingEventArgs)"/>
-        public void OnShooting(ShootingEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is shooting a {ev.Player.CurrentItem.Type}! Target Pos: {ev.ClaimedTarget?.Position} Direction: {ev.Direction} Allowed: {ev.IsAllowed}");
-        }
+        public void OnShooting(ShootingEventArgs ev) => Log.Info($"{ev.Player.Nickname} is shooting a {ev.Player.CurrentItem.Type}! Target Pos: {ev.ClaimedTarget?.Position} Direction: {ev.Direction} Allowed: {ev.IsAllowed}");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnReloadingWeapon(PlayerReloadingWeaponEventArgs)"/>
-        public void OnReloading(ReloadingWeaponEventArgs ev)
-        {
-            Log.Info($"{ev.Player.Nickname} is reloading their {ev.Firearm.Type}. They have {ev.Firearm.MagazineAmmo} ammo. Using ammo type {ev.Firearm.AmmoType}");
-        }
+        public void OnReloading(ReloadingWeaponEventArgs ev) => Log.Info($"{ev.Player.Nickname} is reloading their {ev.Firearm.Type}. They have {ev.Firearm.MagazineAmmo} ammo. Using ammo type {ev.Firearm.AmmoType}");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnReceivingEffect(ReceivingEffectEventArgs)"/>
         public void OnReceivingEffect(ReceivingEffectEventArgs ev)
@@ -182,10 +149,7 @@ namespace Exiled.Example.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp914.OnUpgradingPlayer(UpgradingPlayerEventArgs)"/>
-        public void OnUpgradingPlayer(UpgradingPlayerEventArgs ev)
-        {
-            Log.Info($"SCP-914 is processing {ev.Player.Nickname} on {ev.KnobSetting}. Upgrade Items: {ev.UpgradeItems} Held Items only: {ev.HeldOnly}");
-        }
+        public void OnUpgradingPlayer(UpgradingPlayerEventArgs ev) => Log.Info($"SCP-914 is processing {ev.Player.Nickname} on {ev.KnobSetting}. Upgrade Items: {ev.UpgradeItems} Held Items only: {ev.HeldOnly}");
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDroppingItem(DroppingItemEventArgs)"/>
         public void OnDroppingItem(DroppingItemEventArgs ev)

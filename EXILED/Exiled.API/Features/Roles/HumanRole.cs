@@ -28,31 +28,31 @@ namespace Exiled.API.Features.Roles
         internal HumanRole(HumanGameRole baseRole)
             : base(baseRole)
         {
-            Base = baseRole;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
         }
 
         /// <inheritdoc/>
-        public override RoleTypeId Type => Base.RoleTypeId;
+        public override RoleTypeId Type => this.Base.RoleTypeId;
 
         /// <summary>
         /// Gets the player's unit name.
         /// </summary>
-        public string UnitName => NamingRulesManager.ClientFetchReceived(Team, UnitNameId);
+        public string UnitName => NamingRulesManager.ClientFetchReceived(this.Team, this.UnitNameId);
 
         /// <summary>
         /// Gets or sets the <see cref="UnitNameId"/>.
         /// </summary>
         public byte UnitNameId
         {
-            get => Base.UnitNameId;
-            set => Base.UnitNameId = value;
+            get => this.Base.UnitNameId;
+            set => this.Base.UnitNameId = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="HumanRole"/> uses unit names or not.
         /// </summary>
-        public bool UsesUnitNames => Base.UsesUnitNames;
+        public bool UsesUnitNames => this.Base.UsesUnitNames;
 
         /// <summary>
         /// Gets the game <see cref="HumanGameRole"/>.
@@ -67,12 +67,12 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="hitbox">The <see cref="HitboxType"/>.</param>
         /// <returns>The armor efficacy.</returns>
-        public int GetArmorEfficacy(HitboxType hitbox) => Base.GetArmorEfficacy(hitbox);
+        public int GetArmorEfficacy(HitboxType hitbox) => this.Base.GetArmorEfficacy(hitbox);
 
         /// <inheritdoc/>
         internal override void SendAppearanceSpawnMessage(NetworkWriter writer, PlayerRoleBase basicRole)
         {
-            if (UsesUnitNames)
+            if (this.UsesUnitNames)
                 writer.WriteByte(basicRole is HumanGameRole humanRole && humanRole.UsesUnitNames ? humanRole.UnitNameId : (byte)0);
 
             base.SendAppearanceSpawnMessage(writer, basicRole);

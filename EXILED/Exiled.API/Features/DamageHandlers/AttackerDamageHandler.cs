@@ -41,10 +41,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public bool ForceFullFriendlyFire
         {
-            get => Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.ForceFullFriendlyFire;
+            get => this.Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.ForceFullFriendlyFire;
             set
             {
-                if (Is(out PlayerStatsSystem.AttackerDamageHandler handler))
+                if (this.Is(out PlayerStatsSystem.AttackerDamageHandler handler))
                     handler.ForceFullFriendlyFire = value;
             }
         }
@@ -54,10 +54,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public bool IsSuicide
         {
-            get => Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.IsSuicide;
+            get => this.Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.IsSuicide;
             set
             {
-                if (Is(out PlayerStatsSystem.AttackerDamageHandler handler))
+                if (this.Is(out PlayerStatsSystem.AttackerDamageHandler handler))
                     handler.IsSuicide = value;
             }
         }
@@ -65,17 +65,17 @@ namespace Exiled.API.Features.DamageHandlers
         /// <summary>
         /// Gets a value indicating whether the self damage is allowed.
         /// </summary>
-        public bool AllowSelfDamage => Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.AllowSelfDamage;
+        public bool AllowSelfDamage => this.Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.AllowSelfDamage;
 
         /// <summary>
         /// Gets or sets a value indicating whether the damage is friendly fire.
         /// </summary>
         public bool IsFriendlyFire
         {
-            get => Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.IsFriendlyFire;
+            get => this.Is(out PlayerStatsSystem.AttackerDamageHandler handler) && handler.IsFriendlyFire;
             set
             {
-                if (Is(out PlayerStatsSystem.AttackerDamageHandler handler))
+                if (this.Is(out PlayerStatsSystem.AttackerDamageHandler handler))
                     handler.IsFriendlyFire = value;
             }
         }
@@ -86,33 +86,33 @@ namespace Exiled.API.Features.DamageHandlers
         /// <param name="player">The <see cref="Player"/> to damage.</param>
         public override void ProcessDamage(Player player)
         {
-            if (!Is(out PlayerStatsSystem.AttackerDamageHandler _))
+            if (!this.Is(out PlayerStatsSystem.AttackerDamageHandler _))
                 return;
 
-            if ((player.IsSpawnProtected && (player != Attacker)) ||
+            if ((player.IsSpawnProtected && (player != this.Attacker)) ||
                 (!SpawnProtected.PreventAllDamage &&
-                 Attacker is not null && Attacker.IsSpawnProtected))
+                 this.Attacker is not null && this.Attacker.IsSpawnProtected))
             {
-                Damage = 0f;
+                this.Damage = 0f;
                 return;
             }
 
-            if ((player != Attacker) && !ForceFullFriendlyFire)
+            if ((player != this.Attacker) && !this.ForceFullFriendlyFire)
             {
-                if (HitboxIdentity.IsEnemy(AttackerFootprint.Role, player.Role))
+                if (HitboxIdentity.IsEnemy(this.AttackerFootprint.Role, player.Role))
                     return;
 
-                Damage *= PlayerStatsSystem.AttackerDamageHandler._ffMultiplier;
-                IsFriendlyFire = true;
+                this.Damage *= PlayerStatsSystem.AttackerDamageHandler._ffMultiplier;
+                this.IsFriendlyFire = true;
             }
             else
             {
-                IsSuicide = AllowSelfDamage || ForceFullFriendlyFire;
+                this.IsSuicide = this.AllowSelfDamage || this.ForceFullFriendlyFire;
 
-                if (IsSuicide)
+                if (this.IsSuicide)
                     return;
 
-                Damage = 0f;
+                this.Damage = 0f;
             }
         }
     }

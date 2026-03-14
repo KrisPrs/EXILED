@@ -35,10 +35,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// <param name="attacker">The attacker to be set.</param>
         public DamageHandler(Player target, Player attacker)
         {
-            Target = target;
-            Attacker = attacker;
-            TargetFootprint = target?.Footprint ?? default;
-            AttackerFootprint = Attacker?.Footprint ?? default;
+            this.Target = target;
+            this.Attacker = attacker;
+            this.TargetFootprint = target?.Footprint ?? default;
+            this.AttackerFootprint = this.Attacker?.Footprint ?? default;
         }
 
         /// <summary>
@@ -49,23 +49,23 @@ namespace Exiled.API.Features.DamageHandlers
         public DamageHandler(Player target, BaseHandler baseHandler)
             : base(baseHandler)
         {
-            Target = target;
-            TargetFootprint = target?.Footprint ?? default;
+            this.Target = target;
+            this.TargetFootprint = target?.Footprint ?? default;
 
             if (baseHandler is PlayerStatsSystem.AttackerDamageHandler attackerDamageHandler)
             {
-                Attacker = Player.Get(attackerDamageHandler.Attacker.Hub);
-                AttackerFootprint = attackerDamageHandler.Attacker;
+                this.Attacker = Player.Get(attackerDamageHandler.Attacker.Hub);
+                this.AttackerFootprint = attackerDamageHandler.Attacker;
             }
             else if (baseHandler is GenericDamageHandler genericDamageHandler)
             {
-                Attacker = Player.Get(genericDamageHandler.Attacker.Hub);
-                AttackerFootprint = genericDamageHandler.Attacker;
+                this.Attacker = Player.Get(genericDamageHandler.Attacker.Hub);
+                this.AttackerFootprint = genericDamageHandler.Attacker;
             }
             else
             {
-                Attacker = null;
-                AttackerFootprint = default;
+                this.Attacker = null;
+                this.AttackerFootprint = default;
             }
         }
 
@@ -94,10 +94,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public virtual float Damage
         {
-            get => Is(out StandardDamageHandler handler) ? handler.Damage : 0f;
+            get => this.Is(out StandardDamageHandler handler) ? handler.Damage : 0f;
             set
             {
-                if (Is(out StandardDamageHandler handler))
+                if (this.Is(out StandardDamageHandler handler))
                     handler.Damage = value;
             }
         }
@@ -107,10 +107,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public Vector3 StartVelocity
         {
-            get => Is(out StandardDamageHandler handler) ? handler.StartVelocity : Vector3.zero;
+            get => this.Is(out StandardDamageHandler handler) ? handler.StartVelocity : Vector3.zero;
             set
             {
-                if (Is(out StandardDamageHandler handler))
+                if (this.Is(out StandardDamageHandler handler))
                     handler.StartVelocity = value;
             }
         }
@@ -120,10 +120,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public float DealtHealthDamage
         {
-            get => Is(out StandardDamageHandler handler) ? handler.DealtHealthDamage : 0f;
+            get => this.Is(out StandardDamageHandler handler) ? handler.DealtHealthDamage : 0f;
             set
             {
-                if (Is(out StandardDamageHandler handler))
+                if (this.Is(out StandardDamageHandler handler))
                     handler.DealtHealthDamage = value;
             }
         }
@@ -133,10 +133,10 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public float AbsorbedAhpDamage
         {
-            get => Is(out StandardDamageHandler handler) ? handler.AbsorbedAhpDamage : 0f;
+            get => this.Is(out StandardDamageHandler handler) ? handler.AbsorbedAhpDamage : 0f;
             set
             {
-                if (Is(out StandardDamageHandler handler))
+                if (this.Is(out StandardDamageHandler handler))
                     handler.AbsorbedAhpDamage = value;
             }
         }
@@ -144,42 +144,42 @@ namespace Exiled.API.Features.DamageHandlers
         /// <inheritdoc/>
         public override Action ApplyDamage(Player player)
         {
-            if (!Is(out StandardDamageHandler damageHandler))
+            if (!this.Is(out StandardDamageHandler damageHandler))
                 return player.GetModule<HealthStat>().CurValue > 0f ? Action.Damage : Action.Death;
 
-            if (Damage <= 0f)
+            if (this.Damage <= 0f)
                 return Action.None;
 
             damageHandler.ApplyDamage(player.ReferenceHub);
 
-            StartVelocity = player.Velocity;
-            As<StandardDamageHandler>().StartVelocity.y = Mathf.Max(damageHandler.StartVelocity.y, 0f);
+            this.StartVelocity = player.Velocity;
+            this.As<StandardDamageHandler>().StartVelocity.y = Mathf.Max(damageHandler.StartVelocity.y, 0f);
             AhpStat ahpModule = player.GetModule<AhpStat>();
             HealthStat healthModule = player.GetModule<HealthStat>();
 
-            if (Damage <= StandardDamageHandler.KillValue)
+            if (this.Damage <= StandardDamageHandler.KillValue)
             {
                 ahpModule.CurValue = 0f;
                 healthModule.CurValue = 0f;
                 return Action.Death;
             }
 
-            ProcessDamage(player);
+            this.ProcessDamage(player);
 
             foreach (StatusEffectBase effect in player.ActiveEffects)
             {
                 if (effect is IDamageModifierEffect damageModifierEffect)
-                    Damage *= damageModifierEffect.GetDamageModifier(Damage, damageHandler, damageHandler.Hitbox);
+                    this.Damage *= damageModifierEffect.GetDamageModifier(this.Damage, damageHandler, damageHandler.Hitbox);
             }
 
             // DealtHealthDamage = ahpModule.ServerProcessDamage(Damage);
-            AbsorbedAhpDamage = Damage - DealtHealthDamage;
+            this.AbsorbedAhpDamage = this.Damage - this.DealtHealthDamage;
 
             // healthModule.CurValue -= DealtHealthDamage;
             return player.GetModule<HealthStat>().CurValue > 0f ? Action.Damage : Action.Death;
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{Target} {Damage} ({Type}) {(Attacker is not null ? Attacker.Nickname : "No one")}";
+        public override string ToString() => $"{this.Target} {this.Damage} ({this.Type}) {(this.Attacker is not null ? this.Attacker.Nickname : "No one")}";
     }
 }

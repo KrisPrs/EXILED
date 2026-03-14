@@ -26,8 +26,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public HealingEventArgs(Player player, float amount)
         {
-            Player = player;
-            Amount = amount;
+            this.Player = player;
+            this.Amount = amount;
         }
 
         /// <inheritdoc/>

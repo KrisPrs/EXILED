@@ -42,8 +42,8 @@ namespace Exiled.API.Features.Toys
         internal ShootingTargetToy(ShootingTarget target)
             : base(target, AdminToyType.ShootingTarget)
         {
-            Base = target;
-            Type = TypeLookup.TryGetValue(Base.gameObject.name.Substring(0, Base.gameObject.name.Length - 7), out ShootingTargetType type) ? type : ShootingTargetType.Unknown;
+            this.Base = target;
+            this.Type = TypeLookup.TryGetValue(this.Base.gameObject.name.Substring(0, this.Base.gameObject.name.Length - 7), out ShootingTargetType type) ? type : ShootingTargetType.Unknown;
         }
 
         /// <summary>
@@ -72,35 +72,35 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the bullseye.
         /// </summary>
-        public GameObject Bullseye => Base._bullsEye.gameObject;
+        public GameObject Bullseye => this.Base._bullsEye.gameObject;
 
         /// <summary>
         /// Gets the <see cref="Interactables.Verification.IVerificationRule"/> for this target.
         /// </summary>
-        public Interactables.Verification.IVerificationRule VerificationRule => Base.VerificationRule;
+        public Interactables.Verification.IVerificationRule VerificationRule => this.Base.VerificationRule;
 
         /// <summary>
         /// Gets the bullseye location of the target.
         /// </summary>
-        public Vector3 BullseyePosition => Base._bullsEye.position;
+        public Vector3 BullseyePosition => this.Base._bullsEye.position;
 
         /// <summary>
         /// Gets the bullseye radius of the target.
         /// </summary>
-        public float BullseyeRadius => Base._bullsEyeRadius;
+        public float BullseyeRadius => this.Base._bullsEyeRadius;
 
         /// <summary>
         /// Gets or sets the max health of the target.
         /// </summary>
         public int MaxHealth
         {
-            get => Base._maxHp;
+            get => this.Base._maxHp;
             set
             {
-                if (!IsSynced)
+                if (!this.IsSynced)
                     throw new InvalidOperationException("Attempted to set MaxHealth while target was not in sync mode.");
-                Base._maxHp = value;
-                Base.RpcSendInfo(MaxHealth, AutoResetTime);
+                this.Base._maxHp = value;
+                this.Base.RpcSendInfo(this.MaxHealth, this.AutoResetTime);
             }
         }
 
@@ -109,12 +109,12 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float Health
         {
-            get => Base._hp;
+            get => this.Base._hp;
             set
             {
-                if (!IsSynced)
+                if (!this.IsSynced)
                     throw new InvalidOperationException("Attempted to set Health while target was not in sync mode.");
-                Base._hp = value;
+                this.Base._hp = value;
             }
         }
 
@@ -123,13 +123,13 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public int AutoResetTime
         {
-            get => Base._autoDestroyTime;
+            get => this.Base._autoDestroyTime;
             set
             {
-                if (!IsSynced)
+                if (!this.IsSynced)
                     throw new InvalidOperationException("Attempted to set AutoResetTime while target was not in sync mode.");
-                Base._autoDestroyTime = Mathf.Max(0, value);
-                Base.RpcSendInfo(MaxHealth, AutoResetTime);
+                this.Base._autoDestroyTime = Mathf.Max(0, value);
+                this.Base.RpcSendInfo(this.MaxHealth, this.AutoResetTime);
             }
         }
 
@@ -138,12 +138,12 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public new Vector3 Scale
         {
-            get => GameObject.transform.localScale;
+            get => this.GameObject.transform.localScale;
             set
             {
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.localScale = value;
-                NetworkServer.Spawn(GameObject);
+                NetworkServer.UnSpawn(this.GameObject);
+                this.GameObject.transform.localScale = value;
+                NetworkServer.Spawn(this.GameObject);
             }
         }
 
@@ -152,8 +152,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool IsSynced
         {
-            get => Base.Network_syncMode;
-            set => Base.Network_syncMode = value;
+            get => this.Base.Network_syncMode;
+            set => this.Base.Network_syncMode = value;
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Clears the target and resets its health.
         /// </summary>
-        public void Clear() => Base.ClearTarget();
+        public void Clear() => this.Base.ClearTarget();
 
         /// <summary>
         /// Damages the target with the given damage, item, footprint, and hit location.
@@ -231,6 +231,6 @@ namespace Exiled.API.Features.Toys
         /// <param name="damageHandler">The <see cref="DamageHandlerBase"/> dealing the damage.</param>
         /// <param name="exactHit">The exact location of the hit.</param>
         /// <returns>Whether the damage was sent.</returns>
-        public bool Damage(float damage, DamageHandlerBase damageHandler, Vector3 exactHit) => Base.Damage(damage, damageHandler, exactHit);
+        public bool Damage(float damage, DamageHandlerBase damageHandler, Vector3 exactHit) => this.Base.Damage(damage, damageHandler, exactHit);
     }
 }

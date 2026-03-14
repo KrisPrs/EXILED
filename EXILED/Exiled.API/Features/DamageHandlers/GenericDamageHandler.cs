@@ -54,124 +54,124 @@ namespace Exiled.API.Features.DamageHandlers
             this.damageType = damageType;
             this.overrideCassieForAllRole = overrideCassieForAllRole;
             cassieAnnouncement ??= DamageHandlerBase.CassieAnnouncement.Default;
-            customCassieAnnouncement = cassieAnnouncement;
+            this.customCassieAnnouncement = cassieAnnouncement;
 
-            if (customCassieAnnouncement is not null)
-                customCassieAnnouncement.Announcement ??= $"{player.Nickname} killed by {attacker.Nickname} utilizing {damageType}";
+            if (this.customCassieAnnouncement is not null)
+                this.customCassieAnnouncement.Announcement ??= $"{player.Nickname} killed by {attacker.Nickname} utilizing {damageType}";
 
-            Attacker = attacker.Footprint;
-            AllowSelfDamage = true;
-            Damage = damage;
-            ServerLogsText = $"GenericDamageHandler damage processing";
-            genericDamageText = $"You were damaged by {damageType}";
-            genericEnvironmentDamageText = $"Environemntal damage of type {damageType}";
+            this.Attacker = attacker.Footprint;
+            this.AllowSelfDamage = true;
+            this.Damage = damage;
+            this.ServerLogsText = $"GenericDamageHandler damage processing";
+            this.genericDamageText = $"You were damaged by {damageType}";
+            this.genericEnvironmentDamageText = $"Environemntal damage of type {damageType}";
 
             switch (damageType)
             {
                 case DamageType.Falldown:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Falldown, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Falldown, cassieAnnouncement);
                     break;
                 case DamageType.Hypothermia:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Hypothermia, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Hypothermia, cassieAnnouncement);
                     break;
                 case DamageType.Asphyxiation:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Asphyxiated, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Asphyxiated, cassieAnnouncement);
                     break;
                 case DamageType.Poison:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Poisoned, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Poisoned, cassieAnnouncement);
                     break;
                 case DamageType.Bleeding:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Bleeding, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Bleeding, cassieAnnouncement);
                     break;
                 case DamageType.Crushed:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Crushed, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Crushed, cassieAnnouncement);
                     break;
                 case DamageType.FemurBreaker:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.UsedAs106Bait, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.UsedAs106Bait, cassieAnnouncement);
                     break;
                 case DamageType.PocketDimension:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.PocketDecay, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.PocketDecay, cassieAnnouncement);
                     break;
                 case DamageType.FriendlyFireDetector:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.FriendlyFireDetector, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.FriendlyFireDetector, cassieAnnouncement);
                     break;
                 case DamageType.SeveredHands:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.SeveredHands, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.SeveredHands, cassieAnnouncement);
                     break;
                 case DamageType.SeveredEyes:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Scp1344, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Scp1344, cassieAnnouncement);
                     break;
                 case DamageType.Warhead:
-                    Base = new WarheadDamageHandler();
+                    this.Base = new WarheadDamageHandler();
                     break;
                 case DamageType.Decontamination:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Decontamination, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Decontamination, cassieAnnouncement);
                     break;
                 case DamageType.Tesla:
-                    Base = new UniversalDamageHandler(damage, DeathTranslations.Tesla, cassieAnnouncement);
+                    this.Base = new UniversalDamageHandler(damage, DeathTranslations.Tesla, cassieAnnouncement);
                     break;
                 case DamageType.Recontainment:
-                    Base = new RecontainmentDamageHandler(Attacker);
+                    this.Base = new RecontainmentDamageHandler(this.Attacker);
                     break;
                 case DamageType.Jailbird:
-                    Base = new JailbirdDamageHandler(Attacker.Hub, damage, Vector3.zero);
+                    this.Base = new JailbirdDamageHandler(this.Attacker.Hub, damage, Vector3.zero);
                     break;
                 case DamageType.Scp1509:
-                    Base = new Scp1509DamageHandler(Attacker.Hub, damage, Vector3.zero);
+                    this.Base = new Scp1509DamageHandler(this.Attacker.Hub, damage, Vector3.zero);
                     break;
                 case DamageType.GrayCandy:
-                    Base = new GrayCandyDamageHandler(Attacker.Hub, damage);
+                    this.Base = new GrayCandyDamageHandler(this.Attacker.Hub, damage);
                     break;
                 case DamageType.MicroHid:
                     InventorySystem.Items.MicroHID.MicroHIDItem microHidOwner = new();
                     microHidOwner.Owner = attacker.ReferenceHub;
-                    Base = new MicroHidDamageHandler(damage, microHidOwner);
+                    this.Base = new MicroHidDamageHandler(damage, microHidOwner);
                     break;
                 case DamageType.Explosion:
-                    Base = new ExplosionDamageHandler(attacker.Footprint, UnityEngine.Vector3.zero, damage, 0, ExplosionType.Grenade);
+                    this.Base = new ExplosionDamageHandler(attacker.Footprint, UnityEngine.Vector3.zero, damage, 0, ExplosionType.Grenade);
                     break;
                 case DamageType.Firearm:
                 case DamageType.AK:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunAK);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunAK);
                     break;
                 case DamageType.Crossvec:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunCrossvec);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunCrossvec);
                     break;
                 case DamageType.Logicer:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunLogicer);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunLogicer);
                     break;
                 case DamageType.Revolver:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunRevolver);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunRevolver);
                     break;
                 case DamageType.Shotgun:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunShotgun);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunShotgun);
                     break;
                 case DamageType.Com15:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunCOM15);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunCOM15);
                     break;
                 case DamageType.Com18:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunCOM18);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunCOM18);
                     break;
                 case DamageType.Fsp9:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunFSP9);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunFSP9);
                     break;
                 case DamageType.E11Sr:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunE11SR);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunE11SR);
                     break;
                 case DamageType.Com45:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunCom45);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunCom45);
                     break;
                 case DamageType.Frmg0:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunFRMG0);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunFRMG0);
                     break;
                 case DamageType.A7:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunA7);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunA7);
                     break;
                 case DamageType.Scp127:
-                    GenericFirearm(player, attacker, damage, damageType, ItemType.GunSCP127);
+                    this.GenericFirearm(player, attacker, damage, damageType, ItemType.GunSCP127);
                     break;
                 case DamageType.ParticleDisruptor:
-                    Base = new DisruptorDamageHandler(new (Item.Create(ItemType.ParticleDisruptor, attacker).Base as InventorySystem.Items.Firearms.Firearm, InventorySystem.Items.Firearms.Modules.DisruptorActionModule.FiringState.FiringSingle), Vector3.up, damage);
+                    this.Base = new DisruptorDamageHandler(new (Item.Create(ItemType.ParticleDisruptor, attacker).Base as InventorySystem.Items.Firearms.Firearm, InventorySystem.Items.Firearms.Modules.DisruptorActionModule.FiringState.FiringSingle), Vector3.up, damage);
                     break;
                 case DamageType.Scp096:
                     Scp096Role curr096 = attacker.ReferenceHub.roleManager.CurrentRole as Scp096Role ?? new Scp096Role();
@@ -179,7 +179,7 @@ namespace Exiled.API.Features.DamageHandlers
                     if (curr096 != null)
                         curr096._lastOwner = attacker.ReferenceHub;
 
-                    Base = new Scp096DamageHandler(curr096, damage, Scp096DamageHandler.AttackType.SlapRight);
+                    this.Base = new Scp096DamageHandler(curr096, damage, Scp096DamageHandler.AttackType.SlapRight);
                     break;
                 case DamageType.Scp939:
                     Scp939Role curr939 = attacker.ReferenceHub.roleManager.CurrentRole as Scp939Role ?? new Scp939Role();
@@ -187,54 +187,54 @@ namespace Exiled.API.Features.DamageHandlers
                     if (curr939 != null)
                         curr939._lastOwner = attacker.ReferenceHub;
 
-                    Base = new Scp939DamageHandler(curr939, damage, Scp939DamageType.LungeTarget);
+                    this.Base = new Scp939DamageHandler(curr939, damage, Scp939DamageType.LungeTarget);
                     break;
                 case DamageType.Scp: // TODO replace ScpDamageHandler with specific SCP-Role damage handler
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Unknown);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Unknown);
                     break;
                 case DamageType.Scp018:
                     Scp018Projectile scp018Projectile = Projectile.Create<Scp018Projectile>(ProjectileType.Scp018);
                     scp018Projectile.PreviousOwner = attacker;
-                    Base = new Scp018DamageHandler(scp018Projectile.Base, damage, true);
+                    this.Base = new Scp018DamageHandler(scp018Projectile.Base, damage, true);
                     break;
                 case DamageType.Scp207:
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp207);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp207);
                     break;
                 case DamageType.Scp049:
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp049);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp049);
                     break;
                 case DamageType.Scp173:
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp173);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Scp173);
                     break;
                 case DamageType.Scp0492:
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Zombie);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.Zombie);
                     break;
                 case DamageType.Scp106:
-                    Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.PocketDecay);
+                    this.Base = new PlayerStatsSystem.ScpDamageHandler(attacker.ReferenceHub, damage, DeathTranslations.PocketDecay);
                     break;
                 case DamageType.CardiacArrest:
-                    Base = new Scp049DamageHandler(attacker.ReferenceHub, damage, Scp049DamageHandler.AttackType.CardiacArrest);
+                    this.Base = new Scp049DamageHandler(attacker.ReferenceHub, damage, Scp049DamageHandler.AttackType.CardiacArrest);
                     break;
                 case DamageType.Scp3114:
-                    Base = new Scp3114DamageHandler(attacker.ReferenceHub, damage, Scp3114DamageHandler.HandlerType.Slap);
+                    this.Base = new Scp3114DamageHandler(attacker.ReferenceHub, damage, Scp3114DamageHandler.HandlerType.Slap);
                     break;
                 case DamageType.Strangled:
-                    Base = new Scp3114DamageHandler(attacker.ReferenceHub, damage, Scp3114DamageHandler.HandlerType.Strangulation);
+                    this.Base = new Scp3114DamageHandler(attacker.ReferenceHub, damage, Scp3114DamageHandler.HandlerType.Strangulation);
                     break;
                 case DamageType.Scp1507:
-                    Base = new Scp1507DamageHandler(attacker.Footprint, damage);
+                    this.Base = new Scp1507DamageHandler(attacker.Footprint, damage);
                     break;
                 case DamageType.Scp956:
-                    Base = new Scp956DamageHandler(Vector3.forward);
+                    this.Base = new Scp956DamageHandler(Vector3.forward);
                     break;
                 case DamageType.SnowBall:
-                    Base = new SnowballDamageHandler(attacker.Footprint, damage, Vector3.forward);
+                    this.Base = new SnowballDamageHandler(attacker.Footprint, damage, Vector3.forward);
                     break;
                 case DamageType.Custom:
                 case DamageType.Unknown:
                 case DamageType.Marshmallow:
                 default:
-                    Base = new CustomReasonDamageHandler(damageText ?? genericDamageText, damage, cassieAnnouncement.Announcement);
+                    this.Base = new CustomReasonDamageHandler(damageText ?? this.genericDamageText, damage, cassieAnnouncement.Announcement);
                     break;
             }
         }
@@ -263,7 +263,7 @@ namespace Exiled.API.Features.DamageHandlers
         /// <summary>
         /// Gets the <see cref="PlayerStatsSystem.DamageHandlerBase.CassieAnnouncement"/> the base game uses when a player dies.
         /// </summary>
-        public override CassieAnnouncement CassieDeathAnnouncement => customCassieAnnouncement;
+        public override CassieAnnouncement CassieDeathAnnouncement => this.customCassieAnnouncement;
 
         /// <summary>
         /// Gets or sets the current attacker.
@@ -291,9 +291,9 @@ namespace Exiled.API.Features.DamageHandlers
             HandlerOutput output = base.ApplyDamage(ply);
             if (output is HandlerOutput.Death)
             {
-                if (customCassieAnnouncement?.Announcement != null && (overrideCassieForAllRole || ply.IsSCP()))
+                if (this.customCassieAnnouncement?.Announcement != null && (this.overrideCassieForAllRole || ply.IsSCP()))
                 {
-                    Cassie.Message(customCassieAnnouncement.Announcement);
+                    Cassie.Message(this.customCassieAnnouncement.Announcement);
                 }
             }
 
@@ -317,7 +317,7 @@ namespace Exiled.API.Features.DamageHandlers
                     Owner = attacker.ReferenceHub,
                 },
             };
-            Base = new PlayerStatsSystem.FirearmDamageHandler() { Firearm = firearm.Base, Damage = amount };
+            this.Base = new PlayerStatsSystem.FirearmDamageHandler() { Firearm = firearm.Base, Damage = amount };
         }
     }
 }

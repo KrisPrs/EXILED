@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public RevealedEventArgs(Player player, bool isManualReveal)
         {
-            Player = player;
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            IsManualReveal = isManualReveal;
+            this.Player = player;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.IsManualReveal = isManualReveal;
         }
 
         /// <inheritdoc/>

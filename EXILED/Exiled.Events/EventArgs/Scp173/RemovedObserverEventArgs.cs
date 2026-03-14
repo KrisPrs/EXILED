@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Scp173
         /// <param name="observer"><inheritdoc cref="Player" /></param>
         public RemovedObserverEventArgs(Player player, Player observer)
         {
-            Scp173 = player.Role.As<Scp173Role>();
-            Player = player;
-            Observer = observer;
+            this.Scp173 = player.Role.As<Scp173Role>();
+            this.Player = player;
+            this.Observer = observer;
         }
 
         /// <inheritdoc />

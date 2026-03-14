@@ -62,7 +62,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (!player.TryGetCustomRole(out CustomRole role))
             {
-                response = NoCustomRoleResponse;
+                response = this.NoCustomRoleResponse;
                 return false;
             }
 
@@ -74,7 +74,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (role.CustomAbilities == null)
             {
-                response = NoAbilitiesResponse;
+                response = this.NoAbilitiesResponse;
                 return false;
             }
 
@@ -96,7 +96,7 @@ namespace Exiled.CustomRoles.Commands.User
 
             if (activeAbilities.IsEmpty())
             {
-                response = NoAbilitiesResponse;
+                response = this.NoAbilitiesResponse;
                 return false;
             }
 
@@ -105,14 +105,14 @@ namespace Exiled.CustomRoles.Commands.User
             {
                 if (!int.TryParse(arguments.At(0), out abilityNumber))
                 {
-                    response = string.Format(InvalidArgumentResponse, arguments.At(0));
+                    response = string.Format(this.InvalidArgumentResponse, arguments.At(0));
                     return false;
                 }
             }
 
             if (activeAbilities.Count < abilityNumber)
             {
-                response = InvalidAbilityNumberResponse;
+                response = this.InvalidAbilityNumberResponse;
                 return false;
             }
 
@@ -124,7 +124,7 @@ namespace Exiled.CustomRoles.Commands.User
             }
 
             activeAbilities[abilityNumber - 1].UseAbility(player);
-            response = string.Format(AbilityUsedResponse, activeAbilities[abilityNumber - 1].Name);
+            response = string.Format(this.AbilityUsedResponse, activeAbilities[abilityNumber - 1].Name);
             return false;
         }
     }

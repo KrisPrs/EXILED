@@ -26,11 +26,11 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="newZone">The new zone the player entered.</param>
         public ZoneChangedEventArgs(Player player, Room oldRoom, Room newRoom, ZoneType oldZone, ZoneType newZone)
         {
-            Player = player;
-            OldRoom = oldRoom;
-            NewRoom = newRoom;
-            OldZone = oldZone;
-            NewZone = newZone;
+            this.Player = player;
+            this.OldRoom = oldRoom;
+            this.NewRoom = newRoom;
+            this.OldZone = oldZone;
+            this.NewZone = newZone;
         }
 
         /// <inheritdoc/>

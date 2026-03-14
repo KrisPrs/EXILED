@@ -50,14 +50,14 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DamagingShootingTargetEventArgs(Player player, float damage, float distance, Vector3 hitLocation, ShootingTarget shootingTarget, DamageHandlerBase damageHandler, bool isAllowed = true)
         {
-            Player = player;
-            Amount = damage;
-            Distance = distance;
-            ShootingTarget = ShootingTargetToy.Get(shootingTarget);
-            Item = player?.CurrentItem;
-            DamageHandler = damageHandler as AttackerDamageHandler;
-            HitLocation = hitLocation;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Amount = damage;
+            this.Distance = distance;
+            this.ShootingTarget = ShootingTargetToy.Get(shootingTarget);
+            this.Item = player?.CurrentItem;
+            this.DamageHandler = damageHandler as AttackerDamageHandler;
+            this.HitLocation = hitLocation;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

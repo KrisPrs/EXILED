@@ -39,11 +39,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SearchingPickupEventArgs(Player player, ItemPickupBase pickup, SearchSession searchSession, PickupSearchCompletor searchCompletor, float searchTime)
         {
-            Player = player;
-            Pickup = Pickup.Get(pickup);
-            SearchSession = searchSession;
-            SearchCompletor = searchCompletor;
-            SearchTime = searchTime;
+            this.Player = player;
+            this.Pickup = Pickup.Get(pickup);
+            this.SearchSession = searchSession;
+            this.SearchCompletor = searchCompletor;
+            this.SearchTime = searchTime;
         }
 
         /// <summary>

@@ -46,17 +46,17 @@ namespace Exiled.API.Features
         /// <param name="elevator">The <see cref="ElevatorChamber"/> to wrap.</param>
         internal Lift(ElevatorChamber elevator)
         {
-            Base = elevator;
-            ElevatorAutoReturn = elevator.GetComponent<ElevatorAutoReturn>();
+            this.Base = elevator;
+            this.ElevatorAutoReturn = elevator.GetComponent<ElevatorAutoReturn>();
             ElevatorChamberToLift.Add(elevator, this);
 
-            internalDoorsList.AddRange(Elevator.AllElevatorDoors[Group]);
+            this.internalDoorsList.AddRange(Elevator.AllElevatorDoors[this.Group]);
         }
 
         /// <summary>
         /// Finalizes an instance of the <see cref="Lift"/> class.
         /// </summary>
-        ~Lift() => ListPool<Elevator>.Pool.Return(internalDoorsList);
+        ~Lift() => ListPool<Elevator>.Pool.Return(this.internalDoorsList);
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Lift"/> which contains all the <see cref="Lift"/> instances.
@@ -83,35 +83,35 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a value of the internal doors list.
         /// </summary>
-        public IReadOnlyCollection<Doors.ElevatorDoor> Doors => internalDoorsList.Select(x => Door.Get<Doors.ElevatorDoor>(x)).ToList();
+        public IReadOnlyCollection<Doors.ElevatorDoor> Doors => this.internalDoorsList.Select(x => Door.Get<Doors.ElevatorDoor>(x)).ToList();
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Player"/> in the <see cref="Room"/>.
         /// </summary>
-        public IEnumerable<Player> Players => Player.List.Where(x => Bounds.Contains(x.Position));
+        public IEnumerable<Player> Players => Player.List.Where(x => this.Bounds.Contains(x.Position));
 
         /// <summary>
         /// Gets the lift's name.
         /// </summary>
-        public string Name => Group.ToString();
+        public string Name => this.Group.ToString();
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the lift.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the lift's <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets or sets the lift's position.
         /// </summary>
         public Vector3 Position
         {
-            get => Base.transform.position;
-            set => Base.transform.position = value;
+            get => this.Base.transform.position;
+            set => this.Base.transform.position = value;
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace Exiled.API.Features
         /// </summary>
         public Quaternion Rotation
         {
-            get => Base.transform.rotation;
-            set => Base.transform.rotation = value;
+            get => this.Base.transform.rotation;
+            set => this.Base.transform.rotation = value;
         }
 
         /// <summary>
@@ -128,19 +128,19 @@ namespace Exiled.API.Features
         /// </summary>
         public ElevatorSequence Status
         {
-            get => Base.CurSequence;
-            set => Base.CurSequence = value;
+            get => this.Base.CurSequence;
+            set => this.Base.CurSequence = value;
         }
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Bounds"/> representing the space inside the lift.
         /// </summary>
-        public Bounds Bounds => (Bounds)Base.WorldspaceBounds;
+        public Bounds Bounds => (Bounds)this.Base.WorldspaceBounds;
 
         /// <summary>
         /// Gets the lift's <see cref="ElevatorType"/>.
         /// </summary>
-        public ElevatorType Type => Group switch
+        public ElevatorType Type => this.Group switch
         {
             ElevatorGroup.Scp049 => ElevatorType.Scp049,
             ElevatorGroup.GateA01 or ElevatorGroup.GateA02 => ElevatorType.GateA,
@@ -155,61 +155,61 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="ElevatorGroup"/>.
         /// </summary>
-        public ElevatorGroup Group => Base.AssignedGroup;
+        public ElevatorGroup Group => this.Base.AssignedGroup;
 
         /// <summary>
         /// Gets a value indicating whether the lift is operative.
         /// </summary>
-        public bool IsOperative => Base.IsReady;
+        public bool IsOperative => this.Base.IsReady;
 
         /// <summary>
         /// Gets a value indicating whether the lift is currently moving.
         /// </summary>
-        public bool IsMoving => Status is ElevatorSequence.MovingAway or ElevatorSequence.Arriving;
+        public bool IsMoving => this.Status is ElevatorSequence.MovingAway or ElevatorSequence.Arriving;
 
         /// <summary>
         /// Gets a value indicating whether the lift is locked.
         /// </summary>
-        public bool IsLocked => Base.ActiveLocksAnyDoors > 0 || Base.ActiveLocksAllDoors > 0;
+        public bool IsLocked => this.Base.ActiveLocksAnyDoors > 0 || this.Base.ActiveLocksAllDoors > 0;
 
         /// <summary>
         /// Gets or sets the <see cref="AnimationTime"/>.
         /// </summary>
         public float AnimationTime
         {
-            get => Base._animationTime;
-            set => Base._animationTime = value;
+            get => this.Base._animationTime;
+            set => this.Base._animationTime = value;
         }
 
         /// <summary>
         /// Gets the <see cref="RotationTime"/>.
         /// </summary>
-        public float RotationTime => Base._rotationTime;
+        public float RotationTime => this.Base._rotationTime;
 
         /// <summary>
         /// Gets the <see cref="DoorOpenTime"/>.
         /// </summary>
-        public float DoorOpenTime => Base._doorOpenTime;
+        public float DoorOpenTime => this.Base._doorOpenTime;
 
         /// <summary>
         /// Gets the <see cref="DoorCloseTime"/>.
         /// </summary>
-        public float DoorCloseTime => Base._doorCloseTime;
+        public float DoorCloseTime => this.Base._doorCloseTime;
 
         /// <summary>
         /// Gets the total <see cref="MoveTime"/>.
         /// </summary>
-        public float MoveTime => AnimationTime + RotationTime + DoorOpenTime + DoorCloseTime;
+        public float MoveTime => this.AnimationTime + this.RotationTime + this.DoorOpenTime + this.DoorCloseTime;
 
         /// <summary>
         /// Gets the <see cref="CurrentLevel"/>.
         /// </summary>
-        public int CurrentLevel => Base.DestinationLevel;
+        public int CurrentLevel => this.Base.DestinationLevel;
 
         /// <summary>
         /// Gets the <see cref="CurrentDestination"/>.
         /// </summary>
-        public Doors.ElevatorDoor CurrentDestination => Door.Get<Doors.ElevatorDoor>(Base.DestinationDoor);
+        public Doors.ElevatorDoor CurrentDestination => Door.Get<Doors.ElevatorDoor>(this.Base.DestinationDoor);
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Lift"/> which contains all the <see cref="Lift"/> instances from the specified <see cref="Status"/>.
@@ -288,7 +288,7 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="level">The destination level.</param>
         /// <param name="allowQueueing">Allowing queing.</param>
-        public void TryStart(int level, bool allowQueueing = false) => Base.ServerSetDestination(level, allowQueueing);
+        public void TryStart(int level, bool allowQueueing = false) => this.Base.ServerSetDestination(level, allowQueueing);
 
         /// <summary>
         /// Changes lock of the lift.
@@ -298,7 +298,7 @@ namespace Exiled.API.Features
         {
             bool forceLock = lockReason != DoorLockReason.None;
 
-            foreach (Doors.ElevatorDoor door in Doors)
+            foreach (Doors.ElevatorDoor door in this.Doors)
             {
                 if (!forceLock)
                 {
@@ -318,12 +318,12 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="point">The position.</param>
         /// <returns><see langword="true"/> if the point is inside the elevator. Otherwise, <see langword="false"/>.</returns>
-        public bool IsInElevator(Vector3 point) => Bounds.Contains(point);
+        public bool IsInElevator(Vector3 point) => this.Bounds.Contains(point);
 
         /// <summary>
         /// Returns the Lift in a human-readable format.
         /// </summary>
         /// <returns>A string containing Lift-related data.</returns>
-        public override string ToString() => $"{Type} {Status} [{CurrentLevel}] *{IsLocked}*";
+        public override string ToString() => $"{this.Type} {this.Status} [{this.CurrentLevel}] *{this.IsLocked}*";
     }
 }

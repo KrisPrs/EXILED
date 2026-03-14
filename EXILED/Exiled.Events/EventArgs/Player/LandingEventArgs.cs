@@ -22,7 +22,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="player">
         /// <inheritdoc cref="Player" />
         /// </param>
-        public LandingEventArgs(Player player) => Player = player;
+        public LandingEventArgs(Player player) => this.Player = player;
 
         /// <summary>
         /// Gets the <see cref="API.Features.Player" /> who's landing.

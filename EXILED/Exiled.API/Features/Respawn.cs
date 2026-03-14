@@ -213,10 +213,7 @@ namespace Exiled.API.Features
         /// Play the spawn effect of a <see cref="SpawnableWaveBase"/>.
         /// </summary>
         /// <param name="wave">The <see cref="SpawnableWaveBase"/> whose effect should be played.</param>
-        public static void PlayEffect(SpawnableWaveBase wave)
-        {
-            WaveUpdateMessage.ServerSendUpdate(wave, UpdateMessageFlags.Trigger);
-        }
+        public static void PlayEffect(SpawnableWaveBase wave) => WaveUpdateMessage.ServerSendUpdate(wave, UpdateMessageFlags.Trigger);
 
         /// <summary>
         /// Play the spawn effect of a target <see cref="SpawnableFaction"/>.
@@ -410,10 +407,7 @@ namespace Exiled.API.Features
         /// Starts the spawn sequence of the given <see cref="SpawnableWaveBase"/>.
         /// </summary>
         /// <param name="spawnableWaveBase">The <see cref="SpawnableWaveBase"/> to spawn.</param>
-        public static void ForceWave(SpawnableWaveBase spawnableWaveBase)
-        {
-            WaveManager.Spawn(spawnableWaveBase);
-        }
+        public static void ForceWave(SpawnableWaveBase spawnableWaveBase) => WaveManager.Spawn(spawnableWaveBase);
 
         /// <summary>
         /// Pauses a specific respawn wave by removing it from the active wave list and adding it to the paused wave list.

@@ -35,10 +35,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TogglingRadioEventArgs(Player player, RadioItem radio, bool newState, bool isAllowed = true)
         {
-            Player = player;
-            Radio = Item.Get<Radio>(radio);
-            NewState = newState;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Radio = Item.Get<Radio>(radio);
+            this.NewState = newState;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Exiled.Events.EventArgs.Player
         public Radio Radio { get; }
 
         /// <inheritdoc/>
-        public Item Item => Radio;
+        public Item Item => this.Radio;
 
         /// <summary>
         /// Gets a value indicating whether the radio is being turned on or off.

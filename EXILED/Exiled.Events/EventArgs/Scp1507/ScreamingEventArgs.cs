@@ -26,9 +26,9 @@ namespace Exiled.Events.EventArgs.Scp1507
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public ScreamingEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp1507 = player.Role.As<Scp1507Role>();
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp1507 = player.Role.As<Scp1507Role>();
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

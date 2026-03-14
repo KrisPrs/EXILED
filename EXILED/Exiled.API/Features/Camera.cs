@@ -163,18 +163,18 @@ namespace Exiled.API.Features
         /// <param name="camera079">The base camera.</param>
         internal Camera(Scp079Camera camera079)
         {
-            Base = camera079;
+            this.Base = camera079;
             Camera079ToCamera.Add(camera079, this);
-            Type = GetCameraType();
-            if (Base != null && Type is CameraType.Unknown)
+            this.Type = this.GetCameraType();
+            if (this.Base != null && this.Type is CameraType.Unknown)
             {
-                if (Base.IsToy)
+                if (this.Base.IsToy)
                 {
                     // If NW gives a way to tell CameraType by game object, set Type here, otherwise we cant tell what CameraType is.
                 }
                 else
                 {
-                    Log.Warn($"[Camera] Add CameraType entry for: [Room: {Room?.Type ?? RoomType.Unknown} Name: {Name}]");
+                    Log.Warn($"[Camera] Add CameraType entry for: [Room: {this.Room?.Type ?? RoomType.Unknown} Name: {this.Name}]");
                 }
             }
         }
@@ -198,32 +198,32 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the camera's <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the camera's <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the camera's name.
         /// </summary>
-        public string Name => Base.Label;
+        public string Name => this.Base.Label;
 
         /// <summary>
         /// Gets the camera's id.
         /// </summary>
-        public ushort Id => Base.SyncId;
+        public ushort Id => this.Base.SyncId;
 
         /// <summary>
         /// Gets the camera's <see cref="Room"/>.
         /// </summary>
-        public Room Room => field ??= Room.Get(Base.Room);
+        public Room Room => field ??= Room.Get(this.Base.Room);
 
         /// <summary>
         /// Gets the camera's <see cref="ZoneType"/>.
         /// </summary>
-        public ZoneType Zone => Room?.Zone ?? ZoneType.Unspecified;
+        public ZoneType Zone => this.Room?.Zone ?? ZoneType.Unspecified;
 
         /// <summary>
         /// Gets the camera's <see cref="CameraType"/>.
@@ -233,29 +233,29 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the camera's position.
         /// </summary>
-        public Vector3 Position => Base.Position;
+        public Vector3 Position => this.Base.Position;
 
         /// <summary>
         /// Gets or sets the camera's rotation.
         /// </summary>
         public Quaternion Rotation
         {
-            get => Base.CameraAnchor.rotation;
-            set => Base.CameraAnchor.rotation = value;
+            get => this.Base.CameraAnchor.rotation;
+            set => this.Base.CameraAnchor.rotation = value;
         }
 
         /// <summary>
         /// Gets the value of the <see cref="Camera"/> zoom.
         /// </summary>
-        public float Zoom => Base.ZoomAxis.CurrentZoom;
+        public float Zoom => this.Base.ZoomAxis.CurrentZoom;
 
         /// <summary>
         /// Gets or sets a value indicating whether this camera is being used by SCP-079.
         /// </summary>
         public bool IsBeingUsed
         {
-            get => Base.IsActive;
-            set => Base.IsActive = value;
+            get => this.Base.IsActive;
+            set => this.Base.IsActive = value;
         }
 
         /// <summary>
@@ -352,21 +352,21 @@ namespace Exiled.API.Features
         /// Returns the Camera in a human-readable format.
         /// </summary>
         /// <returns>A string containing Camera-related data.</returns>
-        public override string ToString() => $"({Type}) [{Room}] *{Name}* |{Id}| ={IsBeingUsed}=";
+        public override string ToString() => $"({this.Type}) [{this.Room}] *{this.Name}* |{this.Id}| ={this.IsBeingUsed}=";
 
         private CameraType GetCameraType()
         {
-            if (NameToCameraType.ContainsKey(Name))
-                return NameToCameraType[Name];
-            return Base.Room.Name switch
+            if (NameToCameraType.ContainsKey(this.Name))
+                return NameToCameraType[this.Name];
+            return this.Base.Room.Name switch
             {
-                RoomName.Hcz049 => Name switch
+                RoomName.Hcz049 => this.Name switch
                 {
                     "173 STAIRS" => CameraType.Hcz173Stairs,
                     "173 CONT CHAMBER" => CameraType.Hcz173ContChamber,
                     _ => CameraType.Unknown,
                 },
-                RoomName.Lcz173 => Name switch
+                RoomName.Lcz173 => this.Name switch
                 {
                     "173 STAIRS" => CameraType.Lcz173Stairs,
                     "173 CONT CHAMBER" => CameraType.Lcz173ContChamber,

@@ -26,7 +26,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="invisibleInteractableToy">The <see cref="InvisibleInteractableToy"/> of the toy.</param>
         internal InteractableToy(InvisibleInteractableToy invisibleInteractableToy)
-            : base(invisibleInteractableToy, AdminToyType.InvisibleInteractableToy) => Base = invisibleInteractableToy;
+            : base(invisibleInteractableToy, AdminToyType.InvisibleInteractableToy) => this.Base = invisibleInteractableToy;
 
         /// <summary>
         /// Gets the prefab.
@@ -43,8 +43,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public ColliderShape Shape
         {
-            get => Base.NetworkShape;
-            set => Base.NetworkShape = value;
+            get => this.Base.NetworkShape;
+            set => this.Base.NetworkShape = value;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float InteractionDuration
         {
-            get => Base.NetworkInteractionDuration;
-            set => Base.NetworkInteractionDuration = value;
+            get => this.Base.NetworkInteractionDuration;
+            set => this.Base.NetworkInteractionDuration = value;
         }
 
         /// <summary>
@@ -61,8 +61,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool IsLocked
         {
-            get => Base.NetworkIsLocked;
-            set => Base.NetworkIsLocked = value;
+            get => this.Base.NetworkIsLocked;
+            set => this.Base.NetworkIsLocked = value;
         }
 
         /// <summary>

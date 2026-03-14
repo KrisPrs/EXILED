@@ -23,10 +23,7 @@ namespace Exiled.Events.EventArgs.Scp244
         /// <param name="pickup">
         /// <inheritdoc cref="Pickup" />
         /// </param>
-        public OpeningScp244EventArgs(Scp244DeployablePickup pickup)
-        {
-            Pickup = (Scp244Pickup)API.Features.Pickups.Pickup.Get(pickup);
-        }
+        public OpeningScp244EventArgs(Scp244DeployablePickup pickup) => this.Pickup = (Scp244Pickup)API.Features.Pickups.Pickup.Get(pickup);
 
         /// <summary>
         /// Gets a value representing the <see cref="Scp244Pickup"/> being opened.

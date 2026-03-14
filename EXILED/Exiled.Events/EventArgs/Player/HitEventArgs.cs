@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="playerHits"> the list of players who are getting hit.</param>
         public HitEventArgs(Player player, AttackResult result, HashSet<ReferenceHub> playerHits)
         {
-            Player = player;
-            Result = result;
-            PlayersAffected = playerHits.Select(Player.Get).ToList().AsReadOnly();
+            this.Player = player;
+            this.Result = result;
+            this.PlayersAffected = playerHits.Select(Player.Get).ToList().AsReadOnly();
         }
 
         /// <inheritdoc />

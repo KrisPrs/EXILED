@@ -38,12 +38,12 @@ namespace Exiled.Events.EventArgs.Scp330
         /// </param>
         public InteractingScp330EventArgs(ReferenceHub referenceHub, int usage, bool shouldPlaySound, bool shouldSever, CandyKindID candy)
         {
-            Player = Player.Get(referenceHub);
-            UsageCount = usage;
-            ShouldSever = usage >= 2;
-            ShouldPlaySound = shouldPlaySound;
-            IsAllowed = Player.IsHuman;
-            Candy = Scp330Candies.GetRandom();
+            this.Player = Player.Get(referenceHub);
+            this.UsageCount = usage;
+            this.ShouldSever = usage >= 2;
+            this.ShouldPlaySound = shouldPlaySound;
+            this.IsAllowed = this.Player.IsHuman;
+            this.Candy = Scp330Candies.GetRandom();
         }
 
         /// <summary>
@@ -81,6 +81,6 @@ namespace Exiled.Events.EventArgs.Scp330
         public Scp330 Scp330 { get; }
 
         /// <inheritdoc/>
-        public Item Item => Scp330;
+        public Item Item => this.Scp330;
     }
 }

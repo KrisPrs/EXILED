@@ -35,13 +35,10 @@ namespace Exiled.API.Features.Pools
         /// Rent a <see cref="Dictionary{TKey, TValue}"/> temporarily.
         /// </summary>
         /// <returns>The <see cref="Dictionary{TKey, TValue}"/>.</returns>
-        public Dictionary<TKey, TValue> Get()
-        {
+        public Dictionary<TKey, TValue> Get() =>
             /*if (pool.TryDequeue(out Dictionary<TKey, TValue> result))
                 return result;*/
-
-            return new();
-        }
+            new();
 
         /// <summary>
         /// Rent a <see cref="Dictionary{TKey, TValue}"/> temporarily. Fills it with the provided <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair{TKey, TValue}"/>.
@@ -78,7 +75,7 @@ namespace Exiled.API.Features.Pools
         {
             KeyValuePair<TKey, TValue>[] array = obj.ToArray();
 
-            Return(obj);
+            this.Return(obj);
 
             return array;
         }

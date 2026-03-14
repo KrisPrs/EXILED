@@ -67,9 +67,6 @@ namespace Exiled.Events.Patches.Generic
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
 
-        private static bool HelpMethod(Scp173ObserversTracker instance, ReferenceHub targetHub)
-        {
-            return Player.Get(targetHub) is Player player && ((player.Role.Type == RoleTypeId.Tutorial && !ExiledEvents.Instance.Config.CanTutorialBlockScp173) || Scp173Role.TurnedPlayers.Contains(player)) && instance.IsObservedBy(targetHub, Scp173ObserversTracker.WidthMultiplier);
-        }
+        private static bool HelpMethod(Scp173ObserversTracker instance, ReferenceHub targetHub) => Player.Get(targetHub) is Player player && ((player.Role.Type == RoleTypeId.Tutorial && !ExiledEvents.Instance.Config.CanTutorialBlockScp173) || Scp173Role.TurnedPlayers.Contains(player)) && instance.IsObservedBy(targetHub, Scp173ObserversTracker.WidthMultiplier);
     }
 }

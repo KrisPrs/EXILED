@@ -20,9 +20,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(Scp559Cake), nameof(Scp559Cake.Start))]
     internal class Scp559List
     {
-        private static void Prefix(Scp559Cake __instance)
-        {
-            Scp559.Get(__instance);
-        }
+        private static void Prefix(Scp559Cake __instance) => Scp559.Get(__instance);
     }
 }

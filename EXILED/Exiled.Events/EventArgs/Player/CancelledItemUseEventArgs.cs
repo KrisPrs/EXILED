@@ -28,8 +28,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public CancelledItemUseEventArgs(ReferenceHub hub, UsableItem usableItem)
         {
-            Player = Player.Get(hub);
-            Usable = Item.Get<Usable>(usableItem);
+            this.Player = Player.Get(hub);
+            this.Usable = Item.Get<Usable>(usableItem);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Exiled.Events.EventArgs.Player
         public Usable Usable { get; }
 
         /// <inheritdoc/>
-        public Item Item => Usable;
+        public Item Item => this.Usable;
 
         /// <summary>
         /// Gets the player who cancelling the item.

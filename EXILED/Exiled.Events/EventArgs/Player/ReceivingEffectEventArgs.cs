@@ -28,11 +28,11 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="duration"><inheritdoc cref="Duration"/></param>
         public ReceivingEffectEventArgs(Player player, StatusEffectBase effect, byte intensity, byte currentIntensity, float duration)
         {
-            Player = player;
-            Effect = effect;
-            Intensity = intensity;
-            CurrentIntensity = currentIntensity;
-            Duration = intensity is 0 ? 0 : duration;
+            this.Player = player;
+            this.Effect = effect;
+            this.Intensity = intensity;
+            this.CurrentIntensity = currentIntensity;
+            this.Duration = intensity is 0 ? 0 : duration;
         }
 
         /// <summary>

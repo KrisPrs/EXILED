@@ -54,22 +54,22 @@ namespace Exiled.CustomItems.Commands.List
         {
             if (!sender.CheckPermission("customitems.list.registered"))
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
             if (CustomItem.Registered.Count == 0)
             {
-                response = NoCustomItemsMessage;
+                response = this.NoCustomItemsMessage;
                 return false;
             }
 
             StringBuilder message = StringBuilderPool.Pool.Get().AppendLine();
 
-            message.Append(string.Format(CustomItemsHeader, CustomItem.Registered.Count));
+            message.Append(string.Format(this.CustomItemsHeader, CustomItem.Registered.Count));
 
             foreach (CustomItem customItem in CustomItem.Registered.OrderBy(item => item.Id))
-                message.Append(string.Format(CustomItemFormat, customItem.Id, customItem.Name, customItem.Type)).AppendLine();
+                message.Append(string.Format(this.CustomItemFormat, customItem.Id, customItem.Name, customItem.Type)).AppendLine();
 
             response = StringBuilderPool.Pool.ToStringReturn(message);
             return true;

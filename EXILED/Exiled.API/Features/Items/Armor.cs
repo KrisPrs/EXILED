@@ -30,10 +30,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="BodyArmor"/> class.</param>
         public Armor(BodyArmor itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Armor"/> class.
@@ -52,17 +50,17 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether this item is equippable.
         /// </summary>
-        public bool Equippable => Base.AllowEquip;
+        public bool Equippable => this.Base.AllowEquip;
 
         /// <summary>
         /// Gets a value indicating whether this item is holsterable.
         /// </summary>
-        public bool Holsterable => Base.AllowHolster;
+        public bool Holsterable => this.Base.AllowHolster;
 
         /// <summary>
         /// Gets a value indicating whether this is a worn item.
         /// </summary>
-        public bool IsWorn => Base.IsWorn;
+        public bool IsWorn => this.Base.IsWorn;
 
         /// <summary>
         /// Gets or sets a value indicating whether excess ammo should be removed when the armor is dropped.
@@ -79,8 +77,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public new float Weight
         {
-            get => Base.Weight;
-            set => Base._weight = value;
+            get => this.Base.Weight;
+            set => this.Base._weight = value;
         }
 
         /// <summary>
@@ -88,8 +86,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public int HelmetEfficacy
         {
-            get => Base.HelmetEfficacy;
-            set => Base.HelmetEfficacy = value;
+            get => this.Base.HelmetEfficacy;
+            set => this.Base.HelmetEfficacy = value;
         }
 
         /// <summary>
@@ -97,8 +95,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public int VestEfficacy
         {
-            get => Base.VestEfficacy;
-            set => Base.VestEfficacy = value;
+            get => this.Base.VestEfficacy;
+            set => this.Base.VestEfficacy = value;
         }
 
         /// <summary>
@@ -106,8 +104,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float StaminaUseMultiplier
         {
-            get => Base._staminaUseMultiplier;
-            set => Base._staminaUseMultiplier = value;
+            get => this.Base._staminaUseMultiplier;
+            set => this.Base._staminaUseMultiplier = value;
         }
 
         /// <summary>
@@ -118,20 +116,20 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets how much the users movement speed should be affected when wearing this armor. (higher values = slower movement).
         /// </summary>
-        public float MovementSpeedMultiplier => Base._movementSpeedMultiplier;
+        public float MovementSpeedMultiplier => this.Base._movementSpeedMultiplier;
 
         /// <summary>
         /// Gets how much worse <see cref="RoleTypeId.ClassD"/> and <see cref="RoleTypeId.Scientist"/>s are affected by wearing this armor.
         /// </summary>
-        public float CivilianDownsideMultiplier => Base.CivilianClassDownsidesMultiplier;
+        public float CivilianDownsideMultiplier => this.Base.CivilianClassDownsidesMultiplier;
 
         /// <summary>
         /// Gets or sets the ammo limit of the wearer when using this armor.
         /// </summary>
         public IEnumerable<ArmorAmmoLimit> AmmoLimits
         {
-            get => Base.AmmoLimits.Select(limit => (ArmorAmmoLimit)limit);
-            set => Base.AmmoLimits = value.Select(limit => (BodyArmor.ArmorAmmoLimit)limit).ToArray();
+            get => this.Base.AmmoLimits.Select(limit => (ArmorAmmoLimit)limit);
+            set => this.Base.AmmoLimits = value.Select(limit => (BodyArmor.ArmorAmmoLimit)limit).ToArray();
         }
 
         /// <summary>
@@ -139,31 +137,31 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public IEnumerable<BodyArmor.ArmorCategoryLimitModifier> CategoryLimits
         {
-            get => Base.CategoryLimits;
-            set => Base.CategoryLimits = value.ToArray();
+            get => this.Base.CategoryLimits;
+            set => this.Base.CategoryLimits = value.ToArray();
         }
 
         /// <summary>
         /// Clones current <see cref="Armor"/> object.
         /// </summary>
         /// <returns> New <see cref="Armor"/> object. </returns>
-        public override Item Clone() => new Armor(Type)
+        public override Item Clone() => new Armor(this.Type)
         {
-            Weight = Weight,
-            StaminaUseMultiplier = StaminaUseMultiplier,
-            CategoryLimits = CategoryLimits,
-            StaminaRegenMultiplier = StaminaRegenMultiplier,
-            AmmoLimits = AmmoLimits,
-            VestEfficacy = VestEfficacy,
-            HelmetEfficacy = HelmetEfficacy,
+            Weight = this.Weight,
+            StaminaUseMultiplier = this.StaminaUseMultiplier,
+            CategoryLimits = this.CategoryLimits,
+            StaminaRegenMultiplier = this.StaminaRegenMultiplier,
+            AmmoLimits = this.AmmoLimits,
+            VestEfficacy = this.VestEfficacy,
+            HelmetEfficacy = this.HelmetEfficacy,
         };
 
         /// <inheritdoc/>
         internal override void ChangeOwner(Player oldOwner, Player newOwner)
         {
-            Base.Owner = newOwner.ReferenceHub;
+            this.Base.Owner = newOwner.ReferenceHub;
 
-            Base.OnAdded(null);
+            this.Base.OnAdded(null);
         }
 
         /// <inheritdoc/>
@@ -172,12 +170,12 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is Pickups.BodyArmorPickup armorPickup)
             {
-                HelmetEfficacy = armorPickup.HelmetEfficacy;
-                VestEfficacy = armorPickup.VestEfficacy;
-                StaminaUseMultiplier = armorPickup.StaminaUseMultiplier;
-                StaminaRegenMultiplier = armorPickup.StaminaRegenMultiplier;
-                AmmoLimits = armorPickup.AmmoLimits;
-                CategoryLimits = armorPickup.CategoryLimits;
+                this.HelmetEfficacy = armorPickup.HelmetEfficacy;
+                this.VestEfficacy = armorPickup.VestEfficacy;
+                this.StaminaUseMultiplier = armorPickup.StaminaUseMultiplier;
+                this.StaminaRegenMultiplier = armorPickup.StaminaRegenMultiplier;
+                this.AmmoLimits = armorPickup.AmmoLimits;
+                this.CategoryLimits = armorPickup.CategoryLimits;
             }
         }
     }

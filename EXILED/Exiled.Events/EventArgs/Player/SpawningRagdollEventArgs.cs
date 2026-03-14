@@ -32,10 +32,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SpawningRagdollEventArgs(RagdollData info, bool isAllowed = true)
         {
-            Info = info;
-            Player = Player.Get(info.OwnerHub);
-            Scale = Player.Scale;
-            IsAllowed = isAllowed;
+            this.Info = info;
+            this.Player = Player.Get(info.OwnerHub);
+            this.Scale = this.Player.Scale;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public Vector3 Position
         {
-            get => Info.StartRelativePosition.Position;
-            set => Info = new RagdollData(Player.ReferenceHub, DamageHandlerBase, Role, new(value), Info.StartRelativeRotation, Scale, Nickname, CreationTime);
+            get => this.Info.StartRelativePosition.Position;
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, this.DamageHandlerBase, this.Role, new(value), this.Info.StartRelativeRotation, this.Scale, this.Nickname, this.CreationTime);
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public Quaternion Rotation
         {
-            get => WaypointBase.GetWorldRotation(Info.StartRelativePosition.WaypointId, Info.StartRelativeRotation);
-            set => Info = new RagdollData(Player.ReferenceHub, DamageHandlerBase, Role, Info.StartRelativePosition, WaypointBase.GetWorldRotation(Info.StartRelativePosition.WaypointId, value), Scale, Nickname, CreationTime);
+            get => WaypointBase.GetWorldRotation(this.Info.StartRelativePosition.WaypointId, this.Info.StartRelativeRotation);
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, this.DamageHandlerBase, this.Role, this.Info.StartRelativePosition, WaypointBase.GetWorldRotation(this.Info.StartRelativePosition.WaypointId, value), this.Scale, this.Nickname, this.CreationTime);
         }
 
         /// <summary>
@@ -61,8 +61,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public Vector3 Scale
         {
-            get => Info.Scale;
-            set => Info = new RagdollData(Player.ReferenceHub, DamageHandlerBase, Role, Info.StartRelativePosition, Info.StartRelativeRotation, Vector3.Scale(value, RagdollManager.GetDefaultScale(Role)), Nickname, CreationTime);
+            get => this.Info.Scale;
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, this.DamageHandlerBase, this.Role, this.Info.StartRelativePosition, this.Info.StartRelativeRotation, Vector3.Scale(value, RagdollManager.GetDefaultScale(this.Role)), this.Nickname, this.CreationTime);
         }
 
         /// <summary>
@@ -75,22 +75,22 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public RoleTypeId Role
         {
-            get => Info.RoleType;
-            set => Info = new RagdollData(Player.ReferenceHub, DamageHandlerBase, value, Info.StartRelativePosition, Info.StartRelativeRotation, Scale, Nickname, CreationTime);
+            get => this.Info.RoleType;
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, this.DamageHandlerBase, value, this.Info.StartRelativePosition, this.Info.StartRelativeRotation, this.Scale, this.Nickname, this.CreationTime);
         }
 
         /// <summary>
         /// Gets the ragdoll's creation time.
         /// </summary>
-        public double CreationTime => Info.CreationTime;
+        public double CreationTime => this.Info.CreationTime;
 
         /// <summary>
         /// Gets or sets the ragdoll's nickname.
         /// </summary>
         public string Nickname
         {
-            get => Info.Nickname;
-            set => Info = new RagdollData(Player.ReferenceHub, DamageHandlerBase, Role, Info.StartRelativePosition, Info.StartRelativeRotation, Scale, value, CreationTime);
+            get => this.Info.Nickname;
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, this.DamageHandlerBase, this.Role, this.Info.StartRelativePosition, this.Info.StartRelativeRotation, this.Scale, value, this.CreationTime);
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public DamageHandlerBase DamageHandlerBase
         {
-            get => Info.Handler;
-            set => Info = new RagdollData(Player.ReferenceHub, value, Role, Info.StartRelativePosition, Info.StartRelativeRotation, Scale, Nickname, CreationTime);
+            get => this.Info.Handler;
+            set => this.Info = new RagdollData(this.Player.ReferenceHub, value, this.Role, this.Info.StartRelativePosition, this.Info.StartRelativeRotation, this.Scale, this.Nickname, this.CreationTime);
         }
 
         /// <summary>

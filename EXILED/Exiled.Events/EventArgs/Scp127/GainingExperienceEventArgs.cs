@@ -25,16 +25,16 @@ namespace Exiled.Events.EventArgs.Scp127
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public GainingExperienceEventArgs(Scp127 scp127, float experience, bool isAllowed = true)
         {
-            Scp127 = scp127;
-            Experience = experience;
-            IsAllowed = isAllowed;
+            this.Scp127 = scp127;
+            this.Experience = experience;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc />
-        public Player Player => Scp127.Owner;
+        public Player Player => this.Scp127.Owner;
 
         /// <inheritdoc />
-        public Item Item => Scp127;
+        public Item Item => this.Scp127;
 
         /// <inheritdoc />
         public Scp127 Scp127 { get; }
@@ -52,8 +52,8 @@ namespace Exiled.Events.EventArgs.Scp127
         /// </summary>
         public Scp127Tier Tier
         {
-            get => Scp127.TierManagerModule.GetTierForExp(Experience + Scp127.Experience);
-            set => Experience = Scp127.TierManagerModule.GetExpForTier(value) - Scp127.Experience;
+            get => this.Scp127.TierManagerModule.GetTierForExp(this.Experience + this.Scp127.Experience);
+            set => this.Experience = this.Scp127.TierManagerModule.GetExpForTier(value) - this.Scp127.Experience;
         }
     }
 }

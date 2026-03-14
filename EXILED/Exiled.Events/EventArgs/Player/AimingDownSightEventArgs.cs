@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public AimingDownSightEventArgs(FirearmBase firearm, bool adsIn)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
-            AdsIn = adsIn;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
+            this.AdsIn = adsIn;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the player who's triggering the aim action.

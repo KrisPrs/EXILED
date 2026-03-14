@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp096
         /// </param>
         public EnragingEventArgs(Player player, float initialDuration, bool isAllowed = true)
         {
-            Player = player;
-            Scp096 = player.Role.As<Scp096Role>();
-            InitialDuration = initialDuration;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp096 = player.Role.As<Scp096Role>();
+            this.InitialDuration = initialDuration;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

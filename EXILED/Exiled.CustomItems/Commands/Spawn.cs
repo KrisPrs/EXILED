@@ -69,19 +69,19 @@ namespace Exiled.CustomItems.Commands
         {
             if (!sender.CheckPermission("customitems.spawn"))
             {
-                response = InsufficientPermissionsMessage;
+                response = this.InsufficientPermissionsMessage;
                 return false;
             }
 
             if (arguments.Count < 2)
             {
-                response = InvalidArgumentsMessage;
+                response = this.InvalidArgumentsMessage;
                 return false;
             }
 
             if (!CustomItem.TryGet(arguments.At(0), out CustomItem? item))
             {
-                response = string.Format(InvalidCustomItemMessage, arguments.At(0));
+                response = string.Format(this.InvalidCustomItemMessage, arguments.At(0));
                 return false;
             }
 
@@ -91,7 +91,7 @@ namespace Exiled.CustomItems.Commands
             {
                 if (player.IsDead)
                 {
-                    response = PlayerIsDeadMessage;
+                    response = this.PlayerIsDeadMessage;
                     return false;
                 }
 
@@ -101,7 +101,7 @@ namespace Exiled.CustomItems.Commands
             {
                 if (!float.TryParse(arguments.At(1), out float x) || !float.TryParse(arguments.At(2), out float y) || !float.TryParse(arguments.At(3), out float z))
                 {
-                    response = InvalidCoordinatesMessage;
+                    response = this.InvalidCoordinatesMessage;
                     return false;
                 }
 
@@ -109,13 +109,13 @@ namespace Exiled.CustomItems.Commands
             }
             else
             {
-                response = UnableToFindLocationMessage;
+                response = this.UnableToFindLocationMessage;
                 return false;
             }
 
             item?.Spawn(position);
 
-            response = string.Format(SpawnSuccessMessage, item?.Name, item?.Type, position);
+            response = string.Format(this.SpawnSuccessMessage, item?.Name, item?.Type, position);
             return true;
         }
     }

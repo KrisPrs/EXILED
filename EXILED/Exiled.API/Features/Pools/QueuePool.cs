@@ -32,7 +32,7 @@ namespace Exiled.API.Features.Pools
         /// <inheritdoc/>
         public Queue<T> Get()
         {
-            if (pool.TryDequeue(out Queue<T> queue))
+            if (this.pool.TryDequeue(out Queue<T> queue))
                 return queue;
 
             return new();
@@ -45,7 +45,7 @@ namespace Exiled.API.Features.Pools
         /// <returns>The stored object, or a new object, of type <see cref="List{T}"/>.</returns>
         public Queue<T> Get(IEnumerable<T> items)
         {
-            if (pool.TryDequeue(out Queue<T> queue))
+            if (this.pool.TryDequeue(out Queue<T> queue))
             {
                 foreach (T item in items)
                     queue.Enqueue(item);
@@ -60,7 +60,7 @@ namespace Exiled.API.Features.Pools
         public void Return(Queue<T> obj)
         {
             obj.Clear();
-            pool.Enqueue(obj);
+            this.pool.Enqueue(obj);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Exiled.API.Features.Pools
         {
             T[] array = obj.ToArray();
 
-            Return(obj);
+            this.Return(obj);
 
             return array;
         }

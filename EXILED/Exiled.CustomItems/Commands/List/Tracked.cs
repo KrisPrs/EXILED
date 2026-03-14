@@ -78,7 +78,7 @@ namespace Exiled.CustomItems.Commands.List
         {
             if (!sender.CheckPermission("customitems.list.insideinventories") && sender is PlayerCommandSender playerSender && !playerSender.FullPermissions)
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
@@ -92,7 +92,7 @@ namespace Exiled.CustomItems.Commands.List
                     continue;
 
                 message.AppendLine()
-                    .AppendFormat(ItemFormat, customItem.Id, customItem.Name, customItem.Type, customItem.TrackedSerials.Count)
+                    .AppendFormat(this.ItemFormat, customItem.Id, customItem.Name, customItem.Type, customItem.TrackedSerials.Count)
                     .AppendLine();
 
                 count += customItem.TrackedSerials.Count;
@@ -101,19 +101,19 @@ namespace Exiled.CustomItems.Commands.List
                 {
                     Player owner = Player.List.FirstOrDefault(player => player.Inventory.UserInventory.Items.Any(item => item.Key == insideInventory));
 
-                    message.AppendFormat(SerialFormat, insideInventory);
+                    message.AppendFormat(this.SerialFormat, insideInventory);
 
                     if (owner is null)
-                        message.AppendLine(NoOwnerMessage);
+                        message.AppendLine(this.NoOwnerMessage);
                     else
-                        message.AppendFormat(OwnerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role).AppendLine();
+                        message.AppendFormat(this.OwnerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role).AppendLine();
                 }
             }
 
             if (message.Length == 0)
-                message.Append(NoCustomItemsMessage);
+                message.Append(this.NoCustomItemsMessage);
             else
-                message.Insert(0, Environment.NewLine + string.Format(TitleFormat, count) + Environment.NewLine);
+                message.Insert(0, Environment.NewLine + string.Format(this.TitleFormat, count) + Environment.NewLine);
 
             response = StringBuilderPool.Pool.ToStringReturn(message);
             return true;

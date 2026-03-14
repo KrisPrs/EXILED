@@ -27,15 +27,15 @@ namespace Exiled.API.Features.CustomStats
         {
             get
             {
-                IHumeShieldProvider.GetForHub(Hub, out _, out _, out float hsRegen, out _);
-                return hsRegen * ShieldRegenerationMultiplier;
+                IHumeShieldProvider.GetForHub(this.Hub, out _, out _, out float hsRegen, out _);
+                return hsRegen * this.ShieldRegenerationMultiplier;
             }
         }
 
         /// <inheritdoc/>
         public override void Update()
         {
-            if (ShieldRegenerationMultiplier is 1)
+            if (this.ShieldRegenerationMultiplier is 1)
             {
                 base.Update();
                 return;
@@ -44,35 +44,35 @@ namespace Exiled.API.Features.CustomStats
             if (!NetworkServer.active)
                 return;
 
-            if (ValueDirty)
+            if (this.ValueDirty)
             {
                 new SyncedStatMessages.StatMessage()
                 {
                     Stat = this,
-                    SyncedValue = CurValue,
-                }.SendToHubsConditionally(CanReceive);
-                _lastSent = CurValue;
-                ValueDirty = false;
+                    SyncedValue = this.CurValue,
+                }.SendToHubsConditionally(this.CanReceive);
+                this._lastSent = this.CurValue;
+                this.ValueDirty = false;
             }
 
-            if (ShieldRegeneration == 0)
+            if (this.ShieldRegeneration == 0)
                 return;
 
-            float delta = ShieldRegeneration * Time.deltaTime;
+            float delta = this.ShieldRegeneration * Time.deltaTime;
 
             if (delta > 0)
             {
-                if (CurValue >= MaxValue)
+                if (this.CurValue >= this.MaxValue)
                     return;
 
-                CurValue = Mathf.MoveTowards(CurValue, MaxValue, delta);
+                this.CurValue = Mathf.MoveTowards(this.CurValue, this.MaxValue, delta);
                 return;
             }
 
-            if (CurValue <= 0)
+            if (this.CurValue <= 0)
                 return;
 
-            CurValue += delta;
+            this.CurValue += delta;
         }
     }
 }

@@ -19,10 +19,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         /// <param name="magazine"><inheritdoc cref="MagazineModule"/></param>
         public Scp127Magazine(Scp127MagazineModule magazine)
-            : base(magazine)
-        {
-            MagazineModule = magazine;
-        }
+            : base(magazine) =>
+            this.MagazineModule = magazine;
 
         /// <inheritdoc cref="NormalMagazine.MagazineModule"/>
         public new Scp127MagazineModule MagazineModule { get; }
@@ -32,8 +30,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         public int KillBonus
         {
-            get => MagazineModule.KillBonus;
-            set => MagazineModule.KillBonus = value;
+            get => this.MagazineModule.KillBonus;
+            set => this.MagazineModule.KillBonus = value;
         }
 
         /// <summary>
@@ -41,8 +39,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         public int RankUpBonus
         {
-            get => MagazineModule.RankUpBonus;
-            set => MagazineModule.RankUpBonus = value;
+            get => this.MagazineModule.RankUpBonus;
+            set => this.MagazineModule.RankUpBonus = value;
         }
 
         /// <summary>
@@ -50,22 +48,22 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         public Scp127MagazineModule.RegenerationSettings[] RegenerationPerTier
         {
-            get => MagazineModule._regenerationPerTier;
-            set => MagazineModule._regenerationPerTier = value;
+            get => this.MagazineModule._regenerationPerTier;
+            set => this.MagazineModule._regenerationPerTier = value;
         }
 
         /// <summary>
         /// Gets the current setting.
         /// </summary>
-        public Scp127MagazineModule.RegenerationSettings ActiveSetting => MagazineModule.ActiveSettings;
+        public Scp127MagazineModule.RegenerationSettings ActiveSetting => this.MagazineModule.ActiveSettings;
 
         /// <summary>
         /// Gets or sets a pause in bullets regeneration process.
         /// </summary>
         public float RemainingRegenPause
         {
-            get => MagazineModule._remainingRegenPause;
-            set => MagazineModule._remainingRegenPause = value;
+            get => this.MagazineModule._remainingRegenPause;
+            set => this.MagazineModule._remainingRegenPause = value;
         }
 
         /// <summary>
@@ -73,8 +71,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         public float RegenProgress
         {
-            get => MagazineModule._regenProgress;
-            set => MagazineModule._regenProgress = value;
+            get => this.MagazineModule._regenProgress;
+            set => this.MagazineModule._regenProgress = value;
         }
     }
 }

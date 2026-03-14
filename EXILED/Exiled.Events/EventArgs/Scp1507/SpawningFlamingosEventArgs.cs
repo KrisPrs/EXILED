@@ -29,9 +29,9 @@ namespace Exiled.Events.EventArgs.Scp1507
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public SpawningFlamingosEventArgs(Player newAlpha, bool isAllowed = true)
         {
-            Player = newAlpha;
-            SpawnablePlayers = ReferenceHub.AllHubs.Where(Scp1507Spawner.ValidatePlayer).Select(x => Player.Get(x)).ToHashSet();
-            IsAllowed = isAllowed;
+            this.Player = newAlpha;
+            this.SpawnablePlayers = ReferenceHub.AllHubs.Where(Scp1507Spawner.ValidatePlayer).Select(x => Player.Get(x)).ToHashSet();
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

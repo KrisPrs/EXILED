@@ -38,17 +38,14 @@ namespace Exiled.CreditTags.Features
         /// <summary>
         /// Gets a value indicating whether the request was successful.
         /// </summary>
-        public bool Done => done;
+        public bool Done => this.done;
 
         /// <summary>
         /// Gets the call to the website to obtain users to their roles.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="etag">The entity tag of the request.</param>
-        public static void Go(string url, string etag)
-        {
-            Timing.RunCoroutine(MakeRequest(url, etag), Segment.LateUpdate);
-        }
+        public static void Go(string url, string etag) => Timing.RunCoroutine(MakeRequest(url, etag), Segment.LateUpdate);
 
         private static IEnumerator<float> MakeRequest(string url, string etag)
         {

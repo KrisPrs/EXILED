@@ -35,11 +35,11 @@ namespace Exiled.Events.EventArgs.Scp096
         /// </param>
         public AddingTargetEventArgs(Player scp096, Player target, bool isLooking, bool isAllowed = true)
         {
-            Player = scp096;
-            Scp096 = scp096.Role.As<Scp096Role>();
-            Target = target;
-            IsLooking = isLooking;
-            IsAllowed = isAllowed;
+            this.Player = scp096;
+            this.Scp096 = scp096.Role.As<Scp096Role>();
+            this.Target = target;
+            this.IsLooking = isLooking;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

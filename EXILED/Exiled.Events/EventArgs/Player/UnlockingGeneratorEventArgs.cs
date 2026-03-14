@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UnlockingGeneratorEventArgs(Player player, Scp079Generator generator, bool isAllowed)
         {
-            Player = player;
-            Generator = Generator.Get(generator);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Generator = Generator.Get(generator);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

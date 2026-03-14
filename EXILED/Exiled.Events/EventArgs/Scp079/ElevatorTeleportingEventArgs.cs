@@ -37,12 +37,12 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public ElevatorTeleportingEventArgs(Player player, RoomIdentifier room, ElevatorChamber elevatorChamber, float auxiliaryPowerCost)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Room = Room.Get(room);
-            Lift = Lift.Get(elevatorChamber);
-            AuxiliaryPowerCost = auxiliaryPowerCost;
-            IsAllowed = auxiliaryPowerCost <= Scp079.Energy;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Room = Room.Get(room);
+            this.Lift = Lift.Get(elevatorChamber);
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.IsAllowed = auxiliaryPowerCost <= this.Scp079.Energy;
         }
 
         /// <summary>

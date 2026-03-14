@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingSpectatedPlayerEventArgs(ReferenceHub player, uint oldTarget, uint newTarget)
         {
-            Player = Player.Get(player);
-            OldTarget = Player.Get(oldTarget);
-            NewTarget = Player.Get(newTarget);
+            this.Player = Player.Get(player);
+            this.OldTarget = Player.Get(oldTarget);
+            this.NewTarget = Player.Get(newTarget);
         }
 
         /// <summary>

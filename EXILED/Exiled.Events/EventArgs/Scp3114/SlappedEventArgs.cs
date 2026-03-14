@@ -31,10 +31,10 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public SlappedEventArgs(Player player, AttackResult attackResult, Player target)
         {
-            Player = player;
-            Target = target;
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            AttackResult = attackResult;
+            this.Player = player;
+            this.Target = target;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.AttackResult = attackResult;
         }
 
         /// <inheritdoc/>

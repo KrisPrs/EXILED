@@ -34,15 +34,15 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isSenderVisible">The audio owner is visible for this player.</param>
         public ReceivingGunSoundEventArgs(ReferenceHub hub, InventorySystem.Items.Firearms.Firearm firearm, int audioIndex, MixerChannel mixerChannel, float range, float pitch, Vector3 ownPos, bool isSenderVisible)
         {
-            Player = Player.Get(hub);
-            Firearm = Item.Get<Firearm>(firearm);
-            Sender = Firearm.Owner;
-            Range = range;
-            Pitch = pitch;
-            AudioIndex = audioIndex;
-            MixerChannel = mixerChannel;
-            SenderPosition = ownPos;
-            SenderVisible = isSenderVisible;
+            this.Player = Player.Get(hub);
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Sender = this.Firearm.Owner;
+            this.Range = range;
+            this.Pitch = pitch;
+            this.AudioIndex = audioIndex;
+            this.MixerChannel = mixerChannel;
+            this.SenderPosition = ownPos;
+            this.SenderVisible = isSenderVisible;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Exiled.Events.EventArgs.Player
         public Player Sender { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the firearm that was the source of the sound.

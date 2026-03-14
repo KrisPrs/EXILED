@@ -80,10 +80,10 @@ namespace Exiled.Events.Patches.Fixes
 #pragma warning disable SA1600 // Elements should be documented
         public Scp3114FriendlyFireFix2(Footprint attacker, float damage)
         {
-            Attacker = attacker;
-            Damage = damage;
-            AllowSelfDamage = false;
-            ServerLogsText = "Scp3114 Fix";
+            this.Attacker = attacker;
+            this.Damage = damage;
+            this.AllowSelfDamage = false;
+            this.ServerLogsText = "Scp3114 Fix";
         }
 
         public override Footprint Attacker { get; set; }

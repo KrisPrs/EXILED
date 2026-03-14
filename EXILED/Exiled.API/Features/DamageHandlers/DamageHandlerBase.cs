@@ -39,10 +39,7 @@ namespace Exiled.API.Features.DamageHandlers
         /// Initializes a new instance of the <see cref="DamageHandlerBase"/> class.
         /// </summary>
         /// <param name="baseHandler">The base <see cref="BaseHandler"/>.</param>
-        protected DamageHandlerBase(BaseHandler baseHandler)
-        {
-            Base = baseHandler;
-        }
+        protected DamageHandlerBase(BaseHandler baseHandler) => this.Base = baseHandler;
 
         /// <summary>
         /// All available <see cref="DamageHandler"/> actions.
@@ -75,14 +72,14 @@ namespace Exiled.API.Features.DamageHandlers
         /// </summary>
         public virtual CassieAnnouncement CassieDeathAnnouncement
         {
-            get => field ?? Base.CassieDeathAnnouncement;
+            get => field ?? this.Base.CassieDeathAnnouncement;
             protected set;
         }
 
         /// <summary>
         /// Gets the text to show in the server logs.
         /// </summary>
-        public virtual string ServerLogsText => Base.ServerLogsText;
+        public virtual string ServerLogsText => this.Base.ServerLogsText;
 
         /// <summary>
         /// Gets or sets the <see cref="DamageType"/> for the damage handler.
@@ -94,7 +91,7 @@ namespace Exiled.API.Features.DamageHandlers
                 if (field != DamageType.Unknown)
                     return field;
 
-                field = GetDamageType();
+                field = this.GetDamageType();
                 return field;
             }
 
@@ -110,7 +107,7 @@ namespace Exiled.API.Features.DamageHandlers
         /// <summary>
         /// Gets the <see cref="PlayerStatsSystem.DeathTranslation"/>.
         /// </summary>
-        public virtual DeathTranslation DeathTranslation => DamageTypeExtensions.TranslationConversion.FirstOrDefault(translation => translation.Value == Type).Key;
+        public virtual DeathTranslation DeathTranslation => DamageTypeExtensions.TranslationConversion.FirstOrDefault(translation => translation.Value == this.Type).Key;
 
         /// <summary>
         /// Implicitly converts the given <see cref="DamageHandlerBase"/> instance to a <see cref="BaseHandler"/> object.
@@ -139,7 +136,7 @@ namespace Exiled.API.Features.DamageHandlers
         /// <typeparam name="T">The specified <see cref="BaseHandler"/> type.</typeparam>
         /// <returns>A <see cref="BaseHandler"/> object.</returns>
         public T As<T>()
-            where T : BaseHandler => Base as T;
+            where T : BaseHandler => this.Base as T;
 
         /// <summary>
         /// Unsafely casts the damage handler to the specified <see cref="DamageHandlerBase"/> type.
@@ -160,7 +157,7 @@ namespace Exiled.API.Features.DamageHandlers
         {
             param = default;
 
-            if (Base is not T cast)
+            if (this.Base is not T cast)
                 return false;
 
             param = cast;
@@ -192,12 +189,12 @@ namespace Exiled.API.Features.DamageHandlers
         /// <returns>Assosiated <see cref="DamageType"/>.</returns>
         protected DamageType GetDamageType(BaseHandler damageHandler = null)
         {
-            damageHandler ??= Base;
+            damageHandler ??= this.Base;
 
             switch (damageHandler)
             {
                 case GenericDamageHandler genericDamageHandler:
-                    return GetDamageType(genericDamageHandler.Base);
+                    return this.GetDamageType(genericDamageHandler.Base);
                 case CustomReasonDamageHandler:
                     return DamageType.Custom;
                 case WarheadDamageHandler:
@@ -248,7 +245,7 @@ namespace Exiled.API.Features.DamageHandlers
                     if (DamageTypeExtensions.TranslationIdConversion.ContainsKey(translation.Id))
                         return DamageTypeExtensions.TranslationIdConversion[translation.Id];
 
-                    Log.Warn($"{nameof(DamageHandler)}.{nameof(Type)}: No matching {nameof(DamageType)} for {nameof(UniversalDamageHandler)} with ID {translation.Id}, type will be reported as {DamageType.Unknown}. Report this to EXILED Devs.");
+                    Log.Warn($"{nameof(DamageHandler)}.{nameof(this.Type)}: No matching {nameof(DamageType)} for {nameof(UniversalDamageHandler)} with ID {translation.Id}, type will be reported as {DamageType.Unknown}. Report this to EXILED Devs.");
                     break;
                 case PlayerStatsSystem.FirearmDamageHandler firearmDamageHandler:
                     return Item.Get<Firearm>(firearmDamageHandler.Firearm).FirearmType switch
@@ -289,10 +286,7 @@ namespace Exiled.API.Features.DamageHandlers
             /// Initializes a new instance of the <see cref="CassieAnnouncement"/> class.
             /// </summary>
             /// <param name="announcement">The announcement to be set.</param>
-            public CassieAnnouncement(string announcement)
-            {
-                Announcement = announcement;
-            }
+            public CassieAnnouncement(string announcement) => this.Announcement = announcement;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="CassieAnnouncement"/> class.
@@ -300,10 +294,8 @@ namespace Exiled.API.Features.DamageHandlers
             /// <param name="announcement">The announcement to be set.</param>
             /// <param name="subtitleParts">The subtitles to be set.</param>
             public CassieAnnouncement(string announcement, IEnumerable<Subtitles.SubtitlePart> subtitleParts)
-                : this(announcement)
-            {
-                SubtitleParts = subtitleParts;
-            }
+                : this(announcement) =>
+                this.SubtitleParts = subtitleParts;
 
             /// <summary>
             /// Gets the default announcement.

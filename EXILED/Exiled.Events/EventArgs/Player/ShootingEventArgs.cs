@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ShootingEventArgs(BaseFirearm firearm, ref ShotBacktrackData shotBacktrackData)
         {
-            Firearm = (Firearm)Item.Get(firearm);
-            Player = Firearm.Owner;
-            ShotBacktrackData = shotBacktrackData;
+            this.Firearm = (Firearm)Item.Get(firearm);
+            this.Player = this.Firearm.Owner;
+            this.ShotBacktrackData = shotBacktrackData;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Exiled.Events.EventArgs.Player
         /// Gets the target that client claims it hit.
         /// </summary>
         /// <remarks>This value is controlled by the shooting player and should not be trusted. Can be null.</remarks>
-        public Player ClaimedTarget => ShotBacktrackData.HasPrimaryTarget ? Player.Get(ShotBacktrackData.PrimaryTargetHub) : null;
+        public Player ClaimedTarget => this.ShotBacktrackData.HasPrimaryTarget ? Player.Get(this.ShotBacktrackData.PrimaryTargetHub) : null;
 
         /// <summary>
         /// Gets the <see cref="ShotBacktrackData" />. This object contains the data sent by the client to the server.
@@ -59,8 +59,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public Vector3 Direction
         {
-            get => Player.CameraTransform.forward;
-            set => Player.CameraTransform.forward = value; // It is going to be reset by FpcBacktracker the same frame, so why we can set it freely.
+            get => this.Player.CameraTransform.forward;
+            set => this.Player.CameraTransform.forward = value; // It is going to be reset by FpcBacktracker the same frame, so why we can set it freely.
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc />
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets or sets a value indicating whether the shot can be fired.

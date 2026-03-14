@@ -23,10 +23,8 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="objectiveFootprintBase">A <see cref="BaseObjective"/> instance.</param>
         internal GeneratorActivatedObjective(BaseObjective objectiveFootprintBase)
-            : base(objectiveFootprintBase)
-        {
-            Base = objectiveFootprintBase;
-        }
+            : base(objectiveFootprintBase) =>
+            this.Base = objectiveFootprintBase;
 
         /// <inheritdoc/>
         public new BaseObjective Base { get; }
@@ -39,6 +37,6 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="generator">Generator that is activated.</param>
         /// <param name="player">Player that activated the generator.</param>
-        public void Activate(Generator generator, Player player = null) => Base.OnGeneratorEngaged(generator.Base, (player ?? Server.Host).Footprint);
+        public void Activate(Generator generator, Player player = null) => this.Base.OnGeneratorEngaged(generator.Base, (player ?? Server.Host).Footprint);
     }
 }

@@ -30,10 +30,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="AmmoItem"/> class.</param>
         public Ammo(AmmoItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Ammo"/> class.
@@ -53,6 +51,6 @@ namespace Exiled.API.Features.Items
         /// Clones current <see cref="Ammo"/> object.
         /// </summary>
         /// <returns> New <see cref="Ammo"/> object. </returns>
-        public override Item Clone() => new(Type);
+        public override Item Clone() => new(this.Type);
     }
 }

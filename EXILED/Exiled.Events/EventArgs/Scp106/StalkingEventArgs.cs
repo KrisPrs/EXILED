@@ -24,10 +24,10 @@ namespace Exiled.Events.EventArgs.Scp106
         /// <param name="player"><inheritdoc cref="Player"/></param>
         public StalkingEventArgs(Player player)
         {
-            Player = player;
-            Scp106 = player.Role.As<Scp106Role>();
-            IsAllowed = true;
-            MinimumVigor = Scp106StalkAbility.MinVigorToSubmerge;
+            this.Player = player;
+            this.Scp106 = player.Role.As<Scp106Role>();
+            this.IsAllowed = true;
+            this.MinimumVigor = Scp106StalkAbility.MinVigorToSubmerge;
         }
 
         /// <summary>

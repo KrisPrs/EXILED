@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Scp2536
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public OpeningGiftEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

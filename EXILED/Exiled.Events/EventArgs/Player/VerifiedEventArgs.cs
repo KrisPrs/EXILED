@@ -22,7 +22,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="player">
         /// <inheritdoc cref="Player" />
         /// </param>
-        public VerifiedEventArgs(Player player) => Player = player;
+        public VerifiedEventArgs(Player player) => this.Player = player;
 
         /// <summary>
         /// Gets the verified player.

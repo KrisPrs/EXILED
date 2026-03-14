@@ -34,10 +34,10 @@ namespace Exiled.Events.EventArgs.Scp096
         /// </param>
         public StartPryingGateEventArgs(Player player, PryableDoor gate, bool isAllowed = true)
         {
-            Player = player;
-            Scp096 = player.Role.As<Scp096Role>();
-            Gate = Door.Get<Gate>(gate);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp096 = player.Role.As<Scp096Role>();
+            this.Gate = Door.Get<Gate>(gate);
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
@@ -51,7 +51,7 @@ namespace Exiled.Events.EventArgs.Scp096
         /// <summary>
         /// Gets the <see cref="Door" /> to be pried open.
         /// </summary>
-        public Door Door => Gate;
+        public Door Door => this.Gate;
 
         /// <summary>
         /// Gets the <see cref="Gate" /> to be pried open.

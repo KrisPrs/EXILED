@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Scp2536
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public FindingPositionEventArgs(Player player, Scp2536Spawnpoint spawnpoint, bool isAllowed = true)
         {
-            Player = player;
-            Spawnpoint = spawnpoint;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Spawnpoint = spawnpoint;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

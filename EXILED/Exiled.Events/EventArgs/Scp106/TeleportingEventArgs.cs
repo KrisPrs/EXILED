@@ -32,10 +32,10 @@ namespace Exiled.Events.EventArgs.Scp106
         /// </param>
         public TeleportingEventArgs(Player player, Vector3 position, bool isAllowed = true)
         {
-            Player = player;
-            Scp106 = player.Role.As<Scp106Role>();
-            Position = position;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp106 = player.Role.As<Scp106Role>();
+            this.Position = position;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

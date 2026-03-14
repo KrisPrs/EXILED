@@ -36,27 +36,27 @@ namespace Exiled.API.Features.DamageHandlers
         public CustomDamageHandler(Player target, BaseHandler baseHandler)
             : base(target, baseHandler)
         {
-            if (Attacker is not null)
+            if (this.Attacker is not null)
             {
                 if (baseHandler is BaseScpDamageHandler)
                 {
-                    CustomBase = new ScpDamageHandler(target, baseHandler);
+                    this.CustomBase = new ScpDamageHandler(target, baseHandler);
                 }
                 else
                 {
-                    Item item = Attacker.CurrentItem;
+                    Item item = this.Attacker.CurrentItem;
                     if (item is not null && item.Type.IsWeapon() && baseHandler is BaseFirearmHandler)
-                        CustomBase = new FirearmDamageHandler(item, target, baseHandler);
+                        this.CustomBase = new FirearmDamageHandler(item, target, baseHandler);
                     else
-                        CustomBase = new DamageHandler(target, Attacker);
+                        this.CustomBase = new DamageHandler(target, this.Attacker);
                 }
             }
             else
             {
-                CustomBase = new DamageHandler(target, baseHandler);
+                this.CustomBase = new DamageHandler(target, baseHandler);
             }
 
-            Type = CustomBase.Type;
+            this.Type = this.CustomBase.Type;
         }
 
         /// <summary>
@@ -69,15 +69,15 @@ namespace Exiled.API.Features.DamageHandlers
         public CustomDamageHandler(Player target, Player attacker, float damage, DamageType damageType = DamageType.Unknown)
             : base(target, attacker)
         {
-            Damage = damage;
-            Type = damageType;
+            this.Damage = damage;
+            this.Type = damageType;
 
             Firearm firearm = new(ItemType.GunAK)
             {
                 Base = { Owner = attacker.ReferenceHub },
             };
 
-            CustomBase = new FirearmDamageHandler(firearm, target, new PlayerStatsSystem.FirearmDamageHandler() { Firearm = firearm.Base, Damage = damage });
+            this.CustomBase = new FirearmDamageHandler(firearm, target, new PlayerStatsSystem.FirearmDamageHandler() { Firearm = firearm.Base, Damage = damage });
         }
 
         /// <summary>
@@ -89,10 +89,8 @@ namespace Exiled.API.Features.DamageHandlers
         /// <param name="damageType">The <see cref="DamageType"/> to be set.</param>
         /// <param name="cassieAnnouncement">The <see cref="DamageHandlerBase.CassieAnnouncement"/> to be set.</param>
         public CustomDamageHandler(Player target, Player attacker, float damage, DamageType damageType, CassieAnnouncement cassieAnnouncement)
-            : this(target, attacker, damage, damageType)
-        {
-            CassieDeathAnnouncement = cassieAnnouncement;
-        }
+            : this(target, attacker, damage, damageType) =>
+            this.CassieDeathAnnouncement = cassieAnnouncement;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomDamageHandler"/> class.
@@ -103,10 +101,8 @@ namespace Exiled.API.Features.DamageHandlers
         /// <param name="damageType">The <see cref="DamageType"/> to be set.</param>
         /// <param name="cassieAnnouncement">The <see cref="DamageHandlerBase.CassieAnnouncement"/> to be set.</param>
         public CustomDamageHandler(Player target, Player attacker, float damage, DamageType damageType, string cassieAnnouncement)
-            : this(target, attacker, damage, damageType)
-        {
-            CassieDeathAnnouncement = new CassieAnnouncement(cassieAnnouncement);
-        }
+            : this(target, attacker, damage, damageType) =>
+            this.CassieDeathAnnouncement = new CassieAnnouncement(cassieAnnouncement);
 
         /// <summary>
         /// Gets the base <see cref="DamageHandlerBase"/>.
@@ -116,30 +112,30 @@ namespace Exiled.API.Features.DamageHandlers
         /// <inheritdoc/>
         public override Action ApplyDamage(Player player)
         {
-            if (Damage <= 0f)
+            if (this.Damage <= 0f)
                 return Action.None;
 
-            StartVelocity = player.Velocity;
+            this.StartVelocity = player.Velocity;
 
-            As<BaseFirearmHandler>().StartVelocity.y = Mathf.Max(As<BaseFirearmHandler>().StartVelocity.y, 0f);
+            this.As<BaseFirearmHandler>().StartVelocity.y = Mathf.Max(this.As<BaseFirearmHandler>().StartVelocity.y, 0f);
             AhpStat ahpModule = player.GetModule<AhpStat>();
             HealthStat healthModule = player.GetModule<HealthStat>();
 
-            if (Damage <= StandardDamageHandler.KillValue)
-                return KillPlayer(player, CustomBase);
+            if (this.Damage <= StandardDamageHandler.KillValue)
+                return KillPlayer(player, this.CustomBase);
 
-            ProcessDamage(player);
+            this.ProcessDamage(player);
 
             foreach (StatusEffectBase statusEffect in player.ActiveEffects)
             {
                 if (statusEffect is IDamageModifierEffect damageModifierEffect)
-                    Damage *= damageModifierEffect.GetDamageModifier(Damage, CustomBase, As<BaseFirearmHandler>().Hitbox);
+                    this.Damage *= damageModifierEffect.GetDamageModifier(this.Damage, this.CustomBase, this.As<BaseFirearmHandler>().Hitbox);
             }
 
-            DealtHealthDamage = ahpModule.ServerProcessDamage(Damage);
-            AbsorbedAhpDamage = Damage - DealtHealthDamage;
+            this.DealtHealthDamage = ahpModule.ServerProcessDamage(this.Damage);
+            this.AbsorbedAhpDamage = this.Damage - this.DealtHealthDamage;
 
-            return healthModule.CurValue - DealtHealthDamage > 0f ? Action.Damage : KillPlayer(player, CustomBase);
+            return healthModule.CurValue - this.DealtHealthDamage > 0f ? Action.Damage : KillPlayer(player, this.CustomBase);
         }
 
         private static Action KillPlayer(Player player, DamageHandlerBase damageHandlerBase)

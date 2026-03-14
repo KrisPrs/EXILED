@@ -51,11 +51,11 @@ namespace Exiled.Events
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            Patch();
+            this.Patch();
 
             watch.Stop();
 
-            Log.Info($"{(Config.UseDynamicPatching ? "Non-event" : "All")} patches completed in {watch.Elapsed}");
+            Log.Info($"{(this.Config.UseDynamicPatching ? "Non-event" : "All")} patches completed in {watch.Elapsed}");
             PlayerAuthenticationManager.OnInstanceModeChanged -= RoleAssigner.CheckLateJoin;
 
             CustomNetworkManager.OnClientStarted += Handlers.Internal.ClientStarted.OnClientStarted;
@@ -102,7 +102,7 @@ namespace Exiled.Events
         {
             base.OnDisabled();
 
-            Unpatch();
+            this.Unpatch();
 
             CustomNetworkManager.OnClientStarted -= Handlers.Internal.ClientStarted.OnClientStarted;
             SceneManager.sceneUnloaded -= Handlers.Internal.SceneUnloaded.OnSceneUnloaded;
@@ -145,12 +145,12 @@ namespace Exiled.Events
         {
             try
             {
-                Patcher = new Patcher();
+                this.Patcher = new Patcher();
 #if DEBUG
                 bool lastDebugStatus = Harmony.DEBUG;
                 Harmony.DEBUG = true;
 #endif
-                Patcher.PatchAll(!Config.UseDynamicPatching, out int failedPatch);
+                this.Patcher.PatchAll(!this.Config.UseDynamicPatching, out int failedPatch);
 
                 if (failedPatch == 0)
                     Log.Debug("Events patched successfully!");
@@ -172,8 +172,8 @@ namespace Exiled.Events
         public void Unpatch()
         {
             Log.Debug("Unpatching events...");
-            Patcher.UnpatchAll();
-            Patcher = null;
+            this.Patcher.UnpatchAll();
+            this.Patcher = null;
             Log.Debug("All events have been unpatched complete. Goodbye!");
         }
     }

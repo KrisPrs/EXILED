@@ -25,10 +25,8 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="objectiveFootprintBase"><inheritdoc cref="Base"/></param>
         internal HumanKillObjective(BaseObjective objectiveFootprintBase)
-            : base(objectiveFootprintBase)
-        {
-            Base = objectiveFootprintBase;
-        }
+            : base(objectiveFootprintBase) =>
+            this.Base = objectiveFootprintBase;
 
         /// <inheritdoc/>
         public new BaseObjective Base { get; }
@@ -42,7 +40,7 @@ namespace Exiled.API.Features.Objectives
         /// <param name="target">Target role.</param>
         /// <param name="player">Attacker.</param>
         /// <returns><c>true</c> if role is an enemy role, <c>false</c> otherwise.</returns>
-        public bool IsValidEnemy(RoleTypeId target, Player player) => Base.IsValidEnemy(target, player.ReferenceHub);
+        public bool IsValidEnemy(RoleTypeId target, Player player) => this.Base.IsValidEnemy(target, player.ReferenceHub);
 
         /// <summary>
         /// Checks if the player is an enemy.
@@ -50,13 +48,13 @@ namespace Exiled.API.Features.Objectives
         /// <param name="target">Target player.</param>
         /// <param name="player">Attacker.</param>
         /// <returns><c>true</c> if player is an enemy, <c>false</c> otherwise.</returns>
-        public bool IsValidEnemy(Player target, Player player) => IsValidEnemy(target.Role, player);
+        public bool IsValidEnemy(Player target, Player player) => this.IsValidEnemy(target.Role, player);
 
         /// <summary>
         /// Fakes player's kill and tries to achieve this objective.
         /// </summary>
         /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
-        public void Kill(AttackerDamageHandler damageHandler) => Base.OnKill(damageHandler.Target.ReferenceHub, damageHandler.Base);
+        public void Kill(AttackerDamageHandler damageHandler) => this.Base.OnKill(damageHandler.Target.ReferenceHub, damageHandler.Base);
 
         /// <summary>
         /// Fakes player's kill and tries to achieve this objective.
@@ -64,6 +62,6 @@ namespace Exiled.API.Features.Objectives
         /// <param name="target">Target player.</param>
         /// <param name="attacker">Attacker.</param>
         /// <param name="damageType">Damage type.</param>
-        public void Kill(Player target, Player attacker, DamageType damageType = DamageType.Unknown) => Kill(new CustomDamageHandler(target, attacker, -1, damageType));
+        public void Kill(Player target, Player attacker, DamageType damageType = DamageType.Unknown) => this.Kill(new CustomDamageHandler(target, attacker, -1, damageType));
     }
 }

@@ -33,9 +33,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TransmittingEventArgs(Player player, VoiceMessage voiceMessage, VoiceModuleBase voiceModule)
         {
-            Player = player;
-            VoiceMessage = voiceMessage;
-            VoiceModule = voiceModule;
+            this.Player = player;
+            this.VoiceMessage = voiceMessage;
+            this.VoiceModule = voiceModule;
         }
 
         /// <summary>

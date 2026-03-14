@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Scp106
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public ExitStalkingEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp106 = player.Role.As<Scp106Role>();
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp106 = player.Role.As<Scp106Role>();
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

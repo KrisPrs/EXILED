@@ -50,10 +50,7 @@ namespace Exiled.Events.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="Event"/> class.
         /// </summary>
-        public Event()
-        {
-            EventsValue.Add(this);
-        }
+        public Event() => EventsValue.Add(this);
 
         /// <summary>
         /// Gets a <see cref="IReadOnlyList{T}"/> of <see cref="Event{T}"/> which contains all the <see cref="Event{T}"/> instances.
@@ -118,7 +115,7 @@ namespace Exiled.Events.Features
         /// </summary>
         /// <param name="handler">The handler to add.</param>
         public void Subscribe(CustomEventHandler handler)
-            => Subscribe(handler, 0);
+            => this.Subscribe(handler, 0);
 
         /// <summary>
         /// Subscribes a target <see cref="CustomEventHandler"/> to the inner event if the conditional is true.
@@ -129,26 +126,26 @@ namespace Exiled.Events.Features
         {
             Log.Assert(Events.Instance is not null, $"{nameof(Events.Instance)} is null, please ensure you have exiled_events enabled!");
 
-            if (Events.Instance.Config.UseDynamicPatching && !Patched)
+            if (Events.Instance.Config.UseDynamicPatching && !this.Patched)
             {
                 Events.Instance.Patcher.Patch(this);
-                Patched = true;
+                this.Patched = true;
             }
 
             if (handler == null)
                 return;
 
             Registration registration = new Registration(handler, priority);
-            int index = innerEvent.BinarySearch(registration, RegisterComparable);
+            int index = this.innerEvent.BinarySearch(registration, RegisterComparable);
             if (index < 0)
             {
-                innerEvent.Insert(~index, registration);
+                this.innerEvent.Insert(~index, registration);
             }
             else
             {
-                while (index < innerEvent.Count && innerEvent[index].priority == priority)
+                while (index < this.innerEvent.Count && this.innerEvent[index].priority == priority)
                     index++;
-                innerEvent.Insert(index, registration);
+                this.innerEvent.Insert(index, registration);
             }
         }
 
@@ -157,7 +154,7 @@ namespace Exiled.Events.Features
         /// </summary>
         /// <param name="handler">The handler to add.</param>
         public void Subscribe(CustomAsyncEventHandler handler)
-            => Subscribe(handler, 0);
+            => this.Subscribe(handler, 0);
 
         /// <summary>
         /// Subscribes a target <see cref="CustomAsyncEventHandler"/> to the inner event if the conditional is true.
@@ -168,26 +165,26 @@ namespace Exiled.Events.Features
         {
             Log.Assert(Events.Instance is not null, $"{nameof(Events.Instance)} is null, please ensure you have exiled_events enabled!");
 
-            if (Events.Instance.Config.UseDynamicPatching && !Patched)
+            if (Events.Instance.Config.UseDynamicPatching && !this.Patched)
             {
                 Events.Instance.Patcher.Patch(this);
-                Patched = true;
+                this.Patched = true;
             }
 
             if (handler == null)
                 return;
 
             AsyncRegistration registration = new AsyncRegistration(handler, 0);
-            int index = innerAsyncEvent.BinarySearch(registration, AsyncRegisterComparable);
+            int index = this.innerAsyncEvent.BinarySearch(registration, AsyncRegisterComparable);
             if (index < 0)
             {
-                innerAsyncEvent.Insert(~index, registration);
+                this.innerAsyncEvent.Insert(~index, registration);
             }
             else
             {
-                while (index < innerAsyncEvent.Count && innerAsyncEvent[index].priority == priority)
+                while (index < this.innerAsyncEvent.Count && this.innerAsyncEvent[index].priority == priority)
                     index++;
-                innerAsyncEvent.Insert(index, registration);
+                this.innerAsyncEvent.Insert(index, registration);
             }
         }
 
@@ -197,9 +194,9 @@ namespace Exiled.Events.Features
         /// <param name="handler">The handler to add.</param>
         public void Unsubscribe(CustomEventHandler handler)
         {
-            int index = innerEvent.FindIndex(p => p.handler == handler);
+            int index = this.innerEvent.FindIndex(p => p.handler == handler);
             if (index != -1)
-                innerEvent.RemoveAt(index);
+                this.innerEvent.RemoveAt(index);
         }
 
         /// <summary>
@@ -208,24 +205,21 @@ namespace Exiled.Events.Features
         /// <param name="handler">The handler to add.</param>
         public void Unsubscribe(CustomAsyncEventHandler handler)
         {
-            int index = innerAsyncEvent.FindIndex(p => p.handler == handler);
+            int index = this.innerAsyncEvent.FindIndex(p => p.handler == handler);
             if (index != -1)
-                innerAsyncEvent.RemoveAt(index);
+                this.innerAsyncEvent.RemoveAt(index);
         }
 
         /// <summary>
         /// Executes all <see cref="CustomEventHandler"/> listeners safely.
         /// </summary>
-        public void InvokeSafely()
-        {
-            BlendedInvoke();
-        }
+        public void InvokeSafely() => this.BlendedInvoke();
 
         /// <inheritdoc cref="InvokeSafely"/>
         internal void BlendedInvoke()
         {
-            int syncCount = innerEvent.Count;
-            int asyncCount = innerAsyncEvent.Count;
+            int syncCount = this.innerEvent.Count;
+            int asyncCount = this.innerAsyncEvent.Count;
 
             Registration[] localInnerEvent = ArrayPool<Registration>.Shared.Rent(syncCount);
             AsyncRegistration[] localInnerAsyncEvent = ArrayPool<AsyncRegistration>.Shared.Rent(asyncCount);
@@ -234,8 +228,8 @@ namespace Exiled.Events.Features
 
             try
             {
-                innerEvent.CopyTo(localInnerEvent, 0);
-                innerAsyncEvent.CopyTo(localInnerAsyncEvent, 0);
+                this.innerEvent.CopyTo(localInnerEvent, 0);
+                this.innerAsyncEvent.CopyTo(localInnerAsyncEvent, 0);
 
                 int eventIndex = 0, asyncEventIndex = 0;
 
@@ -249,7 +243,7 @@ namespace Exiled.Events.Features
                         }
                         catch (Exception ex)
                         {
-                            Log.Error($"Method \"{localInnerEvent[eventIndex].handler.Method.Name}\" of the class \"{localInnerEvent[eventIndex].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{GetType().FullName}\"\n{ex}");
+                            Log.Error($"Method \"{localInnerEvent[eventIndex].handler.Method.Name}\" of the class \"{localInnerEvent[eventIndex].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{this.GetType().FullName}\"\n{ex}");
                         }
 
                         eventIndex++;
@@ -262,7 +256,7 @@ namespace Exiled.Events.Features
                         }
                         catch (Exception ex)
                         {
-                            Log.Error($"Method \"{localInnerAsyncEvent[asyncEventIndex].handler.Method.Name}\" of the class \"{localInnerAsyncEvent[asyncEventIndex].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{GetType().FullName}\"\n{ex}");
+                            Log.Error($"Method \"{localInnerAsyncEvent[asyncEventIndex].handler.Method.Name}\" of the class \"{localInnerAsyncEvent[asyncEventIndex].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{this.GetType().FullName}\"\n{ex}");
                         }
 
                         asyncEventIndex++;
@@ -279,12 +273,12 @@ namespace Exiled.Events.Features
         /// <inheritdoc cref="InvokeSafely"/>
         internal void InvokeNormal()
         {
-            int count = innerEvent.Count;
+            int count = this.innerEvent.Count;
             Registration[] localInnerEvent = ArrayPool<Registration>.Shared.Rent(count);
 
             try
             {
-                innerEvent.CopyTo(localInnerEvent, 0);
+                this.innerEvent.CopyTo(localInnerEvent, 0);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -294,7 +288,7 @@ namespace Exiled.Events.Features
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"Method \"{localInnerEvent[i].handler.Method.Name}\" of the class \"{localInnerEvent[i].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{GetType().FullName}\"\n{ex}");
+                        Log.Error($"Method \"{localInnerEvent[i].handler.Method.Name}\" of the class \"{localInnerEvent[i].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{this.GetType().FullName}\"\n{ex}");
                     }
                 }
             }
@@ -307,12 +301,12 @@ namespace Exiled.Events.Features
         /// <inheritdoc cref="InvokeSafely"/>
         internal void InvokeAsync()
         {
-            int count = innerAsyncEvent.Count;
+            int count = this.innerAsyncEvent.Count;
             AsyncRegistration[] localInnerAsyncEvent = ArrayPool<AsyncRegistration>.Shared.Rent(count);
 
             try
             {
-                innerAsyncEvent.CopyTo(localInnerAsyncEvent, 0);
+                this.innerAsyncEvent.CopyTo(localInnerAsyncEvent, 0);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -322,7 +316,7 @@ namespace Exiled.Events.Features
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"Method \"{localInnerAsyncEvent[i].handler.Method.Name}\" of the class \"{localInnerAsyncEvent[i].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{GetType().FullName}\"\n{ex}");
+                        Log.Error($"Method \"{localInnerAsyncEvent[i].handler.Method.Name}\" of the class \"{localInnerAsyncEvent[i].handler.Method.ReflectedType.FullName}\" caused an exception when handling the event \"{this.GetType().FullName}\"\n{ex}");
                     }
                 }
             }

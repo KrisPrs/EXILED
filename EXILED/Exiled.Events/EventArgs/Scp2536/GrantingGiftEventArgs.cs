@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Scp2536
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public GrantingGiftEventArgs(Player player, Scp2536GiftBase gift, bool isAllowed = true)
         {
-            Player = player;
-            Gift = gift;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Gift = gift;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

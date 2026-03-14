@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public EarningAchievementEventArgs(Player player, AchievementName achievementName, bool isAllowed = true)
         {
-            Player = player;
-            AchievementName = achievementName;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.AchievementName = achievementName;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

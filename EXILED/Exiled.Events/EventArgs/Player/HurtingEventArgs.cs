@@ -31,17 +31,17 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public HurtingEventArgs(Player target, DamageHandlerBase damageHandler)
         {
-            DamageHandler = new CustomDamageHandler(target, damageHandler);
+            this.DamageHandler = new CustomDamageHandler(target, damageHandler);
 
-            Attacker = DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
-            Player = target;
+            this.Attacker = this.DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
+            this.Player = target;
 
-            if (DamageHandler.BaseIs(out attackerDamageHandler))
-                Attacker = attackerDamageHandler.Attacker;
+            if (this.DamageHandler.BaseIs(out attackerDamageHandler))
+                this.Attacker = attackerDamageHandler.Attacker;
             else if (damageHandler is GenericDamageHandler genericDamageHandler)
-                Attacker = Player.Get(genericDamageHandler.Attacker);
+                this.Attacker = Player.Get(genericDamageHandler.Attacker);
             else
-                Attacker = null;
+                this.Attacker = null;
 
             Log.Assert(target != null, "HurtingEventArgs - target is null!");
         }
@@ -57,8 +57,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public float Amount
         {
-            get => DamageHandler.Damage;
-            set => DamageHandler.Damage = value;
+            get => this.DamageHandler.Damage;
+            set => this.DamageHandler.Damage = value;
         }
 
         /// <inheritdoc/>
@@ -67,7 +67,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <summary>
         /// Gets a value indicating whether the incoming damage is an instant kill.
         /// </summary>
-        public bool IsInstantKill => Amount == StandardDamageHandler.KillValue;
+        public bool IsInstantKill => this.Amount == StandardDamageHandler.KillValue;
 
         /// <inheritdoc/>
         public bool IsAllowed { get; set; } = true;

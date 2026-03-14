@@ -20,8 +20,8 @@ namespace Exiled.API.Features.Attributes
         /// <param name="name"><inheritdoc cref="Name"/></param>
         public PrefabAttribute(uint assetId, string name)
         {
-            AssetId = assetId;
-            Name = name;
+            this.AssetId = assetId;
+            this.Name = name;
         }
 
         /// <summary>

@@ -24,16 +24,16 @@ namespace Exiled.Events.EventArgs.Scp1509
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public TriggeringAttackEventArgs(Scp1509Item scp1509Item, bool isAllowed = true)
         {
-            Scp1509 = Item.Get<Scp1509>(scp1509Item);
-            Player = Scp1509.Owner;
-            IsAllowed = isAllowed;
+            this.Scp1509 = Item.Get<Scp1509>(scp1509Item);
+            this.Player = this.Scp1509.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc />
         public Player Player { get; }
 
         /// <inheritdoc />
-        public Item Item => Scp1509;
+        public Item Item => this.Scp1509;
 
         /// <summary>
         /// Gets the SCP-1509 instance.

@@ -35,9 +35,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SendingRoleEventArgs(Player player, uint target, RoleTypeId roleType)
         {
-            Player = player;
-            Target = Player.Get(target);
-            roleTypeId = roleType;
+            this.Player = player;
+            this.Target = Player.Get(target);
+            this.roleTypeId = roleType;
         }
 
         /// <summary>
@@ -56,16 +56,13 @@ namespace Exiled.Events.EventArgs.Player
         /// <remarks>Checks value by player <see cref="Role.CheckAppearanceCompatibility(RoleTypeId)"/>.</remarks>
         public RoleTypeId RoleType
         {
-            get
-            {
-                return roleTypeId;
-            }
+            get => this.roleTypeId;
 
             set
             {
-                if (Player.Role.CheckAppearanceCompatibility(value))
+                if (this.Player.Role.CheckAppearanceCompatibility(value))
                 {
-                    roleTypeId = value;
+                    this.roleTypeId = value;
                 }
             }
         }

@@ -57,22 +57,22 @@ namespace Exiled.CustomRoles.Commands.Admin.List
         {
             if (!sender.CheckPermission("customroles.list.registered"))
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
             if (CustomRole.Registered.Count == 0)
             {
-                response = NoCustomRolesMessage;
+                response = this.NoCustomRolesMessage;
                 return false;
             }
 
             StringBuilder builder = StringBuilderPool.Pool.Get().AppendLine();
 
-            builder.Append(string.Format(CustomRolesListFormat, CustomRole.Registered.Count));
+            builder.Append(string.Format(this.CustomRolesListFormat, CustomRole.Registered.Count));
 
             foreach (CustomRole role in CustomRole.Registered.OrderBy(r => r.Id))
-                builder.Append(string.Format(CustomRoleFormat, role.Id, role.Name, role.Role)).AppendLine();
+                builder.Append(string.Format(this.CustomRoleFormat, role.Id, role.Name, role.Role)).AppendLine();
 
             response = StringBuilderPool.Pool.ToStringReturn(builder);
             return true;

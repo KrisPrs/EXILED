@@ -25,10 +25,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public ChangingEmotionEventArgs(ReferenceHub hub, EmotionPresetType newEmotionPresetType, EmotionPresetType oldEmotionPresetType, bool isAllowed = true)
         {
-            Player = Player.Get(hub);
-            NewEmotionPresetType = newEmotionPresetType;
-            OldEmotionPresetType = oldEmotionPresetType;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(hub);
+            this.NewEmotionPresetType = newEmotionPresetType;
+            this.OldEmotionPresetType = oldEmotionPresetType;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

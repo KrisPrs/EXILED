@@ -29,10 +29,10 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public PlacingBulletHoleEventArgs(Item firearm, RaycastHit hit)
         {
-            Firearm = firearm.As<Firearm>();
-            Player = Firearm.Owner;
-            Position = hit.point;
-            Rotation = Quaternion.LookRotation(hit.normal);
+            this.Firearm = firearm.As<Firearm>();
+            this.Player = this.Firearm.Owner;
+            this.Position = hit.point;
+            this.Rotation = Quaternion.LookRotation(hit.normal);
         }
 
         /// <summary>
@@ -59,6 +59,6 @@ namespace Exiled.Events.EventArgs.Map
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
     }
 }

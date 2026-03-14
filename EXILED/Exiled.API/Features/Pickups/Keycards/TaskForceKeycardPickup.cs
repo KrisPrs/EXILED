@@ -40,35 +40,35 @@ namespace Exiled.API.Features.Pickups.Keycards
         /// <inheritdoc cref="INameTagKeycard.NameTag"/>
         public string NameTag
         {
-            get => CustomKeycardItem.DataDict[Serial].NameTag;
+            get => CustomKeycardItem.DataDict[this.Serial].NameTag;
             set
             {
-                CustomKeycardItem.DataDict[Serial].NameTag = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].NameTag = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ISerialNumberKeycard.SerialNumber"/>
         public string SerialNumber
         {
-            get => CustomKeycardItem.DataDict[Serial].SerialNumber;
+            get => CustomKeycardItem.DataDict[this.Serial].SerialNumber;
             set
             {
-                CustomKeycardItem.DataDict[Serial].SerialNumber = value;
+                CustomKeycardItem.DataDict[this.Serial].SerialNumber = value;
 
-                Resync();
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="IRankKeycard.Rank"/>
         public byte Rank
         {
-            get => CustomKeycardItem.DataDict[Serial].Rank;
+            get => CustomKeycardItem.DataDict[this.Serial].Rank;
             set
             {
-                CustomKeycardItem.DataDict[Serial].Rank = value;
+                CustomKeycardItem.DataDict[this.Serial].Rank = value;
 
-                Resync();
+                this.Resync();
             }
         }
 

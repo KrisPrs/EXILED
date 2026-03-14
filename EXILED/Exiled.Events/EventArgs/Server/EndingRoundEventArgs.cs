@@ -31,9 +31,9 @@ namespace Exiled.Events.EventArgs.Server
         /// </param>
         public EndingRoundEventArgs(LeadingTeam leadingTeam, RoundSummary.SumInfo_ClassList classList, bool isAllowed)
         {
-            LeadingTeam = leadingTeam;
-            ClassList = classList;
-            IsAllowed = isAllowed;
+            this.LeadingTeam = leadingTeam;
+            this.ClassList = classList;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Exiled.Events.EventArgs.Server
         public bool IsForceEnded
         {
             get => false; // This event is now call only when ForceEnd method haven't been called
-            set => IsAllowed = value;
+            set => this.IsAllowed = value;
         }
 
         /// <summary>

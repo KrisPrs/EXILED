@@ -19,10 +19,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         /// <param name="hazard">The <see cref="BaseHazard"/> instance.</param>
         public TemporaryHazard(BaseHazard hazard)
-            : base(hazard)
-        {
-            Base = hazard;
-        }
+            : base(hazard) =>
+            this.Base = hazard;
 
         /// <summary>
         /// Gets the <see cref="BaseHazard"/>.
@@ -34,35 +32,35 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public bool IsDestroyed
         {
-            get => Base._destroyed;
+            get => this.Base._destroyed;
             set
             {
                 if (!value)
                 {
-                    Duration = 0;
+                    this.Duration = 0;
                 }
 
-                Base._destroyed = value;
+                this.Base._destroyed = value;
             }
         }
 
         /// <summary>
         /// Gets the total duration before hazard gets destroyed.
         /// </summary>
-        public float TotalDuration => Base.HazardDuration;
+        public float TotalDuration => this.Base.HazardDuration;
 
         /// <summary>
         /// Gets or sets elapsed time which has spend after creating.
         /// </summary>
         public float Duration
         {
-            get => Base.Elapsed;
-            set => Base.Elapsed = value;
+            get => this.Base.Elapsed;
+            set => this.Base.Elapsed = value;
         }
 
         /// <summary>
         /// Destroys this hazard.
         /// </summary>
-        public void Destroy() => Base.ServerDestroy();
+        public void Destroy() => this.Base.ServerDestroy();
     }
 }

@@ -24,10 +24,7 @@ namespace Exiled.API.Features.Items.FirearmModules
         /// Initializes a new instance of the <see cref="Magazine"/> class.
         /// </summary>
         /// <param name="module">target <see cref="IAmmoContainerModule"/>.</param>
-        public Magazine(IAmmoContainerModule module)
-        {
-            AmmoContainerModule = module;
-        }
+        public Magazine(IAmmoContainerModule module) => this.AmmoContainerModule = module;
 
         /// <summary>
         /// Gets an original <see cref="IAmmoContainerModule"/>.
@@ -88,23 +85,23 @@ namespace Exiled.API.Features.Items.FirearmModules
         /// </remarks>
         public int ModifyAmmo(int delta, bool useBorders = true)
         {
-            int oldAmmo = Ammo;
+            int oldAmmo = this.Ammo;
             if (useBorders)
             {
-                Ammo = Mathf.Clamp(Ammo + delta, 0, MaxAmmo);
+                this.Ammo = Mathf.Clamp(this.Ammo + delta, 0, this.MaxAmmo);
             }
             else
             {
-                Ammo += delta;
+                this.Ammo += delta;
             }
 
-            return Ammo - oldAmmo;
+            return this.Ammo - oldAmmo;
         }
 
         /// <summary>
         /// Fills current <see cref="Ammo"/> to <see cref="MaxAmmo"/>.
         /// </summary>
-        public void Fill() => Ammo = MaxAmmo;
+        public void Fill() => this.Ammo = this.MaxAmmo;
 
         /// <summary>
         /// Resyncs a related values with a client.

@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp1344
         /// <param name="scp1344Status"><inheritdoc cref="InventorySystem.Items.Usables.Scp1344.Scp1344Status"/></param>
         public ChangedStatusEventArgs(ItemBase item, Scp1344Status scp1344Status)
         {
-            Scp1344 = Item.Get<Scp1344>(item);
-            Player = Scp1344.Owner;
-            Scp1344Status = scp1344Status;
+            this.Scp1344 = Item.Get<Scp1344>(item);
+            this.Player = this.Scp1344.Owner;
+            this.Scp1344Status = scp1344Status;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Exiled.Events.EventArgs.Scp1344
         /// <summary>
         /// Gets the item.
         /// </summary>
-        public Item Item => Scp1344;
+        public Item Item => this.Scp1344;
 
         /// <summary>
         /// Gets the player in owner of the item.

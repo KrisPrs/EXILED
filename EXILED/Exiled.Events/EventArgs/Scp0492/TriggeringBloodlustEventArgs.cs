@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Scp0492
         /// <param name="scp0492">The <see cref="API.Features.Player"/> who is SCP-049-2.</param>
         public TriggeringBloodlustEventArgs(Player player, Player scp0492)
         {
-            Target = player;
-            Player = scp0492;
-            Scp0492 = Player.Role.As<Scp0492Role>();
+            this.Target = player;
+            this.Player = scp0492;
+            this.Scp0492 = this.Player.Role.As<Scp0492Role>();
         }
 
         /// <summary>

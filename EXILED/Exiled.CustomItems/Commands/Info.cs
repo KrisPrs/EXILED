@@ -86,38 +86,38 @@ namespace Exiled.CustomItems.Commands
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission(Permission))
+            if (!sender.CheckPermission(this.Permission))
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
             if (arguments.Count < 1)
             {
-                response = UsageMessage;
+                response = this.UsageMessage;
                 return false;
             }
 
             if (!(uint.TryParse(arguments.At(0), out uint id) && CustomItem.TryGet(id, out CustomItem? item)) &&
                 !CustomItem.TryGet(arguments.At(0), out item))
             {
-                response = string.Format(NotFoundMessage, arguments.At(0));
+                response = string.Format(this.NotFoundMessage, arguments.At(0));
                 return false;
             }
 
             StringBuilder message = StringBuilderPool.Pool.Get().AppendLine();
 
-            message.Append("<color=").Append(Color1).Append(">-</color> <color=").Append(Color2).Append(">").Append(item?.Name).Append("</color> <color=").Append(Color3).Append(">(").Append(item?.Id).AppendLine(")</color>")
+            message.Append("<color=").Append(this.Color1).Append(">-</color> <color=").Append(this.Color2).Append(">").Append(item?.Name).Append("</color> <color=").Append(this.Color3).Append(">(").Append(item?.Id).AppendLine(")</color>")
                 .Append("- ").AppendLine(item?.Description)
                 .AppendLine(item?.Type.ToString())
-                .Append(SpawnLimitLabel).AppendLine(item?.SpawnProperties?.Limit.ToString()).AppendLine()
-                .Append(string.Format(SpawnPointsLabel, item?.SpawnProperties?.DynamicSpawnPoints.Count + item?.SpawnProperties?.StaticSpawnPoints.Count));
+                .Append(this.SpawnLimitLabel).AppendLine(item?.SpawnProperties?.Limit.ToString()).AppendLine()
+                .Append(string.Format(this.SpawnPointsLabel, item?.SpawnProperties?.DynamicSpawnPoints.Count + item?.SpawnProperties?.StaticSpawnPoints.Count));
 
             foreach (DynamicSpawnPoint spawnPoint in item?.SpawnProperties?.DynamicSpawnPoints!)
-                message.Append(string.Format(SpawnPointFormat, spawnPoint.Name, spawnPoint.Position, spawnPoint.Chance)).AppendLine("%");
+                message.Append(string.Format(this.SpawnPointFormat, spawnPoint.Name, spawnPoint.Position, spawnPoint.Chance)).AppendLine("%");
 
             foreach (StaticSpawnPoint spawnPoint in item.SpawnProperties.StaticSpawnPoints)
-                message.Append(string.Format(SpawnPointFormat, spawnPoint.Name, spawnPoint.Position, spawnPoint.Chance)).AppendLine("%");
+                message.Append(string.Format(this.SpawnPointFormat, spawnPoint.Name, spawnPoint.Position, spawnPoint.Chance)).AppendLine("%");
 
             response = StringBuilderPool.Pool.ToStringReturn(message);
             return true;

@@ -52,10 +52,7 @@ namespace Exiled.API.Features
         /// <param name="color">The color of the lines.</param>
         /// <param name="duration"> How long the line should remain visible.<para><warning><b>Warning:</b> Avoid using <see cref="float.PositiveInfinity"/> or extremely large values, as these lines cannot be removed from the client once sent.</warning></para></param>
         /// <param name="players">A collection of <see cref="Player"/>s to show the path to.</param>
-        public static void Path(Vector3[] points, Color color, float duration, IEnumerable<Player> players = null)
-        {
-            Send(players, duration, color, points, points.Length);
-        }
+        public static void Path(Vector3[] points, Color color, float duration, IEnumerable<Player> players = null) => Send(players, duration, color, points, points.Length);
 
         /// <summary>
         /// Draws a circle at a specific position.
@@ -68,10 +65,7 @@ namespace Exiled.API.Features
         /// <param name="players">A collection of <see cref="Player"/>s to show the circle to.</param>
         /// <param name="horizontal">Indicates whether the circle should be drawn on the horizontal plane (XZ) or vertical plane (XY).</param>
         /// <param name="segments">The number of line segments used to draw the circle. Higher values result in a smoother circle.</param>
-        public static void Circle(Vector3 origin, Quaternion rotation, Vector3 scale, Color color, float duration, IEnumerable<Player> players = null, bool horizontal = true, int segments = 16)
-        {
-            Send(players, duration, color, GetCirclePoints(origin, rotation, scale, ref segments, horizontal), segments);
-        }
+        public static void Circle(Vector3 origin, Quaternion rotation, Vector3 scale, Color color, float duration, IEnumerable<Player> players = null, bool horizontal = true, int segments = 16) => Send(players, duration, color, GetCirclePoints(origin, rotation, scale, ref segments, horizontal), segments);
 
         /// <summary>
         /// Draws a wireframe sphere composed of two circles (horizontal and vertical).
@@ -104,10 +98,7 @@ namespace Exiled.API.Features
         /// <param name="color">The color of the lines.</param>
         /// <param name="duration"> How long the line should remain visible.<para><warning><b>Warning:</b> Avoid using <see cref="float.PositiveInfinity"/> or extremely large values, as these lines cannot be removed from the client once sent.</warning></para></param>
         /// <param name="players">A collection of <see cref="Player"/>s to show the bounds to.</param>
-        public static void Bounds(Bounds bounds, Color color, float duration, IEnumerable<Player> players = null)
-        {
-            Box(bounds.center, bounds.size, Quaternion.identity, color, duration, players);
-        }
+        public static void Bounds(Bounds bounds, Color color, float duration, IEnumerable<Player> players = null) => Box(bounds.center, bounds.size, Quaternion.identity, color, duration, players);
 
         /// <summary>
         /// Draws the edges of a <see cref="RelativeBounds"/> object.
@@ -116,10 +107,7 @@ namespace Exiled.API.Features
         /// <param name="color">The color of the lines.</param>
         /// <param name="duration"> How long the line should remain visible.<para><warning><b>Warning:</b> Avoid using <see cref="float.PositiveInfinity"/> or extremely large values, as these lines cannot be removed from the client once sent.</warning></para></param>
         /// <param name="players">A collection of <see cref="Player"/>s to show the bounds to.</param>
-        public static void RelativeBounds(RelativeBounds relativeBounds, Color color, float duration, IEnumerable<Player> players = null)
-        {
-            Box(relativeBounds.Origin, relativeBounds.Bounds.size, relativeBounds.Rotation, color, duration, players);
-        }
+        public static void RelativeBounds(RelativeBounds relativeBounds, Color color, float duration, IEnumerable<Player> players = null) => Box(relativeBounds.Origin, relativeBounds.Bounds.size, relativeBounds.Rotation, color, duration, players);
 
         /// <summary>
         /// Draws a collider.

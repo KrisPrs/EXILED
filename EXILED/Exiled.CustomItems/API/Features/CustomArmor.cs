@@ -63,11 +63,11 @@ namespace Exiled.CustomItems.API.Features
         {
             Armor armor = (Armor)base.CreateItem();
 
-            armor.Weight = Weight < 0 ? armor.Weight : Weight;
-            armor.StaminaUseMultiplier = StaminaUseMultiplier;
+            armor.Weight = this.Weight < 0 ? armor.Weight : this.Weight;
+            armor.StaminaUseMultiplier = this.StaminaUseMultiplier;
 
-            armor.VestEfficacy = VestEfficacy;
-            armor.HelmetEfficacy = HelmetEfficacy;
+            armor.VestEfficacy = this.VestEfficacy;
+            armor.HelmetEfficacy = this.HelmetEfficacy;
 
             return armor;
         }

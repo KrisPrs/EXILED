@@ -27,7 +27,7 @@ namespace Exiled.API.Features.Waves
         /// <param name="wave">
         /// The <see cref="TimeBasedWave"/> that this class should be based off of.
         /// </param>
-        public TimedWave(TimeBasedWave wave) => Base = wave;
+        public TimedWave(TimeBasedWave wave) => this.Base = wave;
 
         /// <summary>
         /// Gets the base <see cref="TimeBasedWave"/>.
@@ -37,49 +37,49 @@ namespace Exiled.API.Features.Waves
         /// <summary>
         /// Gets the name of the wave timer.
         /// </summary>
-        public string Name => Base.GetType().Name;
+        public string Name => this.Base.GetType().Name;
 
         /// <summary>
         /// Gets a value indicating whether the wave is a mini wave.
         /// </summary>
-        public bool IsMiniWave => Base is IMiniWave;
+        public bool IsMiniWave => this.Base is IMiniWave;
 
         /// <summary>
         /// Gets the wave timer instance.
         /// </summary>
-        public WaveTimer Timer => new(Base.Timer);
+        public WaveTimer Timer => new(this.Base.Timer);
 
         /// <summary>
         /// Gets the faction of this wave.
         /// </summary>
-        public Faction Faction => Base.TargetFaction;
+        public Faction Faction => this.Base.TargetFaction;
 
         /// <summary>
         /// Gets the team of this wave.
         /// </summary>
-        public Team Team => Base.TargetFaction.GetSpawnableTeam();
+        public Team Team => this.Base.TargetFaction.GetSpawnableTeam();
 
         /// <summary>
         /// Gets the spawnable faction for this wave.
         /// </summary>
-        public SpawnableFaction SpawnableFaction => Faction switch
+        public SpawnableFaction SpawnableFaction => this.Faction switch
         {
-            Faction.FoundationStaff when IsMiniWave => SpawnableFaction.NtfMiniWave,
+            Faction.FoundationStaff when this.IsMiniWave => SpawnableFaction.NtfMiniWave,
             Faction.FoundationStaff => SpawnableFaction.NtfWave,
-            Faction.FoundationEnemy when IsMiniWave => SpawnableFaction.ChaosMiniWave,
+            Faction.FoundationEnemy when this.IsMiniWave => SpawnableFaction.ChaosMiniWave,
             _ => SpawnableFaction.ChaosWave
         };
 
         /// <summary>
         /// Gets the maximum amount of people that can spawn in this wave.
         /// </summary>
-        public int MaxAmount => Base.MaxWaveSize;
+        public int MaxAmount => this.Base.MaxWaveSize;
 
         /// <summary>
         /// Gets the <see cref="WaveAnnouncementBase"/> for this wave.
         /// </summary>
         /// <remarks>Wave must implement <see cref="IAnnouncedWave"/>.</remarks>
-        public WaveAnnouncementBase Announcement => Base is IAnnouncedWave announcedWave ? announcedWave.Announcement : null;
+        public WaveAnnouncementBase Announcement => this.Base is IAnnouncedWave announcedWave ? announcedWave.Announcement : null;
 
         /// <summary>
         /// Get the timed waves for the specified faction.
@@ -176,7 +176,7 @@ namespace Exiled.API.Features.Waves
         /// <summary>
         /// Destroys this wave.
         /// </summary>
-        public void Destroy() => Base.Destroy();
+        public void Destroy() => this.Base.Destroy();
 
         /// <summary>
         /// Populates this wave with the specified amount of roles.
@@ -187,19 +187,19 @@ namespace Exiled.API.Features.Waves
         /// <param name="amount">
         /// The amount of people to populate.
         /// </param>
-        public void PopulateQueue(Queue<RoleTypeId> queue, int amount) => Base.PopulateQueue(queue, amount);
+        public void PopulateQueue(Queue<RoleTypeId> queue, int amount) => this.Base.PopulateQueue(queue, amount);
 
         /// <summary>
         /// Plays the announcement for this wave.
         /// </summary>
         /// <remarks>Wave must implement <see cref="IAnnouncedWave"/>.</remarks>
-        public void PlayAnnouncement() => Announcement?.PlayAnnouncement([], Base as IAnnouncedWave);
+        public void PlayAnnouncement() => this.Announcement?.PlayAnnouncement([], this.Base as IAnnouncedWave);
 
         /// <summary>
         /// Plays the announcement for this wave.
         /// </summary>
         /// <remarks>Wave must implement <see cref="IAnnouncedWave"/>.</remarks>
         /// <param name="players">The list of Player to spawn.</param>
-        public void PlayAnnouncement(IEnumerable<Player> players) => Announcement?.PlayAnnouncement(players.Select(x => x.ReferenceHub).ToList(), Base as IAnnouncedWave);
+        public void PlayAnnouncement(IEnumerable<Player> players) => this.Announcement?.PlayAnnouncement(players.Select(x => x.ReferenceHub).ToList(), this.Base as IAnnouncedWave);
     }
 }

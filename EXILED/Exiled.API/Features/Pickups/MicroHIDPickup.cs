@@ -23,19 +23,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseMicroHID"/> class.</param>
         internal MicroHIDPickup(BaseMicroHID pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MicroHIDPickup"/> class.
         /// </summary>
         internal MicroHIDPickup()
-            : base(ItemType.MicroHID)
-        {
-            Base = (BaseMicroHID)((Pickup)this).Base;
-        }
+            : base(ItemType.MicroHID) =>
+            this.Base = (BaseMicroHID)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseMicroHID"/> that this class is encapsulating.
@@ -45,15 +41,15 @@ namespace Exiled.API.Features.Pickups
         /// <summary>
         /// Gets the <see cref="InventorySystem.Items.MicroHID.Modules.CycleController"/> of this <see cref="MicroHIDPickup"/>.
         /// </summary>
-        public CycleController CycleController => Base._cycleController;
+        public CycleController CycleController => this.Base._cycleController;
 
         /// <summary>
         /// Gets or sets the MicroHID Energy Level.
         /// </summary>
         public float Energy
         {
-            get => EnergyManagerModule.GetEnergy(Serial);
-            set => EnergyManagerModule.SyncEnergy[Serial] = value;
+            get => EnergyManagerModule.GetEnergy(this.Serial);
+            set => EnergyManagerModule.SyncEnergy[this.Serial] = value;
         }
 
         /// <summary>
@@ -61,8 +57,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public MicroHidPhase State
         {
-            get => CycleController.Phase;
-            set => CycleController.Phase = value;
+            get => this.CycleController.Phase;
+            set => this.CycleController.Phase = value;
         }
 
         /// <summary>
@@ -71,8 +67,8 @@ namespace Exiled.API.Features.Pickups
         /// <value>A value between <c>0</c> and <c>1</c>.</value>
         public float WindUpProgress
         {
-            get => CycleController.ServerWindUpProgress;
-            set => CycleController.ServerWindUpProgress = value;
+            get => this.CycleController.ServerWindUpProgress;
+            set => this.CycleController.ServerWindUpProgress = value;
         }
 
         /// <summary>
@@ -80,8 +76,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public MicroHidFiringMode LastFiringMode
         {
-            get => CycleController.LastFiringMode;
-            set => CycleController.LastFiringMode = value;
+            get => this.CycleController.LastFiringMode;
+            set => this.CycleController.LastFiringMode = value;
         }
 
         /// <summary>
@@ -93,15 +89,15 @@ namespace Exiled.API.Features.Pickups
             switch (firingMode)
             {
                 case MicroHidFiringMode.PrimaryFire:
-                    if (TryGetFireController(MicroHidFiringMode.PrimaryFire, out PrimaryFireModeModule primaryFireModeModule))
+                    if (this.TryGetFireController(MicroHidFiringMode.PrimaryFire, out PrimaryFireModeModule primaryFireModeModule))
                         primaryFireModeModule.ServerFire();
                     break;
                 case MicroHidFiringMode.ChargeFire:
-                    if (TryGetFireController(MicroHidFiringMode.ChargeFire, out ChargeFireModeModule chargeFireModeModule))
+                    if (this.TryGetFireController(MicroHidFiringMode.ChargeFire, out ChargeFireModeModule chargeFireModeModule))
                         chargeFireModeModule.ServerFire();
                     break;
                 default:
-                    if (TryGetFireController(MicroHidFiringMode.BrokenFire, out BrokenFireModeModule brokenFireModeModule))
+                    if (this.TryGetFireController(MicroHidFiringMode.BrokenFire, out BrokenFireModeModule brokenFireModeModule))
                         brokenFireModeModule.ServerFire();
                     break;
             }
@@ -112,7 +108,7 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public void Explode()
         {
-            if (TryGetFireController(MicroHidFiringMode.ChargeFire, out ChargeFireModeModule module))
+            if (this.TryGetFireController(MicroHidFiringMode.ChargeFire, out ChargeFireModeModule module))
                 module.ServerExplode();
         }
 
@@ -126,13 +122,13 @@ namespace Exiled.API.Features.Pickups
         public bool TryGetFireController<T>(MicroHidFiringMode firingMode, out T module)
             where T : FiringModeControllerModule
         {
-            if (CycleController._firingModeControllers.Count == 0)
+            if (this.CycleController._firingModeControllers.Count == 0)
             {
                 module = null;
                 return false;
             }
 
-            module = (T)CycleController._firingModeControllers.Find(x => x.AssignedMode == firingMode);
+            module = (T)this.CycleController._firingModeControllers.Find(x => x.AssignedMode == firingMode);
             return module != null;
         }
 
@@ -141,12 +137,12 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="module">Found module or <c>null</c>.</param>
         /// <returns><c>true</c> if module was found, <c>false</c> otherwise.</returns>
-        public bool TryGetLastFireController(out FiringModeControllerModule module) => TryGetFireController(LastFiringMode, out module);
+        public bool TryGetLastFireController(out FiringModeControllerModule module) => this.TryGetFireController(this.LastFiringMode, out module);
 
         /// <summary>
         /// Returns the MicroHIDPickup in a human readable format.
         /// </summary>
         /// <returns>A string containing MicroHIDPickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Energy}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Energy}|";
     }
 }

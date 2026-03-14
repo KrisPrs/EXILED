@@ -30,8 +30,8 @@ namespace Exiled.CustomItems.API.EventArgs
         public UpgradingEventArgs(ItemPickupBase item, Vector3 newPos, Scp914KnobSetting knobSetting, bool isAllowed = true)
             : base(item, newPos, knobSetting)
         {
-            IsAllowed = isAllowed;
-            Item = item;
+            this.IsAllowed = isAllowed;
+            this.Item = item;
         }
 
         /// <summary>

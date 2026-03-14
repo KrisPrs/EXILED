@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Warhead
         /// </param>
         public StoppingEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player ?? Server.Host;
-            IsAllowed = isAllowed;
+            this.Player = player ?? Server.Host;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

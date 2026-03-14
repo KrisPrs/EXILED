@@ -54,8 +54,8 @@ namespace Exiled.CreditTags
         public override void OnEnabled()
         {
             DatabaseHandler.UpdateData();
-            RefreshHandler();
-            AttachHandler();
+            this.RefreshHandler();
+            this.AttachHandler();
 
             base.OnEnabled();
         }
@@ -63,7 +63,7 @@ namespace Exiled.CreditTags
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            UnattachHandler();
+            this.UnattachHandler();
 
             base.OnDisabled();
         }
@@ -85,25 +85,25 @@ namespace Exiled.CreditTags
                 bool canReceiveCreditBadge = force ||
                                              (((string.IsNullOrEmpty(player.RankName) &&
                                                 string.IsNullOrEmpty(player.ReferenceHub.serverRoles.HiddenBadge)) ||
-                                               Config.BadgeOverride) && player.GlobalBadge is null);
-                bool canReceiveCreditCustomInfo = string.IsNullOrEmpty(player.CustomInfo) || Config.CustomPlayerInfoOverride;
+                                               this.Config.BadgeOverride) && player.GlobalBadge is null);
+                bool canReceiveCreditCustomInfo = string.IsNullOrEmpty(player.CustomInfo) || this.Config.CustomPlayerInfoOverride;
 
-                if (!Ranks.TryGetValue(rank, out Rank value))
+                if (!this.Ranks.TryGetValue(rank, out Rank value))
                     return;
 
-                switch (Config.Mode)
+                switch (this.Config.Mode)
                 {
                     case InfoSide.Badge when canReceiveCreditBadge:
-                        SetCreditBadge(player, value);
+                        this.SetCreditBadge(player, value);
                         break;
                     case InfoSide.CustomPlayerInfo when canReceiveCreditCustomInfo:
-                        SetCreditCustomInfo(player, value);
+                        this.SetCreditCustomInfo(player, value);
                         break;
                     case InfoSide.FirstAvailable:
                         if (canReceiveCreditBadge)
-                            SetCreditBadge(player, value);
+                            this.SetCreditBadge(player, value);
                         else if (canReceiveCreditCustomInfo)
-                            SetCreditCustomInfo(player, value);
+                            this.SetCreditCustomInfo(player, value);
                         break;
                 }
             }
@@ -122,10 +122,10 @@ namespace Exiled.CreditTags
             Log.Debug($"Updated {player.Nickname} CustomInfo to {value.Name}.");
         }
 
-        private void RefreshHandler() => handler = new CreditsHandler();
+        private void RefreshHandler() => this.handler = new CreditsHandler();
 
-        private void AttachHandler() => PlayerEvents.Verified += handler.OnPlayerVerify;
+        private void AttachHandler() => PlayerEvents.Verified += this.handler.OnPlayerVerify;
 
-        private void UnattachHandler() => PlayerEvents.Verified -= handler.OnPlayerVerify;
+        private void UnattachHandler() => PlayerEvents.Verified -= this.handler.OnPlayerVerify;
     }
 }

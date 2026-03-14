@@ -23,10 +23,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         /// <param name="hazard">The <see cref="TantrumEnvironmentalHazard"/> instance.</param>
         public TantrumHazard(TantrumEnvironmentalHazard hazard)
-            : base(hazard)
-        {
-            Base = hazard;
-        }
+            : base(hazard) =>
+            this.Base = hazard;
 
         /// <summary>
         /// Gets the tantrum prefab.
@@ -55,8 +53,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public bool PlaySizzle
         {
-            get => Base.PlaySizzle;
-            set => Base.PlaySizzle = value;
+            get => this.Base.PlaySizzle;
+            set => this.Base.PlaySizzle = value;
         }
 
         /// <summary>
@@ -64,8 +62,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public RelativePosition SynchronisedPosition
         {
-            get => Base.SynchronizedPosition;
-            set => Base.SynchronizedPosition = value;
+            get => this.Base.SynchronizedPosition;
+            set => this.Base.SynchronizedPosition = value;
         }
 
         /// <summary>
@@ -73,8 +71,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public Transform CorrectPosition
         {
-            get => Base._correctPosition;
-            set => Base._correctPosition = value;
+            get => this.Base._correctPosition;
+            set => this.Base._correctPosition = value;
         }
 
         /// <summary>

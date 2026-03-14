@@ -22,19 +22,15 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseRadio"/> class.</param>
         internal RadioPickup(BaseRadio pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RadioPickup"/> class.
         /// </summary>
         internal RadioPickup()
-            : base(ItemType.Radio)
-        {
-            Base = (BaseRadio)((Pickup)this).Base;
-        }
+            : base(ItemType.Radio) =>
+            this.Base = (BaseRadio)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseRadio"/> that this class is encapsulating.
@@ -46,8 +42,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public float BatteryLevel
         {
-            get => Base.SavedBattery;
-            set => Base.SavedBattery = value;
+            get => this.Base.SavedBattery;
+            set => this.Base.SavedBattery = value;
         }
 
         /// <summary>
@@ -55,8 +51,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public RadioRange Range
         {
-            get => (RadioRange)Base.NetworkSavedRange;
-            set => Base.NetworkSavedRange = (byte)value;
+            get => (RadioRange)this.Base.NetworkSavedRange;
+            set => this.Base.NetworkSavedRange = (byte)value;
         }
 
         /// <summary>
@@ -64,14 +60,14 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public bool IsEnabled
         {
-            get => Base.NetworkSavedEnabled;
-            set => Base.NetworkSavedEnabled = value;
+            get => this.Base.NetworkSavedEnabled;
+            set => this.Base.NetworkSavedEnabled = value;
         }
 
         /// <summary>
         /// Returns the RadioPickup in a human readable format.
         /// </summary>
         /// <returns>A string containing RadioPickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{BatteryLevel}| -{Range}- /{IsEnabled}/";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.BatteryLevel}| -{this.Range}- /{this.IsEnabled}/";
     }
 }

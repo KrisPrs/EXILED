@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp173
         /// </param>
         public BeingObservedEventArgs(API.Features.Player target, API.Features.Player scp173, bool isAllowed = true)
         {
-            Target = target;
-            Player = scp173;
-            Scp173 = scp173.Role.As<Scp173Role>();
-            IsAllowed = isAllowed;
+            this.Target = target;
+            this.Player = scp173;
+            this.Scp173 = scp173.Role.As<Scp173Role>();
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

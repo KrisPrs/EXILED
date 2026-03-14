@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public DisguisedEventArgs(Player player, Ragdoll ragdoll)
         {
-            Player = player;
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            Ragdoll = ragdoll;
+            this.Player = player;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.Ragdoll = ragdoll;
         }
 
         /// <inheritdoc/>

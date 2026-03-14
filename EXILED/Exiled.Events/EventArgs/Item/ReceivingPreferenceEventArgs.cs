@@ -43,12 +43,12 @@ namespace Exiled.Events.EventArgs.Item
         /// </param>
         public ReceivingPreferenceEventArgs(Player player, ItemType itemType, uint currentCode, uint newCode, bool isAllowed = true)
         {
-            Player = player;
-            Item = itemType.GetFirearmType();
-            CurrentAttachmentIdentifiers = Item.GetAttachmentIdentifiers(currentCode);
-            NewAttachmentIdentifiers = Item.GetAttachmentIdentifiers(newCode).ToList();
-            CurrentCode = currentCode;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Item = itemType.GetFirearmType();
+            this.CurrentAttachmentIdentifiers = this.Item.GetAttachmentIdentifiers(currentCode);
+            this.NewAttachmentIdentifiers = this.Item.GetAttachmentIdentifiers(newCode).ToList();
+            this.CurrentCode = currentCode;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace Exiled.Events.EventArgs.Item
         /// </summary>
         public uint NewCode
         {
-            get => NewAttachmentIdentifiers.GetAttachmentsCode();
-            set => NewAttachmentIdentifiers = Item.GetAttachmentIdentifiers(value).ToList();
+            get => this.NewAttachmentIdentifiers.GetAttachmentsCode();
+            set => this.NewAttachmentIdentifiers = this.Item.GetAttachmentIdentifiers(value).ToList();
         }
 
         /// <summary>

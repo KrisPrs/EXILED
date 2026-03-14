@@ -26,10 +26,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="voiceMessage">The voice message being sent.</param>
         public ReceivingVoiceMessageEventArgs(Player receiver, Player sender, VoiceModuleBase voiceModule, VoiceMessage voiceMessage)
         {
-            Sender = sender;
-            Player = receiver;
-            VoiceMessage = voiceMessage;
-            VoiceModule = voiceModule;
+            this.Sender = sender;
+            this.Player = receiver;
+            this.VoiceMessage = voiceMessage;
+            this.VoiceModule = voiceModule;
         }
 
         /// <summary>

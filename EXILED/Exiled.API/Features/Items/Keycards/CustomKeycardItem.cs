@@ -32,10 +32,10 @@ namespace Exiled.API.Features.Items.Keycards
         internal CustomKeycardItem(KeycardItem itemBase)
             : base(itemBase)
         {
-            Base = itemBase;
+            this.Base = itemBase;
 
-            if (!DataDict.ContainsKey(Serial))
-                DataDict[Serial] = new KeycardData();
+            if (!DataDict.ContainsKey(this.Serial))
+                DataDict[this.Serial] = new KeycardData();
         }
 
         /// <summary>
@@ -57,12 +57,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public override KeycardPermissions Permissions
         {
-            get => CustomPermsDetail.CustomPermissions.TryGetValue(Serial, out DoorPermissionFlags flags) ? (KeycardPermissions)flags : KeycardPermissions.None;
+            get => CustomPermsDetail.CustomPermissions.TryGetValue(this.Serial, out DoorPermissionFlags flags) ? (KeycardPermissions)flags : KeycardPermissions.None;
             set
             {
-                CustomPermsDetail.CustomPermissions[Serial] = (DoorPermissionFlags)value;
+                CustomPermsDetail.CustomPermissions[this.Serial] = (DoorPermissionFlags)value;
 
-                Resync();
+                this.Resync();
             }
         }
 
@@ -71,12 +71,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public KeycardLevels KeycardLevels
         {
-            get => new((DoorPermissionFlags)Permissions);
+            get => new((DoorPermissionFlags)this.Permissions);
             set
             {
-                CustomPermsDetail.CustomPermissions[Serial] = value.Permissions;
+                CustomPermsDetail.CustomPermissions[this.Serial] = value.Permissions;
 
-                Resync();
+                this.Resync();
             }
         }
 
@@ -85,12 +85,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public Color PermissionsColor
         {
-            get => DataDict[Serial].PermissionsColor ?? Color.clear;
+            get => DataDict[this.Serial].PermissionsColor ?? Color.clear;
             set
             {
-                DataDict[Serial].PermissionsColor = value;
+                DataDict[this.Serial].PermissionsColor = value;
 
-                Resync();
+                this.Resync();
             }
         }
 
@@ -99,12 +99,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public string ItemName
         {
-            get => DataDict[Serial].ItemName;
+            get => DataDict[this.Serial].ItemName;
             set
             {
-                DataDict[Serial].ItemName = value;
+                DataDict[this.Serial].ItemName = value;
 
-                Resync();
+                this.Resync();
             }
         }
 
@@ -113,12 +113,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public Color Color
         {
-            get => DataDict[Serial].Color ?? Color.clear;
+            get => DataDict[this.Serial].Color ?? Color.clear;
             set
             {
-                DataDict[Serial].Color = value;
+                DataDict[this.Serial].Color = value;
 
-                Resync();
+                this.Resync();
             }
         }
 
@@ -167,14 +167,14 @@ namespace Exiled.API.Features.Items.Keycards
         {
             List<ItemType> matches = ListPool<ItemType>.Pool.Get();
 
-            ItemType[] toIterate = Type switch
+            ItemType[] toIterate = this.Type switch
             {
                 _ when !matchDesign => AllKeycards,
                 ItemType.KeycardCustomSite02 => AllSite02,
                 ItemType.KeycardCustomManagement => AllManagement,
                 ItemType.KeycardCustomMetalCase => AllMetalCase,
                 ItemType.KeycardCustomTaskForce => AllTaskForce,
-                _ => throw new ArgumentOutOfRangeException(nameof(Type), Type.ToString()),
+                _ => throw new ArgumentOutOfRangeException(nameof(this.Type), this.Type.ToString()),
             };
 
             ILabelKeycard label1 = this as ILabelKeycard;
@@ -186,7 +186,7 @@ namespace Exiled.API.Features.Items.Keycards
                 {
                     if (detail is PredefinedPermsDetail permsDetail)
                     {
-                        if (matchPerms && permsDetail.Levels.Permissions != KeycardLevels.Permissions)
+                        if (matchPerms && permsDetail.Levels.Permissions != this.KeycardLevels.Permissions)
                             goto cont;
                     }
 
@@ -220,11 +220,11 @@ namespace Exiled.API.Features.Items.Keycards
         public void Resync()
         {
             // we loveeeeeeeeeeeee NW static fields trusttttttttttttttt I'm not mad at allllllllllll
-            CustomPermsDetail._customLevels = KeycardLevels;
-            CustomPermsDetail._customColor = PermissionsColor;
+            CustomPermsDetail._customLevels = this.KeycardLevels;
+            CustomPermsDetail._customColor = this.PermissionsColor;
 
-            CustomItemNameDetail._customText = ItemName;
-            CustomTintDetail._customColor = Color;
+            CustomItemNameDetail._customText = this.ItemName;
+            CustomTintDetail._customColor = this.Color;
 
             if (this is ILabelKeycard label)
             {
@@ -251,6 +251,6 @@ namespace Exiled.API.Features.Items.Keycards
         /// Returns the Keycard in a human readable format.
         /// </summary>
         /// <returns>A string containing Keycard-related data.</returns>
-        public override string ToString() => $"{Type} ={ItemName}= ({Serial}) [{Weight}] *{Scale}* |{Permissions}|";
+        public override string ToString() => $"{this.Type} ={this.ItemName}= ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Permissions}|";
     }
 }

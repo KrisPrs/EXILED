@@ -33,9 +33,9 @@ namespace Exiled.Events.EventArgs.Scp244
         /// </param>
         public UsingScp244EventArgs(Scp244Item scp244, Player player, bool isAllowed = true)
         {
-            Scp244 = Item.Get<Scp244>(scp244);
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Scp244 = Item.Get<Scp244>(scp244);
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

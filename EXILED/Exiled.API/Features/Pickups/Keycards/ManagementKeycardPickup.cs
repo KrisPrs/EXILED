@@ -40,22 +40,22 @@ namespace Exiled.API.Features.Pickups.Keycards
         /// <inheritdoc cref="ILabelKeycard.Label"/>
         public string Label
         {
-            get => CustomKeycardItem.DataDict[Serial].Label;
+            get => CustomKeycardItem.DataDict[this.Serial].Label;
             set
             {
-                CustomKeycardItem.DataDict[Serial].Label = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].Label = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.LabelColor"/>
         public Color LabelColor
         {
-            get => CustomKeycardItem.DataDict[Serial].LabelColor ?? Color.clear;
+            get => CustomKeycardItem.DataDict[this.Serial].LabelColor ?? Color.clear;
             set
             {
-                CustomKeycardItem.DataDict[Serial].LabelColor = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].LabelColor = value;
+                this.Resync();
             }
         }
 

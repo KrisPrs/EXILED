@@ -34,11 +34,11 @@ namespace Exiled.Events.EventArgs.Scp049
         /// </param>
         public FinishingRecallEventArgs(Player target, Player scp049, BasicRagdoll ragdoll, bool isAllowed = true)
         {
-            Player = scp049;
-            Scp049 = Player.Role.As<Scp049Role>();
-            Target = target;
-            Ragdoll = Ragdoll.Get(ragdoll);
-            IsAllowed = isAllowed;
+            this.Player = scp049;
+            this.Scp049 = this.Player.Role.As<Scp049Role>();
+            this.Target = target;
+            this.Ragdoll = Ragdoll.Get(ragdoll);
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

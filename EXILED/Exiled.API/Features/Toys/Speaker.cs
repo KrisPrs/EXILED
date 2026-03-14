@@ -59,7 +59,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="speakerToy">The <see cref="SpeakerToy"/> of the toy.</param>
         internal Speaker(SpeakerToy speakerToy)
-            : base(speakerToy, AdminToyType.Speaker) => Base = speakerToy;
+            : base(speakerToy, AdminToyType.Speaker) => this.Base = speakerToy;
 
         /// <summary>
         /// Invoked when the audio playback starts.
@@ -141,7 +141,7 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Gets a value indicating whether gets is a sound playing on this speaker or not.
         /// </summary>
-        public bool IsPlaying => playBackRoutine.IsRunning && !IsPaused;
+        public bool IsPlaying => this.playBackRoutine.IsRunning && !this.IsPaused;
 
         /// <summary>
         /// Gets or sets a value indicating whether the playback is paused.
@@ -151,20 +151,20 @@ namespace Exiled.API.Features.Toys
         /// </value>
         public bool IsPaused
         {
-            get => playBackRoutine.IsAliveAndPaused;
+            get => this.playBackRoutine.IsAliveAndPaused;
             set
             {
-                if (!playBackRoutine.IsRunning)
+                if (!this.playBackRoutine.IsRunning)
                     return;
 
-                if (playBackRoutine.IsAliveAndPaused == value)
+                if (this.playBackRoutine.IsAliveAndPaused == value)
                     return;
 
-                playBackRoutine.IsAliveAndPaused = value;
+                this.playBackRoutine.IsAliveAndPaused = value;
                 if (value)
-                    OnPlaybackPaused?.Invoke();
+                    this.OnPlaybackPaused?.Invoke();
                 else
-                    OnPlaybackResumed?.Invoke();
+                    this.OnPlaybackResumed?.Invoke();
             }
         }
 
@@ -174,14 +174,14 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public double CurrentTime
         {
-            get => source?.CurrentTime ?? 0.0;
+            get => this.source?.CurrentTime ?? 0.0;
             set
             {
-                if (source != null)
+                if (this.source != null)
                 {
-                    source.CurrentTime = value;
-                    resampleTime = 0.0;
-                    resampleBufferFilled = 0;
+                    this.source.CurrentTime = value;
+                    this.resampleTime = 0.0;
+                    this.resampleBufferFilled = 0;
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace Exiled.API.Features.Toys
         /// Gets the total duration of the current track in seconds.
         /// Returns 0 if not playing.
         /// </summary>
-        public double TotalDuration => source?.TotalDuration ?? 0.0;
+        public double TotalDuration => this.source?.TotalDuration ?? 0.0;
 
         /// <summary>
         /// Gets the path to the last audio file played on this speaker.
@@ -210,11 +210,11 @@ namespace Exiled.API.Features.Toys
             set
             {
                 field = Mathf.Max(0.1f, Mathf.Abs(value));
-                isPitchDefault = Mathf.Abs(field - 1.0f) < 0.0001f;
-                if (isPitchDefault)
+                this.isPitchDefault = Mathf.Abs(field - 1.0f) < 0.0001f;
+                if (this.isPitchDefault)
                 {
-                    resampleTime = 0.0;
-                    resampleBufferFilled = 0;
+                    this.resampleTime = 0.0;
+                    this.resampleBufferFilled = 0;
                 }
             }
         }
@@ -228,8 +228,8 @@ namespace Exiled.API.Features.Toys
         /// </value>
         public float Volume
         {
-            get => Base.NetworkVolume;
-            set => Base.NetworkVolume = value;
+            get => this.Base.NetworkVolume;
+            set => this.Base.NetworkVolume = value;
         }
 
         /// <summary>
@@ -241,8 +241,8 @@ namespace Exiled.API.Features.Toys
         /// </value>
         public bool IsSpatial
         {
-            get => Base.NetworkIsSpatial;
-            set => Base.NetworkIsSpatial = value;
+            get => this.Base.NetworkIsSpatial;
+            set => this.Base.NetworkIsSpatial = value;
         }
 
         /// <summary>
@@ -254,8 +254,8 @@ namespace Exiled.API.Features.Toys
         /// </value>
         public float MaxDistance
         {
-            get => Base.NetworkMaxDistance;
-            set => Base.NetworkMaxDistance = value;
+            get => this.Base.NetworkMaxDistance;
+            set => this.Base.NetworkMaxDistance = value;
         }
 
         /// <summary>
@@ -267,8 +267,8 @@ namespace Exiled.API.Features.Toys
         /// </value>
         public float MinDistance
         {
-            get => Base.NetworkMinDistance;
-            set => Base.NetworkMinDistance = value;
+            get => this.Base.NetworkMinDistance;
+            set => this.Base.NetworkMinDistance = value;
         }
 
         /// <summary>
@@ -276,8 +276,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public byte ControllerId
         {
-            get => Base.NetworkControllerId;
-            set => Base.NetworkControllerId = value;
+            get => this.Base.NetworkControllerId;
+            set => this.Base.NetworkControllerId = value;
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace Exiled.API.Features.Toys
         /// <param name="samples">Audio samples.</param>
         /// <param name="length">The length of the samples array.</param>
         /// <param name="targets">Targets who will hear the audio. If <c>null</c>, audio will be sent to all players.</param>
-        public void Play(byte[] samples, int? length = null, IEnumerable<Player> targets = null) => Play(new AudioMessage(ControllerId, samples, length ?? samples.Length), targets);
+        public void Play(byte[] samples, int? length = null, IEnumerable<Player> targets = null) => Play(new AudioMessage(this.ControllerId, samples, length ?? samples.Length), targets);
 
         /// <summary>
         /// Plays a wav file through this speaker.(File must be 16 bit, mono and 48khz.)
@@ -359,14 +359,14 @@ namespace Exiled.API.Features.Toys
             if (!path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
                 throw new NotSupportedException($"The file type '{Path.GetExtension(path)}' is not supported. Please use .wav file.");
 
-            TryInitializePlayBack();
-            Stop();
+            this.TryInitializePlayBack();
+            this.Stop();
 
-            Loop = loop;
-            LastTrack = path;
-            DestroyAfter = destroyAfter;
-            source = stream ? new WavStreamSource(path) : new PreloadedPcmSource(path);
-            playBackRoutine = Timing.RunCoroutine(PlayBackCoroutine().CancelWith(GameObject));
+            this.Loop = loop;
+            this.LastTrack = path;
+            this.DestroyAfter = destroyAfter;
+            this.source = stream ? new WavStreamSource(path) : new PreloadedPcmSource(path);
+            this.playBackRoutine = Timing.RunCoroutine(this.PlayBackCoroutine().CancelWith(this.GameObject));
         }
 
         /// <summary>
@@ -374,37 +374,37 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public void Stop()
         {
-            if (playBackRoutine.IsRunning)
+            if (this.playBackRoutine.IsRunning)
             {
-                Timing.KillCoroutines(playBackRoutine);
-                OnPlaybackStopped?.Invoke();
+                Timing.KillCoroutines(this.playBackRoutine);
+                this.OnPlaybackStopped?.Invoke();
             }
 
-            source?.Dispose();
-            source = null;
+            this.source?.Dispose();
+            this.source = null;
         }
 
         private void TryInitializePlayBack()
         {
-            if (isPlayBackInitialized)
+            if (this.isPlayBackInitialized)
                 return;
 
-            isPlayBackInitialized = true;
+            this.isPlayBackInitialized = true;
 
-            frame = new float[FrameSize];
-            resampleBuffer = Array.Empty<float>();
-            encoder = new(OpusApplicationType.Audio);
-            encoded = new byte[VoiceChatSettings.MaxEncodedSize];
+            this.frame = new float[FrameSize];
+            this.resampleBuffer = Array.Empty<float>();
+            this.encoder = new(OpusApplicationType.Audio);
+            this.encoded = new byte[VoiceChatSettings.MaxEncodedSize];
 
-            AdminToyBase.OnRemoved += OnToyRemoved;
+            AdminToyBase.OnRemoved += this.OnToyRemoved;
         }
 
         private IEnumerator<float> PlayBackCoroutine()
         {
-            OnPlaybackStarted?.Invoke();
+            this.OnPlaybackStarted?.Invoke();
 
-            resampleTime = 0.0;
-            resampleBufferFilled = 0;
+            this.resampleTime = 0.0;
+            this.resampleBufferFilled = 0;
 
             float timeAccumulator = 0f;
 
@@ -416,39 +416,39 @@ namespace Exiled.API.Features.Toys
                 {
                     timeAccumulator -= FrameTime;
 
-                    if (isPitchDefault)
+                    if (this.isPitchDefault)
                     {
-                        int read = source.Read(frame, 0, FrameSize);
+                        int read = this.source.Read(this.frame, 0, FrameSize);
                         if (read < FrameSize)
-                            Array.Clear(frame, read, FrameSize - read);
+                            Array.Clear(this.frame, read, FrameSize - read);
                     }
                     else
                     {
-                        ResampleFrame();
+                        this.ResampleFrame();
                     }
 
-                    int len = encoder.Encode(frame, encoded);
+                    int len = this.encoder.Encode(this.frame, this.encoded);
 
                     if (len > 2)
-                        SendPacket(len);
+                        this.SendPacket(len);
 
-                    if (!source.Ended)
+                    if (!this.source.Ended)
                         continue;
 
-                    OnPlaybackFinished?.Invoke(LastTrack);
+                    this.OnPlaybackFinished?.Invoke(this.LastTrack);
 
-                    if (Loop)
+                    if (this.Loop)
                     {
-                        source.Reset();
-                        OnPlaybackLooped?.Invoke();
-                        resampleTime = resampleBufferFilled = 0;
+                        this.source.Reset();
+                        this.OnPlaybackLooped?.Invoke();
+                        this.resampleTime = this.resampleBufferFilled = 0;
                         continue;
                     }
 
-                    if (DestroyAfter)
-                        Destroy();
+                    if (this.DestroyAfter)
+                        this.Destroy();
                     else
-                        Stop();
+                        this.Stop();
 
                     yield break;
                 }
@@ -459,86 +459,86 @@ namespace Exiled.API.Features.Toys
 
         private void ResampleFrame()
         {
-            int requiredSize = (int)(FrameSize * Mathf.Abs(Pitch) * 2) + 10;
+            int requiredSize = (int)(FrameSize * Mathf.Abs(this.Pitch) * 2) + 10;
 
-            if (resampleBuffer.Length < requiredSize)
+            if (this.resampleBuffer.Length < requiredSize)
             {
-                resampleBuffer = new float[requiredSize];
-                resampleTime = 0.0;
-                resampleBufferFilled = 0;
+                this.resampleBuffer = new float[requiredSize];
+                this.resampleTime = 0.0;
+                this.resampleBufferFilled = 0;
             }
 
             int outputIdx = 0;
 
             while (outputIdx < FrameSize)
             {
-                if (resampleBufferFilled == 0)
+                if (this.resampleBufferFilled == 0)
                 {
-                    int toRead = resampleBuffer.Length - 4;
-                    int actualRead = source.Read(resampleBuffer, 0, toRead);
+                    int toRead = this.resampleBuffer.Length - 4;
+                    int actualRead = this.source.Read(this.resampleBuffer, 0, toRead);
 
                     if (actualRead == 0)
                     {
                         while (outputIdx < FrameSize)
-                            frame[outputIdx++] = 0f;
+                            this.frame[outputIdx++] = 0f;
                         return;
                     }
 
-                    resampleBufferFilled = actualRead;
-                    resampleTime = 0.0;
+                    this.resampleBufferFilled = actualRead;
+                    this.resampleTime = 0.0;
                 }
 
-                int currentSample = (int)resampleTime;
+                int currentSample = (int)this.resampleTime;
 
-                if (currentSample >= resampleBufferFilled - 1)
+                if (currentSample >= this.resampleBufferFilled - 1)
                 {
-                    if (resampleBufferFilled > 0)
+                    if (this.resampleBufferFilled > 0)
                     {
-                        resampleBuffer[0] = resampleBuffer[resampleBufferFilled - 1];
+                        this.resampleBuffer[0] = this.resampleBuffer[this.resampleBufferFilled - 1];
 
-                        int toRead = resampleBuffer.Length - 5;
-                        int actualRead = source.Read(resampleBuffer, 1, toRead);
+                        int toRead = this.resampleBuffer.Length - 5;
+                        int actualRead = this.source.Read(this.resampleBuffer, 1, toRead);
 
                         if (actualRead == 0)
                         {
                             while (outputIdx < FrameSize)
-                                frame[outputIdx++] = 0f;
+                                this.frame[outputIdx++] = 0f;
                             return;
                         }
 
-                        resampleBufferFilled = actualRead + 1;
-                        resampleTime -= currentSample;
+                        this.resampleBufferFilled = actualRead + 1;
+                        this.resampleTime -= currentSample;
                     }
                     else
                     {
-                        resampleBufferFilled = 0;
+                        this.resampleBufferFilled = 0;
                     }
 
                     continue;
                 }
 
-                double frac = resampleTime - currentSample;
-                float sample1 = resampleBuffer[currentSample];
-                float sample2 = resampleBuffer[currentSample + 1];
+                double frac = this.resampleTime - currentSample;
+                float sample1 = this.resampleBuffer[currentSample];
+                float sample2 = this.resampleBuffer[currentSample + 1];
 
-                frame[outputIdx++] = (float)(sample1 + ((sample2 - sample1) * frac));
+                this.frame[outputIdx++] = (float)(sample1 + ((sample2 - sample1) * frac));
 
-                resampleTime += Pitch;
+                this.resampleTime += this.Pitch;
             }
         }
 
         private void SendPacket(int len)
         {
-            AudioMessage msg = new(ControllerId, encoded, len);
+            AudioMessage msg = new(this.ControllerId, this.encoded, len);
 
-            switch (PlayMode)
+            switch (this.PlayMode)
             {
                 case SpeakerPlayMode.Global:
-                    NetworkServer.SendToReady(msg, Channel);
+                    NetworkServer.SendToReady(msg, this.Channel);
                     break;
 
                 case SpeakerPlayMode.Player:
-                    TargetPlayer?.Connection.Send(msg, Channel);
+                    this.TargetPlayer?.Connection.Send(msg, this.Channel);
                     break;
 
                 case SpeakerPlayMode.PlayerList:
@@ -547,9 +547,9 @@ namespace Exiled.API.Features.Toys
                         NetworkMessages.Pack(msg, writer);
                         ArraySegment<byte> segment = writer.ToArraySegment();
 
-                        foreach (Player ply in TargetPlayers)
+                        foreach (Player ply in this.TargetPlayers)
                         {
-                            ply?.Connection.Send(segment, Channel);
+                            ply?.Connection.Send(segment, this.Channel);
                         }
                     }
 
@@ -563,8 +563,8 @@ namespace Exiled.API.Features.Toys
 
                         foreach (Player ply in Player.List)
                         {
-                            if (Predicate(ply))
-                                ply.Connection.Send(segment, Channel);
+                            if (this.Predicate(ply))
+                                ply.Connection.Send(segment, this.Channel);
                         }
                     }
 
@@ -574,14 +574,14 @@ namespace Exiled.API.Features.Toys
 
         private void OnToyRemoved(AdminToyBase toy)
         {
-            if (toy != Base)
+            if (toy != this.Base)
                 return;
 
-            AdminToyBase.OnRemoved -= OnToyRemoved;
+            AdminToyBase.OnRemoved -= this.OnToyRemoved;
 
-            Stop();
+            this.Stop();
 
-            encoder?.Dispose();
+            this.encoder?.Dispose();
         }
     }
 }

@@ -27,10 +27,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="lightSourceToy">The <see cref="LightSourceToy"/> of the toy.</param>
         internal Light(LightSourceToy lightSourceToy)
-            : base(lightSourceToy, AdminToyType.LightSource)
-        {
-            Base = lightSourceToy;
-        }
+            : base(lightSourceToy, AdminToyType.LightSource) =>
+            this.Base = lightSourceToy;
 
         /// <summary>
         /// Gets the prefab.
@@ -47,8 +45,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float Intensity
         {
-            get => Base.NetworkLightIntensity;
-            set => Base.NetworkLightIntensity = value;
+            get => this.Base.NetworkLightIntensity;
+            set => this.Base.NetworkLightIntensity = value;
         }
 
         /// <summary>
@@ -56,8 +54,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float Range
         {
-            get => Base.NetworkLightRange;
-            set => Base.NetworkLightRange = value;
+            get => this.Base.NetworkLightRange;
+            set => this.Base.NetworkLightRange = value;
         }
 
         /// <summary>
@@ -65,8 +63,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float SpotAngle
         {
-            get => Base.NetworkSpotAngle;
-            set => Base.NetworkSpotAngle = value;
+            get => this.Base.NetworkSpotAngle;
+            set => this.Base.NetworkSpotAngle = value;
         }
 
         /// <summary>
@@ -74,8 +72,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float InnerSpotAngle
         {
-            get => Base.NetworkInnerSpotAngle;
-            set => Base.NetworkInnerSpotAngle = value;
+            get => this.Base.NetworkInnerSpotAngle;
+            set => this.Base.NetworkInnerSpotAngle = value;
         }
 
         /// <summary>
@@ -83,8 +81,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float ShadowStrength
         {
-            get => Base.NetworkShadowStrength;
-            set => Base.NetworkShadowStrength = value;
+            get => this.Base.NetworkShadowStrength;
+            set => this.Base.NetworkShadowStrength = value;
         }
 
         /// <summary>
@@ -92,8 +90,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Color Color
         {
-            get => Base.NetworkLightColor;
-            set => Base.NetworkLightColor = value;
+            get => this.Base.NetworkLightColor;
+            set => this.Base.NetworkLightColor = value;
         }
 
         /// <summary>
@@ -102,8 +100,8 @@ namespace Exiled.API.Features.Toys
         [Obsolete("This property has been deprecated. Use LightType.Spot, LightType.Pyramid, or LightType.Box instead.")]
         public LightShape LightShape
         {
-            get => Base.NetworkLightShape;
-            set => Base.NetworkLightShape = value;
+            get => this.Base.NetworkLightShape;
+            set => this.Base.NetworkLightShape = value;
         }
 
         /// <summary>
@@ -111,8 +109,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public LightType LightType
         {
-            get => Base.NetworkLightType;
-            set => Base.NetworkLightType = value;
+            get => this.Base.NetworkLightType;
+            set => this.Base.NetworkLightType = value;
         }
 
         /// <summary>
@@ -120,8 +118,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public LightShadows ShadowType
         {
-            get => Base.NetworkShadowType;
-            set => Base.NetworkShadowType = value;
+            get => this.Base.NetworkShadowType;
+            set => this.Base.NetworkShadowType = value;
         }
 
         /// <summary>

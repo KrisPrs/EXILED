@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public JumpingEventArgs(Player player, Vector3 direction, bool isAllowed = true)
         {
-            Player = player;
-            Direction = direction;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Direction = direction;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public float Speed
         {
-            get => Direction.y;
-            set => Direction += Vector3.up * value;
+            get => this.Direction.y;
+            set => this.Direction += Vector3.up * value;
         }
 
         /// <summary>

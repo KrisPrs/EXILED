@@ -36,20 +36,16 @@ namespace Exiled.API.Features.Core.UserSettings
             string hintDescription = null,
             HeaderSetting header = null,
             Action<Player, SettingBase> onChanged = null)
-            : base(new SSTextArea(id, label, foldoutMode, hintDescription, alignment), header, onChanged)
-        {
-            Base = (SSTextArea)base.Base;
-        }
+            : base(new SSTextArea(id, label, foldoutMode, hintDescription, alignment), header, onChanged) =>
+            this.Base = (SSTextArea)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextInputSetting"/> class.
         /// </summary>
         /// <param name="settingBase">A <see cref="SSTextArea"/> instance.</param>
         internal TextInputSetting(SSTextArea settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-        }
+            : base(settingBase) =>
+            this.Base = settingBase;
 
         /// <inheritdoc/>
         public new SSTextArea Base { get; }
@@ -59,8 +55,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public new string Label
         {
-            get => Base.Label;
-            set => Base.SendTextUpdate(value);
+            get => this.Base.Label;
+            set => this.Base.SendTextUpdate(value);
         }
 
         /// <summary>
@@ -68,8 +64,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public SSTextArea.FoldoutMode FoldoutMode
         {
-            get => Base.Foldout;
-            set => Base.Foldout = value;
+            get => this.Base.Foldout;
+            set => this.Base.Foldout = value;
         }
 
         /// <summary>
@@ -77,18 +73,15 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public TextAlignmentOptions Alignment
         {
-            get => Base.AlignmentOptions;
-            set => Base.AlignmentOptions = value;
+            get => this.Base.AlignmentOptions;
+            set => this.Base.AlignmentOptions = value;
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="TextInputSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{FoldoutMode}/ *{Alignment}*";
-        }
+        public override string ToString() => base.ToString() + $" /{this.FoldoutMode}/ *{this.Alignment}*";
 
         /// <summary>
         /// Represents a config for TextInputSetting.
@@ -107,13 +100,13 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="foldoutMode"></param><inheritdoc cref="FoldoutMode"/>
             public TextInputConfig(string label, SSTextArea.FoldoutMode foldoutMode, TextAlignmentOptions textAlignmentOptions, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                HintDescription = hintDescription;
-                FoldoutMode = foldoutMode;
-                TextAlignmentOptions = textAlignmentOptions;
-                HeaderName = headerName;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.HintDescription = hintDescription;
+                this.FoldoutMode = foldoutMode;
+                this.TextAlignmentOptions = textAlignmentOptions;
+                this.HeaderName = headerName;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -162,7 +155,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TextInputSetting instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
-            public override TextInputSetting Create() => new(++IdIncrementor, Label, FoldoutMode, TextAlignmentOptions, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override TextInputSetting Create() => new(++IdIncrementor, this.Label, this.FoldoutMode, this.TextAlignmentOptions, this.HintDescription, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

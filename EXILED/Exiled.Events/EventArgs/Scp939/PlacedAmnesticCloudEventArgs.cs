@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public PlacedAmnesticCloudEventArgs(ReferenceHub hub, Scp939AmnesticCloudInstance cloud)
         {
-            Player = Player.Get(hub);
-            AmnesticCloud = Hazard.Get<AmnesticCloudHazard>(cloud);
-            Scp939 = Player.Role.As<Scp939Role>();
+            this.Player = Player.Get(hub);
+            this.AmnesticCloud = Hazard.Get<AmnesticCloudHazard>(cloud);
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
         }
 
         /// <summary>
@@ -49,6 +49,6 @@ namespace Exiled.Events.EventArgs.Scp939
         public Scp939Role Scp939 { get; }
 
         /// <inheritdoc/>
-        public Hazard Hazard => AmnesticCloud;
+        public Hazard Hazard => this.AmnesticCloud;
     }
 }

@@ -31,9 +31,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public FlippingCoinEventArgs(ReferenceHub referenceHub, Coin coin, bool isTails)
         {
-            Player = Player.Get(referenceHub);
-            Item = Item.Get(coin);
-            IsTails = isTails;
+            this.Player = Player.Get(referenceHub);
+            this.Item = Item.Get(coin);
+            this.IsTails = isTails;
         }
 
         /// <summary>

@@ -17,9 +17,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(global::Coffee), nameof(global::Coffee.Start))]
     internal class CoffeeListAdd
     {
-        private static void Postfix(global::Coffee __instance)
-        {
-            new Coffee(__instance);
-        }
+        private static void Postfix(global::Coffee __instance) => new Coffee(__instance);
     }
 }

@@ -25,10 +25,10 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="unitNumber"><inheritdoc cref="UnitNumber"/></param>
         public AnnouncingNtfEntranceEventArgs(WaveAnnouncementBase announcement, int scpsLeft, string unitName, int unitNumber)
         {
-            Wave = TimedWave.GetTimedWaves().Find(x => x.Announcement == announcement);
-            ScpsLeft = scpsLeft;
-            UnitName = unitName;
-            UnitNumber = unitNumber;
+            this.Wave = TimedWave.GetTimedWaves().Find(x => x.Announcement == announcement);
+            this.ScpsLeft = scpsLeft;
+            this.UnitName = unitName;
+            this.UnitNumber = unitNumber;
         }
 
         /// <summary>

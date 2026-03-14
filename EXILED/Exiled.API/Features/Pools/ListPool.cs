@@ -57,7 +57,7 @@ namespace Exiled.API.Features.Pools
         {
             T[] array = obj.ToArray();
 
-            Return(obj);
+            this.Return(obj);
 
             return array;
         }

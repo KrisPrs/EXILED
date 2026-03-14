@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public FailingEscapePocketDimensionEventArgs(PocketDimensionTeleport pocketDimensionTeleport, ReferenceHub hub, bool isAllowed = true)
         {
-            Player = Player.Get(hub);
-            Teleporter = pocketDimensionTeleport;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(hub);
+            this.Teleporter = pocketDimensionTeleport;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

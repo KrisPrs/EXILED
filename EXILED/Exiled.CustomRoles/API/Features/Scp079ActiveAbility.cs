@@ -45,28 +45,28 @@ namespace Exiled.CustomRoles.API.Features
                 return false;
             }
 
-            if (scp079Role.Level < MinRequiredLevel)
+            if (scp079Role.Level < this.MinRequiredLevel)
             {
                 Hint hint = CustomRoles.Instance!.Config.InsufficientLevelHint;
-                response = string.Format(hint.Content, scp079Role.Level + 1, MinRequiredLevel + 1);
+                response = string.Format(hint.Content, scp079Role.Level + 1, this.MinRequiredLevel + 1);
                 if (hint.Show)
                     player.ShowHint(response, hint.Duration);
                 return false;
             }
 
-            if (scp079Role.Level > MaxRequiredLevel)
+            if (scp079Role.Level > this.MaxRequiredLevel)
             {
                 Hint hint = CustomRoles.Instance!.Config.RedundantLevelHint;
-                response = string.Format(hint.Content, scp079Role.Level + 1, MaxRequiredLevel + 1);
+                response = string.Format(hint.Content, scp079Role.Level + 1, this.MaxRequiredLevel + 1);
                 if (hint.Show)
                     player.ShowHint(response, hint.Duration);
                 return false;
             }
 
-            if (scp079Role.Energy < EnergyUsage)
+            if (scp079Role.Energy < this.EnergyUsage)
             {
                 Hint hint = CustomRoles.Instance!.Config.InsufficientEnergyHint;
-                response = string.Format(hint.Content, scp079Role.Energy, EnergyUsage);
+                response = string.Format(hint.Content, scp079Role.Energy, this.EnergyUsage);
                 if (hint.Show)
                     player.ShowHint(response, hint.Duration);
                 return false;
@@ -81,13 +81,13 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">Target <see cref="Player"/>.</param>
         /// <returns>skibidi ohio rizz.</returns>
         internal bool IsAvailable(Player player) =>
-            player.Role.Is(out Scp079Role scp079Role) && scp079Role.Level <= MaxRequiredLevel && (!CustomRoles.Instance!.Config.HideUnavailableHighLevelAbilities || scp079Role.Level >= MinRequiredLevel);
+            player.Role.Is(out Scp079Role scp079Role) && scp079Role.Level <= this.MaxRequiredLevel && (!CustomRoles.Instance!.Config.HideUnavailableHighLevelAbilities || scp079Role.Level >= this.MinRequiredLevel);
 
         /// <inheritdoc />
         protected override void AbilityUsed(Player player)
         {
             if (player.Role.Is(out Scp079Role role))
-                role.Energy -= EnergyUsage;
+                role.Energy -= this.EnergyUsage;
         }
     }
 }

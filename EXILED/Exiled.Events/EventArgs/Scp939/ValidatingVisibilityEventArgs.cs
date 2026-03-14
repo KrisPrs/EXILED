@@ -32,12 +32,12 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public ValidatingVisibilityEventArgs(Scp939VisibilityState state, ReferenceHub player, ReferenceHub target)
         {
-            Player = Player.Get(player);
-            Scp939 = Player.Role.As<Scp939Role>();
-            Target = Player.Get(target);
-            TargetVisibilityState = state;
-            IsAllowed = TargetVisibilityState is not(Scp939VisibilityState.NotSeen or Scp939VisibilityState.None);
-            IsLateSeen = TargetVisibilityState is Scp939VisibilityState.SeenByRange;
+            this.Player = Player.Get(player);
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.Target = Player.Get(target);
+            this.TargetVisibilityState = state;
+            this.IsAllowed = this.TargetVisibilityState is not(Scp939VisibilityState.NotSeen or Scp939VisibilityState.None);
+            this.IsLateSeen = this.TargetVisibilityState is Scp939VisibilityState.SeenByRange;
         }
 
         /// <summary>

@@ -34,10 +34,10 @@ namespace Exiled.API.Features
         {
             if (!statusEffectBase.TryGetEffectType(out EffectType effect))
                 Log.Error($"EffectType not found please report to Exiled BugReport : {statusEffectBase}");
-            Type = effect;
-            Duration = statusEffectBase.TimeLeft;
-            Intensity = statusEffectBase.Intensity;
-            IsEnabled = statusEffectBase.IsEnabled;
+            this.Type = effect;
+            this.Duration = statusEffectBase.TimeLeft;
+            this.Intensity = statusEffectBase.Intensity;
+            this.IsEnabled = statusEffectBase.IsEnabled;
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace Exiled.API.Features
         /// <param name="isEnabled">Whether the effect should be enabled.</param>
         public Effect(EffectType type, float duration, byte intensity = 1, bool addDurationIfActive = false, bool isEnabled = true)
         {
-            Type = type;
-            Duration = duration;
-            Intensity = intensity;
-            AddDurationIfActive = addDurationIfActive;
-            IsEnabled = isEnabled;
+            this.Type = type;
+            this.Duration = duration;
+            this.Intensity = intensity;
+            this.AddDurationIfActive = addDurationIfActive;
+            this.IsEnabled = isEnabled;
         }
 
         /// <summary>
@@ -91,6 +91,6 @@ namespace Exiled.API.Features
         /// Returns the effect in a human-readable format.
         /// </summary>
         /// <returns>A string containing effect-related data.</returns>
-        public override string ToString() => $"({Type}) {Duration} {AddDurationIfActive}";
+        public override string ToString() => $"({this.Type}) {this.Duration} {this.AddDurationIfActive}";
     }
 }

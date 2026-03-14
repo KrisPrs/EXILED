@@ -116,18 +116,18 @@ namespace Exiled.API.Features.Core
         {
             base.PostInitialize();
 
-            if (Get(GetType()))
+            if (Get(this.GetType()))
             {
-                Log.Warn($"Found a duplicated instance of a StaticActor with type {GetType().Name} in the Actor {Name} that will be ignored");
-                NotifyInstanceRepeated();
+                Log.Warn($"Found a duplicated instance of a StaticActor with type {this.GetType().Name} in the Actor {this.Name} that will be ignored");
+                this.NotifyInstanceRepeated();
                 return;
             }
 
-            if (!IsInitialized)
+            if (!this.IsInitialized)
             {
-                Log.Debug($"Start() StaticActor with type {GetType().Name} in the Actor {Name}");
-                PostInitialize_Static();
-                IsInitialized = true;
+                Log.Debug($"Start() StaticActor with type {this.GetType().Name} in the Actor {this.Name}");
+                this.PostInitialize_Static();
+                this.IsInitialized = true;
             }
         }
 
@@ -136,24 +136,24 @@ namespace Exiled.API.Features.Core
         {
             base.OnBeginPlay();
 
-            if (IsStarted)
+            if (this.IsStarted)
                 return;
 
-            BeginPlay_Static();
-            IsStarted = true;
+            this.BeginPlay_Static();
+            this.IsStarted = true;
         }
 
         /// <inheritdoc/>
         protected override void OnEndPlay()
         {
-            IsDestroyed = true;
-            EndPlay_Static();
+            this.IsDestroyed = true;
+            this.EndPlay_Static();
         }
 
         /// <summary>
         /// Flushes the current actor.
         /// </summary>
-        protected virtual void Flush() => Destroy();
+        protected virtual void Flush() => this.Destroy();
 
         /// <summary>
         /// Fired on <see cref="PostInitialize()"/>.
@@ -195,6 +195,6 @@ namespace Exiled.API.Features.Core
         /// <remarks>
         /// The default approach is delete the duplicated component.
         /// </remarks>
-        protected virtual void NotifyInstanceRepeated() => Destroy(GetComponent<StaticActor>());
+        protected virtual void NotifyInstanceRepeated() => this.Destroy(this.GetComponent<StaticActor>());
     }
 }

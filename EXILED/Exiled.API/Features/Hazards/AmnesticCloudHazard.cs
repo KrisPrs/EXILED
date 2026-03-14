@@ -22,9 +22,9 @@ namespace Exiled.API.Features.Hazards
         public AmnesticCloudHazard(Scp939AmnesticCloudInstance hazard)
             : base(hazard)
         {
-            Base = hazard;
-            Ability = Base._cloud;
-            Owner = Player.Get(Ability.Owner);
+            this.Base = hazard;
+            this.Ability = this.Base._cloud;
+            this.Owner = Player.Get(this.Ability.Owner);
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public Scp939AmnesticCloudInstance.CloudState State
         {
-            get => Base.State;
-            set => Base.State = value;
+            get => this.Base.State;
+            set => this.Base.State = value;
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public float EffectDuration
         {
-            get => Base._amnesiaDuration;
-            set => Base._amnesiaDuration = value;
+            get => this.Base._amnesiaDuration;
+            set => this.Base._amnesiaDuration = value;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public float MinHoldTime
         {
-            get => Base._minHoldTime;
-            set => Base._minHoldTime = value;
+            get => this.Base._minHoldTime;
+            set => this.Base._minHoldTime = value;
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public float MaxHoldTime
         {
-            get => Base._maxHoldTime;
-            set => Base._maxHoldTime = value;
+            get => this.Base._maxHoldTime;
+            set => this.Base._maxHoldTime = value;
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public new float TotalDuration
         {
-            get => Base._targetDuration;
-            set => Base._targetDuration = value;
+            get => this.Base._targetDuration;
+            set => this.Base._targetDuration = value;
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public bool TargetState
         {
-            get => Ability.TargetState;
-            set => Ability.TargetState = value;
+            get => this.Ability.TargetState;
+            set => this.Ability.TargetState = value;
         }
     }
 }

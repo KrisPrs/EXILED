@@ -32,11 +32,11 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public InteractingTeslaEventArgs(Player player, TeslaGate teslaGate, float auxiliaryPowerCost)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Tesla = API.Features.TeslaGate.Get(teslaGate);
-            AuxiliaryPowerCost = auxiliaryPowerCost;
-            IsAllowed = auxiliaryPowerCost <= Scp079.Energy;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Tesla = API.Features.TeslaGate.Get(teslaGate);
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.IsAllowed = auxiliaryPowerCost <= this.Scp079.Energy;
         }
 
         /// <summary>

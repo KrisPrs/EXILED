@@ -22,10 +22,10 @@ namespace Exiled.Events.EventArgs.Scp1344
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public TryingDeactivatingEventArgs(Item item, bool isAllowed = true)
         {
-            Item = item;
-            Scp1344 = item as Scp1344;
-            Player = item.Owner;
-            IsAllowed = isAllowed;
+            this.Item = item;
+            this.Scp1344 = item as Scp1344;
+            this.Player = item.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

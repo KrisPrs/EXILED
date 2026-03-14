@@ -27,10 +27,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseFirearm"/> class.</param>
         internal FirearmPickup(BaseFirearm pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirearmPickup"/> class.
@@ -39,8 +37,8 @@ namespace Exiled.API.Features.Pickups
         internal FirearmPickup(ItemType type)
             : base(type)
         {
-            Base = (BaseFirearm)((Pickup)this).Base;
-            Ammo = MaxAmmo;
+            this.Base = (BaseFirearm)((Pickup)this).Base;
+            this.Ammo = this.MaxAmmo;
         }
 
         /// <summary>
@@ -66,14 +64,14 @@ namespace Exiled.API.Features.Pickups
         {
             get
             {
-                if (!AttachmentPreview.TryGetOrAddInstance(Type, out Firearm baseFirearm))
+                if (!AttachmentPreview.TryGetOrAddInstance(this.Type, out Firearm baseFirearm))
                     return 0;
 
                 Items.Firearm firearm = Items.Item.Get<Items.Firearm>(baseFirearm);
 
                 ushort oldSerial = firearm.Serial;
 
-                firearm.Serial = Serial;
+                firearm.Serial = this.Serial;
 
                 int ammo = firearm.PrimaryMagazine.Ammo;
 
@@ -84,14 +82,14 @@ namespace Exiled.API.Features.Pickups
 
             set
             {
-                if (!AttachmentPreview.TryGetOrAddInstance(Type, out Firearm baseFirearm))
+                if (!AttachmentPreview.TryGetOrAddInstance(this.Type, out Firearm baseFirearm))
                     return;
 
                 Items.Firearm firearm = Items.Item.Get<Items.Firearm>(baseFirearm);
 
                 ushort oldSerial = firearm.Serial;
 
-                firearm.Serial = Serial;
+                firearm.Serial = this.Serial;
 
                 firearm.PrimaryMagazine.Ammo = value;
 
@@ -113,28 +111,28 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public uint Attachments
         {
-            get => Base.Worldmodel.AttachmentCode;
-            set => Base.Worldmodel.Setup(Base.CurId, Base.Worldmodel.WorldmodelType, value);
+            get => this.Base.Worldmodel.AttachmentCode;
+            set => this.Base.Worldmodel.Setup(this.Base.CurId, this.Base.Worldmodel.WorldmodelType, value);
         }
 
         /// <summary>
         /// Initializes the item as if it was spawned naturally by map generation.
         /// </summary>
-        public void Distribute() => Base.OnDistributed();
+        public void Distribute() => this.Base.OnDistributed();
 
         /// <summary>
         /// Returns the FirearmPickup in a human-readable format.
         /// </summary>
         /// <returns>A string containing FirearmPickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}*";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}*";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Items.Item item)
         {
             if (item is Items.Firearm firearm)
             {
-                MaxAmmo = firearm.PrimaryMagazine.ConstantMaxAmmo;
-                AmmoDrain = firearm.AmmoDrain;
+                this.MaxAmmo = firearm.PrimaryMagazine.ConstantMaxAmmo;
+                this.AmmoDrain = firearm.AmmoDrain;
             }
 
             base.ReadItemInfo(item);
@@ -150,7 +148,7 @@ namespace Exiled.API.Features.Pickups
                 return;
             }
 
-            MaxAmmo = magazine.AmmoMax;
+            this.MaxAmmo = magazine.AmmoMax;
         }
     }
 }

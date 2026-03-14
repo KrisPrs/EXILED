@@ -16,9 +16,6 @@ namespace Exiled.Events.Handlers.Internal
     internal static class ExplodingGrenade
     {
         /// <inheritdoc cref="Map.OnChangedIntoGrenade(ChangedIntoGrenadeEventArgs)" />
-        public static void OnChangedIntoGrenade(ChangedIntoGrenadeEventArgs ev)
-        {
-            ((TimeGrenadeProjectile)ev.Projectile).ReadGrenadePickupInfo(ev.Pickup);
-        }
+        public static void OnChangedIntoGrenade(ChangedIntoGrenadeEventArgs ev) => ((TimeGrenadeProjectile)ev.Projectile).ReadGrenadePickupInfo(ev.Pickup);
     }
 }

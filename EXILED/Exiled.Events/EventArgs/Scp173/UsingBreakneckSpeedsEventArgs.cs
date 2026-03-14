@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp173
         /// </param>
         public UsingBreakneckSpeedsEventArgs(Player player, bool isActivationRequested, bool isAllowed = true)
         {
-            Player = player;
-            Scp173 = player.Role.As<Scp173Role>();
-            IsActivationRequested = isActivationRequested;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp173 = player.Role.As<Scp173Role>();
+            this.IsActivationRequested = isActivationRequested;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

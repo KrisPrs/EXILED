@@ -20,10 +20,7 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="isAllowed">
         /// <inheritdoc cref="IsAllowed" />
         /// </param>
-        public DecontaminatingEventArgs(bool isAllowed = true)
-        {
-            IsAllowed = isAllowed;
-        }
+        public DecontaminatingEventArgs(bool isAllowed = true) => this.IsAllowed = isAllowed;
 
         /// <summary>
         /// Gets or sets a value indicating whether light containment zone decontamination can begin.

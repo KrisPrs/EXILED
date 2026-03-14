@@ -36,33 +36,33 @@ namespace Exiled.API.Features.Components
         /// <param name="fuseDelay">Delay before onCollisionAction may be executed by collision.</param>
         public void Init(GameObject owner, Action onCollisionAction, float fuseDelay = 0.15f)
         {
-            Owner = owner;
-            initialized = true;
+            this.Owner = owner;
+            this.initialized = true;
             this.onCollisionAction = onCollisionAction;
-            activableTime = (float)NetworkTime.time + fuseDelay;
+            this.activableTime = (float)NetworkTime.time + fuseDelay;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             try
             {
-                if (!initialized)
+                if (!this.initialized)
                     return;
-                if (activableTime > NetworkTime.time)
+                if (this.activableTime > NetworkTime.time)
                     return;
 
-                if (Owner == null)
+                if (this.Owner == null)
                     Log.Error($"Owner is null!");
                 if (collision.gameObject == null)
                     Log.Error("pepehm");
-                if (collision.collider.gameObject == Owner || collision.collider.gameObject.TryGetComponent<EffectGrenade>(out _))
+                if (collision.collider.gameObject == this.Owner || collision.collider.gameObject.TryGetComponent<EffectGrenade>(out _))
                     return;
 
-                onCollisionAction.Invoke();
+                this.onCollisionAction.Invoke();
             }
             catch (Exception exception)
             {
-                Log.Error($"{nameof(OnCollisionEnter)} error:\n{exception}");
+                Log.Error($"{nameof(this.OnCollisionEnter)} error:\n{exception}");
                 Destroy(this);
             }
         }

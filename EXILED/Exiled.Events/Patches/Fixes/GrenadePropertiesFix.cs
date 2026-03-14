@@ -69,9 +69,6 @@ namespace Exiled.Events.Patches.Fixes
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
 
-        private static void NotifyWrongType(Item item)
-        {
-            Log.Warn($"Item is not Throwable, should never happen: '{item}'");
-        }
+        private static void NotifyWrongType(Item item) => Log.Warn($"Item is not Throwable, should never happen: '{item}'");
     }
 }

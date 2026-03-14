@@ -68,7 +68,7 @@ namespace Exiled.API.Features
             set
             {
                 base.Position = value;
-                if (Role is FpcRole fpcRole)
+                if (this.Role is FpcRole fpcRole)
                     fpcRole.ClientRelativePosition = new(value);
             }
         }
@@ -79,13 +79,13 @@ namespace Exiled.API.Features
         /// <remarks>The npc must have <see cref="PlayerFollower"/>.</remarks>
         public Player? FollowedPlayer
         {
-            get => !GameObject.TryGetComponent(out PlayerFollower follower) ? null : Player.Get(follower._hubToFollow);
+            get => !this.GameObject.TryGetComponent(out PlayerFollower follower) ? null : Player.Get(follower._hubToFollow);
 
             set
             {
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                 {
-                    GameObject.AddComponent<PlayerFollower>()._hubToFollow = value?.ReferenceHub;
+                    this.GameObject.AddComponent<PlayerFollower>()._hubToFollow = value?.ReferenceHub;
                     return;
                 }
 
@@ -101,7 +101,7 @@ namespace Exiled.API.Features
         {
             get
             {
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                     return null;
 
                 return follower._maxDistance;
@@ -112,9 +112,9 @@ namespace Exiled.API.Features
                 if (!value.HasValue)
                     return;
 
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                 {
-                    GameObject.AddComponent<PlayerFollower>()._maxDistance = value.Value;
+                    this.GameObject.AddComponent<PlayerFollower>()._maxDistance = value.Value;
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace Exiled.API.Features
         {
             get
             {
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                     return null;
 
                 return follower._minDistance;
@@ -141,9 +141,9 @@ namespace Exiled.API.Features
                 if (!value.HasValue)
                     return;
 
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                 {
-                    GameObject.AddComponent<PlayerFollower>()._minDistance = value.Value;
+                    this.GameObject.AddComponent<PlayerFollower>()._minDistance = value.Value;
                     return;
                 }
 
@@ -159,7 +159,7 @@ namespace Exiled.API.Features
         {
             get
             {
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                     return null;
 
                 return follower._speed;
@@ -170,9 +170,9 @@ namespace Exiled.API.Features
                 if (!value.HasValue)
                     return;
 
-                if (!GameObject.TryGetComponent(out PlayerFollower follower))
+                if (!this.GameObject.TryGetComponent(out PlayerFollower follower))
                 {
-                    GameObject.AddComponent<PlayerFollower>()._speed = value.Value;
+                    this.GameObject.AddComponent<PlayerFollower>()._speed = value.Value;
                     return;
                 }
 
@@ -315,7 +315,7 @@ namespace Exiled.API.Features
         /// <param name="player">the Player to follow.</param>
         public void Follow(Player player)
         {
-            PlayerFollower follow = !GameObject.TryGetComponent(out PlayerFollower follower) ? GameObject.AddComponent<PlayerFollower>() : follower;
+            PlayerFollower follow = !this.GameObject.TryGetComponent(out PlayerFollower follower) ? this.GameObject.AddComponent<PlayerFollower>() : follower;
 
             follow.Init(player.ReferenceHub);
         }
@@ -329,7 +329,7 @@ namespace Exiled.API.Features
         /// <param name="speed">the speed the npc will go.</param>
         public void Follow(Player player, float maxDistance, float minDistance, float speed = 30f)
         {
-            PlayerFollower follow = !GameObject.TryGetComponent(out PlayerFollower follower) ? GameObject.AddComponent<PlayerFollower>() : follower;
+            PlayerFollower follow = !this.GameObject.TryGetComponent(out PlayerFollower follower) ? this.GameObject.AddComponent<PlayerFollower>() : follower;
 
             follow.Init(player.ReferenceHub, maxDistance, minDistance, speed);
         }
@@ -341,9 +341,9 @@ namespace Exiled.API.Features
         {
             try
             {
-                Round.IgnoredPlayers.Remove(ReferenceHub);
-                Dictionary.Remove(ReferenceHub.gameObject);
-                NetworkServer.Destroy(ReferenceHub.gameObject);
+                Round.IgnoredPlayers.Remove(this.ReferenceHub);
+                Dictionary.Remove(this.ReferenceHub.gameObject);
+                NetworkServer.Destroy(this.ReferenceHub.gameObject);
             }
             catch (Exception e)
             {

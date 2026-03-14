@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Map
             if (pickup is null)
                 Log.Error($"{nameof(ChangingIntoGrenadeEventArgs)}: Pickup is null!");
 
-            Pickup = Pickup.Get(pickup);
-            Type = Pickup.Type;
+            this.Pickup = Pickup.Get(pickup);
+            this.Type = this.Pickup.Type;
         }
 
         /// <summary>

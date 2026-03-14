@@ -36,10 +36,10 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public UpgradedInventoryItemEventArgs(Player player, ItemBase item, Scp914KnobSetting knobSetting, ItemBase[] result)
         {
-            Player = player;
-            Item = Item.Get(item);
-            KnobSetting = knobSetting;
-            Result = result;
+            this.Player = player;
+            this.Item = Item.Get(item);
+            this.KnobSetting = knobSetting;
+            this.Result = result;
         }
 
         /// <summary>

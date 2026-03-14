@@ -23,7 +23,7 @@ namespace Exiled.CustomRoles.API.Features
         /// <summary>
         ///     Initializes a new instance of the <see cref="CustomAbility" /> class.
         /// </summary>
-        public CustomAbility() => Init();
+        public CustomAbility() => this.Init();
 
         /// <summary>
         ///     Gets a list of all registered custom abilities.
@@ -95,7 +95,7 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player" /> to check.</param>
         /// <returns>True if the player has this ability.</returns>
-        public virtual bool Check(Player player) => player is not null && Players.Contains(player);
+        public virtual bool Check(Player player) => player is not null && this.Players.Contains(player);
 
         /// <summary>
         ///     Adds this ability to the player.
@@ -103,9 +103,9 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">The <see cref="Player" /> to give the ability to.</param>
         public void AddAbility(Player player)
         {
-            Log.Debug($"Added {Name} to {player.Nickname}");
-            Players.Add(player);
-            AbilityAdded(player);
+            Log.Debug($"Added {this.Name} to {player.Nickname}");
+            this.Players.Add(player);
+            this.AbilityAdded(player);
         }
 
         /// <summary>
@@ -114,20 +114,20 @@ namespace Exiled.CustomRoles.API.Features
         /// <param name="player">The <see cref="Player" /> to remove this ability from.</param>
         public void RemoveAbility(Player player)
         {
-            Log.Debug($"Removed {Name} from {player.Nickname}");
-            Players.Remove(player);
-            AbilityRemoved(player);
+            Log.Debug($"Removed {this.Name} from {player.Nickname}");
+            this.Players.Remove(player);
+            this.AbilityRemoved(player);
         }
 
         /// <summary>
         ///     Initializes this ability.
         /// </summary>
-        public void Init() => SubscribeEvents();
+        public void Init() => this.SubscribeEvents();
 
         /// <summary>
         ///     Destroys this ability.
         /// </summary>
-        public void Destroy() => UnsubscribeEvents();
+        public void Destroy() => this.UnsubscribeEvents();
 
         /// <summary>
         ///     Loads the internal event handlers for the ability.

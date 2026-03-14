@@ -32,7 +32,7 @@ namespace Exiled.API.Features
         /// <param name="cakeBase">The <see cref="Scp559Cake"/> instance.</param>
         public Scp559(Scp559Cake cakeBase)
         {
-            Base = cakeBase;
+            this.Base = cakeBase;
 
             CakeToWrapper.Add(cakeBase, this);
         }
@@ -88,8 +88,8 @@ namespace Exiled.API.Features
         /// </summary>
         public byte RemainingSlices
         {
-            get => Base._remainingSlices;
-            set => Base.Network_remainingSlices = value;
+            get => this.Base._remainingSlices;
+            set => this.Base.Network_remainingSlices = value;
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsSpawned
         {
-            get => Base._isSpawned;
-            set => Base.Network_isSpawned = value;
+            get => this.Base._isSpawned;
+            set => this.Base.Network_isSpawned = value;
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float RemainingTime
         {
-            get => Base._remainingTime;
-            set => Base._remainingTime = value;
+            get => this.Base._remainingTime;
+            set => this.Base._remainingTime = value;
         }
 
         /// <summary>
@@ -115,15 +115,15 @@ namespace Exiled.API.Features
         /// </summary>
         public float RespawnTime
         {
-            get => Base._respawnTime;
-            set => Base._respawnTime = value;
+            get => this.Base._respawnTime;
+            set => this.Base._respawnTime = value;
         }
 
         /// <inheritdoc/>
         public Vector3 Position
         {
-            get => Base._position;
-            set => Base.Network_position = value;
+            get => this.Base._position;
+            set => this.Base.Network_position = value;
         }
 
         /// <summary>
@@ -146,6 +146,6 @@ namespace Exiled.API.Features
         /// <param name="pos">Position of spawn.</param>
         /// <param name="pedestal">Will be pedestal also spawned.</param>
         /// <returns><see langword="true"/> if position was found. Otherwise, <see langword="false"/>.</returns>
-        public bool TryGetSpawnpoint(out Vector3 pos, out bool pedestal) => Base.TryGetSpawnPoint(out pos, out pedestal);
+        public bool TryGetSpawnpoint(out Vector3 pos, out bool pedestal) => this.Base.TryGetSpawnPoint(out pos, out pedestal);
     }
 }

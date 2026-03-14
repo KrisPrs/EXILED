@@ -35,9 +35,9 @@ namespace Exiled.API.Features.Core
         internal TickComponent()
             : base()
         {
-            executeAllHandle = Timing.RunCoroutine(ExecuteAll());
-            boundHandles = new HashSet<CoroutineHandle>();
-            CanEverTick = true;
+            this.executeAllHandle = Timing.RunCoroutine(this.ExecuteAll());
+            this.boundHandles = new HashSet<CoroutineHandle>();
+            this.CanEverTick = true;
         }
 
         /// <summary>
@@ -50,23 +50,23 @@ namespace Exiled.API.Features.Core
         /// </summary>
         public bool CanEverTick
         {
-            get => canEverTick;
+            get => this.canEverTick;
             set
             {
-                if (!IsEditable || canEverTick == value)
+                if (!this.IsEditable || this.canEverTick == value)
                     return;
 
-                canEverTick = value;
+                this.canEverTick = value;
 
-                if (canEverTick)
+                if (this.canEverTick)
                 {
-                    Timing.ResumeCoroutines(executeAllHandle);
-                    Timing.ResumeCoroutines(boundHandles.ToArray());
+                    Timing.ResumeCoroutines(this.executeAllHandle);
+                    Timing.ResumeCoroutines(this.boundHandles.ToArray());
                     return;
                 }
 
-                Timing.PauseCoroutines(executeAllHandle);
-                Timing.PauseCoroutines(boundHandles.ToArray());
+                Timing.PauseCoroutines(this.executeAllHandle);
+                Timing.PauseCoroutines(this.boundHandles.ToArray());
             }
         }
 
@@ -78,20 +78,20 @@ namespace Exiled.API.Features.Core
         /// <summary>
         /// Gets all the currently bound handles.
         /// </summary>
-        public IReadOnlyCollection<CoroutineHandle> BoundHandles => boundHandles;
+        public IReadOnlyCollection<CoroutineHandle> BoundHandles => this.boundHandles;
 
         /// <summary>
         /// Binds a <see cref="CoroutineHandle"/>.
         /// </summary>
         /// <param name="handle">The <see cref="CoroutineHandle"/> to bind.</param>
-        public void BindHandle(CoroutineHandle handle) => boundHandles.Add(handle);
+        public void BindHandle(CoroutineHandle handle) => this.boundHandles.Add(handle);
 
         /// <summary>
         /// Binds a <see cref="CoroutineHandle"/>.
         /// </summary>
         /// <param name="handle">The <see cref="CoroutineHandle"/> to bind.</param>
         /// <param name="coroutine">The coroutine to handle.</param>
-        public void BindHandle(ref CoroutineHandle handle, IEnumerator<float> coroutine) => BindHandle(handle = Timing.RunCoroutine(coroutine));
+        public void BindHandle(ref CoroutineHandle handle, IEnumerator<float> coroutine) => this.BindHandle(handle = Timing.RunCoroutine(coroutine));
 
         /// <summary>
         /// Unbinds a <see cref="CoroutineHandle"/>.
@@ -100,7 +100,7 @@ namespace Exiled.API.Features.Core
         public void UnbindHandle(CoroutineHandle handle)
         {
             Timing.KillCoroutines(handle);
-            boundHandles.RemoveWhere(ax => ax == handle);
+            this.boundHandles.RemoveWhere(ax => ax == handle);
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace Exiled.API.Features.Core
         /// </summary>
         public void UnbindAllHandles()
         {
-            Timing.KillCoroutines(boundHandles.ToArray());
-            boundHandles.Clear();
+            Timing.KillCoroutines(this.boundHandles.ToArray());
+            this.boundHandles.Clear();
         }
 
         /// <inheritdoc/>
@@ -117,18 +117,18 @@ namespace Exiled.API.Features.Core
         {
             base.OnBeginDestroy();
 
-            ListPool<Action>.Pool.Return(Instructions);
-            UnbindAllHandles();
-            Timing.KillCoroutines(executeAllHandle);
+            ListPool<Action>.Pool.Return(this.Instructions);
+            this.UnbindAllHandles();
+            Timing.KillCoroutines(this.executeAllHandle);
         }
 
         private IEnumerator<float> ExecuteAll()
         {
             while (true)
             {
-                yield return Timing.WaitForSeconds(TickRate);
+                yield return Timing.WaitForSeconds(this.TickRate);
 
-                foreach (Action action in Instructions)
+                foreach (Action action in this.Instructions)
                 {
                     try
                     {

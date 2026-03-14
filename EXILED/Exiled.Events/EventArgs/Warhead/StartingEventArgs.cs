@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Warhead
         /// <param name="isAllowed">Indicating whether the event can be executed.</param>
         public StartingEventArgs(Player player, bool isAuto, bool isAllowed = true)
         {
-            IsAuto = isAuto;
-            Player = player ?? Server.Host;
-            IsAllowed = isAllowed;
+            this.IsAuto = isAuto;
+            this.Player = player ?? Server.Host;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

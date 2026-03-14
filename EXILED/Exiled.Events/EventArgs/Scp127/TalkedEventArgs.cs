@@ -25,16 +25,16 @@ namespace Exiled.Events.EventArgs.Scp127
         /// <param name="voiceLinePriority"><inheritdoc cref="Priority"/></param>
         public TalkedEventArgs(Scp127 scp127, Scp127VoiceLinesTranslation voiceLine, Scp127VoiceTriggerBase.VoiceLinePriority voiceLinePriority)
         {
-            Scp127 = scp127;
-            VoiceLine = voiceLine;
-            Priority = voiceLinePriority;
+            this.Scp127 = scp127;
+            this.VoiceLine = voiceLine;
+            this.Priority = voiceLinePriority;
         }
 
         /// <inheritdoc/>
-        public Player Player => Scp127.Owner;
+        public Player Player => this.Scp127.Owner;
 
         /// <inheritdoc/>
-        public Item Item => Scp127;
+        public Item Item => this.Scp127;
 
         /// <inheritdoc/>
         public Scp127 Scp127 { get; }

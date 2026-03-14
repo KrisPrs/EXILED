@@ -32,8 +32,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingItemEventArgs(Player player, ItemBase newItem)
         {
-            Player = player;
-            Item = Item.Get(newItem);
+            this.Player = player;
+            this.Item = Item.Get(newItem);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Exiled.Events.EventArgs.Player
             get;
             set
             {
-                if (value != null && !Player.Inventory.UserInventory.Items.TryGetValue(value.Serial, out _))
+                if (value != null && !this.Player.Inventory.UserInventory.Items.TryGetValue(value.Serial, out _))
                     throw new InvalidOperationException("ev.NewItem cannot be set to an item they do not have.");
 
                 field = value;

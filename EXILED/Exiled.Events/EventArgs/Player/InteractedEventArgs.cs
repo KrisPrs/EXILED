@@ -22,10 +22,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="player">
         /// <inheritdoc cref="Player" />
         /// </param>
-        public InteractedEventArgs(Player player)
-        {
-            Player = player;
-        }
+        public InteractedEventArgs(Player player) => this.Player = player;
 
         /// <summary>
         /// Gets the player who interacted.

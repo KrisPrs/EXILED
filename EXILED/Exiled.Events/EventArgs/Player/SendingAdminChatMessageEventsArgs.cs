@@ -33,9 +33,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SendingAdminChatMessageEventsArgs(Player player, string message, bool isAllowed)
         {
-            Player = player;
-            Message = message;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Message = message;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

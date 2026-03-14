@@ -37,8 +37,8 @@ namespace Exiled.API.Features.Toys
         /// <param name="type">The <see cref="AdminToyType"/> of the object.</param>
         internal AdminToy(AdminToyBase toyAdminToyBase, AdminToyType type)
         {
-            AdminToyBase = toyAdminToyBase;
-            ToyType = type;
+            this.AdminToyBase = toyAdminToyBase;
+            this.ToyType = type;
 
             BaseToAdminToy.Add(toyAdminToyBase, this);
         }
@@ -63,8 +63,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Player Player
         {
-            get => Player.Get(Footprint);
-            set => Footprint = value.Footprint;
+            get => Player.Get(this.Footprint);
+            set => this.Footprint = value.Footprint;
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Footprint Footprint
         {
-            get => AdminToyBase.SpawnerFootprint;
-            set => AdminToyBase.SpawnerFootprint = value;
+            get => this.AdminToyBase.SpawnerFootprint;
+            set => this.AdminToyBase.SpawnerFootprint = value;
         }
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector3 Position
         {
-            get => AdminToyBase.transform.position;
+            get => this.AdminToyBase.transform.position;
             set
             {
-                AdminToyBase.transform.position = value;
-                AdminToyBase.NetworkPosition = value;
+                this.AdminToyBase.transform.position = value;
+                this.AdminToyBase.NetworkPosition = value;
             }
         }
 
@@ -94,11 +94,11 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Quaternion Rotation
         {
-            get => AdminToyBase.transform.rotation;
+            get => this.AdminToyBase.transform.rotation;
             set
             {
-                AdminToyBase.transform.rotation = value;
-                AdminToyBase.NetworkRotation = value;
+                this.AdminToyBase.transform.rotation = value;
+                this.AdminToyBase.NetworkRotation = value;
             }
         }
 
@@ -107,23 +107,23 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector3 Scale
         {
-            get => AdminToyBase.transform.localScale;
+            get => this.AdminToyBase.transform.localScale;
             set
             {
-                AdminToyBase.transform.localScale = value;
-                AdminToyBase.NetworkScale = value;
+                this.AdminToyBase.transform.localScale = value;
+                this.AdminToyBase.NetworkScale = value;
             }
         }
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the toy.
         /// </summary>
-        public GameObject GameObject => AdminToyBase.gameObject;
+        public GameObject GameObject => this.AdminToyBase.gameObject;
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Transform"/> of the toy.
         /// </summary>
-        public Transform Transform => AdminToyBase.transform;
+        public Transform Transform => this.AdminToyBase.transform;
 
         /// <summary>
         /// Gets or sets the movement smoothing value of the toy.
@@ -134,8 +134,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public byte MovementSmoothing
         {
-            get => AdminToyBase.MovementSmoothing;
-            set => AdminToyBase.NetworkMovementSmoothing = value;
+            get => this.AdminToyBase.MovementSmoothing;
+            set => this.AdminToyBase.NetworkMovementSmoothing = value;
         }
 
         /// <summary>
@@ -143,8 +143,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool IsStatic
         {
-            get => AdminToyBase.IsStatic;
-            set => AdminToyBase.NetworkIsStatic = value;
+            get => this.AdminToyBase.IsStatic;
+            set => this.AdminToyBase.NetworkIsStatic = value;
         }
 
         /// <summary>
@@ -187,20 +187,20 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Spawns the toy into the game. Use <see cref="UnSpawn"/> to remove it.
         /// </summary>
-        public void Spawn() => NetworkServer.Spawn(AdminToyBase.gameObject);
+        public void Spawn() => NetworkServer.Spawn(this.AdminToyBase.gameObject);
 
         /// <summary>
         /// Removes the toy from the game. Use <see cref="Spawn"/> to bring it back.
         /// </summary>
-        public void UnSpawn() => NetworkServer.UnSpawn(AdminToyBase.gameObject);
+        public void UnSpawn() => NetworkServer.UnSpawn(this.AdminToyBase.gameObject);
 
         /// <summary>
         /// Destroys the toy.
         /// </summary>
         public void Destroy()
         {
-            BaseToAdminToy.Remove(AdminToyBase);
-            NetworkServer.Destroy(AdminToyBase.gameObject);
+            BaseToAdminToy.Remove(this.AdminToyBase);
+            NetworkServer.Destroy(this.AdminToyBase.gameObject);
         }
     }
 }

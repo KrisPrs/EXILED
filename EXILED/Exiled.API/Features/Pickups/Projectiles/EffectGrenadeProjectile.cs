@@ -21,20 +21,16 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="EffectGrenade"/> class.</param>
         public EffectGrenadeProjectile(EffectGrenade pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectGrenadeProjectile"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal EffectGrenadeProjectile(ItemType type)
-            : base(type)
-        {
-            Base = (EffectGrenade)((Pickup)this).Base;
-        }
+            : base(type) =>
+            this.Base = (EffectGrenade)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="EffectGrenade"/> that this class is encapsulating.
@@ -45,6 +41,6 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// Returns the EffectGrenadePickup in a human readable format.
         /// </summary>
         /// <returns>A string containing EffectGrenadePickup-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Position}| -{IsLocked}- ={InUse}=";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Position}| -{this.IsLocked}- ={this.InUse}=";
     }
 }

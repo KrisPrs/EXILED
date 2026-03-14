@@ -41,10 +41,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="onChanged"><inheritdoc cref="OnChanged"/></param>
         internal SettingBase(ServerSpecificSettingBase settingBase, HeaderSetting header, Action<Player, SettingBase> onChanged)
         {
-            Base = settingBase;
+            this.Base = settingBase;
 
-            Header = header;
-            OnChanged = onChanged;
+            this.Header = header;
+            this.OnChanged = onChanged;
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="settingBase"><inheritdoc cref="Base"/></param>
         internal SettingBase(ServerSpecificSettingBase settingBase)
         {
-            Base = settingBase;
+            this.Base = settingBase;
 
-            if (OriginalDefinition != null)
+            if (this.OriginalDefinition != null)
             {
-                Header = OriginalDefinition.Header;
-                OnChanged = OriginalDefinition.OnChanged;
-                Label = OriginalDefinition.Label;
-                HintDescription = OriginalDefinition.HintDescription;
+                this.Header = this.OriginalDefinition.Header;
+                this.OnChanged = this.OriginalDefinition.OnChanged;
+                this.Label = this.OriginalDefinition.Label;
+                this.HintDescription = this.OriginalDefinition.HintDescription;
             }
         }
 
@@ -83,8 +83,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public int Id
         {
-            get => Base.SettingId;
-            set => Base.SetId(value, string.Empty);
+            get => this.Base.SettingId;
+            set => this.Base.SetId(value, string.Empty);
         }
 
         /// <summary>
@@ -92,8 +92,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string Label
         {
-            get => Base.Label;
-            set => Base.Label = value;
+            get => this.Base.Label;
+            set => this.Base.Label = value;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string HintDescription
         {
-            get => Base.HintDescription;
-            set => Base.HintDescription = value;
+            get => this.Base.HintDescription;
+            set => this.Base.HintDescription = value;
         }
 
         /// <summary>
@@ -113,8 +113,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </remarks>
         public bool IsServerOnly
         {
-            get => Base.IsServerOnly;
-            set => Base.IsServerOnly = value;
+            get => this.Base.IsServerOnly;
+            set => this.Base.IsServerOnly = value;
         }
 
         /// <summary>
@@ -128,20 +128,20 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </remarks>
         public byte CollectionId
         {
-            get => Base.CollectionId;
-            set => Base.CollectionId = value;
+            get => this.Base.CollectionId;
+            set => this.Base.CollectionId = value;
         }
 
         /// <summary>
         /// Gets the response mode of this setting.
         /// </summary>
-        public ServerSpecificSettingBase.UserResponseMode ResponseMode => Base.ResponseMode;
+        public ServerSpecificSettingBase.UserResponseMode ResponseMode => this.Base.ResponseMode;
 
         /// <summary>
         /// Gets the setting that was sent to players.
         /// </summary>
         /// <remarks>Can be <c>null</c> if this <see cref="SettingBase"/> is a prefab.</remarks>
-        public SettingBase OriginalDefinition => Settings.Find(x => x.Id == Id);
+        public SettingBase OriginalDefinition => Settings.Find(x => x.Id == this.Id);
 
         /// <summary>
         /// Gets or sets the header of this setting.
@@ -426,17 +426,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateLabelAndHint(string label, string hint, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendUpdate(label, hint, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendUpdate(label, hint, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Returns a string representation of this <see cref="SettingBase"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return $"{Id} ({Label}) [{HintDescription}] {{{ResponseMode}}} ^{Header}^";
-        }
+        public override string ToString() => $"{this.Id} ({this.Label}) [{this.HintDescription}] {{{this.ResponseMode}}} ^{this.Header}^";
 
         /// <summary>
         /// Internal method that fires when a setting is updated.

@@ -36,12 +36,12 @@ namespace Exiled.API.Features
         internal Window(BreakableWindow window, Room room)
         {
             BreakableWindowToWindow.Add(window, this);
-            Base = window;
-            Room = room;
-            Type = GetGlassType();
+            this.Base = window;
+            this.Room = room;
+            this.Type = this.GetGlassType();
 
-            if (Type is GlassType.Unknown)
-                Log.Warn($"[GLASSTYPE UNKNOWN] Room = ({Room}) BASE = [{Base}] HP = {{{Base?.Health}}}");
+            if (this.Type is GlassType.Unknown)
+                Log.Warn($"[GLASSTYPE UNKNOWN] Room = ({this.Room}) BASE = [{this.Base}] HP = {{{this.Base?.Health}}}");
         }
 
         /// <summary>
@@ -57,12 +57,12 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the window.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the window's <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the <see cref="Features.Room"/> the window is in.
@@ -77,29 +77,29 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the window's <see cref="ZoneType"/>.
         /// </summary>
-        public ZoneType Zone => Room.Zone;
+        public ZoneType Zone => this.Room.Zone;
 
         /// <summary>
         /// Gets or sets the window's position.
         /// </summary>
         public Vector3 Position
         {
-            get => GameObject.transform.position;
-            set => GameObject.transform.position = value;
+            get => this.GameObject.transform.position;
+            set => this.GameObject.transform.position = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether this window is breakable.
         /// </summary>
-        public bool IsBreakable => !Base.IsBroken;
+        public bool IsBreakable => !this.Base.IsBroken;
 
         /// <summary>
         /// Gets or sets a value indicating whether this window is broken.
         /// </summary>
         public bool IsBroken
         {
-            get => Base.IsBroken;
-            set => Base.IsBroken = value;
+            get => this.Base.IsBroken;
+            set => this.Base.IsBroken = value;
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float Health
         {
-            get => Base.Health;
-            set => Base.Health = value;
+            get => this.Base.Health;
+            set => this.Base.Health = value;
         }
 
         /// <summary>
@@ -116,8 +116,8 @@ namespace Exiled.API.Features
         /// </summary>
         public Quaternion Rotation
         {
-            get => GameObject.transform.rotation;
-            set => GameObject.transform.rotation = value;
+            get => this.GameObject.transform.rotation;
+            set => this.GameObject.transform.rotation = value;
         }
 
         /// <summary>
@@ -125,8 +125,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool DisableScpDamage
         {
-            get => Base._preventScpDamage;
-            set => Base._preventScpDamage = value;
+            get => this.Base._preventScpDamage;
+            set => this.Base._preventScpDamage = value;
         }
 
         /// <summary>
@@ -135,8 +135,8 @@ namespace Exiled.API.Features
         [Obsolete("You should use IsBroken Propperty now", true)]
         public bool SyncStatus
         {
-            get => Base._prevStatus;
-            set => Base._prevStatus = value;
+            get => this.Base._prevStatus;
+            set => this.Base._prevStatus = value;
         }
 
         /// <summary>
@@ -144,8 +144,8 @@ namespace Exiled.API.Features
         /// </summary>
         public Player LastAttacker
         {
-            get => Player.Get(Base.LastAttacker.Hub);
-            set => Base.LastAttacker = value.Footprint;
+            get => Player.Get(this.Base.LastAttacker.Hub);
+            set => this.Base.LastAttacker = value.Footprint;
         }
 
         /// <summary>
@@ -191,50 +191,47 @@ namespace Exiled.API.Features
         /// <summary>
         /// Break the window.
         /// </summary>
-        public void BreakWindow() => Base.ServerDamageWindow(Health);
+        public void BreakWindow() => this.Base.ServerDamageWindow(this.Health);
 
         /// <summary>
         /// Damages the window.
         /// </summary>
         /// <param name="amount">The amount of damage to deal.</param>
-        public void DamageWindow(float amount) => Base.ServerDamageWindow(amount);
+        public void DamageWindow(float amount) => this.Base.ServerDamageWindow(amount);
 
         /// <summary>
         /// Damages the window.
         /// </summary>
         /// <param name="amount">The amount of damage to deal.</param>
         /// <param name="handler">The handler of damage.</param>
-        public void DamageWindow(float amount, DamageHandlerBase handler)
-        {
-            Base.Damage(amount, handler, Vector3.zero);
-        }
+        public void DamageWindow(float amount, DamageHandlerBase handler) => this.Base.Damage(amount, handler, Vector3.zero);
 
         /// <summary>
         /// Returns the Window in a human-readable format.
         /// </summary>
         /// <returns>A string containing Window-related data.</returns>
-        public override string ToString() => $"{Type} ({Health}) [{IsBroken}] *{DisableScpDamage}*";
+        public override string ToString() => $"{this.Type} ({this.Health}) [{this.IsBroken}] *{this.DisableScpDamage}*";
 
-        private GlassType GetGlassType() => Base.name.RemoveBracketsOnEndOfName() switch
+        private GlassType GetGlassType() => this.Base.name.RemoveBracketsOnEndOfName() switch
         {
-            "B272sa" => Room?.Type switch
+            "B272sa" => this.Room?.Type switch
             {
                 RoomType.LczGlassBox => GlassType.GR18,
                 RoomType.Lcz330 => GlassType.Scp330,
                 _ => GlassType.Unknown,
             },
-            "GLASS" => Room?.Type switch
+            "GLASS" => this.Room?.Type switch
             {
                 RoomType.Hcz079 => GlassType.Scp079,
                 RoomType.HczHid => GlassType.MicroHid,
                 RoomType.HczEzCheckpointA => GlassType.HczEzCheckpointA,
                 RoomType.HczEzCheckpointB => GlassType.HczEzCheckpointB,
-                RoomType.EzGateA when Base.name[7] == '5' => GlassType.GateAArmory,
+                RoomType.EzGateA when this.Base.name[7] == '5' => GlassType.GateAArmory,
                 RoomType.EzGateA => GlassType.GateAPit,
                 RoomType.HczLoadingBay => GlassType.HczLoadingBay,
                 _ => GlassType.Unknown,
             },
-            "Window" => Room?.Type switch
+            "Window" => this.Room?.Type switch
             {
                 RoomType.Hcz049 => GlassType.Scp049,
                 RoomType.Hcz127 => GlassType.Scp127,
@@ -242,7 +239,7 @@ namespace Exiled.API.Features
                 RoomType.HczTestRoom => GlassType.TestRoom,
                 _ => GlassType.Unknown,
             },
-            "Glass" => Room?.Type switch
+            "Glass" => this.Room?.Type switch
             {
                 RoomType.Hcz079 => GlassType.Scp079Trigger,
                 RoomType.HczHid => GlassType.MicroHid,

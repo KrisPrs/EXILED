@@ -24,8 +24,8 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="projectile">The <see cref="TimeGrenadeProjectile"/>.</param>
         public ChangedIntoGrenadeEventArgs(TimedGrenadePickup pickup, ThrownProjectile projectile)
         {
-            Pickup = API.Features.Pickups.Pickup.Get<GrenadePickup>(pickup);
-            Projectile = (Projectile)API.Features.Pickups.Pickup.Get(projectile);
+            this.Pickup = API.Features.Pickups.Pickup.Get<GrenadePickup>(pickup);
+            this.Projectile = (Projectile)API.Features.Pickups.Pickup.Get(projectile);
         }
 
         /// <summary>
@@ -40,6 +40,6 @@ namespace Exiled.Events.EventArgs.Map
         public Projectile Projectile { get; }
 
         /// <inheritdoc/>
-        Pickup IPickupEvent.Pickup => Pickup;
+        Pickup IPickupEvent.Pickup => this.Pickup;
     }
 }

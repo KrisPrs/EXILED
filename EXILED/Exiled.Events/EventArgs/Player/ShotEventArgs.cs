@@ -30,20 +30,20 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="damage"><inheritdoc cref="Damage"/></param>
         public ShotEventArgs(HitscanHitregModuleBase hitregModule, RaycastHit hitInfo, InventorySystem.Items.Firearms.Firearm firearm, IDestructible destructible, float damage)
         {
-            HitregModule = hitregModule;
-            RaycastHit = hitInfo;
-            Destructible = destructible;
-            Firearm = Item.Get<Firearm>(firearm);
-            Damage = damage;
+            this.HitregModule = hitregModule;
+            this.RaycastHit = hitInfo;
+            this.Destructible = destructible;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Damage = damage;
 
-            Player = Firearm.Owner;
+            this.Player = this.Firearm.Owner;
 
-            if (Destructible is HitboxIdentity hitboxIdentity)
+            if (this.Destructible is HitboxIdentity hitboxIdentity)
             {
-                Hitbox = hitboxIdentity;
-                Target = Player.Get(Hitbox.TargetHub);
-                if (Target != null)
-                    BoneType = Target.GetByMassCenter(Hitbox);
+                this.Hitbox = hitboxIdentity;
+                this.Target = Player.Get(this.Hitbox.TargetHub);
+                if (this.Target != null)
+                    this.BoneType = this.Target.GetByMassCenter(this.Hitbox);
             }
         }
 
@@ -58,7 +58,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the firearm hitreg module responsible for the shot.
@@ -73,12 +73,12 @@ namespace Exiled.Events.EventArgs.Player
         /// <summary>
         /// Gets the bullet travel distance.
         /// </summary>
-        public float Distance => RaycastHit.distance;
+        public float Distance => this.RaycastHit.distance;
 
         /// <summary>
         /// Gets the position of the hit.
         /// </summary>
-        public Vector3 Position => RaycastHit.point;
+        public Vector3 Position => this.RaycastHit.point;
 
         /// <summary>
         /// Gets the firearm base damage at the hit distance. Actual inflicted damage may vary.

@@ -34,8 +34,8 @@ namespace Exiled.API.Features
         /// <param name="scp079Generator">The <see cref="Scp079Generator"/>.</param>
         internal Generator(Scp079Generator scp079Generator)
         {
-            Base = scp079Generator;
-            PositionSync = scp079Generator.GetComponent<StructurePositionSync>();
+            this.Base = scp079Generator;
+            this.PositionSync = scp079Generator.GetComponent<StructurePositionSync>();
             Scp079GeneratorToGenerator.Add(scp079Generator, this);
         }
 
@@ -52,25 +52,25 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the generator.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Transform"/> of the generator.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the generator's <see cref="Room"/>.
         /// </summary>
-        public Room Room => field ??= Room.FindParentRoom(GameObject);
+        public Room Room => field ??= Room.FindParentRoom(this.GameObject);
 
         /// <summary>
         /// Gets or sets the generator' state.
         /// </summary>
         public GeneratorState State
         {
-            get => (GeneratorState)Base.Network_flags;
-            set => Base.Network_flags = (byte)value;
+            get => (GeneratorState)this.Base.Network_flags;
+            set => this.Base.Network_flags = (byte)value;
         }
 
         /// <summary>
@@ -78,27 +78,27 @@ namespace Exiled.API.Features
         /// </summary>
         public short CurrentTime
         {
-            get => Base.Network_syncTime;
-            set => Base.Network_syncTime = value;
+            get => this.Base.Network_syncTime;
+            set => this.Base.Network_syncTime = value;
         }
 
         /// <summary>
         /// Gets the generator's dropdown speed.
         /// </summary>
-        public float DropdownSpeed => Base.DropdownSpeed;
+        public float DropdownSpeed => this.Base.DropdownSpeed;
 
         /// <summary>
         /// Gets a value indicating whether the generator is ready to be activated.
         /// </summary>
-        public bool IsReady => Base.ActivationReady;
+        public bool IsReady => this.Base.ActivationReady;
 
         /// <summary>
         /// Gets or sets a value indicating whether the generator is engaged.
         /// </summary>
         public bool IsEngaged
         {
-            get => Base.Engaged;
-            set => Base.Engaged = value;
+            get => this.Base.Engaged;
+            set => this.Base.Engaged = value;
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsActivating
         {
-            get => Base.Activating;
-            set => Base.Activating = value;
+            get => this.Base.Activating;
+            set => this.Base.Activating = value;
         }
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsOpen
         {
-            get => Base.HasFlag(Base.Network_flags, Scp079Generator.GeneratorFlags.Open);
-            set => Base.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, value);
+            get => this.Base.HasFlag(this.Base.Network_flags, Scp079Generator.GeneratorFlags.Open);
+            set => this.Base.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, value);
         }
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsUnlocked
         {
-            get => Base.HasFlag(Base.Network_flags, Scp079Generator.GeneratorFlags.Unlocked);
-            set => Base.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, value);
+            get => this.Base.HasFlag(this.Base.Network_flags, Scp079Generator.GeneratorFlags.Unlocked);
+            set => this.Base.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, value);
         }
 
         /// <summary>
@@ -133,8 +133,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float LeverDelay
         {
-            get => Base._leverDelay;
-            set => Base._leverDelay = value;
+            get => this.Base._leverDelay;
+            set => this.Base._leverDelay = value;
         }
 
         /// <summary>
@@ -142,8 +142,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float InteractionCooldown
         {
-            get => Base._targetCooldown;
-            set => Base._targetCooldown = value;
+            get => this.Base._targetCooldown;
+            set => this.Base._targetCooldown = value;
         }
 
         /// <summary>
@@ -151,8 +151,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float ActivationTime
         {
-            get => Base._totalActivationTime;
-            set => Base._totalActivationTime = value;
+            get => this.Base._totalActivationTime;
+            set => this.Base._totalActivationTime = value;
         }
 
         /// <summary>
@@ -160,8 +160,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float DeactivationTime
         {
-            get => Base._totalDeactivationTime;
-            set => Base._totalDeactivationTime = value;
+            get => this.Base._totalDeactivationTime;
+            set => this.Base._totalDeactivationTime = value;
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float TogglePanelCooldown
         {
-            get => Base._doorToggleCooldownTime;
-            set => Base._doorToggleCooldownTime = value;
+            get => this.Base._doorToggleCooldownTime;
+            set => this.Base._doorToggleCooldownTime = value;
         }
 
         /// <summary>
@@ -178,8 +178,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float UnlockCooldown
         {
-            get => Base._unlockCooldownTime;
-            set => Base._unlockCooldownTime = value;
+            get => this.Base._unlockCooldownTime;
+            set => this.Base._unlockCooldownTime = value;
         }
 
         /// <summary>
@@ -187,8 +187,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float DeniedUnlockCooldown
         {
-            get => Base._deniedCooldownTime;
-            set => Base._deniedCooldownTime = value;
+            get => this.Base._deniedCooldownTime;
+            set => this.Base._deniedCooldownTime = value;
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace Exiled.API.Features
         /// </summary>
         public Player LastActivator
         {
-            get => Player.Get(Base._lastActivator.Hub);
-            set => Base._lastActivator = value.Footprint;
+            get => Player.Get(this.Base._lastActivator.Hub);
+            set => this.Base._lastActivator = value.Footprint;
         }
 
         /// <summary>
@@ -205,11 +205,11 @@ namespace Exiled.API.Features
         /// </summary>
         public Vector3 Position
         {
-            get => Base.transform.position;
+            get => this.Base.transform.position;
             set
             {
-                Base.transform.position = value;
-                PositionSync.Network_position = value;
+                this.Base.transform.position = value;
+                this.PositionSync.Network_position = value;
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -220,11 +220,11 @@ namespace Exiled.API.Features
         /// <remarks>The setter only works in the y-axis (left to right) due to base game limitations.</remarks>
         public Quaternion Rotation
         {
-            get => Base.transform.rotation;
+            get => this.Base.transform.rotation;
             set
             {
-                Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
-                PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
+                this.Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
+                this.PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -237,8 +237,8 @@ namespace Exiled.API.Features
         /// </summary>
         public KeycardPermissions Permissions
         {
-            get => (KeycardPermissions)Base._requiredPermission;
-            set => Base._requiredPermission = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.Base._requiredPermission;
+            set => this.Base._requiredPermission = (Interactables.Interobjects.DoorUtils.DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -247,8 +247,8 @@ namespace Exiled.API.Features
         [Obsolete]
         public KeycardPermissions KeycardPermissions
         {
-            get => (KeycardPermissions)Base._requiredPermission;
-            set => Base._requiredPermission = (DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.Base._requiredPermission;
+            set => this.Base._requiredPermission = (DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -313,21 +313,21 @@ namespace Exiled.API.Features
         /// <summary>
         /// Denies the unlock.
         /// </summary>
-        public void DenyUnlock() => Base.RpcDenied(DoorPermissionFlags.None);
+        public void DenyUnlock() => this.Base.RpcDenied(DoorPermissionFlags.None);
 
         /// <summary>
         /// Denies the unlock.
         /// </summary>
         /// <param name="doorPermission">.</param>
-        public void DenyUnlock(KeycardPermissions doorPermission) => Base.RpcDenied((Interactables.Interobjects.DoorUtils.DoorPermissionFlags)doorPermission);
+        public void DenyUnlock(KeycardPermissions doorPermission) => this.Base.RpcDenied((Interactables.Interobjects.DoorUtils.DoorPermissionFlags)doorPermission);
 
         /// <summary>
         /// Denies the unlock and resets the interaction cooldown.
         /// </summary>
         public void DenyUnlockAndResetCooldown()
         {
-            InteractionCooldown = UnlockCooldown;
-            DenyUnlock();
+            this.InteractionCooldown = this.UnlockCooldown;
+            this.DenyUnlock();
         }
 
         /// <summary>
@@ -340,15 +340,15 @@ namespace Exiled.API.Features
             DoorPermissionFlags permission = (DoorPermissionFlags)flag;
 
             if (isEnabled)
-                Base._requiredPermission |= permission;
+                this.Base._requiredPermission |= permission;
             else
-                Base._requiredPermission &= ~permission;
+                this.Base._requiredPermission &= ~permission;
         }
 
         /// <summary>
         /// Returns the Generator in a human-readable format.
         /// </summary>
         /// <returns>A string containing Generator-related data.</returns>
-        public override string ToString() => $"{State} ({Permissions})";
+        public override string ToString() => $"{this.State} ({this.Permissions})";
     }
 }

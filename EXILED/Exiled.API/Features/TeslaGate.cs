@@ -36,9 +36,9 @@ namespace Exiled.API.Features
         /// <param name="room">The <see cref="Features.Room"/> for this tesla.</param>
         internal TeslaGate(BaseTeslaGate baseTeslaGate, Room room)
         {
-            Base = baseTeslaGate;
+            this.Base = baseTeslaGate;
             BaseTeslaGateToTeslaGate.Add(baseTeslaGate, this);
-            Room = room;
+            this.Room = room;
         }
 
         /// <summary>
@@ -69,22 +69,22 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the tesla gate's <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the tesla gate's <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the tesla gate's position.
         /// </summary>
-        public Vector3 Position => Transform.position;
+        public Vector3 Position => this.Transform.position;
 
         /// <summary>
         /// Gets the tesla gate's rotation.
         /// </summary>
-        public Quaternion Rotation => Quaternion.Euler(Base.localRotation);
+        public Quaternion Rotation => Quaternion.Euler(this.Base.localRotation);
 
         /// <summary>
         /// Gets the tesla gate's <see cref="Features.Room"/> which is located in.
@@ -94,15 +94,15 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a value indicating whether the tesla gate's shock burst is in progess.
         /// </summary>
-        public bool IsShocking => Base.InProgress;
+        public bool IsShocking => this.Base.InProgress;
 
         /// <summary>
         /// Gets or sets the tesla gate's inactive time.
         /// </summary>
         public float InactiveTime
         {
-            get => Base.NetworkInactiveTime;
-            set => Base.NetworkInactiveTime = value;
+            get => this.Base.NetworkInactiveTime;
+            set => this.Base.NetworkInactiveTime = value;
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace Exiled.API.Features
         /// </summary>
         public Vector3 HurtRange
         {
-            get => Base.sizeOfKiller;
-            set => Base.sizeOfKiller = value;
+            get => this.Base.sizeOfKiller;
+            set => this.Base.sizeOfKiller = value;
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float TriggerRange
         {
-            get => Base.sizeOfTrigger;
-            set => Base.sizeOfTrigger = value;
+            get => this.Base.sizeOfTrigger;
+            set => this.Base.sizeOfTrigger = value;
         }
 
         /// <summary>
@@ -128,8 +128,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float IdleRange
         {
-            get => Base.distanceToIdle;
-            set => Base.distanceToIdle = value;
+            get => this.Base.distanceToIdle;
+            set => this.Base.distanceToIdle = value;
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float ActivationTime
         {
-            get => Base.windupTime;
-            set => Base.windupTime = value;
+            get => this.Base.windupTime;
+            set => this.Base.windupTime = value;
         }
 
         /// <summary>
@@ -146,8 +146,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float CooldownTime
         {
-            get => Base.cooldownTime;
-            set => Base.cooldownTime = value;
+            get => this.Base.cooldownTime;
+            set => this.Base.cooldownTime = value;
         }
 
         /// <summary>
@@ -155,13 +155,13 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsIdling
         {
-            get => Base.isIdling;
+            get => this.Base.isIdling;
             set
             {
                 if (value)
-                    Base.RpcDoIdle();
+                    this.Base.RpcDoIdle();
                 else
-                    Base.RpcDoneIdling();
+                    this.Base.RpcDoneIdling();
             }
         }
 
@@ -171,29 +171,29 @@ namespace Exiled.API.Features
         /// </summary>
         public bool UseInstantBurst
         {
-            get => Base.next079burst;
-            set => Base.next079burst = value;
+            get => this.Base.next079burst;
+            set => this.Base.next079burst = value;
         }
 
         /// <summary>
         /// Gets a <see cref="List{T}"/> of <see cref="TantrumHazard"/> which contains all the tantrums to destroy.
         /// </summary>
-        public IEnumerable<TantrumHazard> TantrumsToDestroy => Base.TantrumsToBeDestroyed.Select(x => Hazard.Get<TantrumHazard>(x));
+        public IEnumerable<TantrumHazard> TantrumsToDestroy => this.Base.TantrumsToBeDestroyed.Select(x => Hazard.Get<TantrumHazard>(x));
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Player"/> which contains all the players inside the hurt range.
         /// </summary>
-        public IEnumerable<Player> PlayersInHurtRange => Player.List.Where(IsPlayerInHurtRange);
+        public IEnumerable<Player> PlayersInHurtRange => Player.List.Where(this.IsPlayerInHurtRange);
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Player"/> which contains all the players inside the idle range.
         /// </summary>
-        public IEnumerable<Player> PlayersInIdleRange => Player.List.Where(IsPlayerInIdleRange);
+        public IEnumerable<Player> PlayersInIdleRange => Player.List.Where(this.IsPlayerInIdleRange);
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Player"/> which contains all the players inside the trigger range.
         /// </summary>
-        public IEnumerable<Player> PlayersInTriggerRange => Player.List.Where(IsPlayerInTriggerRange);
+        public IEnumerable<Player> PlayersInTriggerRange => Player.List.Where(this.IsPlayerInTriggerRange);
 
         /// <summary>
         /// Gets the <see cref="TeslaGate"/> belonging to the <see cref="BaseTeslaGate"/>.
@@ -242,9 +242,9 @@ namespace Exiled.API.Features
         public void Trigger(bool isInstantBurst = false)
         {
             if (isInstantBurst)
-                Base.RpcInstantBurst();
+                this.Base.RpcInstantBurst();
             else
-                Base.ServerSideCode();
+                this.Base.ServerSideCode();
         }
 
         /// <summary>
@@ -252,8 +252,8 @@ namespace Exiled.API.Features
         /// </summary>
         public void ForceTrigger()
         {
-            Timing.RunCoroutine(Base.ServerSideWaitForAnimation());
-            Base.RpcPlayAnimation();
+            Timing.RunCoroutine(this.Base.ServerSideWaitForAnimation());
+            this.Base.RpcPlayAnimation();
         }
 
         /// <summary>
@@ -261,21 +261,21 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to check.</param>
         /// <returns><see langword="true"/> if the given <see cref="Player"/> is in the hurt range of the tesla gate; otherwise, <see langword="false"/>.</returns>
-        public bool IsPlayerInHurtRange(Player player) => player is not null && Base.killers.Any(x => new Bounds(x.transform.position, Base.sizeOfKiller).Contains(player.Position));
+        public bool IsPlayerInHurtRange(Player player) => player is not null && this.Base.killers.Any(x => new Bounds(x.transform.position, this.Base.sizeOfKiller).Contains(player.Position));
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is in the idle range of a specific tesla gate.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to check.</param>
         /// <returns><see langword="true"/> if the given <see cref="Player"/> is in the idle range of the tesla gate; otherwise, <see langword="false"/>.</returns>
-        public bool IsPlayerInIdleRange(Player player) => player is not null && Base.IsInIdleRange(player.ReferenceHub);
+        public bool IsPlayerInIdleRange(Player player) => player is not null && this.Base.IsInIdleRange(player.ReferenceHub);
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is in the trigger range of a specific tesla gate.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to check.</param>
         /// <returns><see langword="true"/> if the given <see cref="Player"/> is in the trigger range of the tesla gate; otherwise, <see langword="false"/>.</returns>
-        public bool IsPlayerInTriggerRange(Player player) => player is not null && Base.PlayerInRange(player.ReferenceHub);
+        public bool IsPlayerInTriggerRange(Player player) => player is not null && this.Base.PlayerInRange(player.ReferenceHub);
 
         /// <summary>
         /// Gets a value indicating whether the tesla gate can be idle by a specific <see cref="Player"/>.
@@ -283,7 +283,7 @@ namespace Exiled.API.Features
         /// <param name="player">The <see cref="Player"/> to check.</param>
         /// <returns><see langword="true"/> if the given <see cref="Player"/> can idle the tesla gate; otherwise, <see langword="false"/>.</returns>
         public bool CanBeIdle(Player player) => player is not null && player.IsAlive && !IgnoredPlayers.Contains(player) && !IgnoredRoles.Contains(player.Role) &&
-                                                !IgnoredTeams.Contains(player.Role.Team) && IsPlayerInIdleRange(player);
+                                                !IgnoredTeams.Contains(player.Role.Team) && this.IsPlayerInIdleRange(player);
 
         /// <summary>
         /// Gets a value indicating whether the tesla gate can be triggered by a specific <see cref="Player"/>.
@@ -291,6 +291,6 @@ namespace Exiled.API.Features
         /// <param name="player">The <see cref="Player"/> to check.</param>
         /// <returns><see langword="true"/> if the given <see cref="Player"/> can trigger the tesla gate; otherwise, <see langword="false"/>.</returns>
         public bool CanBeTriggered(Player player) => player is not null && player.IsAlive && !IgnoredPlayers.Contains(player) && !IgnoredRoles.Contains(player.Role) &&
-                                                     !IgnoredTeams.Contains(player.Role.Team) && IsPlayerInTriggerRange(player);
+                                                     !IgnoredTeams.Contains(player.Role.Team) && this.IsPlayerInTriggerRange(player);
     }
 }

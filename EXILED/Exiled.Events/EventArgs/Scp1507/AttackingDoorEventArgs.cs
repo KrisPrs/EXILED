@@ -29,10 +29,10 @@ namespace Exiled.Events.EventArgs.Scp1507
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public AttackingDoorEventArgs(Player player, DoorVariant doorVariant, bool isAllowed = true)
         {
-            Player = player;
-            Scp1507 = player.Role.As<Scp1507Role>();
-            Door = Door.Get(doorVariant);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp1507 = player.Role.As<Scp1507Role>();
+            this.Door = Door.Get(doorVariant);
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

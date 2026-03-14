@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Scp2536
         /// <param name="spawnpoint"><inheritdoc cref="Spawnpoint"/></param>
         public FoundPositionEventArgs(Player player, Scp2536Spawnpoint spawnpoint)
         {
-            Player = player;
-            Spawnpoint = spawnpoint;
+            this.Player = player;
+            this.Spawnpoint = spawnpoint;
         }
 
         /// <summary>

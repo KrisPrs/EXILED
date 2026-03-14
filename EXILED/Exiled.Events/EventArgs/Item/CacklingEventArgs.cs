@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="isAllowed">Whether the player is allowed to cackle.</param>
         public CacklingEventArgs(MarshmallowItem marshmallow, bool isAllowed = true)
         {
-            Marshmallow = Item.Get<Marshmallow>(marshmallow);
-            Player = Marshmallow.Owner;
-            IsAllowed = isAllowed;
+            this.Marshmallow = Item.Get<Marshmallow>(marshmallow);
+            this.Player = this.Marshmallow.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Exiled.Events.EventArgs.Item
         public Player Player { get; }
 
         /// <inheritdoc />
-        public API.Features.Items.Item Item => Marshmallow;
+        public API.Features.Items.Item Item => this.Marshmallow;
 
         /// <summary>
         /// Gets the marshmallow item of the player cackling.

@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public SpawningTeamVehicleEventArgs(SpawnableWaveBase team, bool isAllowed = true)
         {
-            Team = team;
-            IsAllowed = isAllowed;
+            this.Team = team;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

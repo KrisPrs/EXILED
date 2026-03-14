@@ -23,15 +23,15 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed">Whether the Micro HID can explode the player or not.</param>
         public ExplodingMicroHIDEventArgs(MicroHIDItem item, bool isAllowed = true)
         {
-            MicroHID = Item.Get<MicroHid>(item);
-            Player = MicroHID.Owner;
-            IsAllowed = isAllowed;
+            this.MicroHID = Item.Get<MicroHid>(item);
+            this.Player = this.MicroHID.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
         /// Gets the item.
         /// </summary>
-        public Item Item => MicroHID;
+        public Item Item => this.MicroHID;
 
         /// <summary>
         /// Gets the player in owner of the item.

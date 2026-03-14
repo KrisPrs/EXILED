@@ -26,20 +26,16 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="TimedGrenadePickup"/> class.</param>
         internal GrenadePickup(TimedGrenadePickup pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrenadePickup"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal GrenadePickup(ItemType type)
-            : base(type)
-        {
-            Base = (TimedGrenadePickup)((Pickup)this).Base;
-        }
+            : base(type) =>
+            this.Base = (TimedGrenadePickup)((Pickup)this).Base;
 
         /// <summary>
         /// Gets or sets how long the fuse will last.
@@ -49,7 +45,7 @@ namespace Exiled.API.Features.Pickups
         /// <summary>
         /// Gets the <see cref="Enums.ProjectileType"/> of the item.
         /// </summary>
-        public ProjectileType ProjectileType => Type.GetProjectileType();
+        public ProjectileType ProjectileType => this.Type.GetProjectileType();
 
         /// <summary>
         /// Gets the <see cref="TimedGrenadePickup"/> that this class is encapsulating.
@@ -59,7 +55,7 @@ namespace Exiled.API.Features.Pickups
         /// <summary>
         /// Trigger the grenade to make it Explode.
         /// </summary>
-        public void Explode() => Explode(Base.PreviousOwner);
+        public void Explode() => this.Explode(this.Base.PreviousOwner);
 
         /// <summary>
         /// Trigger the grenade to make it Explode.
@@ -67,8 +63,8 @@ namespace Exiled.API.Features.Pickups
         /// <param name="attacker">The <see cref="Footprint"/> of the explosion.</param>
         public void Explode(Footprint attacker)
         {
-            Base._replaceNextFrame = true;
-            Base._attacker = attacker;
+            this.Base._replaceNextFrame = true;
+            this.Base._attacker = attacker;
         }
 
         /// <inheritdoc/>
@@ -77,7 +73,7 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is ThrowableItem throwable && throwable.Projectile is TimeGrenade timeGrenade)
             {
-                FuseTime = timeGrenade._fuseTime;
+                this.FuseTime = timeGrenade._fuseTime;
             }
         }
     }

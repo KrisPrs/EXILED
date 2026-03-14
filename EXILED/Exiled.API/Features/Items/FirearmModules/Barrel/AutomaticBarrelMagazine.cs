@@ -27,10 +27,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         /// </summary>
         /// <param name="automaticModule">Target <see cref="AutomaticActionModule"/>.</param>
         public AutomaticBarrelMagazine(AutomaticActionModule automaticModule)
-            : base(automaticModule)
-        {
-            AutomaticBarrel = automaticModule;
-        }
+            : base(automaticModule) =>
+            this.AutomaticBarrel = automaticModule;
 
         /// <summary>
         /// Gets an original <see cref="IAmmoContainerModule"/>.
@@ -38,17 +36,17 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         public AutomaticActionModule AutomaticBarrel { get; }
 
         /// <inheritdoc/>
-        public override Firearm Firearm => Item.Get<Firearm>(AutomaticBarrel.Firearm);
+        public override Firearm Firearm => Item.Get<Firearm>(this.AutomaticBarrel.Firearm);
 
         /// <inheritdoc/>
         public override int Ammo
         {
-            get => AutomaticBarrel.AmmoStored;
+            get => this.AutomaticBarrel.AmmoStored;
 
             set
             {
-                AutomaticBarrel.AmmoStored = Mathf.Max(value, 0);
-                Resync();
+                this.AutomaticBarrel.AmmoStored = Mathf.Max(value, 0);
+                this.Resync();
             }
         }
 
@@ -58,48 +56,48 @@ namespace Exiled.API.Features.Items.FirearmModules.Barrel
         /// </remarks>
         public override int MaxAmmo
         {
-            get => AutomaticBarrel.ChamberSize;
+            get => this.AutomaticBarrel.ChamberSize;
 
-            set => AutomaticBarrel.ChamberSize = Mathf.Clamp(value, 0, 16);
+            set => this.AutomaticBarrel.ChamberSize = Mathf.Clamp(value, 0, 16);
         }
 
         /// <inheritdoc/>
         public override bool IsCocked
         {
-            get => AutomaticBarrel.Cocked;
+            get => this.AutomaticBarrel.Cocked;
 
             set
             {
-                AutomaticBarrel.Cocked = value;
-                Resync();
+                this.AutomaticBarrel.Cocked = value;
+                this.Resync();
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether barrel magazine has open bolt or not.
         /// </summary>
-        public bool IsOpenBolted => AutomaticBarrel.OpenBolt;
+        public bool IsOpenBolted => this.AutomaticBarrel.OpenBolt;
 
         /// <summary>
         /// Gets or sets a value indicating whether barrel bolt is currently locked.
         /// </summary>
         public bool BoltLocked
         {
-            get => AutomaticBarrel.BoltLocked;
+            get => this.AutomaticBarrel.BoltLocked;
 
             set
             {
-                AutomaticBarrel.BoltLocked = value;
-                Resync();
+                this.AutomaticBarrel.BoltLocked = value;
+                this.Resync();
             }
         }
 
         /// <summary>
         /// Gets the fire rate of the firearm.
         /// </summary>
-        public float FireRate => AutomaticBarrel.BaseFireRate;
+        public float FireRate => this.AutomaticBarrel.BaseFireRate;
 
         /// <inheritdoc/>
-        public override void Resync() => AutomaticBarrel.ServerResync();
+        public override void Resync() => this.AutomaticBarrel.ServerResync();
     }
 }

@@ -33,11 +33,11 @@ namespace Exiled.Events.EventArgs.Scp049
         /// </param>
         public FinishingSenseEventArgs(ReferenceHub scp049, ReferenceHub target, double cooldowntime, bool isAllowed = true)
         {
-            Player = Player.Get(scp049);
-            Scp049 = Player.Role.As<Scp049Role>();
-            Target = Player.Get(target);
-            IsAllowed = isAllowed;
-            CooldownTime = cooldowntime;
+            this.Player = Player.Get(scp049);
+            this.Scp049 = this.Player.Role.As<Scp049Role>();
+            this.Target = Player.Get(target);
+            this.IsAllowed = isAllowed;
+            this.CooldownTime = cooldowntime;
         }
 
         /// <inheritdoc/>

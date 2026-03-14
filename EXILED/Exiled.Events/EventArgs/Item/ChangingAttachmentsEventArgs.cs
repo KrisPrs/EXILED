@@ -33,15 +33,15 @@ namespace Exiled.Events.EventArgs.Item
         /// </param>
         public ChangingAttachmentsEventArgs(AttachmentsChangeRequest request)
         {
-            Firearm = Item.Get<Firearm>(request.WeaponSerial);
-            Player = Firearm.Owner;
-            NewAttachmentIdentifiers = Firearm.FirearmType.GetAttachmentIdentifiers(request.AttachmentsCode).ToList();
+            this.Firearm = Item.Get<Firearm>(request.WeaponSerial);
+            this.Player = this.Firearm.Owner;
+            this.NewAttachmentIdentifiers = this.Firearm.FirearmType.GetAttachmentIdentifiers(request.AttachmentsCode).ToList();
         }
 
         /// <summary>
         /// Gets the old <see cref="AttachmentIdentifier" />.
         /// </summary>
-        public IEnumerable<AttachmentIdentifier> CurrentAttachmentIdentifiers => Firearm.AttachmentIdentifiers;
+        public IEnumerable<AttachmentIdentifier> CurrentAttachmentIdentifiers => this.Firearm.AttachmentIdentifiers;
 
         /// <summary>
         /// Gets or sets the new <see cref="AttachmentIdentifier" />.
@@ -51,12 +51,12 @@ namespace Exiled.Events.EventArgs.Item
         /// <summary>
         /// Gets the <see cref="CurrentAttachmentIdentifiers" /> code.
         /// </summary>
-        public uint CurrentCode => Firearm.Base.GetCurrentAttachmentsCode();
+        public uint CurrentCode => this.Firearm.Base.GetCurrentAttachmentsCode();
 
         /// <summary>
         /// Gets the <see cref="NewAttachmentIdentifiers" /> code.
         /// </summary>
-        public uint NewCode => NewAttachmentIdentifiers.GetAttachmentsCode();
+        public uint NewCode => this.NewAttachmentIdentifiers.GetAttachmentsCode();
 
         /// <summary>
         /// Gets or sets a value indicating whether the attachments can be changed.
@@ -69,7 +69,7 @@ namespace Exiled.Events.EventArgs.Item
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the <see cref="API.Features.Player" /> who's changing attachments.

@@ -26,10 +26,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public InteractingEmergencyButtonEventArgs(EmergencyDoorRelease emergencyDoorRelease, Door door, Player player, bool isAllowed = true)
         {
-            EmergencyReleaseButton = EmergencyReleaseButton.Get(emergencyDoorRelease);
-            Door = door;
-            Player = player;
-            IsAllowed = isAllowed;
+            this.EmergencyReleaseButton = EmergencyReleaseButton.Get(emergencyDoorRelease);
+            this.Door = door;
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

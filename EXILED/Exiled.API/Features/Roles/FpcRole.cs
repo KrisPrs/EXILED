@@ -39,17 +39,14 @@ namespace Exiled.API.Features.Roles
         protected FpcRole(FpcStandardRoleBase baseRole)
             : base(baseRole)
         {
-            FirstPersonController = baseRole;
-            IsUsingStamina = true;
+            this.FirstPersonController = baseRole;
+            this.IsUsingStamina = true;
         }
 
         /// <summary>
         /// Finalizes an instance of the <see cref="FpcRole"/> class.
         /// </summary>
-        ~FpcRole()
-        {
-            HashSetPool<Player>.Pool.Return(IsInvisibleFor);
-        }
+        ~FpcRole() => HashSetPool<Player>.Pool.Return(this.IsInvisibleFor);
 
         /// <summary>
         /// Gets the <see cref="FirstPersonController"/>.
@@ -61,8 +58,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public RelativePosition RelativePosition
         {
-            get => new(Owner.Position);
-            set => Owner.Position = value.Position;
+            get => new(this.Owner.Position);
+            set => this.Owner.Position = value.Position;
         }
 
         /// <summary>
@@ -70,8 +67,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public RelativePosition ClientRelativePosition
         {
-            get => FirstPersonController.FpcModule.Motor.ReceivedPosition;
-            set => FirstPersonController.FpcModule.Motor.ReceivedPosition = value;
+            get => this.FirstPersonController.FpcModule.Motor.ReceivedPosition;
+            set => this.FirstPersonController.FpcModule.Motor.ReceivedPosition = value;
         }
 
         /// <summary>
@@ -79,8 +76,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public CharacterModel Model
         {
-            get => FirstPersonController.FpcModule.CharacterModelInstance;
-            set => FirstPersonController.FpcModule.CharacterModelInstance = value;
+            get => this.FirstPersonController.FpcModule.CharacterModelInstance;
+            set => this.FirstPersonController.FpcModule.CharacterModelInstance = value;
         }
 
         /// <summary>
@@ -88,8 +85,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public Vector3 Gravity
         {
-            get => FirstPersonController.FpcModule.Motor.GravityController.Gravity;
-            set => FirstPersonController.FpcModule.Motor.GravityController.Gravity = value;
+            get => this.FirstPersonController.FpcModule.Motor.GravityController.Gravity;
+            set => this.FirstPersonController.FpcModule.Motor.GravityController.Gravity = value;
         }
 
         /// <summary>
@@ -97,8 +94,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public Vector3 Scale
         {
-            get => FirstPersonController.FpcModule.Motor.ScaleController.Scale;
-            set => FirstPersonController.FpcModule.Motor.ScaleController.Scale = value;
+            get => this.FirstPersonController.FpcModule.Motor.ScaleController.Scale;
+            set => this.FirstPersonController.FpcModule.Motor.ScaleController.Scale = value;
         }
 
         /// <summary>
@@ -106,8 +103,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public bool IsFallDamageEnable
         {
-            get => FirstPersonController.FpcModule.Motor._fallDamageSettings.Enabled;
-            set => FirstPersonController.FpcModule.Motor._fallDamageSettings.Enabled = value;
+            get => this.FirstPersonController.FpcModule.Motor._fallDamageSettings.Enabled;
+            set => this.FirstPersonController.FpcModule.Motor._fallDamageSettings.Enabled = value;
         }
 
         /// <summary>
@@ -115,8 +112,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float FallDamageMultiplier
         {
-            get => FirstPersonController.FpcModule.Motor._fallDamageSettings.Multiplier;
-            set => FirstPersonController.FpcModule.Motor._fallDamageSettings.Multiplier = value;
+            get => this.FirstPersonController.FpcModule.Motor._fallDamageSettings.Multiplier;
+            set => this.FirstPersonController.FpcModule.Motor._fallDamageSettings.Multiplier = value;
         }
 
         /// <summary>
@@ -124,8 +121,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public bool RotationDetected
         {
-            get => FirstPersonController.FpcModule.Motor.RotationDetected;
-            set => FirstPersonController.FpcModule.Motor.RotationDetected = value;
+            get => this.FirstPersonController.FpcModule.Motor.RotationDetected;
+            set => this.FirstPersonController.FpcModule.Motor.RotationDetected = value;
         }
 
         /// <summary>
@@ -133,8 +130,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float WalkingSpeed
         {
-            get => FirstPersonController.FpcModule.WalkSpeed;
-            set => FirstPersonController.FpcModule.WalkSpeed = value;
+            get => this.FirstPersonController.FpcModule.WalkSpeed;
+            set => this.FirstPersonController.FpcModule.WalkSpeed = value;
         }
 
         /// <summary>
@@ -142,8 +139,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float SprintingSpeed
         {
-            get => FirstPersonController.FpcModule.SprintSpeed;
-            set => FirstPersonController.FpcModule.SprintSpeed = value;
+            get => this.FirstPersonController.FpcModule.SprintSpeed;
+            set => this.FirstPersonController.FpcModule.SprintSpeed = value;
         }
 
         /// <summary>
@@ -151,8 +148,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float JumpingSpeed
         {
-            get => FirstPersonController.FpcModule.JumpSpeed;
-            set => FirstPersonController.FpcModule.JumpSpeed = value;
+            get => this.FirstPersonController.FpcModule.JumpSpeed;
+            set => this.FirstPersonController.FpcModule.JumpSpeed = value;
         }
 
         /// <summary>
@@ -160,8 +157,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float CrouchingSpeed
         {
-            get => FirstPersonController.FpcModule.CrouchSpeed;
-            set => FirstPersonController.FpcModule.CrouchSpeed = value;
+            get => this.FirstPersonController.FpcModule.CrouchSpeed;
+            set => this.FirstPersonController.FpcModule.CrouchSpeed = value;
         }
 
         /// <summary>
@@ -169,8 +166,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public Vector3 Velocity
         {
-            get => FirstPersonController.FpcModule.Motor.Velocity;
-            set => FirstPersonController.FpcModule.Motor.Velocity = value;
+            get => this.FirstPersonController.FpcModule.Motor.Velocity;
+            set => this.FirstPersonController.FpcModule.Motor.Velocity = value;
         }
 
         /// <summary>
@@ -178,14 +175,14 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public bool MovementDetected
         {
-            get => FirstPersonController.FpcModule.Motor.MovementDetected;
-            set => FirstPersonController.FpcModule.Motor.MovementDetected = value;
+            get => this.FirstPersonController.FpcModule.Motor.MovementDetected;
+            set => this.FirstPersonController.FpcModule.Motor.MovementDetected = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether the player can send inputs.
         /// </summary>
-        public bool CanSendInputs => FirstPersonController.FpcModule.LockMovement;
+        public bool CanSendInputs => this.FirstPersonController.FpcModule.LockMovement;
 
         /// <summary>
         /// Gets or sets a value indicating whether the player is invisible.
@@ -201,7 +198,7 @@ namespace Exiled.API.Features.Roles
             set
             {
                 if (!value)
-                    Owner.ResetStamina();
+                    this.Owner.ResetStamina();
                 field = value;
             }
         }
@@ -226,44 +223,44 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public PlayerMovementState MoveState
         {
-            get => FirstPersonController.FpcModule.CurrentMovementState;
-            set => FirstPersonController.FpcModule.CurrentMovementState = value;
+            get => this.FirstPersonController.FpcModule.CurrentMovementState;
+            set => this.FirstPersonController.FpcModule.CurrentMovementState = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is crouching.
         /// </summary>
-        public bool IsCrouching => FirstPersonController.FpcModule.StateProcessor.CrouchPercent > 0;
+        public bool IsCrouching => this.FirstPersonController.FpcModule.StateProcessor.CrouchPercent > 0;
 
         /// <summary>
         /// Gets a value indicating whether the player is on the ground.
         /// </summary>
-        public bool IsGrounded => FirstPersonController.FpcModule.IsGrounded;
+        public bool IsGrounded => this.FirstPersonController.FpcModule.IsGrounded;
 
         /// <summary>
         /// Gets the <see cref="Player"/>'s current movement speed.
         /// </summary>
-        public virtual float MovementSpeed => FirstPersonController.FpcModule.VelocityForState(MoveState, IsCrouching);
+        public virtual float MovementSpeed => this.FirstPersonController.FpcModule.VelocityForState(this.MoveState, this.IsCrouching);
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is in darkness.
         /// </summary>
-        public bool IsInDarkness => FirstPersonController.InDarkness;
+        public bool IsInDarkness => this.FirstPersonController.InDarkness;
 
         /// <summary>
         /// Gets the <see cref="Player"/>'s vertical rotation.
         /// </summary>
-        public float VerticalRotation => FirstPersonController.VerticalRotation;
+        public float VerticalRotation => this.FirstPersonController.VerticalRotation;
 
         /// <summary>
         /// Gets the <see cref="Player"/>'s horizontal rotation.
         /// </summary>
-        public float HorizontalRotation => FirstPersonController.HorizontalRotation;
+        public float HorizontalRotation => this.FirstPersonController.HorizontalRotation;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is AFK.
         /// </summary>
-        public bool IsAfk => FirstPersonController.IsAFK;
+        public bool IsAfk => this.FirstPersonController.IsAFK;
 
         /// <summary>
         /// Gets a value indicating whether this role is protected by a hume shield.
@@ -279,8 +276,8 @@ namespace Exiled.API.Features.Roles
         [Obsolete("Use Player::IsNoclipEnabled instead")]
         public bool IsNoclipEnabled
         {
-            get => Owner.ReferenceHub.playerStats.GetModule<AdminFlagsStat>().HasFlag(AdminFlags.Noclip);
-            set => Owner.ReferenceHub.playerStats.GetModule<AdminFlagsStat>().SetFlag(AdminFlags.Noclip, value);
+            get => this.Owner.ReferenceHub.playerStats.GetModule<AdminFlagsStat>().HasFlag(AdminFlags.Noclip);
+            set => this.Owner.ReferenceHub.playerStats.GetModule<AdminFlagsStat>().SetFlag(AdminFlags.Noclip, value);
         }
 
         /// <summary>
@@ -288,24 +285,24 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public BasicRagdoll Ragdoll
         {
-            get => FirstPersonController.Ragdoll;
-            set => FirstPersonController.Ragdoll = value;
+            get => this.FirstPersonController.Ragdoll;
+            set => this.FirstPersonController.Ragdoll = value;
         }
 
         /// <summary>
         /// Gets a voice module for this role.
         /// </summary>
-        public VoiceModuleBase VoiceModule => FirstPersonController.VoiceModule;
+        public VoiceModuleBase VoiceModule => this.FirstPersonController.VoiceModule;
 
         /// <summary>
         /// Gets a <see cref="VisibilityController"/> for this role.
         /// </summary>
-        public VisibilityController VisibilityController => FirstPersonController.VisibilityController;
+        public VisibilityController VisibilityController => this.FirstPersonController.VisibilityController;
 
         /// <summary>
         /// Gets a <see cref="SpectatableModuleBase"/> for this role.
         /// </summary>
-        public SpectatableModuleBase SpectatableModuleBase => FirstPersonController.SpectatorModule;
+        public SpectatableModuleBase SpectatableModuleBase => this.FirstPersonController.SpectatorModule;
 
         /// <summary>
         /// Tries to get the <see cref="Transform"/> of a specified <see cref="HumanBodyBones"/> bone.
@@ -320,7 +317,7 @@ namespace Exiled.API.Features.Roles
         {
             boneTransform = null;
 
-            if (Model is not AnimatedCharacterModel animatedModel)
+            if (this.Model is not AnimatedCharacterModel animatedModel)
                 return false;
 
             Animator animator = animatedModel.Animator;
@@ -337,13 +334,13 @@ namespace Exiled.API.Features.Roles
         /// <param name="multipliers">Resets <see cref="StaminaUsageMultiplier"/> and <see cref="StaminaRegenMultiplier"/>.</param>
         public void ResetStamina(bool multipliers = false)
         {
-            Owner.Stamina = Owner.StaminaStat.MaxValue;
+            this.Owner.Stamina = this.Owner.StaminaStat.MaxValue;
 
             if (!multipliers)
                 return;
 
-            StaminaUsageMultiplier = 1f;
-            StaminaRegenMultiplier = 1f;
+            this.StaminaUsageMultiplier = 1f;
+            this.StaminaRegenMultiplier = 1f;
         }
 
         /// <summary>
@@ -352,8 +349,8 @@ namespace Exiled.API.Features.Roles
         /// <param name="jumpStrength">Optional. The strength of the jump. If not provided, the default jump speed for Role is used.</param>
         public void Jump(float? jumpStrength = null)
         {
-            float strength = jumpStrength ?? FirstPersonController.FpcModule.JumpSpeed;
-            FirstPersonController.FpcModule.Motor.JumpController.ForceJump(strength);
+            float strength = jumpStrength ?? this.FirstPersonController.FpcModule.JumpSpeed;
+            this.FirstPersonController.FpcModule.Motor.JumpController.ForceJump(strength);
         }
 
         /// <inheritdoc/>

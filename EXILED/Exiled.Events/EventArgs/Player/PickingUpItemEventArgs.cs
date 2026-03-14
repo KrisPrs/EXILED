@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public PickingUpItemEventArgs(ReferenceHub referenceHub, ItemPickupBase pickup, bool isAllowed = true)
         {
-            IsAllowed = isAllowed;
-            Player = Player.Get(referenceHub);
-            Pickup = Pickup.Get(pickup);
+            this.IsAllowed = isAllowed;
+            this.Player = Player.Get(referenceHub);
+            this.Pickup = Pickup.Get(pickup);
         }
 
         /// <summary>

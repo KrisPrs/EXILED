@@ -23,16 +23,16 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public UsingRadioPickupBatteryEventArgs(InventorySystem.Items.Radio.RadioPickup pickup, float drain, bool isAllowed = true)
         {
-            RadioPickup = Pickup.Get(pickup).As<RadioPickup>();
-            Drain = drain;
-            IsAllowed = isAllowed;
+            this.RadioPickup = Pickup.Get(pickup).As<RadioPickup>();
+            this.Drain = drain;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
         public bool IsAllowed { get; set; }
 
         /// <inheritdoc/>
-        public Pickup Pickup => RadioPickup;
+        public Pickup Pickup => this.RadioPickup;
 
         /// <inheritdoc cref="Pickup"/>
         public RadioPickup RadioPickup { get; }

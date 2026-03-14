@@ -122,10 +122,7 @@ namespace Exiled.API.Features
         /// <param name="message">The message to be sent.</param>
         /// <param name="level">The message level of importance.</param>
         /// <param name="color">The message color.</param>
-        public static void Send(object message, Discord.LogLevel level, ConsoleColor color = ConsoleColor.Gray)
-        {
-            SendRaw($"[{level.ToString().ToUpper()}] {message}", color);
-        }
+        public static void Send(object message, Discord.LogLevel level, ConsoleColor color = ConsoleColor.Gray) => SendRaw($"[{level.ToString().ToUpper()}] {message}", color);
 
         /// <summary>
         /// Sends a log message to the game console.
@@ -133,10 +130,7 @@ namespace Exiled.API.Features
         /// <param name="message">The message to be sent.</param>
         /// <param name="level">The message level of importance.</param>
         /// <param name="color">The message color.</param>
-        public static void Send(string message, Discord.LogLevel level, ConsoleColor color = ConsoleColor.Gray)
-        {
-            SendRaw($"[{level.ToString().ToUpper()}] {message}", color);
-        }
+        public static void Send(string message, Discord.LogLevel level, ConsoleColor color = ConsoleColor.Gray) => SendRaw($"[{level.ToString().ToUpper()}] {message}", color);
 
         /// <summary>
         /// Sends a raw log message to the game console.

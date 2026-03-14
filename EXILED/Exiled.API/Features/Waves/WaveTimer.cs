@@ -28,7 +28,7 @@ namespace Exiled.API.Features.Waves
         /// Initializes a new instance of the <see cref="WaveTimer"/> class.
         /// </summary>
         /// <param name="wave">The <see cref="Respawning.Waves.WaveTimer"/> that this class should be based off of.</param>
-        public WaveTimer(Respawning.Waves.WaveTimer wave) => Base = wave;
+        public WaveTimer(Respawning.Waves.WaveTimer wave) => this.Base = wave;
 
         /// <summary>
         /// Gets the base <see cref="Respawning.Waves.WaveTimer"/>.
@@ -38,57 +38,57 @@ namespace Exiled.API.Features.Waves
         /// <summary>
         /// Gets the name of the wave timer.
         /// </summary>
-        public string Name => Base._wave.GetType().Name;
+        public string Name => this.Base._wave.GetType().Name;
 
         /// <summary>
         /// Gets a value indicating whether the wave is a mini wave.
         /// </summary>
-        public bool IsMiniWave => Base._wave is IMiniWave;
+        public bool IsMiniWave => this.Base._wave is IMiniWave;
 
         /// <summary>
         /// Gets the amount of time left before the wave spawns.
         /// </summary>
-        public TimeSpan TimeLeft => TimeSpan.FromSeconds(Base.TimeLeft);
+        public TimeSpan TimeLeft => TimeSpan.FromSeconds(this.Base.TimeLeft);
 
         /// <summary>
         /// Gets the amount of time passed since the last wave spawned.
         /// </summary>
-        public TimeSpan TimePassed => TimeSpan.FromSeconds(Base.TimePassed);
+        public TimeSpan TimePassed => TimeSpan.FromSeconds(this.Base.TimePassed);
 
         /// <summary>
         /// Gets the amount of time left before this wave unpause.
         /// </summary>
-        public TimeSpan PauseTimeLeft => TimeSpan.FromSeconds(Base.PauseTimeLeft);
+        public TimeSpan PauseTimeLeft => TimeSpan.FromSeconds(this.Base.PauseTimeLeft);
 
         /// <summary>
         /// Gets the amount of time this wave has been paused for.
         /// </summary>
-        public TimeSpan PausedFor => TimeSpan.FromSeconds(Base._pauseTimer);
+        public TimeSpan PausedFor => TimeSpan.FromSeconds(this.Base._pauseTimer);
 
         /// <summary>
         /// Gets a value indicating whether this wave is paused.
         /// </summary>
-        public bool IsPaused => Base.IsPaused;
+        public bool IsPaused => this.Base.IsPaused;
 
         /// <summary>
         /// Gets a value indicating whether this wave is ready to spawn.
         /// </summary>
-        public bool IsReady => Base.IsReadyToSpawn;
+        public bool IsReady => this.Base.IsReadyToSpawn;
 
         /// <summary>
         /// Gets a value indicating whether this wave is out of respawns.
         /// </summary>
-        public bool IsRespawnable => !Base.IsOutOfRespawns;
+        public bool IsRespawnable => !this.Base.IsOutOfRespawns;
 
         /// <summary>
         /// Gets the default amount of time between a respawn of this wave.
         /// </summary>
-        public float DefaultSpawnInterval => Base.DefaultSpawnInterval;
+        public float DefaultSpawnInterval => this.Base.DefaultSpawnInterval;
 
         /// <summary>
         /// Gets the actual amount of time between a respawn of this wave.
         /// </summary>
-        public float SpawnInterval => Base.SpawnIntervalSeconds;
+        public float SpawnInterval => this.Base.SpawnIntervalSeconds;
 
         /// <summary>
         /// Get the wave timers for the specified faction.
@@ -130,15 +130,12 @@ namespace Exiled.API.Features.Waves
         /// Gets all wave timers.
         /// </summary>
         /// <returns>A list of all wave timers.</returns>
-        public static List<WaveTimer> GetWaveTimers()
-        {
-            return TimedWave.GetTimedWaves().Select(l => l.Timer).ToList();
-        }
+        public static List<WaveTimer> GetWaveTimers() => TimedWave.GetTimedWaves().Select(l => l.Timer).ToList();
 
         /// <summary>
         /// Destroys this wave timer.
         /// </summary>
-        public void Destroy() => Base.Destroy();
+        public void Destroy() => this.Base.Destroy();
 
         /// <summary>
         /// Pauses this wave timer.
@@ -146,12 +143,12 @@ namespace Exiled.API.Features.Waves
         /// <param name="seconds">
         /// The amount of time to pause this wave timer for.
         /// </param>
-        public void Pause(float seconds) => Base.Pause(seconds);
+        public void Pause(float seconds) => this.Base.Pause(seconds);
 
         /// <summary>
         /// Unpauses this wave timer.
         /// </summary>
-        public void Unpause() => Base.Pause(0);
+        public void Unpause() => this.Base.Pause(0);
 
         /// <summary>
         /// Resets this wave timer.
@@ -159,12 +156,12 @@ namespace Exiled.API.Features.Waves
         /// <param name="resetInterval">
         /// A value indicating whether the <see cref="SpawnInterval"/> should be reset.
         /// </param>
-        public void Reset(bool resetInterval = true) => Base.Reset(resetInterval);
+        public void Reset(bool resetInterval = true) => this.Base.Reset(resetInterval);
 
         /// <summary>
         /// Update the timer.
         /// </summary>
-        public void Update() => Base.Update();
+        public void Update() => this.Base.Update();
 
         /// <summary>
         /// Add time to the wave timer.
@@ -172,7 +169,7 @@ namespace Exiled.API.Features.Waves
         /// <param name="seconds">
         /// The amount of time to add in seconds.
         /// </param>
-        public void AddTime(float seconds) => Base.AddTime(seconds);
+        public void AddTime(float seconds) => this.Base.AddTime(seconds);
 
         /// <summary>
         /// Set the amount of time before the wave spawns.
@@ -180,7 +177,7 @@ namespace Exiled.API.Features.Waves
         /// <param name="time">
         /// The amount of time before the wave spawns.
         /// </param>
-        public void SetTime(TimeSpan time) => SetTime((float)time.TotalSeconds);
+        public void SetTime(TimeSpan time) => this.SetTime((float)time.TotalSeconds);
 
         /// <summary>
         /// Set the amount of time before the wave spawns.
@@ -188,6 +185,6 @@ namespace Exiled.API.Features.Waves
         /// <param name="seconds">
         /// The amount of time before the wave spawns, in seconds.
         /// </param>
-        public void SetTime(float seconds) => Base.SetTime(seconds);
+        public void SetTime(float seconds) => this.Base.SetTime(seconds);
     }
 }

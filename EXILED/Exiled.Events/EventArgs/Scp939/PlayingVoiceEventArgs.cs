@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public PlayingVoiceEventArgs(ReferenceHub player, ReferenceHub stolen)
         {
-            Player = Player.Get(player);
-            Scp939 = Player.Role.As<Scp939Role>();
-            Stolen = Player.Get(stolen);
+            this.Player = Player.Get(player);
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.Stolen = Player.Get(stolen);
         }
 
         /// <summary>

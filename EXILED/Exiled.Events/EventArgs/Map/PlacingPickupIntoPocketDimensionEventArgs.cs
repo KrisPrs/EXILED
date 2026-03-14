@@ -28,9 +28,9 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public PlacingPickupIntoPocketDimensionEventArgs(ItemPickupBase pickupBase, PocketItem pocketItem, bool isAllowed)
         {
-            Pickup = Pickup.Get(pickupBase);
-            PocketItem = pocketItem;
-            IsAllowed = isAllowed;
+            this.Pickup = Pickup.Get(pickupBase);
+            this.PocketItem = pocketItem;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
@@ -46,8 +46,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </summary>
         public double DropTime
         {
-            get => PocketItem.TriggerTime;
-            set => PocketItem.TriggerTime = value;
+            get => this.PocketItem.TriggerTime;
+            set => this.PocketItem.TriggerTime = value;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </summary>
         public bool ShouldRemove
         {
-            get => PocketItem.Remove;
-            set => PocketItem.Remove = value;
+            get => this.PocketItem.Remove;
+            set => this.PocketItem.Remove = value;
         }
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </summary>
         public bool ShouldWarn
         {
-            get => !PocketItem.WarningSent;
-            set => PocketItem.WarningSent = !value;
+            get => !this.PocketItem.WarningSent;
+            set => this.PocketItem.WarningSent = !value;
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </summary>
         public Vector3 Position
         {
-            get => PocketItem.DropPosition.Position;
-            set => PocketItem.DropPosition = new(value);
+            get => this.PocketItem.DropPosition.Position;
+            set => this.PocketItem.DropPosition = new(value);
         }
 
         /// <inheritdoc/>

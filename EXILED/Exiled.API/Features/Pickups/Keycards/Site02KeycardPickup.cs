@@ -40,33 +40,33 @@ namespace Exiled.API.Features.Pickups.Keycards
         /// <inheritdoc cref="INameTagKeycard.NameTag"/>
         public string NameTag
         {
-            get => CustomKeycardItem.DataDict[Serial].NameTag;
+            get => CustomKeycardItem.DataDict[this.Serial].NameTag;
             set
             {
-                CustomKeycardItem.DataDict[Serial].NameTag = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].NameTag = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.Label"/>
         public string Label
         {
-            get => CustomKeycardItem.DataDict[Serial].Label;
+            get => CustomKeycardItem.DataDict[this.Serial].Label;
             set
             {
-                CustomKeycardItem.DataDict[Serial].Label = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].Label = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.LabelColor"/>
         public Color LabelColor
         {
-            get => CustomKeycardItem.DataDict[Serial].LabelColor ?? Color.clear;
+            get => CustomKeycardItem.DataDict[this.Serial].LabelColor ?? Color.clear;
             set
             {
-                CustomKeycardItem.DataDict[Serial].LabelColor = value;
-                Resync();
+                CustomKeycardItem.DataDict[this.Serial].LabelColor = value;
+                this.Resync();
             }
         }
 
@@ -74,12 +74,12 @@ namespace Exiled.API.Features.Pickups.Keycards
         /// <remarks>Capped from 0-4 for Site-02 keycards, returns 255 if no wear level is found.</remarks>
         public byte Wear
         {
-            get => CustomKeycardItem.DataDict[Serial].Wear;
+            get => CustomKeycardItem.DataDict[this.Serial].Wear;
             set
             {
-                CustomKeycardItem.DataDict[Serial].Wear = value;
+                CustomKeycardItem.DataDict[this.Serial].Wear = value;
 
-                Resync();
+                this.Resync();
             }
         }
 

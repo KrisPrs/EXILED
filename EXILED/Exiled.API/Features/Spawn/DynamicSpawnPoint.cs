@@ -34,7 +34,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override string Name
         {
-            get => Location.ToString();
+            get => this.Location.ToString();
             set => throw new InvalidOperationException("The name of a dynamic spawn location cannot be changed.");
         }
 
@@ -42,7 +42,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override Vector3 Position
         {
-            get => Location.GetPosition();
+            get => this.Location.GetPosition();
             set => throw new InvalidOperationException("The spawn vector of a dynamic spawn location cannot be changed.");
         }
     }

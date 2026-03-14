@@ -23,7 +23,7 @@ namespace Exiled.API.Features.Core.StateMachine
         /// <summary>
         /// Gets all handled states.
         /// </summary>
-        public IEnumerable<State> States => states;
+        public IEnumerable<State> States => this.states;
 
         /// <summary>
         /// Gets or sets the current state.
@@ -36,10 +36,10 @@ namespace Exiled.API.Features.Core.StateMachine
                 if (field.Id == value.Id)
                     return;
 
-                (PreviousState = field).OnExit(this);
+                (this.PreviousState = field).OnExit(this);
                 (field = value).OnEnter(this);
 
-                OnStateChanged();
+                this.OnStateChanged();
             }
         }
 
@@ -73,8 +73,8 @@ namespace Exiled.API.Features.Core.StateMachine
         /// </summary>
         protected virtual void OnStateChanged()
         {
-            EndStateMulticastDispatcher.InvokeAll(PreviousState);
-            BeginStateMulticastDispatcher.InvokeAll(CurrentState);
+            this.EndStateMulticastDispatcher.InvokeAll(this.PreviousState);
+            this.BeginStateMulticastDispatcher.InvokeAll(this.CurrentState);
         }
     }
 }

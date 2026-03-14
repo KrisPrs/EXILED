@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UsingItemCompletedEventArgs(Player player, UsableItem item)
         {
-            Player = player;
-            Usable = Item.Get(item) is Usable usable ? usable : null;
+            this.Player = player;
+            this.Usable = Item.Get(item) is Usable usable ? usable : null;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Exiled.Events.EventArgs.Player
         public Usable Usable { get; }
 
         /// <inheritdoc/>
-        public Item Item => Usable;
+        public Item Item => this.Usable;
 
         /// <summary>
         /// Gets the player who using the item.

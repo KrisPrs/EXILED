@@ -40,8 +40,8 @@ namespace Exiled.API.Features.Objectives
         /// <param name="objectiveFootprintBase"><inheritdoc cref="Base"/></param>
         internal Objective(FactionObjectiveBase objectiveFootprintBase)
         {
-            Base = objectiveFootprintBase;
-            Objectives.Add(Base, this);
+            this.Base = objectiveFootprintBase;
+            Objectives.Add(this.Base, this);
         }
 
         /// <summary>
@@ -98,32 +98,32 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="faction">Faction to affect.</param>
         /// <param name="seconds">Time to reduce in seconds.</param>
-        public void ReduceTimer(Faction faction, float seconds) => Base.ReduceTimer(faction, seconds);
+        public void ReduceTimer(Faction faction, float seconds) => this.Base.ReduceTimer(faction, seconds);
 
         /// <summary>
         /// Grants influence to faction.
         /// </summary>
         /// <param name="faction">Faction to affect.</param>
         /// <param name="amount">Amount of influence to grant.</param>
-        public void GrantInfluence(Faction faction, float amount) => Base.GrantInfluence(faction, amount);
+        public void GrantInfluence(Faction faction, float amount) => this.Base.GrantInfluence(faction, amount);
 
         /// <summary>
         /// Achieves objective.
         /// </summary>
-        public void Achieve() => Base.ServerSendUpdate();
+        public void Achieve() => this.Base.ServerSendUpdate();
 
         /// <summary>
         /// Checks if faction has this objective.
         /// </summary>
         /// <param name="faction">Faction to check.</param>
         /// <returns><c>true</c> if faction has this objective, <c>false</c> otherwise.</returns>
-        public bool IsValidFaction(Faction faction) => Base.IsValidFaction(faction);
+        public bool IsValidFaction(Faction faction) => this.Base.IsValidFaction(faction);
 
         /// <summary>
         /// Checks if player has this objective.
         /// </summary>
         /// <param name="player">Player to check.</param>
         /// <returns><c>true</c> if player has this objective, <c>false</c> otherwise.</returns>
-        public bool IsValidFaction(Player player) => Base.IsValidFaction(player.ReferenceHub);
+        public bool IsValidFaction(Player player) => this.Base.IsValidFaction(player.ReferenceHub);
     }
 }

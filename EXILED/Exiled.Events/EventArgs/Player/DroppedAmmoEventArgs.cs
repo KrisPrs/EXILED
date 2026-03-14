@@ -39,11 +39,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DroppedAmmoEventArgs(Player player, ItemType itemType, ushort amount, List<InventorySystem.Items.Firearms.Ammo.AmmoPickup> ammoPickups)
         {
-            Player = player;
-            ItemType = itemType;
-            AmmoType = ItemExtensions.GetAmmoType(itemType);
-            Amount = amount;
-            AmmoPickups = Pickup.Get<AmmoPickup>(ammoPickups);
+            this.Player = player;
+            this.ItemType = itemType;
+            this.AmmoType = ItemExtensions.GetAmmoType(itemType);
+            this.Amount = amount;
+            this.AmmoPickups = Pickup.Get<AmmoPickup>(ammoPickups);
         }
 
         /// <summary>

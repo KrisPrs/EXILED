@@ -22,10 +22,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="Scp1576Item"/> class.</param>
         public Scp1576(Scp1576Item itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp1576"/> class.
@@ -43,11 +41,11 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets Scp1576Playback.
         /// </summary>
-        public Scp1576Playback PlaybackTemplate => Base.PlaybackTemplate;
+        public Scp1576Playback PlaybackTemplate => this.Base.PlaybackTemplate;
 
         /// <summary>
         /// Forcefully stops the transmission of SCP-1576.
         /// </summary>
-        public void StopTransmitting() => Base.ServerStopTransmitting();
+        public void StopTransmitting() => this.Base.ServerStopTransmitting();
     }
 }

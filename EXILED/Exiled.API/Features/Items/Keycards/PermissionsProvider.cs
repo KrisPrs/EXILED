@@ -26,13 +26,13 @@ namespace Exiled.API.Features.Items.Keycards
         /// <param name="serial">The serial to imitate.</param>
         public PermissionsProvider(DoorPermissionFlags flags, ItemType type, ushort serial)
         {
-            Flags = flags;
-            Type = type;
-            Serial = serial;
+            this.Flags = flags;
+            this.Type = type;
+            this.Serial = serial;
 
-            PermissionsUsedCallback = (_, success) =>
+            this.PermissionsUsedCallback = (_, success) =>
             {
-                using (new AutosyncRpc(new ItemIdentifier(Type, Serial), out NetworkWriter writer))
+                using (new AutosyncRpc(new ItemIdentifier(this.Type, this.Serial), out NetworkWriter writer))
                 {
                     writer.WriteSubheader(KeycardItem.MsgType.OnKeycardUsed);
                     writer.WriteBool(success);
@@ -65,9 +65,6 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         /// <param name="requester">Not used.</param>
         /// <returns>The <see cref="DoorPermissionFlags"/> of this <see cref="PermissionsProvider"/>.</returns>
-        public DoorPermissionFlags GetPermissions(IDoorPermissionRequester requester)
-        {
-            return Flags;
-        }
+        public DoorPermissionFlags GetPermissions(IDoorPermissionRequester requester) => this.Flags;
     }
 }

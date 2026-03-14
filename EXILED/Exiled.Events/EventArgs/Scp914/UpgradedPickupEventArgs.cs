@@ -35,10 +35,10 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public UpgradedPickupEventArgs(ItemPickupBase item, Vector3 newPos, Scp914KnobSetting knobSetting, ItemPickupBase[] result)
         {
-            Pickup = Pickup.Get(item);
-            OutputPosition = newPos;
-            KnobSetting = knobSetting;
-            Result = result;
+            this.Pickup = Pickup.Get(item);
+            this.OutputPosition = newPos;
+            this.KnobSetting = knobSetting;
+            this.Result = result;
         }
 
         /// <summary>

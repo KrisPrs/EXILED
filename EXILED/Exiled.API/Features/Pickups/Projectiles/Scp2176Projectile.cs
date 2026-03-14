@@ -24,19 +24,15 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseScp2176Projectile"/> class.</param>
         public Scp2176Projectile(BaseScp2176Projectile pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp2176Projectile"/> class.
         /// </summary>
         internal Scp2176Projectile()
-            : base(ItemType.SCP2176)
-        {
-            Base = (BaseScp2176Projectile)((Pickup)this).Base;
-        }
+            : base(ItemType.SCP2176) =>
+            this.Base = (BaseScp2176Projectile)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="ExplosionGrenade"/> that this class is encapsulating.
@@ -46,22 +42,22 @@ namespace Exiled.API.Features.Pickups.Projectiles
         /// <summary>
         /// Gets a value indicating whether SCP-2176 has shattered.
         /// </summary>
-        public bool IsAlreadyTriggered => Base._hasTriggered;
+        public bool IsAlreadyTriggered => this.Base._hasTriggered;
 
         /// <summary>
         /// Gets or sets a value indicating whether SCP-2176's next collision will make the dropped sound effect.
         /// </summary>
         public bool DropSound
         {
-            get => Base.Network_playedDropSound;
-            set => Base.Network_playedDropSound = value;
+            get => this.Base.Network_playedDropSound;
+            set => this.Base.Network_playedDropSound = value;
         }
 
         /// <summary>
         /// Returns the Scp2176Pickup in a human readable format.
         /// </summary>
         /// <returns>A string containing Scp2176Pickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}| ={IsAlreadyDetonated}=";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}| ={this.IsAlreadyDetonated}=";
 
         /// <inheritdoc/>
         internal override void ReadThrowableItemInfo(Throwable throwable)
@@ -69,7 +65,7 @@ namespace Exiled.API.Features.Pickups.Projectiles
             base.ReadThrowableItemInfo(throwable);
             if (throwable is Scp2176 scp2176)
             {
-                DropSound = scp2176.DropSound;
+                this.DropSound = scp2176.DropSound;
             }
         }
     }

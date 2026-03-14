@@ -33,9 +33,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UsedItemEventArgs(ReferenceHub player, UsableItem item, bool causedByHolstering)
         {
-            Player = Player.Get(player);
-            Usable = Item.Get(item) as Usable;
-            CausedByHolstering = causedByHolstering;
+            this.Player = Player.Get(player);
+            this.Usable = Item.Get(item) as Usable;
+            this.CausedByHolstering = causedByHolstering;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Exiled.Events.EventArgs.Player
         public Usable Usable { get; }
 
         /// <inheritdoc/>
-        public Item Item => Usable;
+        public Item Item => this.Usable;
 
         /// <summary>
         /// Gets the player who used the item.

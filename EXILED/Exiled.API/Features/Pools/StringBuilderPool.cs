@@ -47,7 +47,7 @@ namespace Exiled.API.Features.Pools
         {
             string s = obj.ToString();
 
-            Return(obj);
+            this.Return(obj);
 
             return s;
         }

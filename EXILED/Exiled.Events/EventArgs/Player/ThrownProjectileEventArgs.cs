@@ -28,9 +28,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="projectile"><inheritdoc cref="Projectile"/></param>
         public ThrownProjectileEventArgs(ThrownProjectile projectile, Player player, ThrowableItem item)
         {
-            Player = player;
-            Throwable = Item.Get<Throwable>(item);
-            Projectile = Pickup.Get<Projectile>(projectile);
+            this.Player = player;
+            this.Throwable = Item.Get<Throwable>(item);
+            this.Projectile = Pickup.Get<Projectile>(projectile);
         }
 
         /// <summary>
@@ -44,12 +44,12 @@ namespace Exiled.Events.EventArgs.Player
         public Throwable Throwable { get; }
 
         /// <inheritdoc/>
-        public Item Item => Throwable;
+        public Item Item => this.Throwable;
 
         /// <inheritdoc/>
         public Projectile Projectile { get; }
 
         /// <inheritdoc/>
-        public Pickup Pickup => Projectile;
+        public Pickup Pickup => this.Projectile;
     }
 }

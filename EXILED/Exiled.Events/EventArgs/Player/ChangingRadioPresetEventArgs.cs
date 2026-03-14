@@ -43,11 +43,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingRadioPresetEventArgs(Player player, RadioItem item, RadioRangeLevel oldValue, RadioRangeLevel newValue, bool isAllowed = true)
         {
-            Player = player;
-            Radio = Item.Get<Radio>(item);
-            OldValue = (RadioRange)oldValue;
-            NewValue = (RadioRange)newValue;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Radio = Item.Get<Radio>(item);
+            this.OldValue = (RadioRange)oldValue;
+            this.NewValue = (RadioRange)newValue;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Exiled.Events.EventArgs.Player
         public Player Player { get; }
 
         /// <inheritdoc/>
-        public Item Item => Radio;
+        public Item Item => this.Radio;
 
         /// <summary>
         /// Gets the <see cref="API.Features.Items.Radio" /> which is being used.

@@ -29,10 +29,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="JailbirdItem"/> class.</param>
         public Jailbird(JailbirdItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Jailbird"/> class, as well as a new Jailbird item.
@@ -52,8 +50,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MeleeDamage
         {
-            get => Base.MeleeDamage;
-            set => Base.MeleeDamage = value;
+            get => this.Base.MeleeDamage;
+            set => this.Base.MeleeDamage = value;
         }
 
         /// <summary>
@@ -61,8 +59,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ChargeDamage
         {
-            get => Base._chargeDamage;
-            set => Base._chargeDamage = value;
+            get => this.Base._chargeDamage;
+            set => this.Base._chargeDamage = value;
         }
 
         /// <summary>
@@ -70,8 +68,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float FlashDuration
         {
-            get => Base._flashedDuration;
-            set => Base._flashedDuration = value;
+            get => this.Base._flashedDuration;
+            set => this.Base._flashedDuration = value;
         }
 
         /// <summary>
@@ -79,8 +77,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ConcussionDuration
         {
-            get => Base._concussionDuration;
-            set => Base._concussionDuration = value;
+            get => this.Base._concussionDuration;
+            set => this.Base._concussionDuration = value;
         }
 
         /// <summary>
@@ -88,8 +86,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float Radius
         {
-            get => Base._hitregRadius;
-            set => Base._hitregRadius = value;
+            get => this.Base._hitregRadius;
+            set => this.Base._hitregRadius = value;
         }
 
         /// <summary>
@@ -97,11 +95,11 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float TotalDamageDealt
         {
-            get => Base.TotalMeleeDamageDealt;
+            get => this.Base.TotalMeleeDamageDealt;
             set
             {
-                Base.TotalMeleeDamageDealt = value;
-                Base._deterioration.RecheckUsage();
+                this.Base.TotalMeleeDamageDealt = value;
+                this.Base._deterioration.RecheckUsage();
             }
         }
 
@@ -110,11 +108,11 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public int TotalCharges
         {
-            get => Base.TotalChargesPerformed;
+            get => this.Base.TotalChargesPerformed;
             set
             {
-                Base.TotalChargesPerformed = value;
-                Base._deterioration.RecheckUsage();
+                this.Base.TotalChargesPerformed = value;
+                this.Base._deterioration.RecheckUsage();
             }
         }
 
@@ -123,12 +121,12 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public JailbirdWearState WearState
         {
-            get => Base._deterioration.WearState;
+            get => this.Base._deterioration.WearState;
             set
             {
-                TotalDamageDealt = GetDamage(value);
-                TotalCharges = GetCharge(value);
-                Base._deterioration.RecheckUsage();
+                this.TotalDamageDealt = this.GetDamage(value);
+                this.TotalCharges = this.GetCharge(value);
+                this.Base._deterioration.RecheckUsage();
             }
         }
 
@@ -139,9 +137,9 @@ namespace Exiled.API.Features.Items
         /// <returns>The amount of damage associated with the specified wear state.</returns>
         public float GetDamage(JailbirdWearState wearState)
         {
-            foreach (Keyframe keyframe in Base._deterioration._damageToWearState.keys)
+            foreach (Keyframe keyframe in this.Base._deterioration._damageToWearState.keys)
             {
-                if (Base._deterioration.FloatToState(keyframe.value) == wearState)
+                if (this.Base._deterioration.FloatToState(keyframe.value) == wearState)
                     return keyframe.time;
             }
 
@@ -160,8 +158,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public void Break()
         {
-            WearState = JailbirdWearState.Broken;
-            ItemIdentifier identifier = new(Base);
+            this.WearState = JailbirdWearState.Broken;
+            ItemIdentifier identifier = new(this.Base);
             using (new AutosyncRpc(identifier, out NetworkWriter networkWriter))
             {
                 networkWriter.WriteByte(0);
@@ -180,17 +178,17 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Jailbird"/> object. </returns>
         public override Item Clone() => new Jailbird()
         {
-            MeleeDamage = MeleeDamage,
-            ChargeDamage = ChargeDamage,
-            TotalDamageDealt = TotalDamageDealt,
-            TotalCharges = TotalCharges,
+            MeleeDamage = this.MeleeDamage,
+            ChargeDamage = this.ChargeDamage,
+            TotalDamageDealt = this.TotalDamageDealt,
+            TotalCharges = this.TotalCharges,
         };
 
         /// <summary>
         /// Returns the JailBird in a human readable format.
         /// </summary>
         /// <returns>A string containing JailBird-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}*";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}*";
 
         /// <inheritdoc/>
         internal override void ReadPickupInfoBefore(Pickup pickup)
@@ -198,11 +196,11 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is JailbirdPickup jailbirdPickup)
             {
-                MeleeDamage = jailbirdPickup.MeleeDamage;
-                ChargeDamage = jailbirdPickup.ChargeDamage;
-                FlashDuration = jailbirdPickup.FlashDuration;
-                ConcussionDuration = jailbirdPickup.ConcussionDuration;
-                Radius = jailbirdPickup.Radius;
+                this.MeleeDamage = jailbirdPickup.MeleeDamage;
+                this.ChargeDamage = jailbirdPickup.ChargeDamage;
+                this.FlashDuration = jailbirdPickup.FlashDuration;
+                this.ConcussionDuration = jailbirdPickup.ConcussionDuration;
+                this.Radius = jailbirdPickup.Radius;
             }
         }
     }

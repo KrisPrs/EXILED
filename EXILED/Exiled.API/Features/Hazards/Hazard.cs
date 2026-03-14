@@ -34,7 +34,7 @@ namespace Exiled.API.Features.Hazards
         /// <param name="hazard">The <see cref="EnvironmentalHazard"/> instance.</param>
         public Hazard(EnvironmentalHazard hazard)
         {
-            Base = hazard;
+            this.Base = hazard;
 
             EnvironmentalHazardToHazard.Add(hazard, this);
         }
@@ -59,11 +59,11 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public IEnumerable<Player> AffectedPlayers
         {
-            get => Base.AffectedPlayers.Select(Player.Get);
+            get => this.Base.AffectedPlayers.Select(Player.Get);
             set
             {
-                Base.AffectedPlayers.Clear();
-                Base.AffectedPlayers.AddRange(value.Select(x => x.ReferenceHub));
+                this.Base.AffectedPlayers.Clear();
+                this.Base.AffectedPlayers.AddRange(value.Select(x => x.ReferenceHub));
             }
         }
 
@@ -72,8 +72,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public float MaxDistance
         {
-            get => Base.MaxDistance;
-            set => Base.MaxDistance = value;
+            get => this.Base.MaxDistance;
+            set => this.Base.MaxDistance = value;
         }
 
         /// <summary>
@@ -81,36 +81,36 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         public float MaxHeightDistance
         {
-            get => Base.MaxHeightDistance;
-            set => Base.MaxHeightDistance = value;
+            get => this.Base.MaxHeightDistance;
+            set => this.Base.MaxHeightDistance = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether hazard is active.
         /// </summary>
-        public bool IsActive => Base.IsActive;
+        public bool IsActive => this.Base.IsActive;
 
         /// <summary>
         /// Gets or sets offset for position.
         /// </summary>
         public Vector3 PositionOffset
         {
-            get => Base.SourceOffset;
-            set => Base.SourceOffset = value;
+            get => this.Base.SourceOffset;
+            set => this.Base.SourceOffset = value;
         }
 
         /// <summary>
         /// Gets the room where this hazard is located.
         /// </summary>
-        public Room Room => Room.FindParentRoom(Base.gameObject);
+        public Room Room => Room.FindParentRoom(this.Base.gameObject);
 
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
         public Vector3 Position
         {
-            get => Base.SourcePosition;
-            set => Base.SourcePosition = value;
+            get => this.Base.SourcePosition;
+            set => this.Base.SourcePosition = value;
         }
 
         /// <summary>
@@ -171,6 +171,6 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         /// <param name="player">Player to check.</param>
         /// <returns><see langword="true"/> if player is in hazard zone. Otherwise, false.</returns>
-        public bool IsInArea(Player player) => Base.IsInArea(Position, player.Position);
+        public bool IsInArea(Player player) => this.Base.IsInArea(this.Position, player.Position);
     }
 }

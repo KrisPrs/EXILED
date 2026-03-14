@@ -21,9 +21,9 @@ namespace Exiled.Events.EventArgs.Scp1344
         /// <param name="item"><inheritdoc cref="Item"/></param>
         public DeactivatedEventArgs(Item item)
         {
-            Item = item;
-            Scp1344 = item as Scp1344;
-            Player = item.Owner;
+            this.Item = item;
+            this.Scp1344 = item as Scp1344;
+            this.Player = item.Owner;
         }
 
         /// <summary>

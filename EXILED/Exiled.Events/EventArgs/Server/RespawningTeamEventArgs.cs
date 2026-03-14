@@ -37,8 +37,8 @@ namespace Exiled.Events.EventArgs.Server
         /// </param>
         public RespawningTeamEventArgs(List<Player> players, int maxRespawn, SpawnableWaveBase wave)
         {
-            Players = players;
-            if (Players.Remove(null))
+            this.Players = players;
+            if (this.Players.Remove(null))
             {
                 string debug = string.Empty;
                 foreach (ReferenceHub hub in ReferenceHub.AllHubs)
@@ -50,10 +50,10 @@ namespace Exiled.Events.EventArgs.Server
                 Log.Error("(RespawningTeamEventArgs) preventing a null player to spawn:\n" + debug);
             }
 
-            MaximumRespawnAmount = maxRespawn;
-            SpawnQueue = WaveSpawner.SpawnQueue;
-            Wave = new TimedWave((TimeBasedWave)wave);
-            IsAllowed = true;
+            this.MaximumRespawnAmount = maxRespawn;
+            this.SpawnQueue = WaveSpawner.SpawnQueue;
+            this.Wave = new TimedWave((TimeBasedWave)wave);
+            this.IsAllowed = true;
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace Exiled.Events.EventArgs.Server
             {
                 if (value < field)
                 {
-                    if (Players.Count > value)
-                        Players.RemoveRange(value, Players.Count - value);
+                    if (this.Players.Count > value)
+                        this.Players.RemoveRange(value, this.Players.Count - value);
                 }
 
                 field = value;
@@ -87,7 +87,7 @@ namespace Exiled.Events.EventArgs.Server
         /// <summary>
         /// Gets a value indicating what the next respawnable team is.
         /// </summary>
-        public Faction NextKnownTeam => Wave.Faction;
+        public Faction NextKnownTeam => this.Wave.Faction;
 
         /// <summary>
         /// Gets or sets a value indicating whether the spawn can occur.

@@ -32,49 +32,49 @@ namespace Exiled.API.Features.Roles
         internal Scp3114Role(Scp3114GameRole baseRole)
             : base(baseRole)
         {
-            Base = baseRole;
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114Slap scp3114Slap))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114Slap scp3114Slap))
                 Log.Error("Scp3114Slap not found in Scp3114Role::ctor");
 
-            Slap = scp3114Slap;
+            this.Slap = scp3114Slap;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114Dance scp3114Dance))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114Dance scp3114Dance))
                 Log.Error("Scp3114Dance not found in Scp3114Role::ctor");
 
-            Dance = scp3114Dance;
+            this.Dance = scp3114Dance;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114Reveal scp3114Reveal))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114Reveal scp3114Reveal))
                 Log.Error("Scp3114Reveal not found in Scp3114Role::ctor");
 
-            Reveal = scp3114Reveal;
+            this.Reveal = scp3114Reveal;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114Identity scp3114Identity))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114Identity scp3114Identity))
                 Log.Error("Scp3114Identity not found in Scp3114Role::ctor");
 
-            Identity = scp3114Identity;
+            this.Identity = scp3114Identity;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114History scp3114History))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114History scp3114History))
                 Log.Error("Scp3114History not found in Scp3114Role::ctor");
 
-            History = scp3114History;
+            this.History = scp3114History;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114FakeModelManager scp3114FakeModelManager))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114FakeModelManager scp3114FakeModelManager))
                 Log.Error("Scp3114FakeModelManager not found in Scp3114Role::ctor");
 
-            FakeModelManager = scp3114FakeModelManager;
+            this.FakeModelManager = scp3114FakeModelManager;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114Disguise scp3114Disguise))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114Disguise scp3114Disguise))
                 Log.Error("Scp3114Disguise not found in Scp3114Role::ctor");
 
-            Disguise = scp3114Disguise;
+            this.Disguise = scp3114Disguise;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp3114VoiceLines scp3114VoiceLines))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp3114VoiceLines scp3114VoiceLines))
                 Log.Error("Scp3114VoiceLines not found in Scp3114Role::ctor");
 
-            VoiceLines = scp3114VoiceLines;
+            this.VoiceLines = scp3114VoiceLines;
         }
 
         /// <inheritdoc/>
@@ -144,26 +144,26 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Gets the damage amount of SCP-3114's slap ability.
         /// </summary>
-        public float SlapDamage => Slap.DamageAmount;
+        public float SlapDamage => this.Slap.DamageAmount;
 
         /// <summary>
         /// Gets the current target of SCP-3114's strangle ability. Can be <see langword="null"/>.
         /// </summary>
-        public Player StrangleTarget => Player.Get(Slap._strangle.SyncTarget?.Target);
+        public Player StrangleTarget => Player.Get(this.Slap._strangle.SyncTarget?.Target);
 
         /// <summary>
         /// Gets or sets the SCP-3114's Stolen Role.
         /// </summary>
         public RoleTypeId StolenRole
         {
-            get => Identity.CurIdentity.StolenRole;
+            get => this.Identity.CurIdentity.StolenRole;
             set
             {
-                if (IdentityRagdoll is null)
+                if (this.IdentityRagdoll is null)
                     return;
 
-                IdentityRagdoll.Role = value;
-                UpdateIdentity();
+                this.IdentityRagdoll.Role = value;
+                this.UpdateIdentity();
             }
         }
 
@@ -172,11 +172,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public Ragdoll IdentityRagdoll
         {
-            get => Features.Ragdoll.Get(Identity.CurIdentity.Ragdoll);
+            get => Features.Ragdoll.Get(this.Identity.CurIdentity.Ragdoll);
             set
             {
-                Identity.CurIdentity.Ragdoll = value?.Base;
-                UpdateIdentity();
+                this.Identity.CurIdentity.Ragdoll = value?.Base;
+                this.UpdateIdentity();
             }
         }
 
@@ -185,11 +185,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public byte UnitId
         {
-            get => Identity.CurIdentity.UnitNameId;
+            get => this.Identity.CurIdentity.UnitNameId;
             set
             {
-                Identity.CurIdentity.UnitNameId = value;
-                UpdateIdentity();
+                this.Identity.CurIdentity.UnitNameId = value;
+                this.UpdateIdentity();
             }
         }
 
@@ -198,11 +198,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public DisguiseStatus DisguiseStatus
         {
-            get => Identity.CurIdentity.Status;
+            get => this.Identity.CurIdentity.Status;
             set
             {
-                Identity.CurIdentity.Status = value;
-                UpdateIdentity();
+                this.Identity.CurIdentity.Status = value;
+                this.UpdateIdentity();
             }
         }
 
@@ -211,11 +211,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float DisguiseDuration
         {
-            get => Identity._disguiseDurationSeconds;
+            get => this.Identity._disguiseDurationSeconds;
             set
             {
-                Identity._disguiseDurationSeconds = value;
-                UpdateIdentity();
+                this.Identity._disguiseDurationSeconds = value;
+                this.UpdateIdentity();
             }
         }
 
@@ -224,8 +224,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float WarningTime
         {
-            get => Identity._warningTimeSeconds;
-            set => Identity._warningTimeSeconds = value;
+            get => this.Identity._warningTimeSeconds;
+            set => this.Identity._warningTimeSeconds = value;
         }
 
         /// <summary>
@@ -241,15 +241,15 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Updates the identity of SCP-3114.
         /// </summary>
-        public void UpdateIdentity() => Identity.ServerResendIdentity();
+        public void UpdateIdentity() => this.Identity.ServerResendIdentity();
 
         /// <summary>
         /// Reset Scp3114 FakeIdentity.
         /// </summary>
         public void ResetIdentity()
         {
-            Identity.CurIdentity.Reset();
-            UpdateIdentity();
+            this.Identity.CurIdentity.Reset();
+            this.UpdateIdentity();
         }
 
         /// <summary>
@@ -257,14 +257,14 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="voiceLine">The type of voice line to play.</param>
         public void PlaySound(Scp3114VoiceLines.VoiceLinesName voiceLine = Scp3114VoiceLines.VoiceLinesName.RandomIdle)
-            => VoiceLines.ServerPlayConditionally(voiceLine);
+            => this.VoiceLines.ServerPlayConditionally(voiceLine);
 
         /// <summary>
         /// Gets the Spawn Chance of SCP-3114.
         /// </summary>
         /// <param name="alreadySpawned">The List of Roles already spawned.</param>
         /// <returns>The Spawn Chance.</returns>
-        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => Base is ISpawnableScp spawnableScp ? spawnableScp.GetSpawnChance(alreadySpawned) : 0;
+        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => this.Base is ISpawnableScp spawnableScp ? spawnableScp.GetSpawnChance(alreadySpawned) : 0;
 
         /// <summary>
         /// SCP-3114 starts dancing.
@@ -272,10 +272,10 @@ namespace Exiled.API.Features.Roles
         /// <param name="danceType">The dance you want to do.</param>
         public void StartDancing(DanceType danceType)
         {
-            Dance.IsDancing = true;
-            DanceType = danceType;
-            Dance._serverStartPos = new RelativePositioning.RelativePosition(Dance.CastRole.FpcModule.Position);
-            Dance.ServerSendRpc(true);
+            this.Dance.IsDancing = true;
+            this.DanceType = danceType;
+            this.Dance._serverStartPos = new RelativePositioning.RelativePosition(this.Dance.CastRole.FpcModule.Position);
+            this.Dance.ServerSendRpc(true);
         }
 
         /// <summary>
@@ -283,8 +283,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public void StopDancing()
         {
-            Dance.IsDancing = false;
-            Dance.ServerSendRpc(true);
+            this.Dance.IsDancing = false;
+            this.Dance.ServerSendRpc(true);
         }
     }
 }

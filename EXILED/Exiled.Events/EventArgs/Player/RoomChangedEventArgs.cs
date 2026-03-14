@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="newRoom">The room identifier after the change.</param>
         public RoomChangedEventArgs(ReferenceHub player, RoomIdentifier oldRoom, RoomIdentifier newRoom)
         {
-            Player = Player.Get(player);
-            OldRoom = Room.Get(oldRoom);
-            NewRoom = Room.Get(newRoom);
+            this.Player = Player.Get(player);
+            this.OldRoom = Room.Get(oldRoom);
+            this.NewRoom = Room.Get(newRoom);
         }
 
         /// <inheritdoc/>

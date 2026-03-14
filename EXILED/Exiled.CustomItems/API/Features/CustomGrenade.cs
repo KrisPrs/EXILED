@@ -69,7 +69,7 @@ namespace Exiled.CustomItems.API.Features
 
             if (item is Throwable throwable)
             {
-                throwable.FuseTime = FuseTime;
+                throwable.FuseTime = this.FuseTime;
             }
 
             return item;
@@ -83,7 +83,7 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="Pickup"/> spawned.</returns>
         public virtual Projectile Throw(Vector3 position, Player? player = null)
         {
-            Projectile projectile = ((Throwable)CreateItem()).CreateProjectile(position);
+            Projectile projectile = ((Throwable)this.CreateItem()).CreateProjectile(position);
             projectile.PreviousOwner = player;
             projectile.Activate();
             return projectile;
@@ -94,15 +94,15 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         /// <param name="grenade">The <see cref="Projectile">grenade</see> to check.</param>
         /// <returns>True if it is a custom grenade.</returns>
-        public virtual bool Check(Projectile grenade) => grenade != null && TrackedSerials.Contains(grenade.Serial);
+        public virtual bool Check(Projectile grenade) => grenade != null && this.TrackedSerials.Contains(grenade.Serial);
 
         /// <inheritdoc />
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ThrowingRequest += OnInternalThrowingRequest;
-            Exiled.Events.Handlers.Player.ThrownProjectile += OnInternalThrownProjectile;
-            Map.ExplodingGrenade += OnInternalExplodingGrenade;
-            Map.ChangedIntoGrenade += OnInternalChangedIntoGrenade;
+            Exiled.Events.Handlers.Player.ThrowingRequest += this.OnInternalThrowingRequest;
+            Exiled.Events.Handlers.Player.ThrownProjectile += this.OnInternalThrownProjectile;
+            Map.ExplodingGrenade += this.OnInternalExplodingGrenade;
+            Map.ChangedIntoGrenade += this.OnInternalChangedIntoGrenade;
 
             base.SubscribeEvents();
         }
@@ -110,10 +110,10 @@ namespace Exiled.CustomItems.API.Features
         /// <inheritdoc />
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ThrowingRequest -= OnInternalThrowingRequest;
-            Exiled.Events.Handlers.Player.ThrownProjectile -= OnInternalThrownProjectile;
-            Map.ExplodingGrenade -= OnInternalExplodingGrenade;
-            Map.ChangedIntoGrenade -= OnInternalChangedIntoGrenade;
+            Exiled.Events.Handlers.Player.ThrowingRequest -= this.OnInternalThrowingRequest;
+            Exiled.Events.Handlers.Player.ThrownProjectile -= this.OnInternalThrownProjectile;
+            Map.ExplodingGrenade -= this.OnInternalExplodingGrenade;
+            Map.ChangedIntoGrenade -= this.OnInternalChangedIntoGrenade;
 
             base.UnsubscribeEvents();
         }
@@ -152,30 +152,30 @@ namespace Exiled.CustomItems.API.Features
 
         private void OnInternalThrowingRequest(ThrowingRequestEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
+            if (!this.Check(ev.Player.CurrentItem))
                 return;
 
-            Log.Debug($"{ev.Player.Nickname} is requesting throw of {Name}!");
+            Log.Debug($"{ev.Player.Nickname} is requesting throw of {this.Name}!");
 
-            OnThrowingRequest(ev);
+            this.OnThrowingRequest(ev);
         }
 
         private void OnInternalThrownProjectile(ThrownProjectileEventArgs ev)
         {
-            if (!Check(ev.Throwable))
+            if (!this.Check(ev.Throwable))
                 return;
 
-            OnThrownProjectile(ev);
+            this.OnThrownProjectile(ev);
             if (ev.Player == null)
             {
                 Log.Error($"CustomGrenade::OnInternalThrownProjectile player is null {ev.Projectile}");
             }
             else
             {
-                Log.Debug($"{ev.Player.Nickname} has thrown a {Name} ({FuseTime}) {ev.Player.Items.ToString(true)}!");
+                Log.Debug($"{ev.Player.Nickname} has thrown a {this.Name} ({this.FuseTime}) {ev.Player.Items.ToString(true)}!");
             }
 
-            if (ExplodeOnCollision)
+            if (this.ExplodeOnCollision)
             {
                 ev.Projectile.GameObject.AttachActionOnCollision(
                     () =>
@@ -186,28 +186,28 @@ namespace Exiled.CustomItems.API.Features
                         }
                     },
                     ev.Projectile.PreviousOwner ?? Server.Host,
-                    ExplodeOnCollisionFuseTime);
+                    this.ExplodeOnCollisionFuseTime);
             }
         }
 
         private void OnInternalExplodingGrenade(ExplodingGrenadeEventArgs ev)
         {
-            if (Check(ev.Projectile))
+            if (this.Check(ev.Projectile))
             {
-                OnExploding(ev);
-                Log.Debug($"A {Name} is exploding! IsAllowed: {ev.IsAllowed}");
+                this.OnExploding(ev);
+                Log.Debug($"A {this.Name} is exploding! IsAllowed: {ev.IsAllowed}");
             }
         }
 
         private void OnInternalChangedIntoGrenade(ChangedIntoGrenadeEventArgs ev)
         {
-            if (!Check(ev.Pickup))
+            if (!this.Check(ev.Pickup))
                 return;
 
-            OnChangedIntoGrenade(ev);
-            Log.Debug($"A {Name} ChangedIntoGrenade");
+            this.OnChangedIntoGrenade(ev);
+            Log.Debug($"A {this.Name} ChangedIntoGrenade");
 
-            if (ExplodeOnCollision)
+            if (this.ExplodeOnCollision)
             {
                 ev.Projectile.GameObject.AttachActionOnCollision(
                     () =>
@@ -218,7 +218,7 @@ namespace Exiled.CustomItems.API.Features
                         }
                     },
                     ev.Projectile.PreviousOwner ?? Server.Host,
-                    ExplodeOnCollisionFuseTime);
+                    this.ExplodeOnCollisionFuseTime);
             }
         }
     }

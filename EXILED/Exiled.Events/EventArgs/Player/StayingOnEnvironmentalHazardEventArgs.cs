@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="environmentalHazard"><inheritdoc cref="EnvironmentalHazard"/></param>
         public StayingOnEnvironmentalHazardEventArgs(API.Features.Player player, EnvironmentalHazard environmentalHazard)
         {
-            Player = player;
-            Hazard = Hazard.Get(environmentalHazard);
+            this.Player = player;
+            this.Hazard = Hazard.Get(environmentalHazard);
         }
 
         /// <summary>

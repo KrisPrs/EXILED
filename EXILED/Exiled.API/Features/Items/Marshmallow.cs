@@ -23,10 +23,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="MarshmallowItem"/> class.</param>
         public Marshmallow(MarshmallowItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Marshmallow"/> class.
@@ -47,20 +45,20 @@ namespace Exiled.API.Features.Items
         /// Gets a value indicating whether this marshmallow man is evil.
         /// </summary>
         /// <remarks>See <see cref="MakeEvil"/> in regards to making a marshmallow evil.</remarks>
-        public bool Evil => Base.EvilMode;
+        public bool Evil => this.Base.EvilMode;
 
         /// <summary>
         /// Gets or sets the <see cref="AhpStat.AhpProcess"/> of the marshmallow man that would be used if he was evil.
         /// </summary>
         public AhpStat.AhpProcess EvilAhpProcess
         {
-            get => Base.EvilAHPProcess;
+            get => this.Base.EvilAHPProcess;
             set
             {
-                if (Evil && value is null)
+                if (this.Evil && value is null)
                     return;
 
-                Base.EvilAHPProcess = value;
+                this.Base.EvilAHPProcess = value;
             }
         }
 
@@ -72,17 +70,17 @@ namespace Exiled.API.Features.Items
         public void Cackle(double cooldown = -1, float duration = 5)
         {
             if (cooldown >= 0)
-                Base._cackleCooldown.Trigger(cooldown);
+                this.Base._cackleCooldown.Trigger(cooldown);
 
-            Base.ServerSendPublicRpc(writer =>
+            this.Base.ServerSendPublicRpc(writer =>
             {
                 writer.WriteByte(4);
-                Base._cackleCooldown.WriteCooldown(writer);
+                this.Base._cackleCooldown.WriteCooldown(writer);
             });
 
             foreach (Player player in Player.List)
             {
-                if (Vector3.Distance(player.Position, Owner.Position) <= 5F && player.CurrentItem is not Marshmallow { Evil: true })
+                if (Vector3.Distance(player.Position, this.Owner.Position) <= 5F && player.CurrentItem is not Marshmallow { Evil: true })
                     player.EnableEffect<TraumatizedByEvil>(duration);
             }
         }
@@ -93,10 +91,10 @@ namespace Exiled.API.Features.Items
         /// <param name="evilProcess">The <see cref="AhpStat.AhpProcess"/> of the new evil player.</param>
         public void MakeEvil(AhpStat.AhpProcess evilProcess = null)
         {
-            if (Evil)
+            if (this.Evil)
                 return;
 
-            Base.ReleaseEvil(evilProcess ?? EvilAhpProcess ?? Owner.GetModule<AhpStat>().ServerAddProcess(450F, 450F, 0F, 1F, 0F, true));
+            this.Base.ReleaseEvil(evilProcess ?? this.EvilAhpProcess ?? this.Owner.GetModule<AhpStat>().ServerAddProcess(450F, 450F, 0F, 1F, 0F, true));
         }
     }
 }

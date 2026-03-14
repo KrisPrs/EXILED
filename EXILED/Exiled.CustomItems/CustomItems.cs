@@ -31,13 +31,13 @@ namespace Exiled.CustomItems
         public override void OnEnabled()
         {
             Instance = this;
-            roundHandler = new RoundHandler();
+            this.roundHandler = new RoundHandler();
 
-            Exiled.Events.Handlers.Server.RoundStarted += roundHandler.OnRoundStarted;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += roundHandler.OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted += this.roundHandler.OnRoundStarted;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += this.roundHandler.OnWaitingForPlayers;
 
-            harmony = new Harmony($"com.{nameof(CustomItems)}.ExiledTeam-{DateTime.Now.Ticks}");
-            GlobalPatchProcessor.PatchAll(harmony, out int failedPatch);
+            this.harmony = new Harmony($"com.{nameof(CustomItems)}.ExiledTeam-{DateTime.Now.Ticks}");
+            GlobalPatchProcessor.PatchAll(this.harmony, out int failedPatch);
             if (failedPatch != 0)
                 Log.Error($"Patching failed! There are {failedPatch} broken patches.");
 
@@ -47,10 +47,10 @@ namespace Exiled.CustomItems
         /// <inheritdoc />
         public override void OnDisabled()
         {
-            Exiled.Events.Handlers.Server.RoundStarted -= roundHandler.OnRoundStarted;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= roundHandler.OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted -= this.roundHandler.OnRoundStarted;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= this.roundHandler.OnWaitingForPlayers;
 
-            harmony?.UnpatchAll();
+            this.harmony?.UnpatchAll();
 
             base.OnDisabled();
         }

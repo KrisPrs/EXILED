@@ -75,10 +75,8 @@ namespace Exiled.CustomRoles.API
         /// <typeparam name="T">The specified <see cref="CustomAbility"/> type.</typeparam>
         /// <returns>A boolean indicating whether or not a custom ability was found.</returns>
         public static bool TryGetCustomAbility<T>(this CustomRole customRole, out T customAbility)
-            where T : CustomAbility
-        {
-            return (customAbility = GetCustomAbility<T>(customRole) !) is not null;
-        }
+            where T : CustomAbility =>
+            (customAbility = GetCustomAbility<T>(customRole) !) is not null;
 
         /// <summary>
         /// Gets a value indicating whether or not custom abukuty has a specific <see cref="CustomAbility"/> by type.
@@ -87,10 +85,8 @@ namespace Exiled.CustomRoles.API
         /// <typeparam name="T">The specified <see cref="CustomAbility"/> type.</typeparam>
         /// <returns>A boolean indicating whether or not custom role has specific <see cref="CustomAbility"/>.</returns>
         public static bool HasCustomAbility<T>(this CustomRole customRole)
-            where T : CustomAbility
-        {
-            return customRole.GetCustomAbility<T>() is not null;
-        }
+            where T : CustomAbility =>
+            customRole.GetCustomAbility<T>() is not null;
 
         /// <summary>
         /// Checks whether the player has any custom role assigned.
@@ -129,20 +125,14 @@ namespace Exiled.CustomRoles.API
         /// <param name="player">The <see cref="Player"/> to check for role.</param>
         /// <param name="customRole">A target <see cref="CustomRole"/>.</param>
         /// <returns>A boolean indicating whether or not a custom role was found.</returns>
-        public static bool TryGetCustomRole(this Player player, out CustomRole customRole)
-        {
-            return (customRole = GetCustomRole(player) !) is not null;
-        }
+        public static bool TryGetCustomRole(this Player player, out CustomRole customRole) => (customRole = GetCustomRole(player) !) is not null;
 
         /// <summary>
         /// Gets a value indicating whether or not player has any <see cref="CustomRole"/>.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to check for role.</param>
         /// <returns>A boolean indicating whether or not player has <see cref="CustomRole"/>.</returns>
-        public static bool HasCustomRole(this Player player)
-        {
-            return player.GetCustomRole() is not null;
-        }
+        public static bool HasCustomRole(this Player player) => player.GetCustomRole() is not null;
 
         /// <summary>
         /// Gets a specific <see cref="CustomRole"/> by type of the player.
@@ -167,10 +157,8 @@ namespace Exiled.CustomRoles.API
         /// <typeparam name="T">The specified <see cref="CustomRole"/> type.</typeparam>
         /// <returns>A boolean indicating whether or not a custom role was found.</returns>
         public static bool TryGetCustomRole<T>(this Player player, out T customRole)
-            where T : CustomRole
-        {
-            return (customRole = GetCustomRole<T>(player) !) is not null;
-        }
+            where T : CustomRole =>
+            (customRole = GetCustomRole<T>(player) !) is not null;
 
         /// <summary>
         /// Gets a value indicating whether or not player has a specific <see cref="CustomRole"/> by type.
@@ -179,10 +167,8 @@ namespace Exiled.CustomRoles.API
         /// <typeparam name="T">The specified <see cref="CustomRole"/> type.</typeparam>
         /// <returns>A boolean indicating whether or not player has specific <see cref="CustomRole"/>.</returns>
         public static bool HasCustomRole<T>(this Player player)
-            where T : CustomRole
-        {
-            return player.GetCustomRole<T>() is not null;
-        }
+            where T : CustomRole =>
+            player.GetCustomRole<T>() is not null;
 
         /// <summary>
         ///     Registers an <see cref="IEnumerable{T}" /> of <see cref="CustomRole" />s.

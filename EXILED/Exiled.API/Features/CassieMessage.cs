@@ -36,11 +36,11 @@ namespace Exiled.API.Features
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
         public CassieMessage(string message, string subtitles, bool isHeld = false, bool isNoisy = false, bool isSubtitles = true)
         {
-            Message = message;
-            Subtitles = subtitles;
-            IsHeld = isHeld;
-            IsNoisy = isNoisy;
-            IsSubtitles = isSubtitles;
+            this.Message = message;
+            this.Subtitles = subtitles;
+            this.IsHeld = isHeld;
+            this.IsNoisy = isNoisy;
+            this.IsSubtitles = isSubtitles;
         }
 
         /// <summary>

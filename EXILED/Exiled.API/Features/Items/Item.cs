@@ -53,26 +53,26 @@ namespace Exiled.API.Features.Items
         /// <param name="itemBase">The <see cref="ItemBase"/> to encapsulate.</param>
         public Item(ItemBase itemBase)
         {
-            Base = itemBase;
+            this.Base = itemBase;
 
-            if (Base is ModularAutosyncItem modularItem && modularItem.InstantiationStatus is AutosyncInstantiationStatus.Template or AutosyncInstantiationStatus.SimulatedInstance)
+            if (this.Base is ModularAutosyncItem modularItem && modularItem.InstantiationStatus is AutosyncInstantiationStatus.Template or AutosyncInstantiationStatus.SimulatedInstance)
                 return;
 
             BaseToItem.Add(itemBase, this);
 
-            if (Base.ItemSerial is 0 && itemBase.Owner != null)
+            if (this.Base.ItemSerial is 0 && itemBase.Owner != null)
             {
                 ushort serial = ItemSerialGenerator.GenerateNext();
-                Serial = serial;
+                this.Serial = serial;
                 itemBase.OnAdded(null);
-                if (Base is ModularAutosyncItem syncItem)
+                if (this.Base is ModularAutosyncItem syncItem)
                     syncItem.InstantiationStatus = AutosyncInstantiationStatus.SimulatedInstance;
 #if DEBUG
-                Log.Debug($"{nameof(Item)}.ctor: Generating new serial number. Serial should now be: {serial}. // {Serial}");
+                Log.Debug($"{nameof(Item)}.ctor: Generating new serial number. Serial should now be: {serial}. // {this.Serial}");
 #endif
             }
 #if DEBUG
-            Log.Debug($"{nameof(Item)}.ctor: New item created with Serial: {Serial}");
+            Log.Debug($"{nameof(Item)}.ctor: New item created with Serial: {this.Serial}");
 #endif
         }
 
@@ -95,14 +95,14 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public ushort Serial
         {
-            get => Base.ItemSerial;
-            set => Base.ItemSerial = value;
+            get => this.Base.ItemSerial;
+            set => this.Base.ItemSerial = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether if the item are in an inventory.
         /// </summary>
-        public bool IsInInventory => Owner != Server.Host && Owner.HasItem(this);
+        public bool IsInInventory => this.Owner != Server.Host && this.Owner.HasItem(this);
 
         /// <summary>
         /// Gets or sets the scale for the item.
@@ -117,22 +117,22 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets the <see cref="ItemType"/> of the item.
         /// </summary>
-        public ItemType Type => Base.ItemTypeId;
+        public ItemType Type => this.Base.ItemTypeId;
 
         /// <summary>
         /// Gets the <see cref="ItemCategory"/> of the item.
         /// </summary>
-        public ItemCategory Category => Base.Category;
+        public ItemCategory Category => this.Base.Category;
 
         /// <summary>
         /// Gets the <see cref="ItemTierFlags"/> of the item.
         /// </summary>
-        public ItemTierFlags TierFlags => Base.TierFlags;
+        public ItemTierFlags TierFlags => this.Base.TierFlags;
 
         /// <summary>
         /// Gets the Weight of the item.
         /// </summary>
-        public float Weight => Base.Weight;
+        public float Weight => this.Base.Weight;
 
         /// <summary>
         /// Gets a value indicating whether this item is ammunition.
@@ -167,7 +167,7 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether this item is a weapon.
         /// </summary>
-        public bool IsWeapon => this is Firearm || Type is ItemType.Jailbird or ItemType.MicroHID or ItemType.SCP1509;
+        public bool IsWeapon => this is Firearm || this.Type is ItemType.Jailbird or ItemType.MicroHID or ItemType.SCP1509;
 
         /// <summary>
         /// Gets a value indicating whether or not this item is a firearm.
@@ -177,31 +177,31 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether this item emits light.
         /// </summary>
-        public bool IsLightEmitter => Base is ILightEmittingItem;
+        public bool IsLightEmitter => this.Base is ILightEmittingItem;
 
         /// <summary>
         /// Gets a value indicating whether this item can be used to disarm players.
         /// </summary>
-        public bool IsDisarmer => Base is IDisarmingItem;
+        public bool IsDisarmer => this.Base is IDisarmingItem;
 
         /// <summary>
         /// Gets the <see cref="Player"/> who owns the item.
         /// </summary>
-        public Player Owner => Player.Get(Base.Owner) ?? Server.Host;
+        public Player Owner => Player.Get(this.Base.Owner) ?? Server.Host;
 
         /// <summary>
         /// Gets or sets a reason for adding this item to the inventory.
         /// </summary>
         public ItemAddReason AddReason
         {
-            get => Base.ServerAddReason;
-            set => Base.ServerAddReason = value;
+            get => this.Base.ServerAddReason;
+            set => this.Base.ServerAddReason = value;
         }
 
         /// <summary>
         /// Gets the <see cref="ItemIdentifier"/> for this item.
         /// </summary>
-        public ItemIdentifier Identifier => Base.ItemId;
+        public ItemIdentifier Identifier => this.Base.ItemId;
 
         /// <summary>
         /// Gets an existing <see cref="Item"/> or creates a new instance of one.
@@ -408,12 +408,12 @@ namespace Exiled.API.Features.Items
         /// Gives this item to a <see cref="Player"/>.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> to give the item to.</param>
-        public void Give(Player player) => player.AddItem(Base, this);
+        public void Give(Player player) => player.AddItem(this.Base, this);
 
         /// <summary>
         /// Destroy this item.
         /// </summary>
-        public void Destroy() => Owner.RemoveItem(this);
+        public void Destroy() => this.Owner.RemoveItem(this);
 
         /// <summary>
         /// Creates the <see cref="Pickup"/> that based on this <see cref="Item"/>.
@@ -424,11 +424,11 @@ namespace Exiled.API.Features.Items
         /// <returns>The created <see cref="Pickup"/>.</returns>
         public virtual Pickup CreatePickup(Vector3 position, Quaternion rotation = default, bool spawn = true)
         {
-            PickupSyncInfo info = new(Type, Weight, Serial);
+            PickupSyncInfo info = new(this.Type, this.Weight, this.Serial);
 
-            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(Base, info, position, rotation);
+            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation);
 
-            Base.OnRemoved(ipb);
+            this.Base.OnRemoved(ipb);
 
             Pickup pickup = Pickup.Get(ipb);
 
@@ -442,13 +442,13 @@ namespace Exiled.API.Features.Items
         /// Clones the current item with a different serial.
         /// </summary>
         /// <returns> Cloned item object. </returns>
-        public virtual Item Clone() => Create(Type);
+        public virtual Item Clone() => Create(this.Type);
 
         /// <summary>
         /// Returns the Item in a human readable format.
         /// </summary>
         /// <returns>A string containing Item-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* ={Owner}=";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* ={this.Owner}=";
 
         /// <summary>
         /// Changes the owner of the <see cref="Item"/>.
@@ -459,7 +459,7 @@ namespace Exiled.API.Features.Items
         {
             if (oldOwner != null && newOwner != null)
             {
-                ChangeOwner(oldOwner, newOwner);
+                this.ChangeOwner(oldOwner, newOwner);
             }
         }
 
@@ -470,11 +470,11 @@ namespace Exiled.API.Features.Items
         /// <param name="newOwner">new <see cref="Item"/> owner.</param>
         internal virtual void ChangeOwner(Player oldOwner, Player newOwner)
         {
-            Base.OnRemoved(null);
+            this.Base.OnRemoved(null);
 
-            Base.Owner = newOwner.ReferenceHub;
+            this.Base.Owner = newOwner.ReferenceHub;
 
-            Base.OnAdded(null);
+            this.Base.OnAdded(null);
         }
 
         /// <summary>
@@ -490,7 +490,7 @@ namespace Exiled.API.Features.Items
         {
             if (pickup is not null)
             {
-                Scale = pickup.Scale;
+                this.Scale = pickup.Scale;
             }
         }
 

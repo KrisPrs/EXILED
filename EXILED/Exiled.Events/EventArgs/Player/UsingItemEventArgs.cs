@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public UsingItemEventArgs(ReferenceHub hub, UsableItem item, float cooldown)
         {
-            Player = Player.Get(hub);
-            Usable = Item.Get(item) is Usable usable ? usable : null;
-            Cooldown = cooldown;
+            this.Player = Player.Get(hub);
+            this.Usable = Item.Get(item) is Usable usable ? usable : null;
+            this.Cooldown = cooldown;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Exiled.Events.EventArgs.Player
         public Usable Usable { get; }
 
         /// <inheritdoc/>
-        public Item Item => Usable;
+        public Item Item => this.Usable;
 
         /// <summary>
         /// Gets the player who using the item.

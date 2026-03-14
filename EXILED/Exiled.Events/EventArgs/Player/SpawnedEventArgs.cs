@@ -27,10 +27,10 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="oldRole">the spawned player's old <see cref="PlayerRoleBase">role</see>.</param>
         public SpawnedEventArgs(Player player, PlayerRoleBase oldRole)
         {
-            Player = player;
-            OldRole = Role.Create(oldRole);
-            Reason = (SpawnReason)Player.Role.SpawnReason;
-            SpawnFlags = Player.Role.SpawnFlags;
+            this.Player = player;
+            this.OldRole = Role.Create(oldRole);
+            this.Reason = (SpawnReason)this.Player.Role.SpawnReason;
+            this.SpawnFlags = this.Player.Role.SpawnFlags;
         }
 
         /// <summary>

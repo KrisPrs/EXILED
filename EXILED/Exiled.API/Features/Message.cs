@@ -33,10 +33,10 @@ namespace Exiled.API.Features
         /// <param name="type">The type of the message.</param>
         public Message(string content, ushort duration = 10, bool show = true, MessageType type = MessageType.Broadcast)
         {
-            Content = content;
-            Duration = duration;
-            Show = show;
-            Type = type;
+            this.Content = content;
+            this.Duration = duration;
+            this.Show = show;
+            this.Type = type;
         }
 
         /// <summary>
@@ -67,6 +67,6 @@ namespace Exiled.API.Features
         /// Returns the Message in a human-readable format.
         /// </summary>
         /// <returns>A string containing Message-related data.</returns>
-        public override string ToString() => $"({Content}) {Duration} {Type}";
+        public override string ToString() => $"({this.Content}) {this.Duration} {this.Type}";
     }
 }

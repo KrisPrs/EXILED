@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public LosingSignalEventArgs(ReferenceHub player)
         {
-            Player = Player.Get(player);
-            Scp079 = Player.Role.As<API.Features.Roles.Scp079Role>();
-            IsAllowed = true;
+            this.Player = Player.Get(player);
+            this.Scp079 = this.Player.Role.As<API.Features.Roles.Scp079Role>();
+            this.IsAllowed = true;
         }
 
         /// <summary>

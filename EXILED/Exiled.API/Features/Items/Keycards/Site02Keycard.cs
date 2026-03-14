@@ -42,33 +42,33 @@ namespace Exiled.API.Features.Items.Keycards
         /// <inheritdoc cref="INameTagKeycard.NameTag"/>
         public string NameTag
         {
-            get => DataDict[Serial].NameTag;
+            get => DataDict[this.Serial].NameTag;
             set
             {
-                DataDict[Serial].NameTag = value;
-                Resync();
+                DataDict[this.Serial].NameTag = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.Label"/>
         public string Label
         {
-            get => DataDict[Serial].Label;
+            get => DataDict[this.Serial].Label;
             set
             {
-                DataDict[Serial].Label = value;
-                Resync();
+                DataDict[this.Serial].Label = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.LabelColor"/>
         public Color LabelColor
         {
-            get => DataDict[Serial].LabelColor ?? Color.clear;
+            get => DataDict[this.Serial].LabelColor ?? Color.clear;
             set
             {
-                DataDict[Serial].LabelColor = value;
-                Resync();
+                DataDict[this.Serial].LabelColor = value;
+                this.Resync();
             }
         }
 
@@ -76,12 +76,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// <remarks>Capped from 0-4 for Site-02 keycards, returns 255 if no wear level is found.</remarks>
         public byte Wear
         {
-            get => DataDict[Serial].Wear;
+            get => DataDict[this.Serial].Wear;
             set
             {
-                DataDict[Serial].Wear = value;
+                DataDict[this.Serial].Wear = value;
 
-                Resync();
+                this.Resync();
             }
         }
 

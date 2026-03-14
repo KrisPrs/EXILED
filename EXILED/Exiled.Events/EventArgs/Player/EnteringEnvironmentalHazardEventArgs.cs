@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public EnteringEnvironmentalHazardEventArgs(API.Features.Player player, EnvironmentalHazard environmentalHazard, bool isAllowed = true)
         {
-            Player = player;
-            Hazard = Hazard.Get(environmentalHazard);
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Hazard = Hazard.Get(environmentalHazard);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="player">
         /// <inheritdoc cref="Player" />
         /// </param>
-        public DroppingNothingEventArgs(Player player) => Player = player;
+        public DroppingNothingEventArgs(Player player) => this.Player = player;
 
         /// <summary>
         /// Gets the player who's dropping the null item.

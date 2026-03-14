@@ -38,11 +38,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DiedEventArgs(Player target, RoleTypeId targetOldRole, DamageHandlerBase damageHandler, BasicRagdoll ragdoll)
         {
-            DamageHandler = new CustomDamageHandler(target, damageHandler);
-            Attacker = DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
-            Player = target;
-            TargetOldRole = targetOldRole;
-            Ragdoll = Ragdoll.Get(ragdoll);
+            this.DamageHandler = new CustomDamageHandler(target, damageHandler);
+            this.Attacker = this.DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
+            this.Player = target;
+            this.TargetOldRole = targetOldRole;
+            this.Ragdoll = Ragdoll.Get(ragdoll);
         }
 
         /// <summary>

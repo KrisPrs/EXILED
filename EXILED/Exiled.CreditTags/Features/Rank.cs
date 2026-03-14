@@ -20,9 +20,9 @@ namespace Exiled.CreditTags.Features
         /// <param name="hexValue">The hex color value of the rank's color (in CustomPlayerInfo).</param>
         public Rank(string name, string color, string hexValue)
         {
-            Name = name;
-            Color = color;
-            HexValue = hexValue;
+            this.Name = name;
+            this.Color = color;
+            this.HexValue = hexValue;
         }
 
         /// <summary>

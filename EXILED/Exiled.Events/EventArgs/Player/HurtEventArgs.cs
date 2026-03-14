@@ -34,16 +34,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public HurtEventArgs(ReferenceHub referenceHub, DamageHandlerBase damageHandler, DamageHandlerBase.HandlerOutput handlerOutput)
         {
-            Player = Player.Get(referenceHub);
-            DamageHandler = new CustomDamageHandler(Player, damageHandler);
-            HandlerOutput = handlerOutput;
+            this.Player = Player.Get(referenceHub);
+            this.DamageHandler = new CustomDamageHandler(this.Player, damageHandler);
+            this.HandlerOutput = handlerOutput;
 
-            if (DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler))
-                Attacker = attackerDamageHandler.Attacker;
+            if (this.DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler))
+                this.Attacker = attackerDamageHandler.Attacker;
             else if (damageHandler is GenericDamageHandler genericDamageHandler)
-                Attacker = Player.Get(genericDamageHandler.Attacker);
+                this.Attacker = Player.Get(genericDamageHandler.Attacker);
             else
-                Attacker = null;
+                this.Attacker = null;
         }
 
         /// <inheritdoc/>
@@ -55,7 +55,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <summary>
         /// Gets the amount of inflicted damage.
         /// </summary>
-        public float Amount => DamageHandler.Damage;
+        public float Amount => this.DamageHandler.Damage;
 
         /// <summary>
         /// Gets or sets the action than will be made on the player.

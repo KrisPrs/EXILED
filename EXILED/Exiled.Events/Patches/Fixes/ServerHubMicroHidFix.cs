@@ -24,9 +24,6 @@ namespace Exiled.Events.Patches.Fixes
     [HarmonyPatch(typeof(CycleSyncModule), nameof(CycleSyncModule.Update))]
     internal static class ServerHubMicroHidFix
     {
-        private static bool Prefix(CycleSyncModule __instance)
-        {
-            return __instance.MicroHid.InstantiationStatus == AutosyncInstantiationStatus.InventoryInstance;
-        }
+        private static bool Prefix(CycleSyncModule __instance) => __instance.MicroHid.InstantiationStatus == AutosyncInstantiationStatus.InventoryInstance;
     }
 }

@@ -22,9 +22,9 @@ namespace Exiled.Events.EventArgs.Server
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public UnbanningEventArgs(string id, BanHandler.BanType banType, bool isAllowed = true)
         {
-            TargetId = id;
-            BanType = banType;
-            IsAllowed = isAllowed;
+            this.TargetId = id;
+            this.BanType = banType;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

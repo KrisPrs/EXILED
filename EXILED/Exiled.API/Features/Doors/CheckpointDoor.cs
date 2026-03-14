@@ -25,8 +25,8 @@ namespace Exiled.API.Features.Doors
         internal CheckpointDoor(Interactables.Interobjects.CheckpointDoor door, List<Room> room)
             : base(door, room)
         {
-            Base = door;
-            Subdoors = SubDoorsValue.AsReadOnly();
+            this.Base = door;
+            this.Subdoors = this.SubDoorsValue.AsReadOnly();
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public Interactables.Interobjects.CheckpointDoor.SequenceState CurrentStage
         {
-            get => Base.CurSequence;
-            set => Base.CurSequence = value;
+            get => this.Base.CurSequence;
+            set => this.Base.CurSequence = value;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float MainTimer
         {
-            get => Base.SequenceCtrl.RemainingTime;
-            set => Base.SequenceCtrl.RemainingTime = value;
+            get => this.Base.SequenceCtrl.RemainingTime;
+            set => this.Base.SequenceCtrl.RemainingTime = value;
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float WaitTime
         {
-            get => Base.SequenceCtrl.OpenLoopTime;
-            set => Base.SequenceCtrl.OpenLoopTime = value;
+            get => this.Base.SequenceCtrl.OpenLoopTime;
+            set => this.Base.SequenceCtrl.OpenLoopTime = value;
         }
 
         /// <summary>
@@ -71,29 +71,29 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float WarningTime
         {
-            get => Base.SequenceCtrl.WarningTime;
-            set => Base.SequenceCtrl.WarningTime = value;
+            get => this.Base.SequenceCtrl.WarningTime;
+            set => this.Base.SequenceCtrl.WarningTime = value;
         }
 
         /// <inheritdoc/>
         public bool IsDestroyed
         {
-            get => Base.IsDestroyed;
-            set => Base.IsDestroyed = value;
+            get => this.Base.IsDestroyed;
+            set => this.Base.IsDestroyed = value;
         }
 
         /// <inheritdoc/>
-        public bool IsBreakable => !IsDestroyed;
+        public bool IsBreakable => !this.IsDestroyed;
 
         /// <inheritdoc/>
         public float Health
         {
-            get => Base.GetHealthPercent();
+            get => this.Base.GetHealthPercent();
             set
             {
-                float health = value / Subdoors.Count;
+                float health = value / this.Subdoors.Count;
 
-                foreach (BreakableDoor door in Subdoors)
+                foreach (BreakableDoor door in this.Subdoors)
                 {
                     door.Health = health;
                 }
@@ -103,12 +103,12 @@ namespace Exiled.API.Features.Doors
         /// <inheritdoc/>
         public float MaxHealth
         {
-            get => Subdoors.Sum(door => door.MaxHealth);
+            get => this.Subdoors.Sum(door => door.MaxHealth);
             set
             {
-                float health = value / Subdoors.Count;
+                float health = value / this.Subdoors.Count;
 
-                foreach (BreakableDoor door in Subdoors)
+                foreach (BreakableDoor door in this.Subdoors)
                 {
                     door.MaxHealth = health;
                 }
@@ -118,10 +118,10 @@ namespace Exiled.API.Features.Doors
         /// <inheritdoc/>
         public DoorDamageType IgnoredDamage
         {
-            get => Subdoors.Aggregate(DoorDamageType.None, (current, door) => current | door.IgnoredDamage);
+            get => this.Subdoors.Aggregate(DoorDamageType.None, (current, door) => current | door.IgnoredDamage);
             set
             {
-                foreach (BreakableDoor door in Subdoors)
+                foreach (BreakableDoor door in this.Subdoors)
                 {
                     door.IgnoredDamage = value;
                 }
@@ -136,24 +136,24 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Repair the door.
         /// </summary>
-        public void Repair() => Base.ServerRepair();
+        public void Repair() => this.Base.ServerRepair();
 
         /// <summary>
         /// Toggles the state of the doors from <see cref="Subdoors"/>.
         /// </summary>
         /// <param name="newState">New state for the subdoors.</param>
-        public void ToggleAllDoors(bool newState) => Base.ToggleAllDoors(newState);
+        public void ToggleAllDoors(bool newState) => this.Base.ToggleAllDoors(newState);
 
         /// <inheritdoc/>
-        public bool Damage(float amount, DoorDamageType damageType = DoorDamageType.ServerCommand) => Base.ServerDamage(amount, damageType);
+        public bool Damage(float amount, DoorDamageType damageType = DoorDamageType.ServerCommand) => this.Base.ServerDamage(amount, damageType);
 
         /// <inheritdoc/>
-        public bool Break(DoorDamageType type = DoorDamageType.ServerCommand) => Base.ServerDamage(float.MaxValue, type);
+        public bool Break(DoorDamageType type = DoorDamageType.ServerCommand) => this.Base.ServerDamage(float.MaxValue, type);
 
         /// <summary>
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"{base.ToString()} |{WaitTime}| -{WarningTime}-";
+        public override string ToString() => $"{base.ToString()} |{this.WaitTime}| -{this.WarningTime}-";
     }
 }

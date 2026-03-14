@@ -70,13 +70,13 @@ namespace Exiled.CustomRoles.Commands.User
             Player player = Player.Get(sender);
             if (player == null)
             {
-                response = PlayerNotFoundResponse;
+                response = this.PlayerNotFoundResponse;
                 return false;
             }
 
             if (!player.TryGetCustomRole(out CustomRole? customRole))
             {
-                response = NoCustomRoleResponse;
+                response = this.NoCustomRoleResponse;
                 return false;
             }
 

@@ -53,19 +53,15 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="Scp330Bag"/> class.</param>
         public Scp330(Scp330Bag itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp330"/> class, as well as a new SCP-330 bag item.
         /// </summary>
         internal Scp330()
-            : this((Scp330Bag)Server.Host.Inventory.CreateItemInstance(new(ItemType.SCP330, 0), false))
-        {
-            Base.Candies.Add(Scp330Candies.GetRandom());
-        }
+            : this((Scp330Bag)Server.Host.Inventory.CreateItemInstance(new(ItemType.SCP330, 0), false)) =>
+            this.Base.Candies.Add(Scp330Candies.GetRandom());
 
         /// <summary>
         /// Gets the <see cref="Dictionary{TKey,TValue}"/> with all presented in game candies.
@@ -80,7 +76,7 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets the <see cref="CandyKindID"/>s held in this bag.
         /// </summary>
-        public IReadOnlyCollection<CandyKindID> Candies => Base.Candies.AsReadOnly();
+        public IReadOnlyCollection<CandyKindID> Candies => this.Base.Candies.AsReadOnly();
 
         /// <summary>
         /// Gets or sets the exposed type. When set to a candy color, the bag will appear as that candy when dropped with the <see cref="Spawn"/> method. Setting it to <see cref="CandyKindID.None"/> results in it looking like a bag.
@@ -94,9 +90,9 @@ namespace Exiled.API.Features.Items
         /// <returns><see langword="true"/> if the candy was successfully added to the bag; otherwise, <see langword="false"/>.</returns>
         public bool AddCandy(CandyKindID type)
         {
-            if (Base.TryAddSpecific(type))
+            if (this.Base.TryAddSpecific(type))
             {
-                Base.ServerRefreshBag();
+                this.Base.ServerRefreshBag();
                 return true;
             }
 
@@ -114,7 +110,7 @@ namespace Exiled.API.Features.Items
             int validCandy = 0;
             foreach (CandyKindID candy in candies)
             {
-                if (!Base.TryAddSpecific(candy))
+                if (!this.Base.TryAddSpecific(candy))
                 {
                     status = validCandy is 0 ? CandyAddStatus.NoCandyAdded : CandyAddStatus.SomeCandyAdded;
                     return validCandy;
@@ -137,9 +133,9 @@ namespace Exiled.API.Features.Items
         {
             int amount = 0;
 
-            while (Base.Candies.Contains(type))
+            while (this.Base.Candies.Contains(type))
             {
-                Base.TryRemove(Base.Candies.IndexOf(type));
+                this.Base.TryRemove(this.Base.Candies.IndexOf(type));
 
                 amount++;
 
@@ -157,9 +153,9 @@ namespace Exiled.API.Features.Items
         public int RemoveAllCandy()
         {
             int amount = 0;
-            for (int i = Base.Candies.Count; i > 0; i--)
+            for (int i = this.Base.Candies.Count; i > 0; i--)
             {
-                Base.TryRemove(0);
+                this.Base.TryRemove(0);
                 amount++;
             }
 
@@ -178,9 +174,9 @@ namespace Exiled.API.Features.Items
         {
             int count = 0;
 
-            for (int i = 0; i < Base.Candies.Count; i++)
+            for (int i = 0; i < this.Base.Candies.Count; i++)
             {
-                if (Base.Candies[i] == type)
+                if (this.Base.Candies[i] == type)
                 {
                     count++;
 
@@ -193,9 +189,9 @@ namespace Exiled.API.Features.Items
 
             if (count > 1 && !dropIndividual)
             {
-                ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, Owner.Position, default);
+                ItemPickupBase ipb = Object.Instantiate(this.Base.PickupDropModel, this.Owner.Position, default);
 
-                ipb.Info = new(Type, Weight, ItemSerialGenerator.GenerateNext());
+                ipb.Info = new(this.Type, this.Weight, ItemSerialGenerator.GenerateNext());
 
                 Scp330Pickup pickup = Pickup.Get<Scp330Pickup>(ipb);
 
@@ -205,7 +201,7 @@ namespace Exiled.API.Features.Items
                     pickup.Candies.Add(type);
 
                 pickup.Base.InfoReceivedHook(default, pickup.Info);
-                pickup.Scale = Scale;
+                pickup.Scale = this.Scale;
                 pickup.Spawn();
                 pickups.Add(pickup);
 
@@ -214,9 +210,9 @@ namespace Exiled.API.Features.Items
 
             for (int i = 0; i < count; i++)
             {
-                ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, Owner.Position, default);
+                ItemPickupBase ipb = Object.Instantiate(this.Base.PickupDropModel, this.Owner.Position, default);
 
-                ipb.Info = new(Type, Weight, ItemSerialGenerator.GenerateNext());
+                ipb.Info = new(this.Type, this.Weight, ItemSerialGenerator.GenerateNext());
 
                 Scp330Pickup pickup = Pickup.Get<Scp330Pickup>(ipb);
 
@@ -225,7 +221,7 @@ namespace Exiled.API.Features.Items
 
                 pickup.Candies.Add(type);
                 pickup.Base.InfoReceivedHook(default, pickup.Info);
-                pickup.Scale = Scale;
+                pickup.Scale = this.Scale;
                 pickup.Spawn();
                 pickups.Add(pickup);
             }
@@ -242,13 +238,13 @@ namespace Exiled.API.Features.Items
         /// <returns>The created <see cref="Pickup"/>.</returns>
         public override Pickup CreatePickup(Vector3 position, Quaternion rotation = default, bool spawn = true)
         {
-            PickupSyncInfo info = new(Type, Weight, Serial);
+            PickupSyncInfo info = new(this.Type, this.Weight, this.Serial);
 
-            InventorySystem.Items.Usables.Scp330.Scp330Pickup ipb = (InventorySystem.Items.Usables.Scp330.Scp330Pickup)InventoryExtensions.ServerCreatePickup(Base, info, position, rotation);
+            InventorySystem.Items.Usables.Scp330.Scp330Pickup ipb = (InventorySystem.Items.Usables.Scp330.Scp330Pickup)InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation);
 
-            Base.OnRemoved(ipb);
+            this.Base.OnRemoved(ipb);
 
-            ipb.NetworkExposedCandy = ExposedType;
+            ipb.NetworkExposedCandy = this.ExposedType;
 
             Pickup pickup = Pickup.Get(ipb);
 
@@ -266,10 +262,10 @@ namespace Exiled.API.Features.Items
         {
             Scp330 cloneableItem = new()
             {
-                ExposedType = ExposedType,
+                ExposedType = this.ExposedType,
             };
 
-            cloneableItem.AddCandy(Candies, out _);
+            cloneableItem.AddCandy(this.Candies, out _);
 
             return cloneableItem;
         }
@@ -278,16 +274,13 @@ namespace Exiled.API.Features.Items
         /// Returns the SCP-330 in a human readable format.
         /// </summary>
         /// <returns>A string containing SCP-330 related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Candies}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Candies}|";
 
         /// <summary>
         /// Clones current <see cref="Scp330"/> object.
         /// </summary>
         /// <param name="oldOwner">old <see cref="Item"/> owner.</param>
         /// <param name="newOwner">new <see cref="Item"/> owner.</param>
-        internal override void ChangeOwner(Player oldOwner, Player newOwner)
-        {
-            Base.Owner = newOwner.ReferenceHub;
-        }
+        internal override void ChangeOwner(Player oldOwner, Player newOwner) => this.Base.Owner = newOwner.ReferenceHub;
     }
 }

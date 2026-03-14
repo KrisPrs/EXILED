@@ -101,13 +101,13 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public virtual ItemType Type
         {
-            get => type;
+            get => this.type;
             set
             {
                 if (!Enum.IsDefined(typeof(ItemType), value))
                     throw new ArgumentOutOfRangeException("Type", value, "Invalid Item type.");
 
-                type = value;
+                this.type = value;
             }
         }
 
@@ -189,10 +189,7 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="t">The <see cref="System.Type"/> type.</param>
         /// <returns>The <see cref="CustomItem"/> matching the search, <see langwod="null"/> if not registered.</returns>
         [Obsolete("Для получения типов кастомИтема - используй GetMany<T>😡😡😡", true)]
-        public static CustomItem? Get(Type t)
-        {
-            return Registered.FirstOrDefault(i => i.GetType() == t);
-        }
+        public static CustomItem? Get(Type t) => Registered.FirstOrDefault(i => i.GetType() == t);
 
         /// <summary>
         /// Gets a <see cref="CustomItem"/> with a specific type.
@@ -201,10 +198,8 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="CustomItem"/> matching the search, <see langwod="null"/> if not registered.</returns>
         [Obsolete("Для получения типов кастомИтема - используй GetMany<T>😡😡😡", true)]
         public static T? Get<T>()
-            where T : CustomItem
-        {
-            return Registered.OfType<T>().FirstOrDefault();
-        }
+            where T : CustomItem =>
+            Registered.OfType<T>().FirstOrDefault();
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="CustomItem"/>'s with a specific type.
@@ -212,10 +207,8 @@ namespace Exiled.CustomItems.API.Features
         /// <typeparam name="T">The type <typeparamref name="T"/> to cast the customitem to.</typeparam>
         /// <returns>The <see cref="IEnumerable{T}"/> of <see cref="CustomItem"/> matching the search.</returns>
         public static IEnumerable<T> GetMany<T>()
-            where T : CustomItem
-        {
-            return Registered.OfType<T>();
-        }
+            where T : CustomItem =>
+            Registered.OfType<T>();
 
         /// <summary>
         /// Tries to get a <see cref="CustomItem"/> with a specific ID.
@@ -721,9 +714,9 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>A created <see cref="Item"/>.</returns>
         public virtual Item CreateItem()
         {
-            Item item = Item.Create(Type);
-            item.Scale = Scale;
-            TrackedSerials.Add(item.Serial);
+            Item item = Item.Create(this.Type);
+            item.Scale = this.Scale;
+            this.TrackedSerials.Add(item.Serial);
             return item;
         }
 
@@ -734,7 +727,7 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="y">The y coordinate.</param>
         /// <param name="z">The z coordinate.</param>
         /// <returns>The <see cref="Pickup"/> wrapper of the spawned <see cref="CustomItem"/>.</returns>
-        public virtual Pickup? Spawn(float x, float y, float z) => Spawn(new Vector3(x, y, z));
+        public virtual Pickup? Spawn(float x, float y, float z) => this.Spawn(new Vector3(x, y, z));
 
         /// <summary>
         /// Spawns the <see cref="CustomItem"/> where a specific <see cref="Player"/> is, and optionally sets the previous owner.
@@ -742,7 +735,7 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="player">The <see cref="Player"/> position where the <see cref="CustomItem"/> will be spawned.</param>
         /// <param name="previousOwner">The previous owner of the pickup, can be null.</param>
         /// <returns>The <see cref="Pickup"/> of the spawned <see cref="CustomItem"/>.</returns>
-        public virtual Pickup? Spawn(Player player, Player? previousOwner = null) => Spawn(player.Position, previousOwner);
+        public virtual Pickup? Spawn(Player player, Player? previousOwner = null) => this.Spawn(player.Position, previousOwner);
 
         /// <summary>
         /// Spawns the <see cref="CustomItem"/> in a specific position.
@@ -752,7 +745,7 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="Pickup"/> of the spawned <see cref="CustomItem"/>.</returns>
         public virtual Pickup? Spawn(Vector3 position, Player? previousOwner = null)
         {
-            Item item = CreateItem();
+            Item item = this.CreateItem();
             Pickup? pickup = item.CreatePickup(position);
 
             if (previousOwner is not null)
@@ -773,7 +766,7 @@ namespace Exiled.CustomItems.API.Features
 
             foreach (SpawnPoint spawnPoint in spawnPoints)
             {
-                Log.Debug($"Attempting to spawn {Name} at {spawnPoint.Position}.");
+                Log.Debug($"Attempting to spawn {this.Name} at {spawnPoint.Position}.");
 
                 if (Loader.Random.NextDouble() * 100 >= spawnPoint.Chance || (limit > 0 && spawned >= limit))
                     continue;
@@ -782,13 +775,13 @@ namespace Exiled.CustomItems.API.Features
 
                 if (spawnPoint is RoleSpawnPoint roleSpawnPoint)
                 {
-                    Spawn(roleSpawnPoint.Role.GetRandomSpawnLocation().Position, null);
+                    this.Spawn(roleSpawnPoint.Role.GetRandomSpawnLocation().Position, null);
                 }
                 else
                 {
-                    Pickup? pickup = Spawn(spawnPoint.Position, null);
+                    Pickup? pickup = this.Spawn(spawnPoint.Position, null);
 
-                    Log.Debug($"Spawned {Name} at {spawnPoint.Position} ({spawnPoint.Name})");
+                    Log.Debug($"Spawned {this.Name} at {spawnPoint.Position} ({spawnPoint.Name})");
                 }
             }
 
@@ -800,7 +793,7 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public virtual void SpawnAll()
         {
-            if (SpawnProperties is null)
+            if (this.SpawnProperties is null)
                 return;
 
             // This will go over each spawn property type (static, dynamic and role) to try and spawn the item.
@@ -813,7 +806,7 @@ namespace Exiled.CustomItems.API.Features
             //    spawned += Spawn(SpawnProperties.DynamicSpawnPoints, SpawnProperties.Limit - spawned);
             // if (spawned < SpawnProperties.Limit)
             //    Spawn(SpawnProperties.StaticSpawnPoints, SpawnProperties.Limit - spawned);
-            Spawn(SpawnProperties.StaticSpawnPoints, Math.Min(0, SpawnProperties.Limit - Math.Min(0, Spawn(SpawnProperties.DynamicSpawnPoints, SpawnProperties.Limit) - Spawn(SpawnProperties.RoleSpawnPoints, SpawnProperties.Limit))));
+            this.Spawn(this.SpawnProperties.StaticSpawnPoints, Math.Min(0, this.SpawnProperties.Limit - Math.Min(0, this.Spawn(this.SpawnProperties.DynamicSpawnPoints, this.SpawnProperties.Limit) - this.Spawn(this.SpawnProperties.RoleSpawnPoints, this.SpawnProperties.Limit))));
         }
 
         /// <summary>
@@ -826,15 +819,15 @@ namespace Exiled.CustomItems.API.Features
         {
             try
             {
-                Log.Debug($"{Name}.{nameof(Give)}: Item Serial: {item.Serial}");
+                Log.Debug($"{this.Name}.{nameof(this.Give)}: Item Serial: {item.Serial}");
 
                 player.AddItem(item);
 
-                Timing.CallDelayed(0.05f, () => OnAcquired(player, item, displayMessage));
+                Timing.CallDelayed(0.05f, () => this.OnAcquired(player, item, displayMessage));
             }
             catch (Exception e)
             {
-                Log.Error($"{nameof(Give)}: {e}");
+                Log.Error($"{nameof(this.Give)}: {e}");
             }
         }
 
@@ -843,16 +836,16 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player"/> who will receive the item.</param>
         /// <param name="displayMessage">Indicates whether or not <see cref="ShowPickedUpMessage"/> will be called when the player receives the item.</param>
-        public virtual void Give(Player player, bool displayMessage = true) => Give(player, CreateItem(), displayMessage);
+        public virtual void Give(Player player, bool displayMessage = true) => this.Give(player, this.CreateItem(), displayMessage);
 
         /// <summary>
         /// Called when the item is registered.
         /// </summary>
         public virtual void Init()
         {
-            idLookupTable.Add(Id, this);
+            idLookupTable.Add(this.Id, this);
 
-            SubscribeEvents();
+            this.SubscribeEvents();
         }
 
         /// <summary>
@@ -860,9 +853,9 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public virtual void Destroy()
         {
-            UnsubscribeEvents();
+            this.UnsubscribeEvents();
 
-            idLookupTable.Remove(Id);
+            idLookupTable.Remove(this.Id);
         }
 
         /// <summary>
@@ -870,24 +863,24 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         /// <param name="pickup">The <see cref="Pickup"/> to check.</param>
         /// <returns>True if it is a custom item.</returns>
-        public virtual bool Check(Pickup? pickup) => pickup is not null && TrackedSerials.Contains(pickup.Serial);
+        public virtual bool Check(Pickup? pickup) => pickup is not null && this.TrackedSerials.Contains(pickup.Serial);
 
         /// <summary>
         /// Checks the specified inventory item to see if it is a custom item.
         /// </summary>
         /// <param name="item">The <see cref="Item"/> to check.</param>
         /// <returns>True if it is a custom item.</returns>
-        public virtual bool Check(Item? item) => item is not null && TrackedSerials.Contains(item.Serial);
+        public virtual bool Check(Item? item) => item is not null && this.TrackedSerials.Contains(item.Serial);
 
         /// <summary>
         /// Checks the specified player's current item to see if it is a custom item.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> who's current item should be checked.</param>
         /// <returns>True if it is a custom item.</returns>
-        public virtual bool Check(Player? player) => Check(player?.CurrentItem);
+        public virtual bool Check(Player? player) => this.Check(player?.CurrentItem);
 
         /// <inheritdoc/>
-        public override string ToString() => $"[{Name} ({Type}) | {Id}] {Description}";
+        public override string ToString() => $"[{this.Name} ({this.Type}) | {this.Id}] {this.Description}";
 
         /// <summary>
         /// Registers a <see cref="CustomItem"/>.
@@ -898,13 +891,13 @@ namespace Exiled.CustomItems.API.Features
             if (!Instance?.Config.IsEnabled ?? false)
                 return false;
 
-            Log.Debug($"Trying to register {Name} ({Id}).");
+            Log.Debug($"Trying to register {this.Name} ({this.Id}).");
             if (!Registered.Contains(this))
             {
                 Log.Debug("Registered items doesn't contain this item yet..");
-                if (Registered.Any(customItem => customItem.Id == Id))
+                if (Registered.Any(customItem => customItem.Id == this.Id))
                 {
-                    Log.Error($"{Name} has tried to register with the same custom item ID as another item: {Id}. It will not be registered.");
+                    Log.Error($"{this.Name} has tried to register with the same custom item ID as another item: {this.Id}. It will not be registered.");
 
                     return false;
                 }
@@ -912,14 +905,14 @@ namespace Exiled.CustomItems.API.Features
                 Log.Debug("Adding item to registered list..");
                 Registered.Add(this);
 
-                Init();
+                this.Init();
 
-                Log.Debug($"{Name} ({Id}) [{Type}] has been successfully registered.");
+                Log.Debug($"{this.Name} ({this.Id}) [{this.Type}] has been successfully registered.");
 
                 return true;
             }
 
-            Log.Error($"Couldn't register {Name} ({Id}) [{Type}] as it already exists.");
+            Log.Error($"Couldn't register {this.Name} ({this.Id}) [{this.Type}] as it already exists.");
 
             return false;
         }
@@ -930,11 +923,11 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>Returns a value indicating whether the <see cref="CustomItem"/> was unregistered or not.</returns>
         internal bool TryUnregister()
         {
-            Destroy();
+            this.Destroy();
 
             if (!Registered.Remove(this))
             {
-                Log.Warn($"Cannot unregister {Name} ({Id}) [{Type}], it hasn't been registered yet.");
+                Log.Warn($"Cannot unregister {this.Name} ({this.Id}) [{this.Type}], it hasn't been registered yet.");
 
                 return false;
             }
@@ -947,18 +940,18 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         protected virtual void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.Dying += OnInternalOwnerDying;
-            Exiled.Events.Handlers.Player.DroppingItem += OnInternalDropping;
-            Exiled.Events.Handlers.Player.ChangingItem += OnInternalChanging;
-            Exiled.Events.Handlers.Player.Escaping += OnInternalOwnerEscaping;
-            Exiled.Events.Handlers.Player.PickingUpItem += OnInternalPickingUp;
-            Exiled.Events.Handlers.Player.ItemAdded += OnInternalItemAdded;
-            Exiled.Events.Handlers.Scp914.UpgradingPickup += OnInternalUpgradingPickup;
-            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
-            Exiled.Events.Handlers.Player.Handcuffing += OnInternalOwnerHandcuffing;
-            Exiled.Events.Handlers.Player.ChangingRole += OnInternalOwnerChangingRole;
-            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem += OnInternalUpgradingInventoryItem;
-            Exiled.Events.Handlers.Map.PickupAdded += OnInternalPickupAdded;
+            Exiled.Events.Handlers.Player.Dying += this.OnInternalOwnerDying;
+            Exiled.Events.Handlers.Player.DroppingItem += this.OnInternalDropping;
+            Exiled.Events.Handlers.Player.ChangingItem += this.OnInternalChanging;
+            Exiled.Events.Handlers.Player.Escaping += this.OnInternalOwnerEscaping;
+            Exiled.Events.Handlers.Player.PickingUpItem += this.OnInternalPickingUp;
+            Exiled.Events.Handlers.Player.ItemAdded += this.OnInternalItemAdded;
+            Exiled.Events.Handlers.Scp914.UpgradingPickup += this.OnInternalUpgradingPickup;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += this.OnWaitingForPlayers;
+            Exiled.Events.Handlers.Player.Handcuffing += this.OnInternalOwnerHandcuffing;
+            Exiled.Events.Handlers.Player.ChangingRole += this.OnInternalOwnerChangingRole;
+            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem += this.OnInternalUpgradingInventoryItem;
+            Exiled.Events.Handlers.Map.PickupAdded += this.OnInternalPickupAdded;
         }
 
         /// <summary>
@@ -966,18 +959,18 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         protected virtual void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.Dying -= OnInternalOwnerDying;
-            Exiled.Events.Handlers.Player.DroppingItem -= OnInternalDropping;
-            Exiled.Events.Handlers.Player.ChangingItem -= OnInternalChanging;
-            Exiled.Events.Handlers.Player.Escaping -= OnInternalOwnerEscaping;
-            Exiled.Events.Handlers.Player.PickingUpItem -= OnInternalPickingUp;
-            Exiled.Events.Handlers.Player.ItemAdded -= OnInternalItemAdded;
-            Exiled.Events.Handlers.Scp914.UpgradingPickup -= OnInternalUpgradingPickup;
-            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
-            Exiled.Events.Handlers.Player.Handcuffing -= OnInternalOwnerHandcuffing;
-            Exiled.Events.Handlers.Player.ChangingRole -= OnInternalOwnerChangingRole;
-            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem -= OnInternalUpgradingInventoryItem;
-            Exiled.Events.Handlers.Map.PickupAdded -= OnInternalPickupAdded;
+            Exiled.Events.Handlers.Player.Dying -= this.OnInternalOwnerDying;
+            Exiled.Events.Handlers.Player.DroppingItem -= this.OnInternalDropping;
+            Exiled.Events.Handlers.Player.ChangingItem -= this.OnInternalChanging;
+            Exiled.Events.Handlers.Player.Escaping -= this.OnInternalOwnerEscaping;
+            Exiled.Events.Handlers.Player.PickingUpItem -= this.OnInternalPickingUp;
+            Exiled.Events.Handlers.Player.ItemAdded -= this.OnInternalItemAdded;
+            Exiled.Events.Handlers.Scp914.UpgradingPickup -= this.OnInternalUpgradingPickup;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= this.OnWaitingForPlayers;
+            Exiled.Events.Handlers.Player.Handcuffing -= this.OnInternalOwnerHandcuffing;
+            Exiled.Events.Handlers.Player.ChangingRole -= this.OnInternalOwnerChangingRole;
+            Exiled.Events.Handlers.Scp914.UpgradingInventoryItem -= this.OnInternalUpgradingInventoryItem;
+            Exiled.Events.Handlers.Map.PickupAdded -= this.OnInternalPickupAdded;
         }
 
         /// <summary>
@@ -1032,7 +1025,7 @@ namespace Exiled.CustomItems.API.Features
         /// Handles tracking items when they are selected in the player's inventory.
         /// </summary>
         /// <param name="ev"><see cref="ChangingItemEventArgs"/>.</param>
-        protected virtual void OnChanging(ChangingItemEventArgs ev) => ShowSelectedMessage(ev.Player);
+        protected virtual void OnChanging(ChangingItemEventArgs ev) => this.ShowSelectedMessage(ev.Player);
 
         /// <summary>
         /// Handles making sure custom items are not affected by SCP-914.
@@ -1056,16 +1049,13 @@ namespace Exiled.CustomItems.API.Features
         protected virtual void OnAcquired(Player player, Item item, bool displayMessage)
         {
             if (displayMessage)
-                ShowPickedUpMessage(player);
+                this.ShowPickedUpMessage(player);
         }
 
         /// <summary>
         /// Clears the lists of item uniqIDs and Pickups since any still in the list will be invalid.
         /// </summary>
-        protected virtual void OnWaitingForPlayers()
-        {
-            TrackedSerials.Clear();
-        }
+        protected virtual void OnWaitingForPlayers() => this.TrackedSerials.Clear();
 
         /// <summary>
         /// Shows a message to the player upon picking up a custom item.
@@ -1074,7 +1064,7 @@ namespace Exiled.CustomItems.API.Features
         protected virtual void ShowPickedUpMessage(Player player)
         {
             if (Instance!.Config.PickedUpHint.Show)
-                player.ShowHint(string.Format(Instance.Config.PickedUpHint.Content, Name, Description), PickedUpHintDuration < 0 ? Instance.Config.PickedUpHint.Duration : PickedUpHintDuration);
+                player.ShowHint(string.Format(Instance.Config.PickedUpHint.Content, this.Name, this.Description), this.PickedUpHintDuration < 0 ? Instance.Config.PickedUpHint.Duration : this.PickedUpHintDuration);
         }
 
         /// <summary>
@@ -1084,7 +1074,7 @@ namespace Exiled.CustomItems.API.Features
         protected virtual void ShowSelectedMessage(Player player)
         {
             if (Instance!.Config.SelectedHint.Show)
-                player.ShowHint(string.Format(Instance.Config.SelectedHint.Content, Name, Description), SelectedHintDuration < 0 ? Instance.Config.SelectedHint.Duration : SelectedHintDuration);
+                player.ShowHint(string.Format(Instance.Config.SelectedHint.Content, this.Name, this.Description), this.SelectedHintDuration < 0 ? Instance.Config.SelectedHint.Duration : this.SelectedHintDuration);
         }
 
         private void OnInternalOwnerChangingRole(ChangingRoleEventArgs ev)
@@ -1094,10 +1084,10 @@ namespace Exiled.CustomItems.API.Features
 
             foreach (Item item in ev.Player.Items.ToList())
             {
-                if (!Check(item))
+                if (!this.Check(item))
                     continue;
 
-                OnOwnerChangingRole(new OwnerChangingRoleEventArgs(item.Base, ev));
+                this.OnOwnerChangingRole(new OwnerChangingRoleEventArgs(item.Base, ev));
             }
         }
 
@@ -1105,10 +1095,10 @@ namespace Exiled.CustomItems.API.Features
         {
             foreach (Item item in ev.Player.Items.ToList())
             {
-                if (!Check(item))
+                if (!this.Check(item))
                     continue;
 
-                OnOwnerDying(new OwnerDyingEventArgs(item, ev));
+                this.OnOwnerDying(new OwnerDyingEventArgs(item, ev));
             }
         }
 
@@ -1116,10 +1106,10 @@ namespace Exiled.CustomItems.API.Features
         {
             foreach (Item item in ev.Player.Items.ToList())
             {
-                if (!Check(item))
+                if (!this.Check(item))
                     continue;
 
-                OnOwnerEscaping(new OwnerEscapingEventArgs(item, ev));
+                this.OnOwnerEscaping(new OwnerEscapingEventArgs(item, ev));
             }
         }
 
@@ -1127,73 +1117,73 @@ namespace Exiled.CustomItems.API.Features
         {
             foreach (Item item in ev.Target.Items.ToList())
             {
-                if (!Check(item))
+                if (!this.Check(item))
                     continue;
 
-                OnOwnerHandcuffing(new OwnerHandcuffingEventArgs(item, ev));
+                this.OnOwnerHandcuffing(new OwnerHandcuffingEventArgs(item, ev));
             }
         }
 
         private void OnInternalDropping(DroppingItemEventArgs ev)
         {
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
-            OnDropping(ev);
+            this.OnDropping(ev);
         }
 
         private void OnInternalPickingUp(PickingUpItemEventArgs ev)
         {
-            if (!Check(ev.Pickup) || ev.Player.Items.Count >= 8)
+            if (!this.Check(ev.Pickup) || ev.Player.Items.Count >= 8)
                 return;
 
-            OnPickingUp(ev);
+            this.OnPickingUp(ev);
         }
 
         private void OnInternalItemAdded(ItemAddedEventArgs ev)
         {
-            if (!Check(ev.Pickup))
+            if (!this.Check(ev.Pickup))
                 return;
 
-            OnAcquired(ev.Player, ev.Item, true);
+            this.OnAcquired(ev.Player, ev.Item, true);
         }
 
         private void OnInternalChanging(ChangingItemEventArgs ev)
         {
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
             {
                 return;
             }
 
-            OnChanging(ev);
+            this.OnChanging(ev);
         }
 
         private void OnInternalUpgradingInventoryItem(UpgradingInventoryItemEventArgs ev)
         {
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
             ev.IsAllowed = false;
 
-            OnUpgrading(new UpgradingItemEventArgs(ev.Player, ev.Item.Base, ev.KnobSetting));
+            this.OnUpgrading(new UpgradingItemEventArgs(ev.Player, ev.Item.Base, ev.KnobSetting));
         }
 
         private void OnInternalUpgradingPickup(UpgradingPickupEventArgs ev)
         {
-            if (!Check(ev.Pickup))
+            if (!this.Check(ev.Pickup))
                 return;
 
             ev.IsAllowed = false;
 
-            OnUpgrading(new UpgradingEventArgs(ev.Pickup.Base, ev.OutputPosition, ev.KnobSetting));
+            this.OnUpgrading(new UpgradingEventArgs(ev.Pickup.Base, ev.OutputPosition, ev.KnobSetting));
         }
 
         private void OnInternalPickupAdded(PickupAddedEventArgs ev)
         {
-            if (!Check(ev.Pickup))
+            if (!this.Check(ev.Pickup))
                 return;
 
-            ev.Pickup.Weight = Weight < 0 ? ev.Pickup.Weight : Weight;
+            ev.Pickup.Weight = this.Weight < 0 ? ev.Pickup.Weight : this.Weight;
         }
     }
 }

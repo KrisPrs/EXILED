@@ -24,7 +24,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="waypointToy">The <see cref="WaypointToy"/> of the toy.</param>
         internal Waypoint(WaypointToy waypointToy)
-            : base(waypointToy, AdminToyType.WaypointToy) => Base = waypointToy;
+            : base(waypointToy, AdminToyType.WaypointToy) => this.Base = waypointToy;
 
         /// <summary>
         /// Gets the prefab.
@@ -41,8 +41,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public float Priority
         {
-            get => Base.NetworkPriority;
-            set => Base.NetworkPriority = value;
+            get => this.Base.NetworkPriority;
+            set => this.Base.NetworkPriority = value;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool VisualizeBounds
         {
-            get => Base.NetworkVisualizeBounds;
-            set => Base.NetworkVisualizeBounds = value;
+            get => this.Base.NetworkVisualizeBounds;
+            set => this.Base.NetworkVisualizeBounds = value;
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Bounds Bounds
         {
-            get => new(Position, Base.NetworkBoundsSize);
-            set => Base.NetworkBoundsSize = value.size;
+            get => new(this.Position, this.Base.NetworkBoundsSize);
+            set => this.Base.NetworkBoundsSize = value.size;
         }
 
         /// <summary>
@@ -68,14 +68,14 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector3 BoundsSize
         {
-            get => Base.NetworkBoundsSize;
-            set => Base.NetworkBoundsSize = value;
+            get => this.Base.NetworkBoundsSize;
+            set => this.Base.NetworkBoundsSize = value;
         }
 
         /// <summary>
         /// Gets the id of the Waypoint used for <see cref="RelativePositioning.RelativePosition.WaypointId"/>.
         /// </summary>
-        public byte WaypointId => Base._waypointId;
+        public byte WaypointId => this.Base._waypointId;
 
         /// <summary>
         /// Creates a new <see cref="Waypoint"/> with a specific position and size (bounds).

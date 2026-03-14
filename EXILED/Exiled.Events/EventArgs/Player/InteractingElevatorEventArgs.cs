@@ -36,11 +36,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public InteractingElevatorEventArgs(Player player, ElevatorChamber elevator, bool isCalledFromInside, bool isAllowed = true)
         {
-            Player = player;
-            Lift = Lift.Get(elevator);
-            Elevator = elevator;
-            IsCalledFromInside = isCalledFromInside;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Lift = Lift.Get(elevator);
+            this.Elevator = elevator;
+            this.IsCalledFromInside = isCalledFromInside;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

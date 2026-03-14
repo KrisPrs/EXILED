@@ -35,10 +35,10 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public UpgradingInventoryItemEventArgs(Player player, ItemBase item, Scp914KnobSetting knobSetting, bool isAllowed = true)
         {
-            Player = player;
-            Item = Item.Get(item);
-            KnobSetting = knobSetting;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Item = Item.Get(item);
+            this.KnobSetting = knobSetting;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

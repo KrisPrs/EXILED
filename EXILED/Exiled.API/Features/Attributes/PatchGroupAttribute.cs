@@ -26,10 +26,7 @@ namespace Exiled.API.Features.Attributes
         /// Initializes a new instance of the <see cref="PatchGroupAttribute"/> class.
         /// </summary>
         /// <param name="groupId">The group of target-patch.</param>
-        public PatchGroupAttribute(string groupId)
-        {
-            GroupId = groupId;
-        }
+        public PatchGroupAttribute(string groupId) => this.GroupId = groupId;
 
         /// <summary>
         /// Gets the group id.

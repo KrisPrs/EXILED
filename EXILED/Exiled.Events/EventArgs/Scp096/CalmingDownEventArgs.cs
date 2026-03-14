@@ -24,10 +24,10 @@ namespace Exiled.Events.EventArgs.Scp096
         /// <param name="isAllowed">Indicates whether SCP-096 can calm down.</param>
         public CalmingDownEventArgs(Player player, bool shouldClearEnragedTimeLeft, bool isAllowed = true)
         {
-            Player = player;
-            Scp096 = player.Role.As<Scp096Role>();
-            ShouldClearEnragedTimeLeft = shouldClearEnragedTimeLeft;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp096 = player.Role.As<Scp096Role>();
+            this.ShouldClearEnragedTimeLeft = shouldClearEnragedTimeLeft;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

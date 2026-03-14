@@ -31,10 +31,10 @@ namespace Exiled.API.Features
         /// <param name="type">The type of the broadcast.</param>
         public Broadcast(string content, ushort duration = 10, bool show = true, global::Broadcast.BroadcastFlags type = global::Broadcast.BroadcastFlags.Normal)
         {
-            Content = content;
-            Duration = duration;
-            Show = show;
-            Type = type;
+            this.Content = content;
+            this.Duration = duration;
+            this.Show = show;
+            this.Type = type;
         }
 
         /// <summary>
@@ -65,6 +65,6 @@ namespace Exiled.API.Features
         /// Returns the Broadcast in a human-readable format.
         /// </summary>
         /// <returns>A string containing Broadcast-related data.</returns>
-        public override string ToString() => $"({Content}) {Duration} {Type}";
+        public override string ToString() => $"({this.Content}) {this.Duration} {this.Type}";
     }
 }

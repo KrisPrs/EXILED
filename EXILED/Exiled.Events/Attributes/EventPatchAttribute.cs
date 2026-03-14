@@ -34,6 +34,6 @@ namespace Exiled.Events.Attributes
         /// <summary>
         /// Gets the <see cref="IExiledEvent"/> that will be raised by this patch.
         /// </summary>
-        internal IExiledEvent Event => (IExiledEvent)handlerType.GetProperty(eventName)?.GetValue(null);
+        internal IExiledEvent Event => (IExiledEvent)this.handlerType.GetProperty(this.eventName)?.GetValue(null);
     }
 }

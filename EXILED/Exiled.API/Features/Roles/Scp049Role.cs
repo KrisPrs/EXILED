@@ -34,29 +34,29 @@ namespace Exiled.API.Features.Roles
         internal Scp049Role(Scp049GameRole baseRole)
             : base(baseRole)
         {
-            Base = baseRole;
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp049ResurrectAbility scp049ResurrectAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp049ResurrectAbility scp049ResurrectAbility))
                 Log.Error("Scp049ResurrectAbility subroutine not found in Scp049Role::ctor");
 
-            ResurrectAbility = scp049ResurrectAbility;
+            this.ResurrectAbility = scp049ResurrectAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp049CallAbility scp049CallAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp049CallAbility scp049CallAbility))
                 Log.Error("Scp049CallAbility subroutine not found in Scp049Role::ctor");
 
-            CallAbility = scp049CallAbility;
+            this.CallAbility = scp049CallAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp049SenseAbility scp049SenseAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp049SenseAbility scp049SenseAbility))
                 Log.Error("Scp049SenseAbility subroutine not found in Scp049Role::ctor");
 
-            SenseAbility = scp049SenseAbility;
+            this.SenseAbility = scp049SenseAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp049AttackAbility scp049AttackAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp049AttackAbility scp049AttackAbility))
                 Log.Error("Scp049AttackAbility subroutine not found in Scp049Role::ctor");
 
-            AttackAbility = scp049AttackAbility;
+            this.AttackAbility = scp049AttackAbility;
         }
 
         /// <summary>
@@ -96,22 +96,22 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Gets a value indicating whether SCP-049 is currently reviving a player.
         /// </summary>
-        public bool IsRecalling => ResurrectAbility.IsInProgress;
+        public bool IsRecalling => this.ResurrectAbility.IsInProgress;
 
         /// <summary>
         /// Gets a value indicating whether SCP-049's "Doctor's Call" ability is currently active.
         /// </summary>
-        public bool IsCallActive => CallAbility.IsMarkerShown;
+        public bool IsCallActive => this.CallAbility.IsMarkerShown;
 
         /// <summary>
         /// Gets the player that is currently being revived by SCP-049. Will be <see langword="null"/> if <see cref="IsRecalling"/> is <see langword="false"/>.
         /// </summary>
-        public Player RecallingPlayer => ResurrectAbility.CurRagdoll == null ? null : Player.Get(ResurrectAbility.CurRagdoll.Info.OwnerHub);
+        public Player RecallingPlayer => this.ResurrectAbility.CurRagdoll == null ? null : Player.Get(this.ResurrectAbility.CurRagdoll.Info.OwnerHub);
 
         /// <summary>
         /// Gets the ragdoll that is currently being revived by SCP-049. Will be <see langword="null"/> if <see cref="IsRecalling"/> is <see langword="false"/>.
         /// </summary>
-        public Ragdoll RecallingRagdoll => Features.Ragdoll.Get(ResurrectAbility.CurRagdoll);
+        public Ragdoll RecallingRagdoll => Features.Ragdoll.Get(this.ResurrectAbility.CurRagdoll);
 
         /// <summary>
         /// Gets all the dead zombies.
@@ -138,11 +138,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float CallCooldown
         {
-            get => CallAbility.Cooldown.Remaining;
+            get => this.CallAbility.Cooldown.Remaining;
             set
             {
-                CallAbility.Cooldown.Remaining = value;
-                CallAbility.ServerSendRpc(true);
+                this.CallAbility.Cooldown.Remaining = value;
+                this.CallAbility.ServerSendRpc(true);
             }
         }
 
@@ -151,11 +151,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float GoodSenseCooldown
         {
-            get => SenseAbility.Cooldown.Remaining;
+            get => this.SenseAbility.Cooldown.Remaining;
             set
             {
-                SenseAbility.Cooldown.Remaining = value;
-                SenseAbility.ServerSendRpc(true);
+                this.SenseAbility.Cooldown.Remaining = value;
+                this.SenseAbility.ServerSendRpc(true);
             }
         }
 
@@ -164,11 +164,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float RemainingAttackCooldown
         {
-            get => AttackAbility.Cooldown.Remaining;
+            get => this.AttackAbility.Cooldown.Remaining;
             set
             {
-                AttackAbility.Cooldown.Remaining = value;
-                AttackAbility.ServerSendRpc(true);
+                this.AttackAbility.Cooldown.Remaining = value;
+                this.AttackAbility.ServerSendRpc(true);
             }
         }
 
@@ -177,11 +177,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float RemainingCallDuration
         {
-            get => CallAbility.Duration.Remaining;
+            get => this.CallAbility.Duration.Remaining;
             set
             {
-                CallAbility.Duration.Remaining = value;
-                CallAbility.ServerSendRpc(true);
+                this.CallAbility.Duration.Remaining = value;
+                this.CallAbility.ServerSendRpc(true);
             }
         }
 
@@ -190,11 +190,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float RemainingGoodSenseDuration
         {
-            get => SenseAbility.Duration.Remaining;
+            get => this.SenseAbility.Duration.Remaining;
             set
             {
-                SenseAbility.Duration.Remaining = value;
-                SenseAbility.ServerSendRpc(true);
+                this.SenseAbility.Duration.Remaining = value;
+                this.SenseAbility.ServerSendRpc(true);
             }
         }
 
@@ -203,8 +203,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float SenseDistance
         {
-            get => SenseAbility._distanceThreshold;
-            set => SenseAbility._distanceThreshold = value;
+            get => this.SenseAbility._distanceThreshold;
+            set => this.SenseAbility._distanceThreshold = value;
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Lose the current target of the Good Sense ability.
         /// </summary>
-        public void LoseSenseTarget() => SenseAbility.ServerLoseTarget();
+        public void LoseSenseTarget() => this.SenseAbility.ServerLoseTarget();
 
         /// <summary>
         /// Resurrects a <see cref="Player"/>.
@@ -226,12 +226,12 @@ namespace Exiled.API.Features.Roles
         {
             if (player is null)
                 return false;
-            player.ReferenceHub.transform.position = ResurrectAbility.CastRole.FpcModule.Position;
+            player.ReferenceHub.transform.position = this.ResurrectAbility.CastRole.FpcModule.Position;
 
-            HumeShieldModuleBase humeShield = ResurrectAbility.CastRole.HumeShieldModule;
+            HumeShieldModuleBase humeShield = this.ResurrectAbility.CastRole.HumeShieldModule;
             humeShield.HsCurrent = Mathf.Min(humeShield.HsCurrent + 100f, humeShield.HsMax);
 
-            return Resurrect(Features.Ragdoll.GetLast(player));
+            return this.Resurrect(Features.Ragdoll.GetLast(player));
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace Exiled.API.Features.Roles
             if (ragdoll is null)
                 return false;
 
-            ResurrectAbility.CurRagdoll = ragdoll.Base;
-            ResurrectAbility.ServerComplete();
+            this.ResurrectAbility.CurRagdoll = ragdoll.Base;
+            this.ResurrectAbility.ServerComplete();
 
             return true;
         }
@@ -256,28 +256,28 @@ namespace Exiled.API.Features.Roles
         /// <param name="player">The <see cref="Player"/>to attack.</param>
         public void Attack(Player player)
         {
-            AttackAbility._target = player?.ReferenceHub;
+            this.AttackAbility._target = player?.ReferenceHub;
 
-            if (AttackAbility._target is null || !AttackAbility.IsTargetValid(AttackAbility._target))
+            if (this.AttackAbility._target is null || !this.AttackAbility.IsTargetValid(this.AttackAbility._target))
                 return;
 
-            AttackAbility.Cooldown.Trigger(Scp049AttackAbility.CooldownTime);
-            CardiacArrest cardiacArrest = AttackAbility._target.playerEffectsController.GetEffect<CardiacArrest>();
+            this.AttackAbility.Cooldown.Trigger(Scp049AttackAbility.CooldownTime);
+            CardiacArrest cardiacArrest = this.AttackAbility._target.playerEffectsController.GetEffect<CardiacArrest>();
 
             if (cardiacArrest.IsEnabled)
             {
-                AttackAbility._target.playerStats.DealDamage(new Scp049DamageHandler(AttackAbility.Owner, StandardDamageHandler.KillValue, Scp049DamageHandler.AttackType.Instakill));
+                this.AttackAbility._target.playerStats.DealDamage(new Scp049DamageHandler(this.AttackAbility.Owner, StandardDamageHandler.KillValue, Scp049DamageHandler.AttackType.Instakill));
             }
             else
             {
-                cardiacArrest.SetAttacker(AttackAbility.Owner);
-                cardiacArrest.ServerSetState(1, AttackAbility._statusEffectDuration, false);
+                cardiacArrest.SetAttacker(this.AttackAbility.Owner);
+                cardiacArrest.ServerSetState(1, this.AttackAbility._statusEffectDuration, false);
             }
 
-            SenseAbility.OnServerHit(AttackAbility._target);
+            this.SenseAbility.OnServerHit(this.AttackAbility._target);
 
-            AttackAbility.ServerSendRpc(true);
-            Hitmarker.SendHitmarkerDirectly(AttackAbility.Owner, 1f);
+            this.AttackAbility.ServerSendRpc(true);
+            Hitmarker.SendHitmarkerDirectly(this.AttackAbility.Owner, 1f);
         }
 
         /// <summary>
@@ -286,37 +286,37 @@ namespace Exiled.API.Features.Roles
         /// <param name="player">The Player to sense.</param>
         public void Sense(Player player)
         {
-            if (!SenseAbility.Cooldown.IsReady || !SenseAbility.Duration.IsReady)
+            if (!this.SenseAbility.Cooldown.IsReady || !this.SenseAbility.Duration.IsReady)
                 return;
 
-            SenseAbility.HasTarget = false;
-            SenseAbility.Target = player?.ReferenceHub;
+            this.SenseAbility.HasTarget = false;
+            this.SenseAbility.Target = player?.ReferenceHub;
 
-            if (SenseAbility.Target is null)
+            if (this.SenseAbility.Target is null)
             {
-                SenseAbility.Cooldown.Trigger(Scp049SenseAbility.AttemptFailCooldown);
-                SenseAbility.ServerSendRpc(true);
+                this.SenseAbility.Cooldown.Trigger(Scp049SenseAbility.AttemptFailCooldown);
+                this.SenseAbility.ServerSendRpc(true);
                 return;
             }
             else
             {
-                if (SenseAbility.Target.roleManager.CurrentRole is not PlayerRoles.HumanRole humanRole)
+                if (this.SenseAbility.Target.roleManager.CurrentRole is not PlayerRoles.HumanRole humanRole)
                     return;
 
                 float radius = humanRole.FpcModule.CharController.radius;
-                if (!VisionInformation.GetVisionInformation(SenseAbility.Owner, SenseAbility.Owner.PlayerCameraReference, humanRole.CameraPosition, radius, SenseAbility._distanceThreshold).IsLooking)
+                if (!VisionInformation.GetVisionInformation(this.SenseAbility.Owner, this.SenseAbility.Owner.PlayerCameraReference, humanRole.CameraPosition, radius, this.SenseAbility._distanceThreshold).IsLooking)
                     return;
 
-                SenseAbility.Duration.Trigger(Scp049SenseAbility.EffectDuration);
-                SenseAbility.HasTarget = true;
-                SenseAbility.ServerSendRpc(true);
+                this.SenseAbility.Duration.Trigger(Scp049SenseAbility.EffectDuration);
+                this.SenseAbility.HasTarget = true;
+                this.SenseAbility.ServerSendRpc(true);
             }
         }
 
         /// <summary>
         /// Refresh the <see cref="Scp049CallAbility"/> duration.
         /// </summary>
-        public void RefreshCallDuration() => CallAbility.ServerRefreshDuration();
+        public void RefreshCallDuration() => this.CallAbility.ServerRefreshDuration();
 
         /// <summary>
         /// Gets the amount of resurrections of a <see cref="Player"/>.
@@ -330,14 +330,14 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if the body can be revived; otherwise, <see langword="false"/>.</returns>
-        public bool CanResurrect(BasicRagdoll ragdoll) => ragdoll != null && ResurrectAbility.CheckRagdoll(ragdoll);
+        public bool CanResurrect(BasicRagdoll ragdoll) => ragdoll != null && this.ResurrectAbility.CheckRagdoll(ragdoll);
 
         /// <summary>
         /// Returns a <see langword="bool"/> indicating whether the ragdoll can be resurrected by SCP-049.
         /// </summary>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if the body can be revived; otherwise, <see langword="false"/>.</returns>
-        public bool CanResurrect(Ragdoll ragdoll) => ragdoll is not null && ResurrectAbility.CheckRagdoll(ragdoll.Base);
+        public bool CanResurrect(Ragdoll ragdoll) => ragdoll is not null && this.ResurrectAbility.CheckRagdoll(ragdoll.Base);
 
         /// <summary>
         /// Returns a <see langword="bool"/> indicating whether SCP-049 is close enough to a ragdoll to revive it.
@@ -345,7 +345,7 @@ namespace Exiled.API.Features.Roles
         /// <remarks>This method only returns whether SCP-049 is close enough to the body to revive it; the body may have expired. Make sure to check <see cref="CanResurrect(BasicRagdoll)"/> to ensure the body can be revived.</remarks>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if close enough to revive the body; otherwise, <see langword="false"/>.</returns>
-        public bool IsInRecallRange(BasicRagdoll ragdoll) => ragdoll != null && ResurrectAbility.IsCloseEnough(Owner.Position, ragdoll.transform.position);
+        public bool IsInRecallRange(BasicRagdoll ragdoll) => ragdoll != null && this.ResurrectAbility.IsCloseEnough(this.Owner.Position, ragdoll.transform.position);
 
         /// <summary>
         /// Returns a <see langword="bool"/> indicating whether SCP-049 is close enough to a ragdoll to revive it.
@@ -353,13 +353,13 @@ namespace Exiled.API.Features.Roles
         /// <remarks>This method only returns whether SCP-049 is close enough to the body to revive it; the body may have expired. Make sure to check <see cref="CanResurrect(Ragdoll)"/> to ensure the body can be revived.</remarks>
         /// <param name="ragdoll">The ragdoll to check.</param>
         /// <returns><see langword="true"/> if close enough to revive the body; otherwise, <see langword="false"/>.</returns>
-        public bool IsInRecallRange(Ragdoll ragdoll) => ragdoll is not null && IsInRecallRange(ragdoll.Base);
+        public bool IsInRecallRange(Ragdoll ragdoll) => ragdoll is not null && this.IsInRecallRange(ragdoll.Base);
 
         /// <summary>
         /// Gets the Spawn Chance of SCP-049.
         /// </summary>
         /// <param name="alreadySpawned">The List of Roles already spawned.</param>
         /// <returns>The Spawn Chance.</returns>
-        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => Base.GetSpawnChance(alreadySpawned);
+        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => this.Base.GetSpawnChance(alreadySpawned);
     }
 }

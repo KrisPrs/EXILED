@@ -38,11 +38,11 @@ namespace Exiled.Events.EventArgs.Scp173
         /// </param>
         public BlinkingEventArgs(Player player, List<Player> targets, Vector3 blinkPos)
         {
-            Player = player;
-            Scp173 = player.Role.As<Scp173Role>();
-            BlinkPosition = blinkPos;
-            Targets = targets;
-            BlinkCooldown = Scp173BlinkTimer.CooldownBaseline;
+            this.Player = player;
+            this.Scp173 = player.Role.As<Scp173Role>();
+            this.BlinkPosition = blinkPos;
+            this.Targets = targets;
+            this.BlinkCooldown = Scp173BlinkTimer.CooldownBaseline;
         }
 
         /// <summary>

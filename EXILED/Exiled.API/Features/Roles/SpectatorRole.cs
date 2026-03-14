@@ -30,10 +30,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="baseRole">The encapsulated <see cref="SpectatorGameRole"/>.</param>
         internal SpectatorRole(SpectatorGameRole baseRole)
-            : base(baseRole)
-        {
-            Base = baseRole;
-        }
+            : base(baseRole) =>
+            this.Base = baseRole;
 
         /// <inheritdoc/>
         public override RoleTypeId Type => RoleTypeId.Spectator;
@@ -41,22 +39,22 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Gets the <see cref="DateTime"/> at which the player died.
         /// </summary>
-        public DateTime DeathTime => Round.StartedTime + ActiveTime;
+        public DateTime DeathTime => Round.StartedTime + this.ActiveTime;
 
         /// <summary>
         /// Gets the total amount of time the player has been dead.
         /// </summary>
-        public TimeSpan DeadTime => DateTime.UtcNow - DeathTime;
+        public TimeSpan DeadTime => DateTime.UtcNow - this.DeathTime;
 
         /// <summary>
         /// Gets the <see cref="Player"/>'s death position.
         /// </summary>
-        public Vector3 DeathPosition => Base.DeathPosition.Position;
+        public Vector3 DeathPosition => this.Base.DeathPosition.Position;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Player"/> is ready to respawn.
         /// </summary>
-        public bool IsReadyToRespawn => Base.ReadyToRespawn;
+        public bool IsReadyToRespawn => this.Base.ReadyToRespawn;
 
         /// <summary>
         /// Gets currently spectated <see cref="Player"/> by this <see cref="Player"/>. May be <see langword="null"/>.
@@ -65,9 +63,9 @@ namespace Exiled.API.Features.Roles
         {
             get
             {
-                Player spectatedPlayer = Player.Get(Base.SyncedSpectatedNetId);
+                Player spectatedPlayer = Player.Get(this.Base.SyncedSpectatedNetId);
 
-                return spectatedPlayer != Owner ? spectatedPlayer : null;
+                return spectatedPlayer != this.Owner ? spectatedPlayer : null;
             }
         }
 
@@ -77,6 +75,6 @@ namespace Exiled.API.Features.Roles
         public new SpectatorGameRole Base { get; }
 
         /// <inheritdoc/>
-        public VoiceModuleBase VoiceModule => Base.VoiceModule;
+        public VoiceModuleBase VoiceModule => this.Base.VoiceModule;
     }
 }

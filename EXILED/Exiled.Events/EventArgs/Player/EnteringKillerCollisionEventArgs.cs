@@ -23,8 +23,8 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public EnteringKillerCollisionEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

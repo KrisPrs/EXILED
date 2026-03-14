@@ -30,7 +30,7 @@ namespace Exiled.Permissions
         /// </summary>
         [Description("The full permissions path")]
         [YamlIgnore]
-        public string FullPath => Path.Combine(Paths.Configs, FileName);
+        public string FullPath => Path.Combine(Paths.Configs, this.FileName);
 
         /// <summary>
         /// Gets the permissions name.

@@ -26,10 +26,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ReservedSlotsCheckEventArgs(bool hasReservedSlot, string userId)
         {
-            UserId = userId;
-            HasReservedSlot = hasReservedSlot;
-            IsAllowed = hasReservedSlot;
-            Result = ReservedSlotEventResult.UseBaseGameSystem;
+            this.UserId = userId;
+            this.HasReservedSlot = hasReservedSlot;
+            this.IsAllowed = hasReservedSlot;
+            this.Result = ReservedSlotEventResult.UseBaseGameSystem;
         }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace Exiled.Events.EventArgs.Player
                 switch (value)
                 {
                     case ReservedSlotEventResult.CanUseReservedSlots or ReservedSlotEventResult.UseBaseGameSystem:
-                        IsAllowed = HasReservedSlot;
+                        this.IsAllowed = this.HasReservedSlot;
                         break;
                     case ReservedSlotEventResult.AllowConnectionUnconditionally:
-                        IsAllowed = true;
+                        this.IsAllowed = true;
                         break;
                     case ReservedSlotEventResult.CannotUseReservedSlots:
-                        IsAllowed = false;
+                        this.IsAllowed = false;
                         break;
                     default:
                         return;

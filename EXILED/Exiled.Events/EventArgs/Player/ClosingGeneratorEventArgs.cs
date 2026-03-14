@@ -23,9 +23,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="generator">The <see cref="Scp079Generator" /> instance.</param>
         public ClosingGeneratorEventArgs(Player player, Scp079Generator generator)
         {
-            Player = player;
-            Generator = Generator.Get(generator);
-            IsAllowed = true;
+            this.Player = player;
+            this.Generator = Generator.Get(generator);
+            this.IsAllowed = true;
         }
 
         /// <summary>

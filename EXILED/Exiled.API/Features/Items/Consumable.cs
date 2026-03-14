@@ -23,10 +23,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="BaseConsumable"/> class.</param>
         public Consumable(BaseConsumable itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Consumable"/> class.
@@ -45,27 +43,27 @@ namespace Exiled.API.Features.Items
         /// <inheritdoc/>
         public override void Use(Player owner = null)
         {
-            Player oldOwner = Owner;
-            owner ??= Owner;
+            Player oldOwner = this.Owner;
+            owner ??= this.Owner;
 
             if (owner is null)
                 throw new System.InvalidOperationException("The Owner of the item cannot be null.");
 
-            Base.Owner = owner.ReferenceHub;
-            Base.ActivateEffects();
+            this.Base.Owner = owner.ReferenceHub;
+            this.Base.ActivateEffects();
 
-            typeof(UsableItemsController).InvokeStaticEvent(nameof(UsableItemsController.ServerOnUsingCompleted), new object[] { owner.ReferenceHub, Base });
+            typeof(UsableItemsController).InvokeStaticEvent(nameof(UsableItemsController.ServerOnUsingCompleted), new object[] { owner.ReferenceHub, this.Base });
 
-            Base.Owner = oldOwner.ReferenceHub;
+            this.Base.Owner = oldOwner.ReferenceHub;
         }
 
         /// <inheritdoc/>
         internal override void ChangeOwner(Player oldOwner, Player newOwner)
         {
             if (oldOwner != Server.Host)
-                Base.OnRemoved(null);
+                this.Base.OnRemoved(null);
 
-            Base.Owner = newOwner.ReferenceHub;
+            this.Base.Owner = newOwner.ReferenceHub;
         }
     }
 }

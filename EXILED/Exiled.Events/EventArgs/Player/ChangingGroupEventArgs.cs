@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingGroupEventArgs(Player player, UserGroup newGroup, bool isAllowed = true)
         {
-            Player = player;
-            NewGroup = newGroup;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.NewGroup = newGroup;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

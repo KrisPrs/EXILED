@@ -26,10 +26,8 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         /// <param name="itemBase">The <see cref="ItemBase"/> to encapsulate.</param>
         internal SingleUseKeycard(SingleUseKeycardItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleUseKeycard"/> class.
@@ -54,15 +52,15 @@ namespace Exiled.API.Features.Items.Keycards
         /// </remarks>
         public int Uses
         {
-            get => RemainingUses.TryGetValue(Serial, out int value) ? value : 1;
+            get => RemainingUses.TryGetValue(this.Serial, out int value) ? value : 1;
             set
             {
                 if (value <= 0)
                 {
-                    IsDestroyed = true;
+                    this.IsDestroyed = true;
                 }
 
-                RemainingUses[Serial] = value;
+                RemainingUses[this.Serial] = value;
             }
         }
 
@@ -71,15 +69,15 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public float TimeToDestroy
         {
-            get => Base._timeToDestroy;
-            set => Base._timeToDestroy = value;
+            get => this.Base._timeToDestroy;
+            set => this.Base._timeToDestroy = value;
         }
 
         /// <inheritdoc/>
         public override KeycardPermissions Permissions
         {
-            get => (KeycardPermissions)Base._singleUsePermissions;
-            set => Base._singleUsePermissions = (DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.Base._singleUsePermissions;
+            set => this.Base._singleUsePermissions = (DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -87,8 +85,8 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public bool AllowClosingDoors
         {
-            get => Base._allowClosingDoors;
-            set => Base._allowClosingDoors = value;
+            get => this.Base._allowClosingDoors;
+            set => this.Base._allowClosingDoors = value;
         }
 
         /// <summary>
@@ -96,8 +94,8 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         public bool IsDestroyed
         {
-            get => Base._destroyed;
-            set => Base._destroyed = value;
+            get => this.Base._destroyed;
+            set => this.Base._destroyed = value;
         }
 
         /// <summary>
@@ -109,17 +107,17 @@ namespace Exiled.API.Features.Items.Keycards
         /// Returns the Keycard in a human readable format.
         /// </summary>
         /// <returns>A string containing Keycard-related data.</returns>
-        public override string ToString() => $"{Type} ={AllowClosingDoors}= ({Serial}) [{Weight}] *{Scale}* |{Permissions}|";
+        public override string ToString() => $"{this.Type} ={this.AllowClosingDoors}= ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Permissions}|";
 
         /// <inheritdoc/>
         internal override void ReadPickupInfoBefore(Pickup pickup)
         {
             if (pickup is SingleUseKeycardPickup singleUseKeycard)
             {
-                Uses = singleUseKeycard.Uses;
-                TimeToDestroy = singleUseKeycard.TimeToDestroy;
-                Permissions = singleUseKeycard.Permissions;
-                AllowClosingDoors = singleUseKeycard.AllowClosingDoors;
+                this.Uses = singleUseKeycard.Uses;
+                this.TimeToDestroy = singleUseKeycard.TimeToDestroy;
+                this.Permissions = singleUseKeycard.Permissions;
+                this.AllowClosingDoors = singleUseKeycard.AllowClosingDoors;
             }
         }
     }

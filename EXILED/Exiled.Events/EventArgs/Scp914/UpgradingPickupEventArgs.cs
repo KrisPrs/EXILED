@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public UpgradingPickupEventArgs(ItemPickupBase item, Vector3 newPos, Scp914KnobSetting knobSetting)
         {
-            Pickup = Pickup.Get(item);
-            OutputPosition = newPos;
-            KnobSetting = knobSetting;
+            this.Pickup = Pickup.Get(item);
+            this.OutputPosition = newPos;
+            this.KnobSetting = knobSetting;
         }
 
         /// <summary>

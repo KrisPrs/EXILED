@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public PlayingFootstepEventArgs(Player target, Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp939 = Player.Role.As<Scp939Role>();
-            Target = target;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.Target = target;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

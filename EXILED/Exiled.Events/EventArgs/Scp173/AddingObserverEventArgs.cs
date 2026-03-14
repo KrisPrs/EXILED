@@ -24,10 +24,10 @@ namespace Exiled.Events.EventArgs.Scp173
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed" /></param>
         public AddingObserverEventArgs(Player player, Player observer, bool isAllowed = true)
         {
-            Scp173 = player.Role.As<Scp173Role>();
-            Player = player;
-            Observer = observer;
-            IsAllowed = isAllowed;
+            this.Scp173 = player.Role.As<Scp173Role>();
+            this.Player = player;
+            this.Observer = observer;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc />

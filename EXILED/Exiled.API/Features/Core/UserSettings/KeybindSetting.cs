@@ -31,20 +31,16 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public KeybindSetting(int id, string label, KeyCode suggested, bool preventInteractionOnGUI = false, bool allowSpectatorTrigger = false, string hintDescription = "", byte collectionId = byte.MaxValue, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSKeybindSetting(id, label, suggested, preventInteractionOnGUI, allowSpectatorTrigger, hintDescription, collectionId), header, onChanged)
-        {
-            Base = (SSKeybindSetting)base.Base;
-        }
+            : base(new SSKeybindSetting(id, label, suggested, preventInteractionOnGUI, allowSpectatorTrigger, hintDescription, collectionId), header, onChanged) =>
+            this.Base = (SSKeybindSetting)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeybindSetting"/> class.
         /// </summary>
         /// <param name="settingBase">A <see cref="SSKeybindSetting"/> instance.</param>
         internal KeybindSetting(SSKeybindSetting settingBase)
-            : base(settingBase)
-        {
-            Base = settingBase;
-        }
+            : base(settingBase) =>
+            this.Base = settingBase;
 
         /// <inheritdoc/>
         public new SSKeybindSetting Base { get; }
@@ -52,15 +48,15 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets a value indicating whether the key is pressed.
         /// </summary>
-        public bool IsPressed => Base.SyncIsPressed;
+        public bool IsPressed => this.Base.SyncIsPressed;
 
         /// <summary>
         /// Gets or sets a value indicating whether the interaction is prevented while player is in RA, Settings etc.
         /// </summary>
         public bool PreventInteractionOnGUI
         {
-            get => Base.PreventInteractionOnGUI;
-            set => Base.PreventInteractionOnGUI = value;
+            get => this.Base.PreventInteractionOnGUI;
+            set => this.Base.PreventInteractionOnGUI = value;
         }
 
         /// <summary>
@@ -68,8 +64,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public bool AllowSpectatorTrigger
         {
-            get => Base.AllowSpectatorTrigger;
-            set => Base.AllowSpectatorTrigger = value;
+            get => this.Base.AllowSpectatorTrigger;
+            set => this.Base.AllowSpectatorTrigger = value;
         }
 
         /// <summary>
@@ -77,18 +73,15 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public KeyCode KeyCode
         {
-            get => Base.SuggestedKey;
-            set => Base.SuggestedKey = value;
+            get => this.Base.SuggestedKey;
+            set => this.Base.SuggestedKey = value;
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="KeybindSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" /{IsPressed}/ *{KeyCode}* +{PreventInteractionOnGUI}+";
-        }
+        public override string ToString() => base.ToString() + $" /{this.IsPressed}/ *{this.KeyCode}* +{this.PreventInteractionOnGUI}+";
 
         /// <summary>
         /// Represents a config for KeybindSetting.
@@ -108,14 +101,14 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
             public KeybindConfig(string label, KeyCode keyCode, string hintDescription = null, bool preventInteractionOnGui = false, bool allowSpectatorTrigger = true, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                KeyCode = keyCode;
-                HintDescription = hintDescription;
-                PreventInteractionOnGUI = preventInteractionOnGui;
-                AllowSpectatorTrigger = allowSpectatorTrigger;
-                HeaderName = headerName;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.KeyCode = keyCode;
+                this.HintDescription = hintDescription;
+                this.PreventInteractionOnGUI = preventInteractionOnGui;
+                this.AllowSpectatorTrigger = allowSpectatorTrigger;
+                this.HeaderName = headerName;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -169,7 +162,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a KeybindSetting instanse.
             /// </summary>
             /// <returns>KeybindSetting.</returns>
-            public override KeybindSetting Create() => new(++IdIncrementor, Label, KeyCode, PreventInteractionOnGUI, AllowSpectatorTrigger, HintDescription, 255, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override KeybindSetting Create() => new(++IdIncrementor, this.Label, this.KeyCode, this.PreventInteractionOnGUI, this.AllowSpectatorTrigger, this.HintDescription, 255, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

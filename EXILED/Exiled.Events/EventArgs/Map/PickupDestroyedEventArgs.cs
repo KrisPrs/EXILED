@@ -22,10 +22,7 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="pickupBase">
         /// <inheritdoc cref="Pickup" />
         /// </param>
-        public PickupDestroyedEventArgs(ItemPickupBase pickupBase)
-        {
-            Pickup = Pickup.Get(pickupBase);
-        }
+        public PickupDestroyedEventArgs(ItemPickupBase pickupBase) => this.Pickup = Pickup.Get(pickupBase);
 
         /// <summary>
         /// Gets a value indicating the pickup being destroyed.

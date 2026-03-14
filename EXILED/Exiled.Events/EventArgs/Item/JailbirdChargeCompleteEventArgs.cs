@@ -24,9 +24,9 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="isAllowed">Whether the Jailbird is allowed to attack after charging.</param>
         public JailbirdChargeCompleteEventArgs(ReferenceHub player, InventorySystem.Items.ItemBase jailbird, bool isAllowed = true)
         {
-            Player = Player.Get(player);
-            Jailbird = Item.Get<Jailbird>(jailbird);
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(player);
+            this.Jailbird = Item.Get<Jailbird>(jailbird);
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Exiled.Events.EventArgs.Item
         /// <summary>
         /// Gets the <see cref="API.Features.Items.Item"/> associated with the charged Jailbird.
         /// </summary>
-        public Item Item => Jailbird;
+        public Item Item => this.Jailbird;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Jailbird is allowed to attack after charging.

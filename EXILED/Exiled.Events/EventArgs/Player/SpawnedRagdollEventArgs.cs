@@ -39,36 +39,36 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public SpawnedRagdollEventArgs(Player player, Ragdoll ragdoll, RagdollData info, DamageHandlerBase damageHandlerBase)
         {
-            Player = player;
-            Ragdoll = ragdoll;
-            Info = info;
-            DamageHandlerBase = damageHandlerBase;
+            this.Player = player;
+            this.Ragdoll = ragdoll;
+            this.Info = info;
+            this.DamageHandlerBase = damageHandlerBase;
         }
 
         /// <summary>
         /// Gets the ragdoll's position.
         /// </summary>
-        public Vector3 Position => Info.StartRelativePosition.Position;
+        public Vector3 Position => this.Info.StartRelativePosition.Position;
 
         /// <summary>
         /// Gets the ragdoll's rotation.
         /// </summary>
-        public Quaternion Rotation => WaypointBase.GetWorldRotation(Info.StartRelativePosition.WaypointId, Info.StartRelativeRotation);
+        public Quaternion Rotation => WaypointBase.GetWorldRotation(this.Info.StartRelativePosition.WaypointId, this.Info.StartRelativeRotation);
 
         /// <summary>
         /// Gets the ragdoll's <see cref="RoleTypeId" />.
         /// </summary>
-        public RoleTypeId Role => Info.RoleType;
+        public RoleTypeId Role => this.Info.RoleType;
 
         /// <summary>
         /// Gets the ragdoll's creation time.
         /// </summary>
-        public double CreationTime => Info.CreationTime;
+        public double CreationTime => this.Info.CreationTime;
 
         /// <summary>
         /// Gets the ragdoll's nickname.
         /// </summary>
-        public string Nickname => Info.Nickname;
+        public string Nickname => this.Info.Nickname;
 
         /// <summary>
         /// Gets the ragdoll's <see cref="RagdollData" />.

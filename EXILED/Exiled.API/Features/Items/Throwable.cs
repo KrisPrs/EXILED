@@ -28,8 +28,8 @@ namespace Exiled.API.Features.Items
         public Throwable(ThrowableItem itemBase)
             : base(itemBase)
         {
-            Base = itemBase;
-            InitializeProperties(itemBase);
+            this.Base = itemBase;
+            this.InitializeProperties(itemBase);
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float PinPullTime
         {
-            get => Base._pinPullTime;
-            set => Base._pinPullTime = value;
+            get => this.Base._pinPullTime;
+            set => this.Base._pinPullTime = value;
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public bool Repickable
         {
-            get => Base._repickupable;
-            set => Base._repickupable = value;
+            get => this.Base._repickupable;
+            set => this.Base._repickupable = value;
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace Exiled.API.Features.Items
         /// this.ServerThrow(projectileSettings.StartVelocity, projectileSettings.UpwardsFactor, projectileSettings.StartTorque, startVel);
         public void Throw(bool fullForce = true)
         {
-            ThrowableItem.ProjectileSettings settings = fullForce ? Base.FullThrowSettings : Base.WeakThrowSettings;
+            ThrowableItem.ProjectileSettings settings = fullForce ? this.Base.FullThrowSettings : this.Base.WeakThrowSettings;
 
-            Base.ServerThrow(settings.StartVelocity, settings.UpwardsFactor, settings.StartTorque, ThrowableNetworkHandler.GetLimitedVelocity(Owner?.Velocity ?? Vector3.one));
+            this.Base.ServerThrow(settings.StartVelocity, settings.UpwardsFactor, settings.StartTorque, ThrowableNetworkHandler.GetLimitedVelocity(this.Owner?.Velocity ?? Vector3.one));
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace Exiled.API.Features.Items
         /// <remarks><see cref="Projectile"/> wont be activated, use <see cref="Projectile.Activate"/> to activate spawned <see cref="Projectile"/>.</remarks>
         public virtual Projectile CreateProjectile(Vector3 position, Quaternion rotation = default, bool spawn = true)
         {
-            ThrownProjectile ipb = Object.Instantiate(Base.Projectile, position, rotation);
+            ThrownProjectile ipb = Object.Instantiate(this.Base.Projectile, position, rotation);
 
-            ipb.Info = new PickupSyncInfo(Type, Weight, Serial);
+            ipb.Info = new PickupSyncInfo(this.Type, this.Weight, this.Serial);
 
             Projectile projectile = Pickup.Get<Projectile>(ipb);
 
@@ -110,23 +110,23 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Cancel the the throws of the item.
         /// </summary>
-        public void CancelThrow() => Base.ServerProcessCancellation();
+        public void CancelThrow() => this.Base.ServerProcessCancellation();
 
         /// <summary>
         /// Clones current <see cref="Throwable"/> object.
         /// </summary>
         /// <returns> New <see cref="Throwable"/> object. </returns>
-        public override Item Clone() => new Throwable(Type)
+        public override Item Clone() => new Throwable(this.Type)
         {
-            PinPullTime = PinPullTime,
-            Repickable = Repickable,
+            PinPullTime = this.PinPullTime,
+            Repickable = this.Repickable,
         };
 
         /// <summary>
         /// Returns the Throwable in a human readable format.
         /// </summary>
         /// <returns>A string containing Throwable-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{PinPullTime}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.PinPullTime}|";
 
         /// <summary>
         /// initialize throwable item properties.
@@ -136,7 +136,7 @@ namespace Exiled.API.Features.Items
         {
             if (throwable.Projectile is TimeGrenade timeGrenade)
             {
-                FuseTime = timeGrenade._fuseTime;
+                this.FuseTime = timeGrenade._fuseTime;
             }
         }
     }

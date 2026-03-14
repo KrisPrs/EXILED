@@ -56,22 +56,22 @@ namespace Exiled.CustomItems.API.Features
         /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.UsingItem += OnInternalUsingItem;
-            Exiled.Events.Handlers.Player.ItemRemoved += OnInternalItemRemoved;
-            Exiled.Events.Handlers.Scp1344.Deactivating += OnInternalDeactivating;
-            Exiled.Events.Handlers.Scp1344.ChangedStatus += OnInternalChangedStatus;
-            Exiled.Events.Handlers.Scp1344.ChangingStatus += OnInternalChangingStatus;
+            Exiled.Events.Handlers.Player.UsingItem += this.OnInternalUsingItem;
+            Exiled.Events.Handlers.Player.ItemRemoved += this.OnInternalItemRemoved;
+            Exiled.Events.Handlers.Scp1344.Deactivating += this.OnInternalDeactivating;
+            Exiled.Events.Handlers.Scp1344.ChangedStatus += this.OnInternalChangedStatus;
+            Exiled.Events.Handlers.Scp1344.ChangingStatus += this.OnInternalChangingStatus;
             base.SubscribeEvents();
         }
 
         /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.UsingItem -= OnInternalUsingItem;
-            Exiled.Events.Handlers.Player.ItemRemoved -= OnInternalItemRemoved;
-            Exiled.Events.Handlers.Scp1344.Deactivating -= OnInternalDeactivating;
-            Exiled.Events.Handlers.Scp1344.ChangedStatus -= OnInternalChangedStatus;
-            Exiled.Events.Handlers.Scp1344.ChangingStatus -= OnInternalChangingStatus;
+            Exiled.Events.Handlers.Player.UsingItem -= this.OnInternalUsingItem;
+            Exiled.Events.Handlers.Player.ItemRemoved -= this.OnInternalItemRemoved;
+            Exiled.Events.Handlers.Scp1344.Deactivating -= this.OnInternalDeactivating;
+            Exiled.Events.Handlers.Scp1344.ChangedStatus -= this.OnInternalChangedStatus;
+            Exiled.Events.Handlers.Scp1344.ChangingStatus -= this.OnInternalChangingStatus;
             base.UnsubscribeEvents();
         }
 
@@ -84,7 +84,7 @@ namespace Exiled.CustomItems.API.Features
             if (Item.Get(ev.Item) is not Scp1344 { IsWorn: true } scp1344)
                 return;
 
-            InternalRemove(ev.Player, scp1344);
+            this.InternalRemove(ev.Player, scp1344);
         }
 
         /// <summary>
@@ -131,10 +131,10 @@ namespace Exiled.CustomItems.API.Features
             if (!ev.IsAllowed)
                 return;
 
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
-            if (!CanBeRemoveSafely)
+            if (!this.CanBeRemoveSafely)
                 return;
 
             ev.NewStatus = Scp1344Status.Idle;
@@ -143,59 +143,59 @@ namespace Exiled.CustomItems.API.Features
 
         private void OnInternalChangedStatus(ChangedStatusEventArgs ev)
         {
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
             switch (ev.Scp1344Status)
             {
                 case Scp1344Status.Deactivating:
-                    ev.Scp1344.Base._useTime = Scp1344Item.DeactivationTime - RemovingTime;
+                    ev.Scp1344.Base._useTime = Scp1344Item.DeactivationTime - this.RemovingTime;
                     break;
 
                 case Scp1344Status.Activating:
-                    ev.Scp1344.Base._useTime = Scp1344Item.ActivationTime - WearingTime;
+                    ev.Scp1344.Base._useTime = Scp1344Item.ActivationTime - this.WearingTime;
                     break;
 
                 case Scp1344Status.Active:
-                    InternalEquip(ev.Player, ev.Scp1344);
+                    this.InternalEquip(ev.Player, ev.Scp1344);
                     break;
             }
         }
 
         private void InternalEquip(Player player, Scp1344 goggles)
         {
-            if (Remove1344Effect)
+            if (this.Remove1344Effect)
             {
                 player.DisableEffect(EffectType.Scp1344);
                 player.ReferenceHub.EnableWearables(WearableElements.Scp1344Goggles);
             }
 
-            OnWornGoggles(player, goggles);
+            this.OnWornGoggles(player, goggles);
         }
 
         private void InternalRemove(Player player, Scp1344 goggles)
         {
-            if (!Remove1344Effect)
+            if (!this.Remove1344Effect)
                 player.DisableEffect(EffectType.Scp1344);
 
-            if (CanBeRemoveSafely)
+            if (this.CanBeRemoveSafely)
             {
                 player.DisableEffect(EffectType.Blindness);
                 player.ReferenceHub?.DisableWearables(WearableElements.Scp1344Goggles);
             }
 
-            OnRemovedGoggles(player, goggles);
+            this.OnRemovedGoggles(player, goggles);
         }
 
         private void OnInternalItemRemoved(ItemRemovedEventArgs ev)
         {
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
             if (ev.Item is not Scp1344 { IsWorn: true } scp1344)
                 return;
 
-            InternalRemove(ev.Player, scp1344);
+            this.InternalRemove(ev.Player, scp1344);
         }
 
         private void OnInternalChangingStatus(ChangingStatusEventArgs ev)
@@ -203,13 +203,13 @@ namespace Exiled.CustomItems.API.Features
             if (!ev.IsAllowed)
                 return;
 
-            if (!Check(ev.Item))
+            if (!this.Check(ev.Item))
                 return;
 
             if (ev.Scp1344StatusOld != Scp1344Status.Deactivating || ev.Scp1344StatusNew != Scp1344Status.Idle)
                 return;
 
-            InternalRemove(ev.Player, ev.Scp1344);
+            this.InternalRemove(ev.Player, ev.Scp1344);
         }
     }
 }

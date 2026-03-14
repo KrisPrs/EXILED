@@ -19,10 +19,7 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(WorkstationController), nameof(WorkstationController.Start))]
     internal class WorkstationListAdd
     {
-        private static void Postfix(WorkstationController __instance)
-        {
-            API.Features.Workstation.Get(__instance);
-        }
+        private static void Postfix(WorkstationController __instance) => API.Features.Workstation.Get(__instance);
     }
 
     /// <summary>
@@ -31,9 +28,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(WorkstationController), nameof(WorkstationController.OnDestroy))]
     internal class WorkstationListRemove
     {
-        private static void Postfix(WorkstationController __instance)
-        {
-            API.Features.Workstation.WorkstationControllerToWorkstation.Remove(__instance);
-        }
+        private static void Postfix(WorkstationController __instance) => API.Features.Workstation.WorkstationControllerToWorkstation.Remove(__instance);
     }
 }

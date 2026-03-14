@@ -36,7 +36,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override string Name
         {
-            get => Room.ToString();
+            get => this.Room.ToString();
             set => throw new InvalidOperationException("The name of this type of SpawnPoint cannot be changed.");
         }
 
@@ -46,9 +46,9 @@ namespace Exiled.API.Features.Spawn
         {
             get
             {
-                Room roomInstance = Features.Room.Get(Room) ?? throw new InvalidOperationException("The room instance could not be found.");
+                Room roomInstance = Features.Room.Get(this.Room) ?? throw new InvalidOperationException("The room instance could not be found.");
 
-                return Offset != Vector3.zero ? roomInstance.transform.TransformPoint(Offset) : roomInstance.Position;
+                return this.Offset != Vector3.zero ? roomInstance.transform.TransformPoint(this.Offset) : roomInstance.Position;
             }
             set => throw new InvalidOperationException("The position of this type of SpawnPoint cannot be changed.");
         }

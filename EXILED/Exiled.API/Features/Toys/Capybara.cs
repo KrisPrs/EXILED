@@ -25,7 +25,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="capybaraToy">The <see cref="CapybaraToy"/> of the toy.</param>
         internal Capybara(CapybaraToy capybaraToy)
-            : base(capybaraToy, AdminToyType.Capybara) => Base = capybaraToy;
+            : base(capybaraToy, AdminToyType.Capybara) => this.Base = capybaraToy;
 
         /// <summary>
         /// Gets the prefab.
@@ -42,8 +42,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public bool Collidable
         {
-            get => Base.NetworkCollisionsEnabled;
-            set => Base.NetworkCollisionsEnabled = value;
+            get => this.Base.NetworkCollisionsEnabled;
+            set => this.Base.NetworkCollisionsEnabled = value;
         }
 
         /// <summary>

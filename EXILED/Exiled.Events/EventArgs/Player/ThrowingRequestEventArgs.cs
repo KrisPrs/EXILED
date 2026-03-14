@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="request"><inheritdoc cref="RequestType"/></param>
         public ThrowingRequestEventArgs(Player player, ThrowableItem item, ThrowableNetworkHandler.RequestType request)
         {
-            Player = player;
-            Throwable = Item.Get<Throwable>(item);
-            RequestType = (ThrowRequest)request;
+            this.Player = player;
+            this.Throwable = Item.Get<Throwable>(item);
+            this.RequestType = (ThrowRequest)request;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Exiled.Events.EventArgs.Player
         public Throwable Throwable { get; set; }
 
         /// <inheritdoc/>
-        public Item Item => Throwable;
+        public Item Item => this.Throwable;
 
         /// <summary>
         ///  Gets or sets the type of throw being requested.

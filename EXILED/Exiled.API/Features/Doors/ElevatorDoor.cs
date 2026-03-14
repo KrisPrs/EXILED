@@ -27,10 +27,10 @@ namespace Exiled.API.Features.Doors
         internal ElevatorDoor(Interactables.Interobjects.ElevatorDoor door, List<Room> room)
             : base(door, room)
         {
-            Base = door;
-            Lift = Lift.Get(x => x.Group == Group).FirstOrDefault();
+            this.Base = door;
+            this.Lift = Lift.Get(x => x.Group == this.Group).FirstOrDefault();
 
-            Panel = Object.FindObjectsByType<ElevatorPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(x => x._door == door);
+            this.Panel = Object.FindObjectsByType<ElevatorPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(x => x._door == door);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the <see cref="ElevatorGroup"/> that this door's <see cref="Lift"/> belongs to.
         /// </summary>
-        public ElevatorGroup Group => Base.Group;
+        public ElevatorGroup Group => this.Base.Group;
 
         /// <summary>
         /// Gets the <see cref="ElevatorPanel"/> associated with this lift.
@@ -51,7 +51,7 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the type according to <see cref="Group"/>.
         /// </summary>
-        public ElevatorType ElevatorType => Group switch
+        public ElevatorType ElevatorType => this.Group switch
         {
             ElevatorGroup.Scp049 => ElevatorType.Scp049,
             ElevatorGroup.GateA01 or ElevatorGroup.GateA02 => ElevatorType.GateA,
@@ -72,6 +72,6 @@ namespace Exiled.API.Features.Doors
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"{base.ToString()} !{ElevatorType}!";
+        public override string ToString() => $"{base.ToString()} !{this.ElevatorType}!";
     }
 }

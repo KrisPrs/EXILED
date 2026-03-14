@@ -24,7 +24,7 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DestroyingEventArgs(Player player)
         {
-            Player = player;
+            this.Player = player;
 #if DEBUG
             Log.Debug($"Destroying obj for {player.Nickname}");
 #endif

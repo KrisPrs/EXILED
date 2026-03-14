@@ -36,10 +36,10 @@ namespace Exiled.Events.Patches.Fixes
 #pragma warning disable SA1600 // Elements should be documented
         public FixMarshmallowManFF(MarshmallowItem marshmallowItem, bool isEvilMode)
         {
-            MarshmallowItem = marshmallowItem;
-            Attacker = new(marshmallowItem.Owner);
-            Damage = marshmallowItem._attackDamage;
-            ForceFullFriendlyFire = isEvilMode;
+            this.MarshmallowItem = marshmallowItem;
+            this.Attacker = new(marshmallowItem.Owner);
+            this.Damage = marshmallowItem._attackDamage;
+            this.ForceFullFriendlyFire = isEvilMode;
         }
 
         public MarshmallowItem MarshmallowItem { get; set; }
@@ -63,7 +63,7 @@ namespace Exiled.Events.Patches.Fixes
 
         public override string DeathScreenText { get; } = DeathTranslations.MarshmallowMan.DeathscreenTranslation;
 
-        public override string ServerLogsText => "Stabbed with Marshmallow Item by " + Attacker.Nickname;
+        public override string ServerLogsText => "Stabbed with Marshmallow Item by " + this.Attacker.Nickname;
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 

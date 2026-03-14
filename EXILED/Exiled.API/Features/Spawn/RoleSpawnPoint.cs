@@ -34,7 +34,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override string Name
         {
-            get => Role.ToString();
+            get => this.Role.ToString();
             set => throw new InvalidOperationException("The name of this type of SpawnPoint cannot be changed.");
         }
 
@@ -42,7 +42,7 @@ namespace Exiled.API.Features.Spawn
         [YamlIgnore]
         public override Vector3 Position
         {
-            get => Role.GetRandomSpawnLocation().Position;
+            get => this.Role.GetRandomSpawnLocation().Position;
             set => throw new InvalidOperationException("The position of this type of SpawnPoint cannot be changed.");
         }
     }

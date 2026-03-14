@@ -24,12 +24,12 @@ namespace Exiled.Events.EventArgs.Item
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public InspectingItemEventArgs(ItemBase item, bool isAllowed = true)
         {
-            Item = Item.Get(item);
-            IsAllowed = isAllowed;
+            this.Item = Item.Get(item);
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>
-        public Player Player => Item.Owner;
+        public Player Player => this.Item.Owner;
 
         /// <inheritdoc/>
         public Item Item { get; }

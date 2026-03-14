@@ -31,13 +31,13 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="ownPos">The audio owner position.</param>
         public SendingGunSoundEventArgs(InventorySystem.Items.Firearms.Firearm firearm, int audioIndex, MixerChannel mixerChannel, float range, float pitch, Vector3 ownPos)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
-            Range = range;
-            Pitch = pitch;
-            AudioIndex = audioIndex;
-            MixerChannel = mixerChannel;
-            SendingPosition = ownPos;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
+            this.Range = range;
+            this.Pitch = pitch;
+            this.AudioIndex = audioIndex;
+            this.MixerChannel = mixerChannel;
+            this.SendingPosition = ownPos;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Exiled.Events.EventArgs.Player
         public Player Player { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the firearm that was the source of the sound.

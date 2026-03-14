@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Warhead
         /// </param>
         public ChangingLeverStatusEventArgs(Player player, bool curState, bool isAllowed = true)
         {
-            Player = player;
-            CurrentState = curState;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.CurrentState = curState;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

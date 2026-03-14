@@ -37,13 +37,13 @@ namespace Exiled.Events.EventArgs.Map
         /// <param name="explosionType"><inheritdoc cref="ExplosionType"/></param>
         public ExplodingGrenadeEventArgs(Footprint thrower, Vector3 position, ExplosionGrenade grenade, Collider[] targets, ExplosionType explosionType)
         {
-            Player = Player.Get(thrower.Hub);
-            Projectile = Pickup.Get<EffectGrenadeProjectile>(grenade);
-            Position = position;
-            TargetsToAffect = HashSetPool<Player>.Pool.Get();
-            ExplosionType = explosionType;
+            this.Player = Player.Get(thrower.Hub);
+            this.Projectile = Pickup.Get<EffectGrenadeProjectile>(grenade);
+            this.Position = position;
+            this.TargetsToAffect = HashSetPool<Player>.Pool.Get();
+            this.ExplosionType = explosionType;
 
-            if (Projectile.Base is not ExplosionGrenade)
+            if (this.Projectile.Base is not ExplosionGrenade)
                 return;
 
             foreach (Collider collider in targets)
@@ -55,13 +55,13 @@ namespace Exiled.Events.EventArgs.Map
                 if (player is null)
                     continue;
 
-                switch (Player is null)
+                switch (this.Player is null)
                 {
                     case false:
                         {
                             if (Server.FriendlyFire || IndividualFriendlyFire.CheckFriendlyFirePlayer(thrower, hub))
                             {
-                                TargetsToAffect.Add(player);
+                                this.TargetsToAffect.Add(player);
                             }
                         }
 
@@ -70,7 +70,7 @@ namespace Exiled.Events.EventArgs.Map
                         {
                             if (Server.FriendlyFire || thrower.Hub == Server.Host.ReferenceHub || HitboxIdentity.IsEnemy(thrower.Role, hub.roleManager.CurrentRole.RoleTypeId))
                             {
-                                TargetsToAffect.Add(player);
+                                this.TargetsToAffect.Add(player);
                             }
                         }
 
@@ -96,21 +96,18 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public ExplodingGrenadeEventArgs(Player thrower, EffectGrenade grenade, HashSet<Player> targetsToAffect, bool isAllowed = true)
         {
-            Player = thrower ?? Server.Host;
-            Projectile = Pickup.Get<EffectGrenadeProjectile>(grenade);
-            Position = Projectile.Position;
-            ExplosionType = ExplosionType.Custom;
-            TargetsToAffect = HashSetPool<Player>.Pool.Get(targetsToAffect ?? new HashSet<Player>());
-            IsAllowed = isAllowed;
+            this.Player = thrower ?? Server.Host;
+            this.Projectile = Pickup.Get<EffectGrenadeProjectile>(grenade);
+            this.Position = this.Projectile.Position;
+            this.ExplosionType = ExplosionType.Custom;
+            this.TargetsToAffect = HashSetPool<Player>.Pool.Get(targetsToAffect ?? new HashSet<Player>());
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
         /// Finalizes an instance of the <see cref="ExplodingGrenadeEventArgs"/> class.
         /// </summary>
-        ~ExplodingGrenadeEventArgs()
-        {
-            HashSetPool<Player>.Pool.Return(TargetsToAffect);
-        }
+        ~ExplodingGrenadeEventArgs() => HashSetPool<Player>.Pool.Return(this.TargetsToAffect);
 
         /// <summary>
         /// Gets the position where the grenade is exploding.
@@ -124,7 +121,7 @@ namespace Exiled.Events.EventArgs.Map
         public ExplosionType ExplosionType
         {
             get;
-            set => field = Projectile is ExplosionGrenadeProjectile ? value : ExplosionType.Custom;
+            set => field = this.Projectile is ExplosionGrenadeProjectile ? value : ExplosionType.Custom;
         }
 
         /// <summary>
@@ -148,6 +145,6 @@ namespace Exiled.Events.EventArgs.Map
         public Player Player { get; }
 
         /// <inheritdoc/>
-        Pickup IPickupEvent.Pickup => Projectile;
+        Pickup IPickupEvent.Pickup => this.Projectile;
     }
 }

@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="pickupBase">The <see cref="ItemPickupBase"/> the <see cref="ItemBase"/> originated from, or <see langword="null"/> if the item was not picked up.</param>
         public ItemRemovedEventArgs(ReferenceHub referenceHub, ItemBase itemBase, ItemPickupBase pickupBase)
         {
-            Player = API.Features.Player.Get(referenceHub);
-            Item = Item.Get(itemBase);
-            Pickup = Pickup.Get(pickupBase);
+            this.Player = API.Features.Player.Get(referenceHub);
+            this.Item = Item.Get(itemBase);
+            this.Pickup = Pickup.Get(pickupBase);
         }
 
         /// <summary>

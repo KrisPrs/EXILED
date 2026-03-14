@@ -58,10 +58,7 @@ namespace Exiled.API.Features
         /// <param name="isHeld">Indicates whether C.A.S.S.I.E has to hold the message.</param>
         /// <param name="isNoisy">Indicates whether C.A.S.S.I.E has to make noises during the message.</param>
         /// <param name="isSubtitles">Indicates whether C.A.S.S.I.E has to make subtitles.</param>
-        public static void MessageTranslated(string message, string translation, bool isHeld = false, bool isNoisy = false, bool isSubtitles = true)
-        {
-            new CassieAnnouncement(new CassieTtsPayload(message, translation, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
-        }
+        public static void MessageTranslated(string message, string translation, bool isHeld = false, bool isNoisy = false, bool isSubtitles = true) => new CassieAnnouncement(new CassieTtsPayload(message, translation, isHeld), 0f, isNoisy ? 1 : 0).AddToQueue();
 
         /// <summary>
         /// Reproduce a glitchy C.A.S.S.I.E announcement.

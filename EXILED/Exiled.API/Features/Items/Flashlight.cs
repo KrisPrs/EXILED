@@ -25,10 +25,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="ToggleableLightItemBase"/> class.</param>
         public Flashlight(ToggleableLightItemBase itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Flashlight"/> class, as well as a new Flashlight item.
@@ -50,11 +48,11 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public bool IsEmittingLight
         {
-            get => Base.IsEmittingLight;
+            get => this.Base.IsEmittingLight;
             set
             {
-                Base.IsEmittingLight = value;
-                new FlashlightNetworkHandler.FlashlightMessage(Serial, value).SendToAuthenticated(0);
+                this.Base.IsEmittingLight = value;
+                new FlashlightNetworkHandler.FlashlightMessage(this.Serial, value).SendToAuthenticated(0);
             }
         }
 
@@ -63,21 +61,21 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float NextAllowedTime
         {
-            get => Base.NextAllowedTime;
-            set => Base.NextAllowedTime = value;
+            get => this.Base.NextAllowedTime;
+            set => this.Base.NextAllowedTime = value;
         }
 
         /// <inheritdoc/>
-        public override Item Clone() => new Flashlight(Type)
+        public override Item Clone() => new Flashlight(this.Type)
         {
-            IsEmittingLight = IsEmittingLight,
-            NextAllowedTime = NextAllowedTime,
+            IsEmittingLight = this.IsEmittingLight,
+            NextAllowedTime = this.NextAllowedTime,
         };
 
         /// <summary>
         /// Returns the item in a human readable format.
         /// </summary>
         /// <returns>A string containing item-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{IsEmittingLight}| /{NextAllowedTime}/";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.IsEmittingLight}| /{this.NextAllowedTime}/";
     }
 }

@@ -47,14 +47,14 @@ namespace Exiled.Events.EventArgs.Player
             ConnectionRequest request,
             int readerStartPosition)
         {
-            UserId = userId;
-            IpAddress = ipAddress;
-            Expiration = expiration;
-            Flags = flags;
-            Country = country;
-            Signature = signature;
-            Request = request;
-            ReaderStartPosition = readerStartPosition;
+            this.UserId = userId;
+            this.IpAddress = ipAddress;
+            this.Expiration = expiration;
+            this.Flags = flags;
+            this.Country = country;
+            this.Signature = signature;
+            this.Request = request;
+            this.ReaderStartPosition = readerStartPosition;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Exiled.Events.EventArgs.Player
             if (seconds is < 1 or > 25)
                 throw new ArgumentOutOfRangeException(nameof(seconds), "Delay duration must be between 1 and 25 seconds.");
 
-            Reject(RejectionReason.Delay, isForced, null, 0, seconds);
+            this.Reject(RejectionReason.Delay, isForced, null, 0, seconds);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         /// <param name="port">The new server port.</param>
         /// <param name="isForced">Indicates whether the player has to be rejected forcefully.</param>
-        public void Redirect(ushort port, bool isForced) => Reject(RejectionReason.Redirect, isForced, null, 0, 0, port);
+        public void Redirect(ushort port, bool isForced) => this.Reject(RejectionReason.Redirect, isForced, null, 0, 0, port);
 
         /// <summary>
         /// Rejects a player who's trying to authenticate.
@@ -128,7 +128,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="banReason">The ban reason.</param>
         /// <param name="expiration">The ban expiration time.</param>
         /// <param name="isForced">Indicates whether the player has to be rejected forcefully.</param>
-        public void RejectBanned(string banReason, DateTime expiration, bool isForced) => Reject(RejectionReason.Banned, isForced, banReason, expiration.Ticks);
+        public void RejectBanned(string banReason, DateTime expiration, bool isForced) => this.Reject(RejectionReason.Banned, isForced, banReason, expiration.Ticks);
 
         /// <summary>
         /// Rejects a player who's trying to authenticate.
@@ -136,7 +136,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="banReason">The ban reason.</param>
         /// <param name="expiration">The ban expiration time in .NET Ticks.</param>
         /// <param name="isForced">Indicates whether the player has to be rejected forcefully.</param>
-        public void RejectBanned(string banReason, long expiration, bool isForced) => Reject(RejectionReason.Banned, isForced, banReason, expiration);
+        public void RejectBanned(string banReason, long expiration, bool isForced) => this.Reject(RejectionReason.Banned, isForced, banReason, expiration);
 
         /// <summary>
         /// Rejects a player who's trying to authenticate.
@@ -145,15 +145,15 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isForced">Indicates whether the player has to be rejected forcefully.</param>
         public void Reject(NetDataWriter writer, bool isForced)
         {
-            if (!IsAllowed)
+            if (!this.IsAllowed)
                 return;
 
-            IsAllowed = false;
+            this.IsAllowed = false;
 
             if (isForced)
-                Request.RejectForce(writer);
+                this.Request.RejectForce(writer);
             else
-                Request.Reject(writer);
+                this.Request.Reject(writer);
         }
 
         /// <summary>
@@ -161,12 +161,12 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         /// <param name="rejectionReason">The custom rejection reason.</param>
         /// <param name="isForced">Indicates whether the player has to be rejected forcefully.</param>
-        public void Reject(string rejectionReason, bool isForced) => Reject(RejectionReason.Custom, isForced, rejectionReason);
+        public void Reject(string rejectionReason, bool isForced) => this.Reject(RejectionReason.Custom, isForced, rejectionReason);
 
         /// <summary>
         /// Rejects a player who's trying to authenticate.
         /// </summary>
-        public void ForceReject() => Reject(RejectionReason.Custom, true, "Rejected By A Plugin");
+        public void ForceReject() => this.Reject(RejectionReason.Custom, true, "Rejected By A Plugin");
 
         /// <summary>
         /// Rejects a player who's trying to authenticate.
@@ -182,10 +182,10 @@ namespace Exiled.Events.EventArgs.Player
             if (customReason is not null && (customReason.Length > 400))
                 throw new ArgumentOutOfRangeException(nameof(rejectionReason), "Reason can't be longer than 400 characters.");
 
-            if (!IsAllowed)
+            if (!this.IsAllowed)
                 return;
 
-            IsAllowed = false;
+            this.IsAllowed = false;
 
             NetDataWriter rejectData = new();
 
@@ -212,9 +212,9 @@ namespace Exiled.Events.EventArgs.Player
             }
 
             if (isForced)
-                Request.RejectForce(rejectData);
+                this.Request.RejectForce(rejectData);
             else
-                Request.Reject(rejectData);
+                this.Request.Reject(rejectData);
         }
     }
 }

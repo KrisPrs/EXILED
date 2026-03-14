@@ -29,8 +29,8 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public ActivatingEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

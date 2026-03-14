@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public EnteringPocketDimensionEventArgs(Player player, Player scp106, bool isAllowed = true)
         {
-            Player = player;
-            Scp106 = scp106;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp106 = scp106;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

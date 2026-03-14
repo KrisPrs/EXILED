@@ -93,10 +93,7 @@ namespace Exiled.API.Extensions
         /// <param name="action">Action on collision.</param>
         /// <param name="owner">GameObject that will be ignored in collision.</param>
         /// <param name="fuseDelay">Delay before collision may be proceeded.</param>
-        public static void AttachActionOnCollision(this GameObject gameObject, Action action, Player owner = null, float fuseDelay = 0.15f)
-        {
-            gameObject.AddComponent<Exiled.API.Features.Components.CollisionHandler>().Init((owner ?? Server.Host).GameObject, action, fuseDelay);
-        }
+        public static void AttachActionOnCollision(this GameObject gameObject, Action action, Player owner = null, float fuseDelay = 0.15f) => gameObject.AddComponent<Exiled.API.Features.Components.CollisionHandler>().Init((owner ?? Server.Host).GameObject, action, fuseDelay);
 
         /// <summary>
         /// Заменяет вспомогательные теги в тексте (в основном для кесси).

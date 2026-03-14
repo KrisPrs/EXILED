@@ -19,7 +19,7 @@ namespace Exiled.Events.EventArgs.Player
         /// Initializes a new instance of the <see cref="LeftEventArgs"/> class.
         /// </summary>
         /// <param name="player">The player who left the server.</param>
-        public LeftEventArgs(Player player) => Player = player;
+        public LeftEventArgs(Player player) => this.Player = player;
 
         /// <summary>
         /// Gets the left player.

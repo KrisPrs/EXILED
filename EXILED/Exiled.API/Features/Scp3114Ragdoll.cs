@@ -22,10 +22,8 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="ragdoll">The base ragdoll to wrap. <inheritdoc cref="Base"/></param>
         internal Scp3114Ragdoll(BaseScp3114Ragdoll ragdoll)
-            : base(ragdoll)
-        {
-            Base = ragdoll;
-        }
+            : base(ragdoll) =>
+            this.Base = ragdoll;
 
         /// <inheritdoc/>
         public new BaseScp3114Ragdoll Base { get; }
@@ -35,8 +33,8 @@ namespace Exiled.API.Features
         /// </summary>
         public RoleTypeId DisguiseRole
         {
-            get => Base._disguiseRole;
-            set => Base.Network_disguiseRole = value;
+            get => this.Base._disguiseRole;
+            set => this.Base.Network_disguiseRole = value;
         }
 
         /// <summary>
@@ -44,8 +42,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float RevealDelay
         {
-            get => Base._revealDelay;
-            set => Base._revealDelay = value;
+            get => this.Base._revealDelay;
+            set => this.Base._revealDelay = value;
         }
 
         /// <summary>
@@ -53,8 +51,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float RevealDuration
         {
-            get => Base._revealDuration;
-            set => Base._revealDuration = value;
+            get => this.Base._revealDuration;
+            set => this.Base._revealDuration = value;
         }
 
         /// <summary>
@@ -62,8 +60,8 @@ namespace Exiled.API.Features
         /// </summary>
         public float RevealElapsed
         {
-            get => Base._revealElapsed;
-            set => Base._revealElapsed = value;
+            get => this.Base._revealElapsed;
+            set => this.Base._revealElapsed = value;
         }
 
         /// <summary>
@@ -71,8 +69,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsPlayingAnimation
         {
-            get => Base._playingAnimation;
-            set => Base._playingAnimation = value;
+            get => this.Base._playingAnimation;
+            set => this.Base._playingAnimation = value;
         }
     }
 }

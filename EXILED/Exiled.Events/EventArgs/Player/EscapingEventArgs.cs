@@ -32,10 +32,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public EscapingEventArgs(ReferenceHub referenceHub, RoleTypeId newRole, EscapeScenario escapeScenario)
         {
-            Player = Player.Get(referenceHub);
-            NewRole = newRole;
-            EscapeScenario = escapeScenario;
-            IsAllowed = escapeScenario is not EscapeScenario.None;
+            this.Player = Player.Get(referenceHub);
+            this.NewRole = newRole;
+            this.EscapeScenario = escapeScenario;
+            this.IsAllowed = escapeScenario is not EscapeScenario.None;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public EscapeScenario EscapeScenario
         {
-            get => (field is EscapeScenario.None && IsAllowed) ? EscapeScenario.CustomEscape : field;
+            get => (field is EscapeScenario.None && this.IsAllowed) ? EscapeScenario.CustomEscape : field;
             set;
         }
 

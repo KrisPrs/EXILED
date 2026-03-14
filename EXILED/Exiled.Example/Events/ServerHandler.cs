@@ -15,15 +15,9 @@ namespace Exiled.Example.Events
     internal sealed class ServerHandler
     {
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers"/>
-        public void OnWaitingForPlayers()
-        {
-            Log.Info("I'm waiting for players!"); // This is an example of information messages sent to your console!
-        }
+        public void OnWaitingForPlayers() => Log.Info("I'm waiting for players!"); // This is an example of information messages sent to your console!
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRoundStarted"/>
-        public void OnRoundStarted()
-        {
-            Log.Info($"A round has started with {Player.Dictionary.Count} players!");
-        }
+        public void OnRoundStarted() => Log.Info($"A round has started with {Player.Dictionary.Count} players!");
     }
 }

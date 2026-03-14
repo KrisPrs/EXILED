@@ -22,9 +22,6 @@ namespace Exiled.Events.Patches.Fixes
     [HarmonyPatch(typeof(Scp330Bag), nameof(Scp330Bag.OnAdded))]
     internal static class ServerHub330Fix
     {
-        private static bool Prefix(Scp330Bag __instance, ItemPickupBase pickup)
-        {
-            return __instance.Owner != Server.Host.ReferenceHub;
-        }
+        private static bool Prefix(Scp330Bag __instance, ItemPickupBase pickup) => __instance.Owner != Server.Host.ReferenceHub;
     }
 }

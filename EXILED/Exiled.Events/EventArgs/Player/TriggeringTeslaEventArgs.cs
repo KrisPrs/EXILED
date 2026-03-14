@@ -27,10 +27,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TriggeringTeslaEventArgs(Player player, TeslaGate teslaGate)
         {
-            Player = player;
-            Tesla = teslaGate;
-            IsInHurtingRange = Tesla.IsPlayerInHurtRange(player);
-            IsTriggerable = Tesla.IsPlayerInTriggerRange(player);
+            this.Player = player;
+            this.Tesla = teslaGate;
+            this.IsInHurtingRange = this.Tesla.IsPlayerInHurtRange(player);
+            this.IsTriggerable = this.Tesla.IsPlayerInTriggerRange(player);
         }
 
         /// <summary>

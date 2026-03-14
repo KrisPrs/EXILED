@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DryfiringWeaponEventArgs(BaseFirearm firearm)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the player who's dryfiring the weapon.

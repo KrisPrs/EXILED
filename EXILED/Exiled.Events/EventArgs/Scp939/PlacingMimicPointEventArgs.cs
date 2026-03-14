@@ -25,10 +25,10 @@ namespace Exiled.Events.EventArgs.Scp939
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public PlacingMimicPointEventArgs(Player player, RelativePosition position, bool isAllowed = true)
         {
-            Player = player;
-            Scp939 = player.Role.As<Scp939Role>();
-            Position = position;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp939 = player.Role.As<Scp939Role>();
+            this.Position = position;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

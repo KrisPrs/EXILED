@@ -34,10 +34,10 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public TriggeringDoorEventArgs(Player player, DoorVariant door, float auxiliaryPowerCost)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Door = Door.Get(door);
-            AuxiliaryPowerCost = auxiliaryPowerCost;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Door = Door.Get(door);
+            this.AuxiliaryPowerCost = auxiliaryPowerCost;
         }
 
         /// <summary>

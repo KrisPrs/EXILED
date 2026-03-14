@@ -29,8 +29,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public Scp244SpawningEventArgs(RoomIdentifier room, Scp244DeployablePickup scp244Pickup)
         {
-            Room = Room.Get(room);
-            Scp244Pickup = Pickup.Get<Scp244Pickup>(scp244Pickup);
+            this.Room = Room.Get(room);
+            this.Scp244Pickup = Pickup.Get<Scp244Pickup>(scp244Pickup);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Exiled.Events.EventArgs.Map
         public Room Room { get; }
 
         /// <inheritdoc />
-        public Pickup Pickup => Scp244Pickup;
+        public Pickup Pickup => this.Scp244Pickup;
 
         /// <summary>
         /// Gets a value indicating the pickup being spawning.

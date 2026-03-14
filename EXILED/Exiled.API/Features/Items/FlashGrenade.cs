@@ -29,10 +29,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="ThrowableItem"/> class.</param>
         public FlashGrenade(ThrowableItem itemBase)
-            : base(itemBase)
-        {
-            Projectile = (FlashbangProjectile)((Throwable)this).Projectile;
-        }
+            : base(itemBase) =>
+            this.Projectile = (FlashbangProjectile)((Throwable)this).Projectile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FlashGrenade"/> class, as well as a new flash grenade item.
@@ -54,8 +52,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MinimalDurationEffect
         {
-            get => Projectile.MinimalDurationEffect;
-            set => Projectile.MinimalDurationEffect = value;
+            get => this.Projectile.MinimalDurationEffect;
+            set => this.Projectile.MinimalDurationEffect = value;
         }
 
         /// <summary>
@@ -63,8 +61,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float AdditionalBlurredEffect
         {
-            get => Projectile.AdditionalBlurredEffect;
-            set => Projectile.AdditionalBlurredEffect = value;
+            get => this.Projectile.AdditionalBlurredEffect;
+            set => this.Projectile.AdditionalBlurredEffect = value;
         }
 
         /// <summary>
@@ -72,8 +70,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float SurfaceDistanceIntensifier
         {
-            get => Projectile.SurfaceDistanceIntensifier;
-            set => Projectile.SurfaceDistanceIntensifier = value;
+            get => this.Projectile.SurfaceDistanceIntensifier;
+            set => this.Projectile.SurfaceDistanceIntensifier = value;
         }
 
         /// <summary>
@@ -81,8 +79,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float FuseTime
         {
-            get => Projectile.FuseTime;
-            set => Projectile.FuseTime = value;
+            get => this.Projectile.FuseTime;
+            set => this.Projectile.FuseTime = value;
         }
 
         /// <summary>
@@ -94,20 +92,20 @@ namespace Exiled.API.Features.Items
         public FlashbangProjectile SpawnActive(Vector3 position, Player owner = null)
         {
 #if DEBUG
-            Log.Debug($"Spawning active grenade: {FuseTime}");
+            Log.Debug($"Spawning active grenade: {this.FuseTime}");
 #endif
-            ItemPickupBase ipb = Object.Instantiate(Projectile.Base, position, Quaternion.identity);
+            ItemPickupBase ipb = Object.Instantiate(this.Projectile.Base, position, Quaternion.identity);
 
-            ipb.Info = new PickupSyncInfo(Type, Weight, ItemSerialGenerator.GenerateNext());
+            ipb.Info = new PickupSyncInfo(this.Type, this.Weight, ItemSerialGenerator.GenerateNext());
 
             FlashbangProjectile grenade = Pickup.Get<FlashbangProjectile>(ipb);
 
             grenade.Base.gameObject.SetActive(true);
 
-            grenade.MinimalDurationEffect = MinimalDurationEffect;
-            grenade.AdditionalBlurredEffect = AdditionalBlurredEffect;
-            grenade.SurfaceDistanceIntensifier = SurfaceDistanceIntensifier;
-            grenade.FuseTime = FuseTime;
+            grenade.MinimalDurationEffect = this.MinimalDurationEffect;
+            grenade.AdditionalBlurredEffect = this.AdditionalBlurredEffect;
+            grenade.SurfaceDistanceIntensifier = this.SurfaceDistanceIntensifier;
+            grenade.FuseTime = this.FuseTime;
 
             grenade.PreviousOwner = owner ?? Server.Host;
 
@@ -124,19 +122,19 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="FlashGrenade"/> object. </returns>
         public override Item Clone() => new FlashGrenade()
         {
-            MinimalDurationEffect = MinimalDurationEffect,
-            AdditionalBlurredEffect = AdditionalBlurredEffect,
-            SurfaceDistanceIntensifier = SurfaceDistanceIntensifier,
-            FuseTime = FuseTime,
-            Repickable = Repickable,
-            PinPullTime = PinPullTime,
+            MinimalDurationEffect = this.MinimalDurationEffect,
+            AdditionalBlurredEffect = this.AdditionalBlurredEffect,
+            SurfaceDistanceIntensifier = this.SurfaceDistanceIntensifier,
+            FuseTime = this.FuseTime,
+            Repickable = this.Repickable,
+            PinPullTime = this.PinPullTime,
         };
 
         /// <summary>
         /// Returns the FlashGrenade in a human readable format.
         /// </summary>
         /// <returns>A string containing FlashGrenade-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{FuseTime}|";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.FuseTime}|";
 
         /// <inheritdoc/>
         internal override void ReadPickupInfoBefore(Pickup pickup)
@@ -144,10 +142,10 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is FlashGrenadePickup flashGrenadePickup)
             {
-                MinimalDurationEffect = flashGrenadePickup.MinimalDurationEffect;
-                AdditionalBlurredEffect = flashGrenadePickup.AdditionalBlurredEffect;
-                SurfaceDistanceIntensifier = flashGrenadePickup.SurfaceDistanceIntensifier;
-                FuseTime = flashGrenadePickup.FuseTime;
+                this.MinimalDurationEffect = flashGrenadePickup.MinimalDurationEffect;
+                this.AdditionalBlurredEffect = flashGrenadePickup.AdditionalBlurredEffect;
+                this.SurfaceDistanceIntensifier = flashGrenadePickup.SurfaceDistanceIntensifier;
+                this.FuseTime = flashGrenadePickup.FuseTime;
             }
         }
     }

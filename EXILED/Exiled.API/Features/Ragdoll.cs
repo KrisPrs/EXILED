@@ -42,7 +42,7 @@ namespace Exiled.API.Features
         /// <param name="ragdoll">The encapsulated <see cref="BasicRagdoll"/>.</param>
         internal Ragdoll(BasicRagdoll ragdoll)
         {
-            Base = ragdoll;
+            this.Base = ragdoll;
             BasicRagdollToRagdoll.Add(ragdoll, this);
         }
 
@@ -63,7 +63,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets a value indicating whether the clean-up event can be executed.
         /// </summary>
-        public bool AllowCleanUp => NetworkInfo.ExistenceTime < FreezeTime;
+        public bool AllowCleanUp => this.NetworkInfo.ExistenceTime < FreezeTime;
 
         /// <summary>
         /// Gets the <see cref="BasicRagdoll"/> instance of the ragdoll.
@@ -73,20 +73,20 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="UnityEngine.GameObject"/> of the ragdoll.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the <see cref="UnityEngine.Transform"/> of the ragdoll.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets or sets the ragdoll's <see cref="RagdollData"/>.
         /// </summary>
         public RagdollData NetworkInfo
         {
-            get => Base.NetworkInfo;
-            set => Base.NetworkInfo = value;
+            get => this.Base.NetworkInfo;
+            set => this.Base.NetworkInfo = value;
         }
 
         /// <summary>
@@ -94,52 +94,52 @@ namespace Exiled.API.Features
         /// </summary>
         public DamageHandlerBase DamageHandler
         {
-            get => NetworkInfo.Handler;
-            set => NetworkInfo = new(NetworkInfo.OwnerHub, value, NetworkInfo.RoleType, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, NetworkInfo.Scale, NetworkInfo.Nickname, NetworkInfo.CreationTime);
+            get => this.NetworkInfo.Handler;
+            set => this.NetworkInfo = new(this.NetworkInfo.OwnerHub, value, this.NetworkInfo.RoleType, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, this.NetworkInfo.Scale, this.NetworkInfo.Nickname, this.NetworkInfo.CreationTime);
         }
 
         /// <summary>
         /// Gets the ragdoll's <see cref="Rigidbody"/>[].
         /// </summary>
-        public Rigidbody[] SpecialRigidbodies => Base is DynamicRagdoll ragdoll ? ragdoll.LinkedRigidbodies : Array.Empty<Rigidbody>();
+        public Rigidbody[] SpecialRigidbodies => this.Base is DynamicRagdoll ragdoll ? ragdoll.LinkedRigidbodies : Array.Empty<Rigidbody>();
 
         /// <summary>
         /// Gets all ragdoll's <see cref="DeathAnimation"/>[].
         /// </summary>
-        public DeathAnimation[] DeathAnimations => Base.AllDeathAnimations;
+        public DeathAnimation[] DeathAnimations => this.Base.AllDeathAnimations;
 
         /// <summary>
         /// Gets a value indicating whether the ragdoll has been already cleaned up.
         /// </summary>
-        public bool IsFrozen => Base.Frozen;
+        public bool IsFrozen => this.Base.Frozen;
 
         /// <summary>
         /// Gets or sets a value indicating whether the ragdoll can be cleaned up.
         /// </summary>
         public bool CanBeCleanedUp
         {
-            get => IgnoredRagdolls.Contains(Base);
+            get => IgnoredRagdolls.Contains(this.Base);
             set
             {
                 if (!value)
-                    IgnoredRagdolls.Remove(Base);
+                    IgnoredRagdolls.Remove(this.Base);
                 else
-                    IgnoredRagdolls.Add(Base);
+                    IgnoredRagdolls.Add(this.Base);
             }
         }
 
         /// <summary>
         /// Gets the ragdoll's name.
         /// </summary>
-        public string Name => Base.name;
+        public string Name => this.Base.name;
 
         /// <summary>
         /// Gets or sets the ragdoll's nickname.
         /// </summary>
         public string Nickname
         {
-            get => NetworkInfo.Nickname;
-            set => NetworkInfo = new(NetworkInfo.OwnerHub, NetworkInfo.Handler, NetworkInfo.RoleType, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, NetworkInfo.Scale, value, NetworkInfo.CreationTime);
+            get => this.NetworkInfo.Nickname;
+            set => this.NetworkInfo = new(this.NetworkInfo.OwnerHub, this.NetworkInfo.Handler, this.NetworkInfo.RoleType, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, this.NetworkInfo.Scale, value, this.NetworkInfo.CreationTime);
         }
 
         /// <summary>
@@ -147,22 +147,22 @@ namespace Exiled.API.Features
         /// </summary>
         public Vector3 Scale
         {
-            get => NetworkInfo.Scale;
-            set => NetworkInfo = new(NetworkInfo.OwnerHub, NetworkInfo.Handler, NetworkInfo.RoleType, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, value, NetworkInfo.Nickname, NetworkInfo.CreationTime);
+            get => this.NetworkInfo.Scale;
+            set => this.NetworkInfo = new(this.NetworkInfo.OwnerHub, this.NetworkInfo.Handler, this.NetworkInfo.RoleType, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, value, this.NetworkInfo.Nickname, this.NetworkInfo.CreationTime);
         }
 
         /// <summary>
         /// Gets the ragdoll's existence time.
         /// </summary>
-        public float ExistenceTime => NetworkInfo.ExistenceTime;
+        public float ExistenceTime => this.NetworkInfo.ExistenceTime;
 
         /// <summary>
         /// Gets or sets the owner <see cref="Player"/>. Can be <see langword="null"/> if the ragdoll does not have an owner.
         /// </summary>
         public Player Owner
         {
-            get => Player.Get(NetworkInfo.OwnerHub);
-            set => NetworkInfo = new(value.ReferenceHub, NetworkInfo.Handler, NetworkInfo.RoleType, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, NetworkInfo.Scale, NetworkInfo.Nickname, NetworkInfo.CreationTime);
+            get => Player.Get(this.NetworkInfo.OwnerHub);
+            set => this.NetworkInfo = new(value.ReferenceHub, this.NetworkInfo.Handler, this.NetworkInfo.RoleType, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, this.NetworkInfo.Scale, this.NetworkInfo.Nickname, this.NetworkInfo.CreationTime);
         }
 
         /// <summary>
@@ -170,11 +170,11 @@ namespace Exiled.API.Features
         /// </summary>
         public DateTime CreationTime
         {
-            get => DateTime.Now - TimeSpan.FromSeconds(NetworkInfo.ExistenceTime);
+            get => DateTime.Now - TimeSpan.FromSeconds(this.NetworkInfo.ExistenceTime);
             set
             {
                 float creationTime = (float)(NetworkTime.time - (DateTime.Now - value).TotalSeconds);
-                NetworkInfo = new(NetworkInfo.OwnerHub, NetworkInfo.Handler, NetworkInfo.RoleType, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, NetworkInfo.Scale, NetworkInfo.Nickname, creationTime);
+                this.NetworkInfo = new(this.NetworkInfo.OwnerHub, this.NetworkInfo.Handler, this.NetworkInfo.RoleType, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, this.NetworkInfo.Scale, this.NetworkInfo.Nickname, creationTime);
             }
         }
 
@@ -183,65 +183,65 @@ namespace Exiled.API.Features
         /// </summary>
         public RoleTypeId Role
         {
-            get => NetworkInfo.RoleType;
-            set => NetworkInfo = new(NetworkInfo.OwnerHub, NetworkInfo.Handler, value, NetworkInfo.StartRelativePosition, NetworkInfo.StartRelativeRotation, NetworkInfo.Scale, NetworkInfo.Nickname, NetworkInfo.CreationTime);
+            get => this.NetworkInfo.RoleType;
+            set => this.NetworkInfo = new(this.NetworkInfo.OwnerHub, this.NetworkInfo.Handler, value, this.NetworkInfo.StartRelativePosition, this.NetworkInfo.StartRelativeRotation, this.NetworkInfo.Scale, this.NetworkInfo.Nickname, this.NetworkInfo.CreationTime);
         }
 
         /// <summary>
         /// Gets a value indicating whether the ragdoll has expired and SCP-049 is unable to revive it if was not being targets.
         /// <seealso cref="Roles.Scp049Role.CanResurrect(Ragdoll)"/>
         /// </summary>
-        public bool IsExpired => NetworkInfo.ExistenceTime > PlayerRoles.PlayableScps.Scp049.Scp049ResurrectAbility.HumanCorpseDuration;
+        public bool IsExpired => this.NetworkInfo.ExistenceTime > PlayerRoles.PlayableScps.Scp049.Scp049ResurrectAbility.HumanCorpseDuration;
 
         /// <summary>
         /// Gets or sets a value indicating whether this ragdoll has been consumed by an SCP-049-2.
         /// </summary>
         public bool IsConsumed
         {
-            get => ZombieConsumeAbility.ConsumedRagdolls.Contains(Base);
+            get => ZombieConsumeAbility.ConsumedRagdolls.Contains(this.Base);
             set
             {
-                if (value && !ZombieConsumeAbility.ConsumedRagdolls.Contains(Base))
-                    ZombieConsumeAbility.ConsumedRagdolls.Add(Base);
-                else if (!value && ZombieConsumeAbility.ConsumedRagdolls.Contains(Base))
-                    ZombieConsumeAbility.ConsumedRagdolls.Remove(Base);
+                if (value && !ZombieConsumeAbility.ConsumedRagdolls.Contains(this.Base))
+                    ZombieConsumeAbility.ConsumedRagdolls.Add(this.Base);
+                else if (!value && ZombieConsumeAbility.ConsumedRagdolls.Contains(this.Base))
+                    ZombieConsumeAbility.ConsumedRagdolls.Remove(this.Base);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether this ragdoll is spawned.
         /// </summary>
-        public bool IsSpawned => NetworkServer.spawned.ContainsValue(Base.netIdentity);
+        public bool IsSpawned => NetworkServer.spawned.ContainsValue(this.Base.netIdentity);
 
         /// <summary>
         /// Gets the <see cref="Features.Room"/> the ragdoll is located in.
         /// </summary>
-        public Room Room => Room.FindParentRoom(GameObject);
+        public Room Room => Room.FindParentRoom(this.GameObject);
 
         /// <summary>
         /// Gets the <see cref="ZoneType"/> the ragdoll is in.
         /// </summary>
-        public ZoneType Zone => Room.Zone;
+        public ZoneType Zone => this.Room.Zone;
 
         /// <summary>
         /// Gets or sets the ragdoll's position.
         /// </summary>
         public Vector3 Position
         {
-            get => Base.transform.position;
+            get => this.Base.transform.position;
             set
             {
-                if (!IsSpawned)
+                if (!this.IsSpawned)
                 {
-                    Base.transform.position = value;
+                    this.Base.transform.position = value;
                     return;
                 }
 
-                UnSpawn();
+                this.UnSpawn();
 
-                Base.transform.position = value;
+                this.Base.transform.position = value;
 
-                Spawn();
+                this.Spawn();
             }
         }
 
@@ -250,20 +250,20 @@ namespace Exiled.API.Features
         /// </summary>
         public Quaternion Rotation
         {
-            get => Base.transform.rotation;
+            get => this.Base.transform.rotation;
             set
             {
-                if (!IsSpawned)
+                if (!this.IsSpawned)
                 {
-                    Base.transform.rotation = value;
+                    this.Base.transform.rotation = value;
                     return;
                 }
 
-                UnSpawn();
+                this.UnSpawn();
 
-                Base.transform.rotation = value;
+                this.Base.transform.rotation = value;
 
-                Spawn();
+                this.Spawn();
             }
         }
 
@@ -272,27 +272,27 @@ namespace Exiled.API.Features
         /// </summary>
         public Vector3 RagdollScale
         {
-            get => Base.transform.localScale;
+            get => this.Base.transform.localScale;
             set
             {
-                if (!IsSpawned)
+                if (!this.IsSpawned)
                 {
-                    Base.transform.localScale = value;
+                    this.Base.transform.localScale = value;
                     return;
                 }
 
-                UnSpawn();
+                this.UnSpawn();
 
-                Base.transform.localScale = value;
+                this.Base.transform.localScale = value;
 
-                Spawn();
+                this.Spawn();
             }
         }
 
         /// <summary>
         /// Gets the ragdoll's death reason.
         /// </summary>
-        public string DeathReason => DamageHandler.ServerLogsText;
+        public string DeathReason => this.DamageHandler.ServerLogsText;
 
         /// <summary>
         /// Gets or sets a <see cref="HashSet{T}"/> of <see cref="BasicRagdoll"/>'s that will be ignored by clean up event.
@@ -429,24 +429,24 @@ namespace Exiled.API.Features
         /// <summary>
         /// Destroys the ragdoll immediately.
         /// </summary>
-        public void Destroy() => Object.Destroy(GameObject);
+        public void Destroy() => Object.Destroy(this.GameObject);
 
         /// <summary>
         /// Destroys the ragdoll after a specified delay.
         /// </summary>
         /// <param name="delay">The delay in seconds before the ragdoll is destroyed.</param>
-        public void Destroy(float delay) => Object.Destroy(GameObject, delay);
+        public void Destroy(float delay) => Object.Destroy(this.GameObject, delay);
 
         /// <summary>
         /// Spawns the ragdoll on the network.
         /// </summary>
-        public void Spawn() => NetworkServer.Spawn(GameObject);
+        public void Spawn() => NetworkServer.Spawn(this.GameObject);
 
         /// <summary>
         /// Spawns the ragdoll on the network with a specified owner.
         /// </summary>
         /// <param name="ownerPlayer">The owner of the ragdoll.</param>
-        public void Spawn(GameObject ownerPlayer) => NetworkServer.Spawn(GameObject, ownerPlayer);
+        public void Spawn(GameObject ownerPlayer) => NetworkServer.Spawn(this.GameObject, ownerPlayer);
 
         /// <summary>
         /// Spawns the ragdoll on the network with a specified network connection or asset ID.
@@ -456,20 +456,20 @@ namespace Exiled.API.Features
         public void Spawn(NetworkConnection ownerConnection, uint? assetId = null)
         {
             if (assetId.HasValue)
-                NetworkServer.Spawn(GameObject, assetId.Value, ownerConnection);
+                NetworkServer.Spawn(this.GameObject, assetId.Value, ownerConnection);
             else
-                NetworkServer.Spawn(GameObject, ownerConnection);
+                NetworkServer.Spawn(this.GameObject, ownerConnection);
         }
 
         /// <summary>
         /// Un-spawns the ragdoll.
         /// </summary>
-        public void UnSpawn() => NetworkServer.UnSpawn(GameObject);
+        public void UnSpawn() => NetworkServer.UnSpawn(this.GameObject);
 
         /// <summary>
         /// Returns the Ragdoll in a human-readable format.
         /// </summary>
         /// <returns>A string containing Ragdoll-related data.</returns>
-        public override string ToString() => $"{Owner} ({Name}) [{DeathReason}] *{Role}* |{CreationTime}| ={IsExpired}=";
+        public override string ToString() => $"{this.Owner} ({this.Name}) [{this.DeathReason}] *{this.Role}* |{this.CreationTime}| ={this.IsExpired}=";
     }
 }

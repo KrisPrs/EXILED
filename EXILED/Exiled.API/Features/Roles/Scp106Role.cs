@@ -36,35 +36,35 @@ namespace Exiled.API.Features.Roles
         internal Scp106Role(Scp106GameRole baseRole)
             : base(baseRole)
         {
-            SubroutineModule = baseRole.SubroutineModule;
-            HumeShieldModule = baseRole.HumeShieldModule;
-            Base = baseRole;
-            MovementModule = FirstPersonController.FpcModule as Scp106MovementModule;
+            this.SubroutineModule = baseRole.SubroutineModule;
+            this.HumeShieldModule = baseRole.HumeShieldModule;
+            this.Base = baseRole;
+            this.MovementModule = this.FirstPersonController.FpcModule as Scp106MovementModule;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp106VigorAbilityBase scp106VigorAbilityBase))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp106VigorAbilityBase scp106VigorAbilityBase))
                 Log.Error("Scp106VigorAbilityBase subroutine not found in Scp106Role::ctor");
 
-            VigorAbility = scp106VigorAbilityBase;
+            this.VigorAbility = scp106VigorAbilityBase;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp106Attack scp106Attack))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp106Attack scp106Attack))
                 Log.Error("Scp106Attack subroutine not found in Scp106Role::ctor");
 
-            Attack = scp106Attack;
+            this.Attack = scp106Attack;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp106StalkAbility scp106StalkAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp106StalkAbility scp106StalkAbility))
                 Log.Error("Scp106StalkAbility not found in Scp106Role::ctor");
 
-            StalkAbility = scp106StalkAbility;
+            this.StalkAbility = scp106StalkAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp106HuntersAtlasAbility scp106HuntersAtlasAbility))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp106HuntersAtlasAbility scp106HuntersAtlasAbility))
                 Log.Error("Scp106HuntersAtlasAbility not found in Scp106Role::ctor");
 
-            HuntersAtlasAbility = scp106HuntersAtlasAbility;
+            this.HuntersAtlasAbility = scp106HuntersAtlasAbility;
 
-            if (!SubroutineModule.TryGetSubroutine(out Scp106SinkholeController scp106SinkholeController))
+            if (!this.SubroutineModule.TryGetSubroutine(out Scp106SinkholeController scp106SinkholeController))
                 Log.Error("Scp106SinkholeController not found in Scp106Role::ctor");
 
-            SinkholeController = scp106SinkholeController;
+            this.SinkholeController = scp106SinkholeController;
         }
 
         /// <inheritdoc/>
@@ -86,7 +86,7 @@ namespace Exiled.API.Features.Roles
         /// <summary>
         /// Gets the <see cref="VigorStat"/>.
         /// </summary>
-        public VigorStat VigorComponent => VigorAbility.Vigor;
+        public VigorStat VigorComponent => this.VigorAbility.Vigor;
 
         /// <summary>
         /// Gets the <see cref="Scp106Attack"/>.
@@ -128,8 +128,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float Vigor
         {
-            get => VigorAbility.VigorAmount;
-            set => VigorAbility.VigorAmount = value;
+            get => this.VigorAbility.VigorAmount;
+            set => this.VigorAbility.VigorAmount = value;
         }
 
         /// <summary>
@@ -137,65 +137,65 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public bool IsSubmerged
         {
-            get => HuntersAtlasAbility._syncSubmerged;
+            get => this.HuntersAtlasAbility._syncSubmerged;
             set
             {
-                HuntersAtlasAbility._syncSubmerged = value;
-                HuntersAtlasAbility.ServerSendRpc(true);
+                this.HuntersAtlasAbility._syncSubmerged = value;
+                this.HuntersAtlasAbility.ServerSendRpc(true);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether SCP-106 can activate teslas.
         /// </summary>
-        public bool CanActivateTesla => Base.CanActivateShock;
+        public bool CanActivateTesla => this.Base.CanActivateShock;
 
         /// <summary>
         /// Gets a value indicating whether if SCP-106 <see cref="Scp106StalkAbility"/> can be cleared.
         /// </summary>
-        public bool CanStopStalk => StalkAbility.CanBeCleared;
+        public bool CanStopStalk => this.StalkAbility.CanBeCleared;
 
         /// <summary>
         /// Gets a value indicating whether SCP-106 is currently slow down by a door.
         /// </summary>
-        public bool IsSlowdown => MovementModule._slowndownTarget is < 1;
+        public bool IsSlowdown => this.MovementModule._slowndownTarget is < 1;
 
         /// <summary>
         /// Gets a value indicating the current time of the sinkhole.
         /// </summary>
-        public float SinkholeCurrentTime => SinkholeController.ElapsedToggle;
+        public float SinkholeCurrentTime => this.SinkholeController.ElapsedToggle;
 
         /// <summary>
         /// Gets a value indicating whether SCP-106 is currently in the middle of an animation.
         /// </summary>
-        public bool IsDuringAnimation => SinkholeController.IsDuringAnimation;
+        public bool IsDuringAnimation => this.SinkholeController.IsDuringAnimation;
 
         /// <summary>
         /// Gets a value indicating whether SCP-106 sinkhole is hidden.
         /// </summary>
-        public bool IsSinkholeHidden => SinkholeController.IsHidden;
+        public bool IsSinkholeHidden => this.SinkholeController.IsHidden;
 
         /// <summary>
         /// Gets or sets a value indicating whether the current sinkhole state.
         /// </summary>
         public bool SinkholeState
         {
-            get => StalkAbility.StalkActive;
-            set => StalkAbility.ServerSetStalk(value);
+            get => this.StalkAbility.StalkActive;
+            set => this.StalkAbility.ServerSetStalk(value);
         }
 
         /// <summary>
         /// Gets the sinkhole target duration.
         /// </summary>
-        public float SinkholeTargetDuration => SinkholeController.TargetTransitionDuration;
+        public float SinkholeTargetDuration => this.SinkholeController.TargetTransitionDuration;
 
         /// <summary>
         /// Gets or sets how mush damage Scp106 will dealt when attacking a player.
         /// </summary>
         public int AttackDamage
         {
-            get => Attack._damage;
-            set => Attack._damage = value;
+            get => this.Attack._damage;
+            set => this.Attack._damage = value;
         }
 
         /// <summary>
@@ -203,11 +203,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float CaptureCooldown
         {
-            get => Attack._hitCooldown;
+            get => this.Attack._hitCooldown;
             set
             {
-                Attack._hitCooldown = value;
-                Attack.ServerSendRpc(true);
+                this.Attack._hitCooldown = value;
+                this.Attack.ServerSendRpc(true);
             }
         }
 
@@ -216,11 +216,11 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public float RemainingSinkholeCooldown
         {
-            get => SinkholeController._submergeCooldown.Remaining;
+            get => this.SinkholeController._submergeCooldown.Remaining;
             set
             {
-                SinkholeController._submergeCooldown.Remaining = value;
-                SinkholeController.ServerSendRpc(true);
+                this.SinkholeController._submergeCooldown.Remaining = value;
+                this.SinkholeController.ServerSendRpc(true);
             }
         }
 
@@ -229,8 +229,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public bool IsStalking
         {
-            get => StalkAbility.StalkActive;
-            set => StalkAbility.ServerSetStalk(value);
+            get => this.StalkAbility.StalkActive;
+            set => this.StalkAbility.ServerSetStalk(value);
         }
 
         /// <summary>
@@ -249,19 +249,19 @@ namespace Exiled.API.Features.Roles
             if (Room.Get(position) is not Room room)
                 return false;
 
-            HuntersAtlasAbility._syncRoom = room.Identifier;
-            HuntersAtlasAbility._syncPos = position;
+            this.HuntersAtlasAbility._syncRoom = room.Identifier;
+            this.HuntersAtlasAbility._syncPos = position;
 
-            if (Vigor < cost)
+            if (this.Vigor < cost)
                 return false;
 
-            HuntersAtlasAbility._estimatedCost = cost;
-            HuntersAtlasAbility._syncSubmerged = true;
+            this.HuntersAtlasAbility._estimatedCost = cost;
+            this.HuntersAtlasAbility._syncSubmerged = true;
 
             Timing.CallDelayed(2f, () =>
             {
-                if (IsValid)
-                    Owner.Position = position;
+                if (this.IsValid)
+                    this.Owner.Position = position;
             });
 
             return true;
@@ -276,16 +276,16 @@ namespace Exiled.API.Features.Roles
         {
             if (player is null)
                 return false;
-            Attack._targetHub = player.ReferenceHub;
-            DamageHandlerBase handler = new ScpDamageHandler(Attack.Owner, AttackDamage, DeathTranslations.PocketDecay);
+            this.Attack._targetHub = player.ReferenceHub;
+            DamageHandlerBase handler = new ScpDamageHandler(this.Attack.Owner, this.AttackDamage, DeathTranslations.PocketDecay);
 
-            if (!Attack._targetHub.playerStats.DealDamage(handler))
+            if (!this.Attack._targetHub.playerStats.DealDamage(handler))
                 return false;
 
-            Attack.SendCooldown(Attack._hitCooldown);
-            Vigor += Scp106Attack.VigorCaptureReward;
-            Attack.ReduceSinkholeCooldown();
-            Hitmarker.SendHitmarkerDirectly(Attack.Owner, 1f);
+            this.Attack.SendCooldown(this.Attack._hitCooldown);
+            this.Vigor += Scp106Attack.VigorCaptureReward;
+            this.Attack.ReduceSinkholeCooldown();
+            Hitmarker.SendHitmarkerDirectly(this.Attack.Owner, 1f);
 
             player.EnableEffect(EffectType.PocketCorroding);
             return true;
@@ -296,6 +296,6 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="alreadySpawned">The List of Roles already spawned.</param>
         /// <returns>The Spawn Chance.</returns>
-        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => Base.GetSpawnChance(alreadySpawned);
+        public float GetSpawnChance(List<RoleTypeId> alreadySpawned) => this.Base.GetSpawnChance(alreadySpawned);
     }
 }

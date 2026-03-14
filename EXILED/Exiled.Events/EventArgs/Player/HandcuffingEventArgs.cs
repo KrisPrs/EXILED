@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public HandcuffingEventArgs(Player cuffer, Player target, bool isAllowed = true)
         {
-            Player = cuffer;
-            Target = target;
-            IsAllowed = isAllowed;
+            this.Player = cuffer;
+            this.Target = target;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

@@ -27,11 +27,11 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public RecontainedEventArgs(Player player, PlayerRoles.PlayableScps.Scp079.Scp079Recontainer scp079Recontainer)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            Recontainer = scp079Recontainer;
-            Attacker = Player.Get(scp079Recontainer._activatorGlass.LastAttacker);
-            IsAutomatic = scp079Recontainer._activatorGlass.LastAttacker.IsSet;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.Recontainer = scp079Recontainer;
+            this.Attacker = Player.Get(scp079Recontainer._activatorGlass.LastAttacker);
+            this.IsAutomatic = scp079Recontainer._activatorGlass.LastAttacker.IsSet;
         }
 
         /// <summary>

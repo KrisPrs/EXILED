@@ -32,9 +32,9 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public ChangingKnobSettingEventArgs(Player player, Scp914KnobSetting knobSetting, bool isAllowed = true)
         {
-            Player = player;
-            KnobSetting = knobSetting;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.KnobSetting = knobSetting;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

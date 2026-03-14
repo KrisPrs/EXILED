@@ -35,31 +35,31 @@ namespace Exiled.API.Features.Audio
         /// <param name="path">The path to the audio file.</param>
         public WavStreamSource(string path)
         {
-            stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 64 * 1024, FileOptions.SequentialScan);
-            WavUtility.SkipHeader(stream);
-            startPosition = stream.Position;
-            endPosition = stream.Length;
-            internalBuffer = ArrayPool<byte>.Shared.Rent(VoiceChatSettings.PacketSizePerChannel * 2);
+            this.stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 64 * 1024, FileOptions.SequentialScan);
+            WavUtility.SkipHeader(this.stream);
+            this.startPosition = this.stream.Position;
+            this.endPosition = this.stream.Length;
+            this.internalBuffer = ArrayPool<byte>.Shared.Rent(VoiceChatSettings.PacketSizePerChannel * 2);
         }
 
         /// <summary>
         /// Gets the total duration of the audio in seconds.
         /// </summary>
-        public double TotalDuration => (endPosition - startPosition) / 2.0 / VoiceChatSettings.SampleRate;
+        public double TotalDuration => (this.endPosition - this.startPosition) / 2.0 / VoiceChatSettings.SampleRate;
 
         /// <summary>
         /// Gets or sets the current playback position in seconds.
         /// </summary>
         public double CurrentTime
         {
-            get => (stream.Position - startPosition) / 2.0 / VoiceChatSettings.SampleRate;
-            set => Seek(value);
+            get => (this.stream.Position - this.startPosition) / 2.0 / VoiceChatSettings.SampleRate;
+            set => this.Seek(value);
         }
 
         /// <summary>
         /// Gets a value indicating whether the end of the stream has been reached.
         /// </summary>
-        public bool Ended => stream.Position >= endPosition;
+        public bool Ended => this.stream.Position >= this.endPosition;
 
         /// <summary>
         /// Reads PCM data from the stream into the specified buffer.
@@ -72,13 +72,13 @@ namespace Exiled.API.Features.Audio
         {
             int bytesNeeded = count * 2;
 
-            if (internalBuffer.Length < bytesNeeded)
+            if (this.internalBuffer.Length < bytesNeeded)
             {
-                ArrayPool<byte>.Shared.Return(internalBuffer);
-                internalBuffer = ArrayPool<byte>.Shared.Rent(bytesNeeded);
+                ArrayPool<byte>.Shared.Return(this.internalBuffer);
+                this.internalBuffer = ArrayPool<byte>.Shared.Rent(bytesNeeded);
             }
 
-            int bytesRead = stream.Read(internalBuffer, 0, bytesNeeded);
+            int bytesRead = this.stream.Read(this.internalBuffer, 0, bytesNeeded);
 
             if (bytesRead == 0)
                 return 0;
@@ -86,7 +86,7 @@ namespace Exiled.API.Features.Audio
             if (bytesRead % 2 != 0)
                 bytesRead--;
 
-            Span<byte> byteSpan = internalBuffer.AsSpan(0, bytesRead);
+            Span<byte> byteSpan = this.internalBuffer.AsSpan(0, bytesRead);
             Span<short> shortSpan = MemoryMarshal.Cast<byte, short>(byteSpan);
 
             int samplesInDestination = buffer.Length - offset;
@@ -107,37 +107,34 @@ namespace Exiled.API.Features.Audio
             long targetSample = (long)(seconds * VoiceChatSettings.SampleRate);
             long targetByte = targetSample * 2;
 
-            long newPos = startPosition + targetByte;
-            if (newPos > endPosition)
-                newPos = endPosition;
+            long newPos = this.startPosition + targetByte;
+            if (newPos > this.endPosition)
+                newPos = this.endPosition;
 
-            if (newPos < startPosition)
-                newPos = startPosition;
+            if (newPos < this.startPosition)
+                newPos = this.startPosition;
 
             if (newPos % 2 != 0)
                 newPos--;
 
-            stream.Position = newPos;
+            this.stream.Position = newPos;
         }
 
         /// <summary>
         /// Resets the stream position to the start.
         /// </summary>
-        public void Reset()
-        {
-            stream.Position = startPosition;
-        }
+        public void Reset() => this.stream.Position = this.startPosition;
 
         /// <summary>
         /// Releases all resources used by the <see cref="WavStreamSource"/>.
         /// </summary>
         public void Dispose()
         {
-            stream?.Dispose();
-            if (internalBuffer != null)
+            this.stream?.Dispose();
+            if (this.internalBuffer != null)
             {
-                ArrayPool<byte>.Shared.Return(internalBuffer);
-                internalBuffer = null;
+                ArrayPool<byte>.Shared.Return(this.internalBuffer);
+                this.internalBuffer = null;
             }
         }
     }

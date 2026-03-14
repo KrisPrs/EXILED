@@ -44,17 +44,17 @@ namespace Exiled.API.Features.Core.StateMachine
         /// <summary>
         /// Gets all the <see cref="StateController"/>s listening to this <see cref="State"/>.
         /// </summary>
-        public IEnumerable<StateController> Controllers => controllers;
+        public IEnumerable<StateController> Controllers => this.controllers;
 
         /// <summary>
         /// Gets all the <see cref="StateController"/>s running on this <see cref="State"/>.
         /// </summary>
-        public IEnumerable<StateController> ActiveControllers => activeControllers;
+        public IEnumerable<StateController> ActiveControllers => this.activeControllers;
 
         /// <summary>
         /// Gets all the <see cref="StateController"/>s running on a <see cref="State"/> other than this.
         /// </summary>
-        public IEnumerable<StateController> InactiveControllers => inactiveControllers;
+        public IEnumerable<StateController> InactiveControllers => this.inactiveControllers;
 
         /// <summary>
         /// Initializes all states defined in the executing <see cref="Assembly"/>.
@@ -218,19 +218,19 @@ namespace Exiled.API.Features.Core.StateMachine
         /// Converts the <see cref="State"/> to a human readable <see cref="string"/> representation.
         /// </summary>
         /// <returns>A human readable <see cref="string"/> representation of the <see cref="State"/> object.</returns>
-        public override string ToString() => $"State - {Name} ({Id})";
+        public override string ToString() => $"State - {this.Name} ({this.Id})";
 
         /// <inheritdoc/>
         public virtual void OnEnter(StateController stateController)
         {
             if (stateController.CurrentState != this)
             {
-                throw new InvalidOperationException($"{nameof(State)}::{nameof(OnEnter)} - State mismatch: ({stateController.CurrentState})/({this})\n" +
+                throw new InvalidOperationException($"{nameof(State)}::{nameof(this.OnEnter)} - State mismatch: ({stateController.CurrentState})/({this})\n" +
                     $"Are you trying to invoke this method from outside the {nameof(StateController)} environment?");
             }
 
-            activeControllers.Add(stateController);
-            inactiveControllers.Remove(stateController);
+            this.activeControllers.Add(stateController);
+            this.inactiveControllers.Remove(stateController);
         }
 
         /// <inheritdoc/>
@@ -238,18 +238,18 @@ namespace Exiled.API.Features.Core.StateMachine
         {
             if (stateController.PreviousState != this)
             {
-                throw new InvalidOperationException($"{nameof(State)}::{nameof(OnExit)} - State mismatch: ({stateController.PreviousState})/({this})\n" +
+                throw new InvalidOperationException($"{nameof(State)}::{nameof(this.OnExit)} - State mismatch: ({stateController.PreviousState})/({this})\n" +
                     $"Are you trying to invoke this method from outside the {nameof(StateController)} environment?");
             }
 
-            inactiveControllers.Add(stateController);
-            activeControllers.Remove(stateController);
+            this.inactiveControllers.Add(stateController);
+            this.activeControllers.Remove(stateController);
         }
 
         /// <inheritdoc/>
         protected override void Tick()
         {
-            foreach (StateController controller in ActiveControllers)
+            foreach (StateController controller in this.ActiveControllers)
             {
                 if (controller.CanEverTick)
                     controller.StateUpdate(this);

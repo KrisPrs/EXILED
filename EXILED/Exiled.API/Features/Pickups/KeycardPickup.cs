@@ -29,10 +29,10 @@ namespace Exiled.API.Features.Pickups
         internal KeycardPickup(BaseKeycard pickupBase)
             : base(pickupBase)
         {
-            Base = pickupBase;
-            if (Base is null)
+            this.Base = pickupBase;
+            if (this.Base is null)
             {
-                Log.Warn($"[KeycardPickup] Base is null: {GetType()}");
+                Log.Warn($"[KeycardPickup] Base is null: {this.GetType()}");
             }
         }
 
@@ -41,10 +41,8 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal KeycardPickup(ItemType type)
-            : base(type)
-        {
-            Base = (BaseKeycard)((Pickup)this).Base;
-        }
+            : base(type) =>
+            this.Base = (BaseKeycard)((Pickup)this).Base;
 
         /// <summary>
         /// Gets or sets the <see cref="KeycardPermissions"/> of the keycard.
@@ -62,7 +60,7 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is Keycard keycarditem and not CustomKeycardItem)
             {
-                Permissions = keycarditem.Permissions;
+                this.Permissions = keycarditem.Permissions;
             }
         }
 
@@ -77,10 +75,10 @@ namespace Exiled.API.Features.Pickups
                     switch (detail)
                     {
                         case PredefinedPermsDetail predefinedPermsDetail:
-                            Permissions = (KeycardPermissions)predefinedPermsDetail.Levels.Permissions;
+                            this.Permissions = (KeycardPermissions)predefinedPermsDetail.Levels.Permissions;
                             return;
                         case CustomPermsDetail customPermsDetail:
-                            Permissions = (KeycardPermissions)customPermsDetail.GetPermissions(null);
+                            this.Permissions = (KeycardPermissions)customPermsDetail.GetPermissions(null);
                             return;
                     }
                 }

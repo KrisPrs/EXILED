@@ -21,10 +21,7 @@ namespace Exiled.API.Features.Attributes
         /// Initializes a new instance of the <see cref="CustomRoleAttribute"/> class.
         /// </summary>
         /// <param name="type">The <see cref="PlayerRoles.RoleTypeId"/> to serialize.</param>
-        public CustomRoleAttribute(RoleTypeId type)
-        {
-            RoleTypeId = type;
-        }
+        public CustomRoleAttribute(RoleTypeId type) => this.RoleTypeId = type;
 
         /// <summary>
         /// Gets the attribute's <see cref="PlayerRoles.RoleTypeId"/>.

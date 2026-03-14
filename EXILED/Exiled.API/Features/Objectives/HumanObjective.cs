@@ -22,10 +22,8 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="objectiveFootprintBase">A <see cref="HumanObjectiveBase{T}"/> instance.</param>
         internal HumanObjective(HumanObjectiveBase<T> objectiveFootprintBase)
-            : base(objectiveFootprintBase)
-        {
-            Base = objectiveFootprintBase;
-        }
+            : base(objectiveFootprintBase) =>
+            this.Base = objectiveFootprintBase;
 
         /// <inheritdoc/>
         public new HumanObjectiveBase<T> Base { get; }
@@ -36,8 +34,8 @@ namespace Exiled.API.Features.Objectives
         /// <remarks>Can be <c>null</c>. It's being set by game only before achieving.</remarks>
         public T ObjectiveFootprint
         {
-            get => (T)Base.ObjectiveFootprint;
-            set => Base.ObjectiveFootprint = value;
+            get => (T)this.Base.ObjectiveFootprint;
+            set => this.Base.ObjectiveFootprint = value;
         }
 
         /// <summary>
@@ -49,11 +47,11 @@ namespace Exiled.API.Features.Objectives
         /// </remarks>
         public float TimeReward
         {
-            get => ObjectiveFootprint?.TimeReward ?? 0;
+            get => this.ObjectiveFootprint?.TimeReward ?? 0;
             set
             {
-                ObjectiveFootprint ??= new T();
-                ObjectiveFootprint.TimeReward = value;
+                this.ObjectiveFootprint ??= new T();
+                this.ObjectiveFootprint.TimeReward = value;
             }
         }
 
@@ -66,11 +64,11 @@ namespace Exiled.API.Features.Objectives
         /// </remarks>
         public float InfluenceReward
         {
-            get => ObjectiveFootprint?.InfluenceReward ?? 0;
+            get => this.ObjectiveFootprint?.InfluenceReward ?? 0;
             set
             {
-                ObjectiveFootprint ??= new T();
-                ObjectiveFootprint.InfluenceReward = value;
+                this.ObjectiveFootprint ??= new T();
+                this.ObjectiveFootprint.InfluenceReward = value;
             }
         }
 
@@ -83,11 +81,11 @@ namespace Exiled.API.Features.Objectives
         /// </remarks>
         public Player Achiever
         {
-            get => ObjectiveFootprint == null ? null : Player.Get(ObjectiveFootprint.AchievingPlayer.Nickname);
+            get => this.ObjectiveFootprint == null ? null : Player.Get(this.ObjectiveFootprint.AchievingPlayer.Nickname);
             set
             {
-                ObjectiveFootprint ??= new T();
-                ObjectiveFootprint.AchievingPlayer = new(value.Footprint);
+                this.ObjectiveFootprint ??= new T();
+                this.ObjectiveFootprint.AchievingPlayer = new(value.Footprint);
             }
         }
 
@@ -97,8 +95,8 @@ namespace Exiled.API.Features.Objectives
         /// <param name="objectiveFootprint">An objective footprint instance.</param>
         public void Achieve(T objectiveFootprint)
         {
-            ObjectiveFootprint = objectiveFootprint;
-            Achieve();
+            this.ObjectiveFootprint = objectiveFootprint;
+            this.Achieve();
         }
     }
 }

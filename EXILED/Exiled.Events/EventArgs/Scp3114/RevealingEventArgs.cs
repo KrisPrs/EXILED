@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public RevealingEventArgs(Player player, bool isManualReveal, bool isAllowed = true)
         {
-            Player = player;
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            IsManualReveal = isManualReveal;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.IsManualReveal = isManualReveal;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

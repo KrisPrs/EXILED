@@ -37,12 +37,12 @@ namespace Exiled.Events.EventArgs.Scp939
         /// </param>
         public PlayingSoundEventArgs(Player player, EnvMimicrySequence sound, bool isReady, float cooldown, bool isAllowed = true)
         {
-            Player = player;
-            Scp939 = Player.Role.As<Scp939Role>();
-            Sound = sound;
-            IsReady = isReady;
-            Cooldown = cooldown;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp939 = this.Player.Role.As<Scp939Role>();
+            this.Sound = sound;
+            this.IsReady = isReady;
+            this.Cooldown = cooldown;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

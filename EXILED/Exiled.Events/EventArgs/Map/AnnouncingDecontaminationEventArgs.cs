@@ -28,9 +28,9 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public AnnouncingDecontaminationEventArgs(int announcementId, PhaseFunction phaseFunction)
         {
-            Id = announcementId;
-            PhaseFunction = phaseFunction;
-            IsGlobal = PhaseFunction is PhaseFunction.GloballyAudible or PhaseFunction.Final;
+            this.Id = announcementId;
+            this.PhaseFunction = phaseFunction;
+            this.IsGlobal = this.PhaseFunction is PhaseFunction.GloballyAudible or PhaseFunction.Final;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Exiled.Events.EventArgs.Map
         /// <summary>
         /// Gets the announcement id, from 0 to 6.
         /// </summary>
-        public DecontaminationState State => (DecontaminationState)Id;
+        public DecontaminationState State => (DecontaminationState)this.Id;
 
         /// <summary>
         /// Gets a value indicating whether the action will be.

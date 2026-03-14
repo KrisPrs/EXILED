@@ -24,16 +24,16 @@ namespace Exiled.Events.EventArgs.Scp127
         /// <param name="experience"><inheritdoc cref="Experience"/></param>
         public GainedExperienceEventArgs(Scp127 scp127, float experience)
         {
-            Scp127 = scp127;
-            Experience = experience;
-            Tier = Scp127.TierManagerModule.GetTierForExp(Experience + Scp127.Experience);
+            this.Scp127 = scp127;
+            this.Experience = experience;
+            this.Tier = this.Scp127.TierManagerModule.GetTierForExp(this.Experience + this.Scp127.Experience);
         }
 
         /// <inheritdoc />
-        public Player Player => Scp127.Owner;
+        public Player Player => this.Scp127.Owner;
 
         /// <inheritdoc />
-        public Item Item => Scp127;
+        public Item Item => this.Scp127;
 
         /// <inheritdoc />
         public Scp127 Scp127 { get; }

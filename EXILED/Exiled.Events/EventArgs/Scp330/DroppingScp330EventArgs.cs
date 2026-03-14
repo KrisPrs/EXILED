@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Scp330
         /// </param>
         public DroppingScp330EventArgs(Scp330Bag scp330, CandyKindID candy)
         {
-            Scp330 = Item.Get<Scp330>(scp330);
-            Player = Scp330.Owner;
-            Candy = candy;
+            this.Scp330 = Item.Get<Scp330>(scp330);
+            this.Player = this.Scp330.Owner;
+            this.Candy = candy;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Exiled.Events.EventArgs.Scp330
         public Scp330 Scp330 { get; }
 
         /// <inheritdoc/>
-        public Item Item => Scp330;
+        public Item Item => this.Scp330;
 
         /// <summary>
         /// Gets or sets a value indicating whether the type of candy drop.

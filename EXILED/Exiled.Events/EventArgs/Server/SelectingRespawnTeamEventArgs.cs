@@ -21,15 +21,12 @@ namespace Exiled.Events.EventArgs.Server
         /// Initializes a new instance of the <see cref="SelectingRespawnTeamEventArgs"/> class.
         /// </summary>
         /// <param name="wave"><inheritdoc cref="Wave"/>.</param>
-        public SelectingRespawnTeamEventArgs(SpawnableWaveBase wave)
-        {
-            Wave = new TimedWave((TimeBasedWave)wave);
-        }
+        public SelectingRespawnTeamEventArgs(SpawnableWaveBase wave) => this.Wave = new TimedWave((TimeBasedWave)wave);
 
         /// <summary>
         /// Gets <see cref="SpawnableFaction"/> that represents the team chosen to spawn.
         /// </summary>
-        public SpawnableFaction Team => Wave.SpawnableFaction;
+        public SpawnableFaction Team => this.Wave.SpawnableFaction;
 
         /// <summary>
         /// Gets or sets <see cref="TimedWave"/> that is selected.

@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public TryUseBodyEventArgs(Player player, Ragdoll ragdoll, bool isAllowed = true)
         {
-            Player = player;
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            Ragdoll = ragdoll;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.Ragdoll = ragdoll;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

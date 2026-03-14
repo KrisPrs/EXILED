@@ -23,9 +23,9 @@ namespace Exiled.API.Features
         /// <param name="isGlobal">Indicates whether the badge is global.</param>
         public Badge(string text, string color, bool isGlobal = false)
         {
-            Text = text;
-            Color = color;
-            IsGlobal = isGlobal;
+            this.Text = text;
+            this.Color = color;
+            this.IsGlobal = isGlobal;
         }
 
         /// <summary>
@@ -75,6 +75,6 @@ namespace Exiled.API.Features
         /// Returns the Badge in a human-readable format.
         /// </summary>
         /// <returns>A string containing Badge-related data.</returns>
-        public override string ToString() => $"{Text} ({Color}) [{IsGlobal}]";
+        public override string ToString() => $"{this.Text} ({this.Color}) [{this.IsGlobal}]";
     }
 }

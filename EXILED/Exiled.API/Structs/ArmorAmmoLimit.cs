@@ -35,8 +35,8 @@ namespace Exiled.API.Structs
         /// <param name="limit">The ammo limit.</param>
         public ArmorAmmoLimit(AmmoType type, ushort limit)
         {
-            AmmoType = type;
-            Limit = limit;
+            this.AmmoType = type;
+            this.Limit = limit;
         }
 
         /// <summary>

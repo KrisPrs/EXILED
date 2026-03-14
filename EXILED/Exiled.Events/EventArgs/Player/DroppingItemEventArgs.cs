@@ -38,11 +38,11 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DroppingItemEventArgs(Player player, ItemBase item, bool isThrown, bool isAllowed = true)
         {
-            Player = player;
-            Item = Item.Get(item);
-            IsAllowed = isAllowed;
-            IsThrown = isThrown;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Item = Item.Get(item);
+            this.IsAllowed = isAllowed;
+            this.IsThrown = isThrown;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Exiled.Events.EventArgs.Player
             get;
             set
             {
-                if (Player.Role == RoleTypeId.Spectator)
+                if (this.Player.Role == RoleTypeId.Spectator)
                     return;
                 field = value;
             }

@@ -32,20 +32,16 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseBodyArmor"/> class.</param>
         internal BodyArmorPickup(BaseBodyArmor pickupBase)
-            : base(pickupBase)
-        {
-            Base = pickupBase;
-        }
+            : base(pickupBase) =>
+            this.Base = pickupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BodyArmorPickup"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal BodyArmorPickup(ItemType type)
-            : base(type)
-        {
-            Base = (BaseBodyArmor)((Pickup)this).Base;
-        }
+            : base(type) =>
+            this.Base = (BaseBodyArmor)((Pickup)this).Base;
 
         /// <summary>
         /// Gets the <see cref="BaseBodyArmor"/> that this class is encapsulating.
@@ -112,7 +108,7 @@ namespace Exiled.API.Features.Pickups
         /// Returns the BodyArmorPickup in a human readable format.
         /// </summary>
         /// <returns>A string containing BodyArmorPickup related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}*";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}*";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Item item)
@@ -120,12 +116,12 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is Armor armoritem)
             {
-                HelmetEfficacy = armoritem.HelmetEfficacy;
-                VestEfficacy = armoritem.VestEfficacy;
-                StaminaUseMultiplier = armoritem.StaminaUseMultiplier;
-                StaminaRegenMultiplier = armoritem.StaminaRegenMultiplier;
-                AmmoLimits = armoritem.AmmoLimits;
-                CategoryLimits = armoritem.CategoryLimits;
+                this.HelmetEfficacy = armoritem.HelmetEfficacy;
+                this.VestEfficacy = armoritem.VestEfficacy;
+                this.StaminaUseMultiplier = armoritem.StaminaUseMultiplier;
+                this.StaminaRegenMultiplier = armoritem.StaminaRegenMultiplier;
+                this.AmmoLimits = armoritem.AmmoLimits;
+                this.CategoryLimits = armoritem.CategoryLimits;
             }
         }
 
@@ -135,12 +131,12 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is BodyArmor armoritem)
             {
-                HelmetEfficacy = armoritem.HelmetEfficacy;
-                VestEfficacy = armoritem.VestEfficacy;
-                StaminaUseMultiplier = armoritem._staminaUseMultiplier;
-                StaminaRegenMultiplier = armoritem.StaminaRegenMultiplier;
-                AmmoLimits = armoritem.AmmoLimits.Select(limit => (ArmorAmmoLimit)limit);
-                CategoryLimits = armoritem.CategoryLimits;
+                this.HelmetEfficacy = armoritem.HelmetEfficacy;
+                this.VestEfficacy = armoritem.VestEfficacy;
+                this.StaminaUseMultiplier = armoritem._staminaUseMultiplier;
+                this.StaminaRegenMultiplier = armoritem.StaminaRegenMultiplier;
+                this.AmmoLimits = armoritem.AmmoLimits.Select(limit => (ArmorAmmoLimit)limit);
+                this.CategoryLimits = armoritem.CategoryLimits;
             }
         }
     }

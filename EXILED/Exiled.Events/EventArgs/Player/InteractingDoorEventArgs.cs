@@ -36,12 +36,12 @@ namespace Exiled.Events.EventArgs.Player
         /// <seealso cref="EventArgs.Item.KeycardInteractingEventArgs"/>
         public InteractingDoorEventArgs(Player player, DoorVariant door, byte colliderId, bool isAllowed)
         {
-            Player = player;
-            Door = Door.Get(door);
-            ColliderId = colliderId;
-            Collider = InteractableCollider.TryGetCollider(door, colliderId, out InteractableCollider interactableCollider) ? interactableCollider : null;
-            IsAllowed = isAllowed;
-            CanInteract = true;
+            this.Player = player;
+            this.Door = Door.Get(door);
+            this.ColliderId = colliderId;
+            this.Collider = InteractableCollider.TryGetCollider(door, colliderId, out InteractableCollider interactableCollider) ? interactableCollider : null;
+            this.IsAllowed = isAllowed;
+            this.CanInteract = true;
         }
 
         /// <summary>

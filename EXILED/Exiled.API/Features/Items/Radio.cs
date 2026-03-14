@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="RadioItem"/> class.</param>
         public Radio(RadioItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Radio"/> class, as well as a new Radio item.
@@ -47,8 +45,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public byte BatteryLevel
         {
-            get => Base.BatteryPercent;
-            set => Base.BatteryPercent = value;
+            get => this.Base.BatteryPercent;
+            set => this.Base.BatteryPercent = value;
         }
 
         /// <summary>
@@ -56,8 +54,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public RadioRange Range
         {
-            get => (RadioRange)Base._rangeId;
-            set => Base._rangeId = (byte)value;
+            get => (RadioRange)this.Base._rangeId;
+            set => this.Base._rangeId = (byte)value;
         }
 
         /// <summary>
@@ -68,12 +66,12 @@ namespace Exiled.API.Features.Items
             get =>
                 new()
                 {
-                    IdleUsage = Base.Ranges[(int)Range].MinuteCostWhenIdle,
-                    TalkingUsage = Base.Ranges[(int)Range].MinuteCostWhenTalking,
-                    MaxRange = Base.Ranges[(int)Range].MaximumRange,
+                    IdleUsage = this.Base.Ranges[(int)this.Range].MinuteCostWhenIdle,
+                    TalkingUsage = this.Base.Ranges[(int)this.Range].MinuteCostWhenTalking,
+                    MaxRange = this.Base.Ranges[(int)this.Range].MaximumRange,
                 };
             set =>
-                Base.Ranges[(int)Range] = new RadioRangeMode
+                this.Base.Ranges[(int)this.Range] = new RadioRangeMode
                 {
                     MaximumRange = value.MaxRange,
                     MinuteCostWhenIdle = value.IdleUsage,
@@ -86,8 +84,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public bool IsEnabled
         {
-            get => Base._enabled;
-            set => Base._enabled = value;
+            get => this.Base._enabled;
+            set => this.Base._enabled = value;
         }
 
         /// <summary>
@@ -95,15 +93,13 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="range">The <see cref="RadioRange"/> to modify.</param>
         /// <param name="settings">The new settings of the specified range.</param>
-        public void SetRangeSettings(RadioRange range, RadioRangeSettings settings)
-        {
-            Base.Ranges[(int)range] = new RadioRangeMode
+        public void SetRangeSettings(RadioRange range, RadioRangeSettings settings) =>
+            this.Base.Ranges[(int)range] = new RadioRangeMode
             {
                 MaximumRange = settings.MaxRange,
                 MinuteCostWhenIdle = settings.IdleUsage,
                 MinuteCostWhenTalking = settings.TalkingUsage,
             };
-        }
 
         /// <summary>
         /// Clones current <see cref="Radio"/> object.
@@ -111,22 +107,22 @@ namespace Exiled.API.Features.Items
         /// <returns> New <see cref="Radio"/> object. </returns>
         public override Item Clone() => new Radio()
         {
-            BatteryLevel = BatteryLevel,
-            Range = Range,
-            RangeSettings = RangeSettings,
+            BatteryLevel = this.BatteryLevel,
+            Range = this.Range,
+            RangeSettings = this.RangeSettings,
         };
 
         /// <summary>
         /// Returns the Radio in a human readable format.
         /// </summary>
         /// <returns>A string containing Radio-related data.</returns>
-        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Range}| -{BatteryLevel}-";
+        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Range}| -{this.BatteryLevel}-";
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         /// <param name="oldOwner">old <see cref="Item"/> owner.</param>
         /// <param name="newOwner">new <see cref="Item"/> owner.</param>
-        internal override void ChangeOwner(Player oldOwner, Player newOwner) => Base.Owner = newOwner.ReferenceHub;
+        internal override void ChangeOwner(Player oldOwner, Player newOwner) => this.Base.Owner = newOwner.ReferenceHub;
     }
 }

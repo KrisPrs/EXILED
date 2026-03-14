@@ -52,8 +52,8 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is Usable usableitem)
             {
-                UseTime = usableitem.UseTime;
-                MaxCancellableTime = usableitem.MaxCancellableTime;
+                this.UseTime = usableitem.UseTime;
+                this.MaxCancellableTime = usableitem.MaxCancellableTime;
             }
         }
 
@@ -63,8 +63,8 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is UsableItem usableitem)
             {
-                UseTime = usableitem.UseTime;
-                MaxCancellableTime = usableitem.MaxCancellableTime;
+                this.UseTime = usableitem.UseTime;
+                this.MaxCancellableTime = usableitem.MaxCancellableTime;
             }
         }
     }

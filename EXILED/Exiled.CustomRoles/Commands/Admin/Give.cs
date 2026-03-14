@@ -90,19 +90,19 @@ namespace Exiled.CustomRoles.Commands.Admin
         {
             if (!sender.CheckPermission("customroles.give"))
             {
-                response = NoPermissionMessage;
+                response = this.NoPermissionMessage;
                 return false;
             }
 
             if (arguments.Count == 0)
             {
-                response = string.Format(UsageMessage, Command);
+                response = string.Format(this.UsageMessage, this.Command);
                 return false;
             }
 
             if (!CustomRole.TryGet(arguments.At(0), out CustomRole? role) || role is null)
             {
-                response = string.Format(NoRoleFoundMessage, arguments.At(0));
+                response = string.Format(this.NoRoleFoundMessage, arguments.At(0));
                 return false;
             }
 
@@ -112,12 +112,12 @@ namespace Exiled.CustomRoles.Commands.Admin
                 {
                     Player player = Player.Get(playerCommandSender);
 
-                    TryAddRole(player, role);
-                    response = string.Format(RoleGivenMessage, role.Name, player.Nickname);
+                    this.TryAddRole(player, role);
+                    response = string.Format(this.RoleGivenMessage, role.Name, player.Nickname);
                     return true;
                 }
 
-                response = PlayerNotFoundMessage;
+                response = this.PlayerNotFoundMessage;
                 return false;
             }
 
@@ -130,20 +130,20 @@ namespace Exiled.CustomRoles.Commands.Admin
                     List<Player> players = ListPool<Player>.Pool.Get(Player.List);
 
                     foreach (Player player in players)
-                        TryAddRole(player, role);
+                        this.TryAddRole(player, role);
 
-                    response = string.Format(AllPlayersRoleGivenMessage, role.Name);
+                    response = string.Format(this.AllPlayersRoleGivenMessage, role.Name);
                     ListPool<Player>.Pool.Return(players);
                     return true;
                 default:
                     if (Player.Get(identifier) is not { } ply)
                     {
-                        response = string.Format(PlayerNotFoundErrorMessage, identifier);
+                        response = string.Format(this.PlayerNotFoundErrorMessage, identifier);
                         return false;
                     }
 
-                    TryAddRole(ply, role);
-                    response = string.Format(RoleGivenMessage, role.Name, ply.Nickname);
+                    this.TryAddRole(ply, role);
+                    response = string.Format(this.RoleGivenMessage, role.Name, ply.Nickname);
                     return true;
             }
         }

@@ -31,10 +31,7 @@ namespace Exiled.Events.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="Patcher"/> class.
         /// </summary>
-        internal Patcher()
-        {
-            Harmony = new($"exiled.events.{++patchesCounter}");
-        }
+        internal Patcher() => this.Harmony = new($"exiled.events.{++patchesCounter}");
 
         /// <summary>
         /// Gets a <see cref="HashSet{T}"/> that contains all patch types that haven't been patched.
@@ -63,9 +60,9 @@ namespace Exiled.Events.Features
 
                 foreach (Type type in types)
                 {
-                    List<MethodInfo> methodInfos = new PatchClassProcessor(Harmony, type).Patch();
+                    List<MethodInfo> methodInfos = new PatchClassProcessor(this.Harmony, type).Patch();
                     if (DisabledPatchesHashSet.Any(x => methodInfos.Contains(x)))
-                        ReloadDisabledPatches();
+                        this.ReloadDisabledPatches();
                     UnpatchedTypes.Remove(type);
                 }
 
@@ -98,7 +95,7 @@ namespace Exiled.Events.Features
                     Type patch = toPatch[i];
                     try
                     {
-                        Harmony.CreateClassProcessor(patch).Patch();
+                        this.Harmony.CreateClassProcessor(patch).Patch();
                         UnpatchedTypes.Remove(patch);
                     }
                     catch (HarmonyException exception)
@@ -130,7 +127,7 @@ namespace Exiled.Events.Features
         {
             foreach (MethodBase method in DisabledPatchesHashSet)
             {
-                Harmony.Unpatch(method, HarmonyPatchType.All, Harmony.Id);
+                this.Harmony.Unpatch(method, HarmonyPatchType.All, this.Harmony.Id);
 
                 Log.Info($"Unpatched {method.Name}");
             }
@@ -142,7 +139,7 @@ namespace Exiled.Events.Features
         public void UnpatchAll()
         {
             Log.Debug("Unpatching events...");
-            Harmony.UnpatchAll(Harmony.Id);
+            this.Harmony.UnpatchAll(this.Harmony.Id);
             UnpatchedTypes = GetAllPatchTypes();
 
             Log.Debug("All events have been unpatched. Goodbye!");

@@ -29,9 +29,9 @@ namespace Exiled.Events.EventArgs.Scp3114
         /// </param>
         public StranglingEventArgs(ReferenceHub hub, ReferenceHub target)
         {
-            Player = Player.Get(hub);
-            Scp3114 = Player.Role.As<Scp3114Role>();
-            Target = Player.Get(target);
+            this.Player = Player.Get(hub);
+            this.Scp3114 = this.Player.Role.As<Scp3114Role>();
+            this.Target = Player.Get(target);
         }
 
         /// <inheritdoc/>

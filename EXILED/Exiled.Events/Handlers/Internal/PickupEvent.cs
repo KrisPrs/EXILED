@@ -19,10 +19,7 @@ namespace Exiled.Events.Handlers.Internal
         /// Called after a pickup is spawned. Hooked to <see cref="ItemPickupBase.OnPickupAdded"/>.
         /// </summary>
         /// <param name="itemPickupBase">The spawned Pickup.</param>
-        public static void OnSpawnedPickup(ItemPickupBase itemPickupBase)
-        {
-            Map.OnPickupAdded(new(itemPickupBase));
-        }
+        public static void OnSpawnedPickup(ItemPickupBase itemPickupBase) => Map.OnPickupAdded(new(itemPickupBase));
 
         /// <summary>
         /// Called before a pickup is destroyed. Hooked to <see cref="ItemPickupBase.OnPickupDestroyed"/>.

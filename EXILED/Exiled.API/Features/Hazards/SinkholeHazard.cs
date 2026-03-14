@@ -20,10 +20,8 @@ namespace Exiled.API.Features.Hazards
         /// </summary>
         /// <param name="hazard">The <see cref="SinkholeEnvironmentalHazard"/> instance.</param>
         public SinkholeHazard(SinkholeEnvironmentalHazard hazard)
-            : base(hazard)
-        {
-            Base = hazard;
-        }
+            : base(hazard) =>
+            this.Base = hazard;
 
         /// <summary>
         /// Gets the <see cref="SinkholeEnvironmentalHazard"/>.

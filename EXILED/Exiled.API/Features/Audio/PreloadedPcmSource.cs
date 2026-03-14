@@ -32,37 +32,31 @@ namespace Exiled.API.Features.Audio
         /// Initializes a new instance of the <see cref="PreloadedPcmSource"/> class.
         /// </summary>
         /// <param name="path">The path to the audio file.</param>
-        public PreloadedPcmSource(string path)
-        {
-            data = WavUtility.WavToPcm(path);
-        }
+        public PreloadedPcmSource(string path) => this.data = WavUtility.WavToPcm(path);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PreloadedPcmSource"/> class.
         /// </summary>
         /// <param name="pcmData">The raw PCM float array.</param>
-        public PreloadedPcmSource(float[] pcmData)
-        {
-            data = pcmData;
-        }
+        public PreloadedPcmSource(float[] pcmData) => this.data = pcmData;
 
         /// <summary>
         /// Gets a value indicating whether the end of the PCM data buffer has been reached.
         /// </summary>
-        public bool Ended => pos >= data.Length;
+        public bool Ended => this.pos >= this.data.Length;
 
         /// <summary>
         /// Gets the total duration of the audio in seconds.
         /// </summary>
-        public double TotalDuration => (double)data.Length / VoiceChatSettings.SampleRate;
+        public double TotalDuration => (double)this.data.Length / VoiceChatSettings.SampleRate;
 
         /// <summary>
         /// Gets or sets the current playback position in seconds.
         /// </summary>
         public double CurrentTime
         {
-            get => (double)pos / VoiceChatSettings.SampleRate;
-            set => Seek(value);
+            get => (double)this.pos / VoiceChatSettings.SampleRate;
+            set => this.Seek(value);
         }
 
         /// <summary>
@@ -74,9 +68,9 @@ namespace Exiled.API.Features.Audio
         /// <returns>The number of samples read into <paramref name="buffer"/>.</returns>
         public int Read(float[] buffer, int offset, int count)
         {
-            int read = Math.Min(count, data.Length - pos);
-            Array.Copy(data, pos, buffer, offset, read);
-            pos += read;
+            int read = Math.Min(count, this.data.Length - this.pos);
+            Array.Copy(this.data, this.pos, buffer, offset, read);
+            this.pos += read;
 
             return read;
         }
@@ -92,19 +86,16 @@ namespace Exiled.API.Features.Audio
             if (targetIndex < 0)
                 targetIndex = 0;
 
-            if (targetIndex > data.Length)
-                targetIndex = data.Length;
+            if (targetIndex > this.data.Length)
+                targetIndex = this.data.Length;
 
-            pos = (int)targetIndex;
+            this.pos = (int)targetIndex;
         }
 
         /// <summary>
         /// Resets the read position to the beginning of the PCM data buffer.
         /// </summary>
-        public void Reset()
-        {
-            pos = 0;
-        }
+        public void Reset() => this.pos = 0;
 
         /// <inheritdoc/>
         public void Dispose()

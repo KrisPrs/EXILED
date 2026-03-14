@@ -28,12 +28,12 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="isAllowed">Whether it is allowed to activate/deactivate.</param>
         public ChangingDangerStateEventArgs(Player player, DangerStackBase danger, DangerType type, bool activating, Player encounteredPlayer = null, bool isAllowed = true)
         {
-            Player = player;
-            Danger = danger;
-            Type = type;
-            IsActivating = activating;
-            EncounteredPlayer = encounteredPlayer;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Danger = danger;
+            this.Type = type;
+            this.IsActivating = activating;
+            this.EncounteredPlayer = encounteredPlayer;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace Exiled.Events.EventArgs.Player
         /// <summary>
         /// Gets a value indicating whether the danger is ending.
         /// </summary>
-        public bool IsEnding => !IsActivating;
+        public bool IsEnding => !this.IsActivating;
 
         /// <summary>
         /// Gets the encountered player if the danger is an encounter or null if it isn't.

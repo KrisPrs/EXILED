@@ -43,10 +43,8 @@ namespace Exiled.API.Features.Core.UserSettings
             bool isServerOnly = false,
             HeaderSetting header = null,
             Action<Player, SettingBase> onChanged = null)
-            : base(new SSDropdownSetting(id, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription, collectionId, isServerOnly), header, onChanged)
-        {
-            Base = (SSDropdownSetting)base.Base;
-        }
+            : base(new SSDropdownSetting(id, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription, collectionId, isServerOnly), header, onChanged) =>
+            this.Base = (SSDropdownSetting)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DropdownSetting"/> class.
@@ -55,11 +53,11 @@ namespace Exiled.API.Features.Core.UserSettings
         internal DropdownSetting(SSDropdownSetting settingBase)
             : base(settingBase)
         {
-            Base = settingBase;
+            this.Base = settingBase;
 
-            if (OriginalDefinition != null && OriginalDefinition.Is(out DropdownSetting dropdown))
+            if (this.OriginalDefinition != null && this.OriginalDefinition.Is(out DropdownSetting dropdown))
             {
-                Options = dropdown.Options;
+                this.Options = dropdown.Options;
             }
         }
 
@@ -71,8 +69,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public IEnumerable<string> Options
         {
-            get => Base.Options;
-            set => Base.Options = value.ToArray();
+            get => this.Base.Options;
+            set => this.Base.Options = value.ToArray();
         }
 
         /// <summary>
@@ -80,8 +78,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public int DefaultOptionIndex
         {
-            get => Base.DefaultOptionIndex;
-            set => Base.DefaultOptionIndex = value;
+            get => this.Base.DefaultOptionIndex;
+            set => this.Base.DefaultOptionIndex = value;
         }
 
         /// <summary>
@@ -89,8 +87,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string DefaultOption
         {
-            get => Base.Options[DefaultOptionIndex];
-            set => DefaultOptionIndex = Array.IndexOf(Base.Options, value);
+            get => this.Base.Options[this.DefaultOptionIndex];
+            set => this.DefaultOptionIndex = Array.IndexOf(this.Base.Options, value);
         }
 
         /// <summary>
@@ -98,8 +96,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public SSDropdownSetting.DropdownEntryType DropdownType
         {
-            get => Base.EntryType;
-            set => Base.EntryType = value;
+            get => this.Base.EntryType;
+            set => this.Base.EntryType = value;
         }
 
         /// <summary>
@@ -107,8 +105,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public int SelectedIndex
         {
-            get => Base.SyncSelectionIndexRaw;
-            set => Base.SyncSelectionIndexRaw = value;
+            get => this.Base.SyncSelectionIndexRaw;
+            set => this.Base.SyncSelectionIndexRaw = value;
         }
 
         /// <summary>
@@ -116,8 +114,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public string SelectedOption
         {
-            get => Base.SyncSelectionText;
-            set => SelectedIndex = Array.IndexOf(Base.Options, value);
+            get => this.Base.SyncSelectionText;
+            set => this.SelectedIndex = Array.IndexOf(this.Base.Options, value);
         }
 
         /// <summary>
@@ -129,7 +127,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateSetting(string[] options, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendDropdownUpdate(options, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendDropdownUpdate(options, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
@@ -141,17 +139,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateValue(int selectedIndex, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendValueUpdate(selectedIndex, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendValueUpdate(selectedIndex, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Gets a string representation of this <see cref="DropdownSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" ={DefaultOptionIndex}= -{SelectedIndex}- /{string.Join(";", Options)}/";
-        }
+        public override string ToString() => base.ToString() + $" ={this.DefaultOptionIndex}= -{this.SelectedIndex}- /{string.Join(";", this.Options)}/";
 
         /// <summary>
         /// Represents a config for DropdownSetting.
@@ -173,15 +168,15 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <inheritdoc cref="Label"/>
             public DropdownConfig(string label, IEnumerable<string> options, int defaultOptionIndex, bool isServerOnly, SSDropdownSetting.DropdownEntryType dropdownEntryType = SSDropdownSetting.DropdownEntryType.Regular, string hintDescription = null, string headerName = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                Options = options;
-                DefaultOptionIndex = defaultOptionIndex;
-                DropdownEntryType = dropdownEntryType;
-                HintDescription = hintDescription;
-                IsServerOnly = isServerOnly;
-                HeaderName = headerName;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.Options = options;
+                this.DefaultOptionIndex = defaultOptionIndex;
+                this.DropdownEntryType = dropdownEntryType;
+                this.HintDescription = hintDescription;
+                this.IsServerOnly = isServerOnly;
+                this.HeaderName = headerName;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -240,7 +235,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a DropdownSetting instanse.
             /// </summary>
             /// <returns>DropdownSetting.</returns>
-            public override DropdownSetting Create() => new(++IdIncrementor, Label, Options, DefaultOptionIndex, DropdownEntryType, HintDescription, 255, IsServerOnly, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override DropdownSetting Create() => new(++IdIncrementor, this.Label, this.Options, this.DefaultOptionIndex, this.DropdownEntryType, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

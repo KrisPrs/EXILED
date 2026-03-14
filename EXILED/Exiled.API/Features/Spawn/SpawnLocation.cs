@@ -25,9 +25,9 @@ namespace Exiled.API.Features.Spawn
         /// <param name="horizontalRotation">The horizontal rotation of the spawn.</param>
         public SpawnLocation(RoleTypeId roleType, Vector3 position, float horizontalRotation)
         {
-            RoleType = roleType;
-            Position = position;
-            HorizontalRotation = horizontalRotation;
+            this.RoleType = roleType;
+            this.Position = position;
+            this.HorizontalRotation = horizontalRotation;
         }
 
         /// <summary>

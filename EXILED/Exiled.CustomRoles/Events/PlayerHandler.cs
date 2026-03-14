@@ -98,8 +98,7 @@ namespace Exiled.CustomRoles.Events
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.ChangedNickname" />
-        public void OnChangedNickname(ChangedNicknameEventArgs ev)
-        {
+        public void OnChangedNickname(ChangedNicknameEventArgs ev) =>
             Timing.CallDelayed(0.1f, () =>
             {
                 if (ev.Player is { IsConnected: true } && ev.Player.TryGetCustomRole(out CustomRole role))
@@ -110,10 +109,9 @@ namespace Exiled.CustomRoles.Events
                             continue;
 
                         player.SetDispayNicknameForTargetOnly(ev.Player, role.GetSpectatorText(ev.Player));
-                        Log.Debug($"[Name sync] [{nameof(OnChangedNickname)}] Sent name of {ev.Player.Nickname} to {player.Nickname}");
+                        Log.Debug($"[Name sync] [{nameof(this.OnChangedNickname)}] Sent name of {ev.Player.Nickname} to {player.Nickname}");
                     }
                 }
             });
-        }
     }
 }

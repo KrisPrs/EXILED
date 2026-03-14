@@ -35,12 +35,12 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DyingEventArgs(Player target, DamageHandlerBase damageHandler)
         {
-            DamageHandler = new CustomDamageHandler(target, damageHandler);
-            Player = target;
+            this.DamageHandler = new CustomDamageHandler(target, damageHandler);
+            this.Player = target;
 #pragma warning disable CS0618
-            ItemsToDrop = Player.Items.ToList();
+            this.ItemsToDrop = this.Player.Items.ToList();
 #pragma warning restore CS0618
-            Attacker = DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
+            this.Attacker = this.DamageHandler.BaseIs(out CustomAttackerHandler attackerDamageHandler) ? attackerDamageHandler.Attacker : null;
         }
 
         /// <summary>

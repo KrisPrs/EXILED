@@ -22,10 +22,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="filmmakerRole">the base <see cref="FilmmakerGameRole"/>.</param>
         internal FilmMakerRole(FilmmakerGameRole filmmakerRole)
-            : base(filmmakerRole)
-        {
-            Base = filmmakerRole;
-        }
+            : base(filmmakerRole) =>
+            this.Base = filmmakerRole;
 
         /// <inheritdoc/>
         public override RoleTypeId Type { get; } = RoleTypeId.Filmmaker;
@@ -35,8 +33,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         public Quaternion CameraRotation
         {
-            get => Base.CameraRotation;
-            set => Base.CameraRotation = value;
+            get => this.Base.CameraRotation;
+            set => this.Base.CameraRotation = value;
         }
 
         /// <summary>

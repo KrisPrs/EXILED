@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TogglingNoClipEventArgs(ReferenceHub referenceHub, bool newValue, bool isAllowed = true)
         {
-            Player = Player.Get(referenceHub);
-            IsEnabled = newValue;
-            IsAllowed = isAllowed;
+            this.Player = Player.Get(referenceHub);
+            this.IsEnabled = newValue;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

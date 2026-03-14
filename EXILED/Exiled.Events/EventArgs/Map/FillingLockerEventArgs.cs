@@ -29,8 +29,8 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public FillingLockerEventArgs(ItemPickupBase pickupBase, LockerChamber lockerChamber)
         {
-            Pickup = Pickup.Get(pickupBase);
-            Chamber = Chamber.Get(lockerChamber);
+            this.Pickup = Pickup.Get(pickupBase);
+            this.Chamber = Chamber.Get(lockerChamber);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Exiled.Events.EventArgs.Map
         /// <summary>
         /// Gets a locker which is containing <see cref="Chamber"/>.
         /// </summary>
-        public API.Features.Lockers.Locker Locker => Chamber?.Locker;
+        public API.Features.Lockers.Locker Locker => this.Chamber?.Locker;
 
         /// <summary>
         /// Gets a chamber which is filling.

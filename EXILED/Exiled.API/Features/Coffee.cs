@@ -34,7 +34,7 @@ namespace Exiled.API.Features
         /// <param name="coffee"><inheritdoc cref="Base"/></param>
         public Coffee(BaseCoffee coffee)
         {
-            Base = coffee;
+            this.Base = coffee;
 
             BaseToWrapper.Add(coffee, this);
         }
@@ -70,8 +70,8 @@ namespace Exiled.API.Features
         /// </summary>
         public bool IsConsumed
         {
-            get => Base.IsConsumed;
-            set => Base.NetworkIsConsumed = value;
+            get => this.Base.IsConsumed;
+            set => this.Base.NetworkIsConsumed = value;
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace Exiled.API.Features
         /// </summary>
         public CoffeeTranslation CoffeeTranslation
         {
-            get => Base._drinkText;
-            set => Base._drinkText = value;
+            get => this.Base._drinkText;
+            set => this.Base._drinkText = value;
         }
 
         /// <summary>
@@ -88,14 +88,14 @@ namespace Exiled.API.Features
         /// </summary>
         public string TranslationAuthor
         {
-            get => Base._author;
-            set => Base._author = value;
+            get => this.Base._author;
+            set => this.Base._author = value;
         }
 
         /// <summary>
         /// Gets the color of a drink in a cup.
         /// </summary>
-        public Color DrinkColor => Base._drinkColor;
+        public Color DrinkColor => this.Base._drinkColor;
 
         /// <summary>
         /// Gets a <see cref="Coffee"/> given a <see cref="BaseCoffee"/> instance.
@@ -116,6 +116,6 @@ namespace Exiled.API.Features
         /// Interacts with <see cref="Coffee"/>.
         /// </summary>
         /// <param name="player">The player who interacts. If <see langword="null"/>, it will be chosen randomly.</param>
-        public void Interact(Player player = null) => Base.ServerInteract((player ?? Player.Get(x => x.IsHuman).GetRandomValue()).ReferenceHub, byte.MaxValue);
+        public void Interact(Player player = null) => this.Base.ServerInteract((player ?? Player.Get(x => x.IsHuman).GetRandomValue()).ReferenceHub, byte.MaxValue);
     }
 }

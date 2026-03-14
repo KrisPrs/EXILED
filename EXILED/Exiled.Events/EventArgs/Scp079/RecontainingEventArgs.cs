@@ -21,8 +21,8 @@ namespace Exiled.Events.EventArgs.Scp079
         /// <param name="recontainer">The <see cref="BreakableWindow"/> instance.</param>
         public RecontainingEventArgs(BreakableWindow recontainer)
         {
-            Player = Player.Get(recontainer.LastAttacker.Hub);
-            IsAutomatic = recontainer.LastAttacker.IsSet;
+            this.Player = Player.Get(recontainer.LastAttacker.Hub);
+            this.IsAutomatic = recontainer.LastAttacker.IsSet;
         }
 
         /// <summary>

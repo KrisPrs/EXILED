@@ -67,12 +67,12 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is ExplosiveGrenade explosiveGrenadeitem)
             {
-                MaxRadius = explosiveGrenadeitem.MaxRadius;
-                ScpDamageMultiplier = explosiveGrenadeitem.ScpDamageMultiplier;
-                BurnDuration = explosiveGrenadeitem.BurnDuration;
-                DeafenDuration = explosiveGrenadeitem.DeafenDuration;
-                ConcussDuration = explosiveGrenadeitem.ConcussDuration;
-                FuseTime = explosiveGrenadeitem.FuseTime;
+                this.MaxRadius = explosiveGrenadeitem.MaxRadius;
+                this.ScpDamageMultiplier = explosiveGrenadeitem.ScpDamageMultiplier;
+                this.BurnDuration = explosiveGrenadeitem.BurnDuration;
+                this.DeafenDuration = explosiveGrenadeitem.DeafenDuration;
+                this.ConcussDuration = explosiveGrenadeitem.ConcussDuration;
+                this.FuseTime = explosiveGrenadeitem.FuseTime;
             }
         }
 
@@ -82,11 +82,11 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is ThrowableItem throwable && throwable.Projectile is ExplosionGrenade explosiveGrenade)
             {
-                MaxRadius = explosiveGrenade.MaxRadius;
-                ScpDamageMultiplier = explosiveGrenade.ScpDamageMultiplier;
-                BurnDuration = explosiveGrenade._burnedDuration;
-                DeafenDuration = explosiveGrenade._deafenedDuration;
-                ConcussDuration = explosiveGrenade._concussedDuration;
+                this.MaxRadius = explosiveGrenade.MaxRadius;
+                this.ScpDamageMultiplier = explosiveGrenade.ScpDamageMultiplier;
+                this.BurnDuration = explosiveGrenade._burnedDuration;
+                this.DeafenDuration = explosiveGrenade._deafenedDuration;
+                this.ConcussDuration = explosiveGrenade._concussedDuration;
             }
         }
     }

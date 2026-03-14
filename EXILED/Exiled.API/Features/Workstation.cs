@@ -36,8 +36,8 @@ namespace Exiled.API.Features
         internal Workstation(WorkstationController workstationController)
         {
             WorkstationControllerToWorkstation.Add(workstationController, this);
-            Base = workstationController;
-            PositionSync = workstationController.GetComponent<StructurePositionSync>();
+            this.Base = workstationController;
+            this.PositionSync = workstationController.GetComponent<StructurePositionSync>();
         }
 
         /// <summary>
@@ -53,33 +53,33 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the <see cref="GameObject"/> of the workstation.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the <see cref="Transform"/> of the workstation.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the <see cref="Room"/> the workstation is located in.
         /// </summary>
-        public Room Room => Room.Get(Position);
+        public Room Room => Room.Get(this.Position);
 
         /// <summary>
         /// Gets the <see cref="ZoneType"/> of the workstation's room.
         /// </summary>
-        public ZoneType Zone => Room.Zone;
+        public ZoneType Zone => this.Room.Zone;
 
         /// <summary>
         /// Gets or sets the position of the workstation.
         /// </summary>
         public Vector3 Position
         {
-            get => Base.transform.position;
+            get => this.Base.transform.position;
             set
             {
-                Base.transform.position = value;
-                PositionSync.Network_position = value;
+                this.Base.transform.position = value;
+                this.PositionSync.Network_position = value;
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -90,11 +90,11 @@ namespace Exiled.API.Features
         /// <remarks>The setter only works in the y-axis (left to right) due to base game limitations.</remarks>
         public Quaternion Rotation
         {
-            get => Base.transform.rotation;
+            get => this.Base.transform.rotation;
             set
             {
-                Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
-                PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
+                this.Base.transform.rotation = Quaternion.Euler(0, value.eulerAngles.y, 0);
+                this.PositionSync.Network_rotationY = (sbyte)Mathf.RoundToInt(value.eulerAngles.y / 5.625F);
                 ((IStructureSync)this).Respawn();
             }
         }
@@ -107,22 +107,22 @@ namespace Exiled.API.Features
         /// </summary>
         public WorkstationController.WorkstationStatus Status
         {
-            get => (WorkstationController.WorkstationStatus)Base.Status;
-            set => Base.NetworkStatus = (byte)value;
+            get => (WorkstationController.WorkstationStatus)this.Base.Status;
+            set => this.Base.NetworkStatus = (byte)value;
         }
 
         /// <summary>
         /// Gets the <see cref="Stopwatch"/> used by the workstation.
         /// </summary>
-        public Stopwatch Stopwatch => Base.ServerStopwatch;
+        public Stopwatch Stopwatch => this.Base.ServerStopwatch;
 
         /// <summary>
         /// Gets or sets the player known to be using the workstation.
         /// </summary>
         public Player KnownUser
         {
-            get => Player.Get(Base.KnownUser);
-            set => Base.KnownUser = value.ReferenceHub;
+            get => Player.Get(this.Base.KnownUser);
+            set => this.Base.KnownUser = value.ReferenceHub;
         }
 
         /// <summary>
@@ -156,18 +156,18 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="player">The player to check.</param>
         /// <returns><c>true</c> if the player is in range; otherwise, <c>false</c>.</returns>
-        public bool IsInRange(Player player) => Base.IsInRange(player.ReferenceHub);
+        public bool IsInRange(Player player) => this.Base.IsInRange(player.ReferenceHub);
 
         /// <summary>
         /// Interacts with the workstation as the specified player.
         /// </summary>
         /// <param name="player">The player to interact as.</param>
-        public void Interact(Player player) => Base.ServerInteract(player.ReferenceHub, Base.ActivateCollider.ColliderId);
+        public void Interact(Player player) => this.Base.ServerInteract(player.ReferenceHub, this.Base.ActivateCollider.ColliderId);
 
         /// <summary>
         /// Returns the Room in a human-readable format.
         /// </summary>
         /// <returns>A string containing Workstation-related data.</returns>
-        public override string ToString() => $"{GameObject.name} ({Zone}) [{Room}]";
+        public override string ToString() => $"{this.GameObject.name} ({this.Zone}) [{this.Room}]";
     }
 }

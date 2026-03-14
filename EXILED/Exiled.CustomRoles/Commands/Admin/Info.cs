@@ -77,29 +77,29 @@ namespace Exiled.CustomRoles.Commands.Admin
         {
             if (!sender.CheckPermission("customroles.info"))
             {
-                response = NoPermissions;
+                response = this.NoPermissions;
                 return false;
             }
 
             if (arguments.Count < 1)
             {
-                response = Usage;
+                response = this.Usage;
                 return false;
             }
 
             if ((!(uint.TryParse(arguments.At(0), out uint id) && CustomRole.TryGet(id, out CustomRole? role)) && !CustomRole.TryGet(arguments.At(0), out role)) || role is null)
             {
-                response = string.Format(ErrorNoRole, arguments.At(0));
+                response = string.Format(this.ErrorNoRole, arguments.At(0));
                 return false;
             }
 
             StringBuilder builder = StringBuilderPool.Pool.Get().AppendLine();
 
-            builder.Append("<color=").Append(Color1).Append(">-</color> <color=").Append(Color2).Append(">").Append(role.Name)
-                .Append("</color> <color=").Append(Color3).Append(">(").Append(role.Id).Append(")</color>")
-                .Append(string.Format(RoleInfoFormat, role.Name, role.Id, role.Description))
+            builder.Append("<color=").Append(this.Color1).Append(">-</color> <color=").Append(this.Color2).Append(">").Append(role.Name)
+                .Append("</color> <color=").Append(this.Color3).Append(">(").Append(role.Id).Append(")</color>")
+                .Append(string.Format(this.RoleInfoFormat, role.Name, role.Id, role.Description))
                 .AppendLine(role.Role.ToString())
-                .Append(string.Format(RoleHealthFormat, role.MaxHealth.ToString())).AppendLine();
+                .Append(string.Format(this.RoleHealthFormat, role.MaxHealth.ToString())).AppendLine();
 
             response = StringBuilderPool.Pool.ToStringReturn(builder);
             return true;

@@ -21,10 +21,8 @@ namespace Exiled.API.Features.Roles
         /// </summary>
         /// <param name="baseRole">The encapsulated <see cref="OverwatchGameRole"/>.</param>
         internal OverwatchRole(OverwatchGameRole baseRole)
-            : base(baseRole)
-        {
-            Base = baseRole;
-        }
+            : base(baseRole) =>
+            this.Base = baseRole;
 
         /// <inheritdoc/>
         public override RoleTypeId Type => RoleTypeId.Overwatch;
@@ -38,6 +36,6 @@ namespace Exiled.API.Features.Roles
         /// Gets the Overwatch role for a player.
         /// </summary>
         /// <returns>The overwatch RoleType.</returns>
-        public RoleTypeId GetObfuscatedRole() => Base.GetRoleForUser(Owner.ReferenceHub);
+        public RoleTypeId GetObfuscatedRole() => this.Base.GetRoleForUser(this.Owner.ReferenceHub);
     }
 }

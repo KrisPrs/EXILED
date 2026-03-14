@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public TogglingWeaponFlashlightEventArgs(BaseFirearm firearm, bool oldState)
         {
-            Firearm = Item.Get<Firearm>(firearm);
-            Player = Firearm.Owner;
-            NewState = !oldState;
+            this.Firearm = Item.Get<Firearm>(firearm);
+            this.Player = this.Firearm.Owner;
+            this.NewState = !oldState;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Exiled.Events.EventArgs.Player
         public Firearm Firearm { get; }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <summary>
         /// Gets the player who's toggling the weapon's flashlight.

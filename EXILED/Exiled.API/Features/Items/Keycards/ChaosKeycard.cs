@@ -21,10 +21,8 @@ namespace Exiled.API.Features.Items.Keycards
         /// </summary>
         /// <param name="itemBase">The <see cref="ItemBase"/> to encapsulate.</param>
         internal ChaosKeycard(ChaosKeycardItem itemBase)
-            : base(itemBase)
-        {
-            Base = itemBase;
-        }
+            : base(itemBase) =>
+            this.Base = itemBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChaosKeycard"/> class.
@@ -44,12 +42,12 @@ namespace Exiled.API.Features.Items.Keycards
         /// Gets the <see cref="InventorySystem.Items.Keycards.Snake.SnakeEngine"/> this encapsulates.
         /// </summary>
         /// <remarks>Can be null, but shouldn't be during usage.</remarks>
-        public SnakeEngine SnakeEngine => ChaosKeycardItem.SnakeSessions.TryGetValue(Serial, out SnakeEngine engine) ? engine : null;
+        public SnakeEngine SnakeEngine => ChaosKeycardItem.SnakeSessions.TryGetValue(this.Serial, out SnakeEngine engine) ? engine : null;
 
         /// <summary>
         /// Returns the Keycard in a human readable format.
         /// </summary>
         /// <returns>A string containing Keycard-related data.</returns>
-        public override string ToString() => $"{Type} == ({Serial}) [{Weight}] *{Scale}* |{Permissions}|";
+        public override string ToString() => $"{this.Type} == ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Permissions}|";
     }
 }

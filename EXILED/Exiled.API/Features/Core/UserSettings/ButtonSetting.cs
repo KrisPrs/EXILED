@@ -29,10 +29,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public ButtonSetting(int id, string label, string buttonText, float holdTime = 0.0f, string hintDescription = null, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
-            : base(new SSButton(id, label, buttonText, holdTime, hintDescription), header, onChanged)
-        {
-            Base = (SSButton)base.Base;
-        }
+            : base(new SSButton(id, label, buttonText, holdTime, hintDescription), header, onChanged) =>
+            this.Base = (SSButton)base.Base;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ButtonSetting"/> class.
@@ -41,12 +39,12 @@ namespace Exiled.API.Features.Core.UserSettings
         internal ButtonSetting(SSButton settingBase)
             : base(settingBase)
         {
-            Base = settingBase;
+            this.Base = settingBase;
 
-            if (OriginalDefinition != null && OriginalDefinition.Is(out ButtonSetting setting))
+            if (this.OriginalDefinition != null && this.OriginalDefinition.Is(out ButtonSetting setting))
             {
-                Text = setting.Text;
-                HoldTime = setting.HoldTime;
+                this.Text = setting.Text;
+                this.HoldTime = setting.HoldTime;
             }
         }
 
@@ -56,15 +54,15 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets the last press time.
         /// </summary>
-        public Stopwatch LastPress => Base.SyncLastPress;
+        public Stopwatch LastPress => this.Base.SyncLastPress;
 
         /// <summary>
         /// Gets or sets the button text.
         /// </summary>
         public string Text
         {
-            get => Base.ButtonText;
-            set => Base.ButtonText = value;
+            get => this.Base.ButtonText;
+            set => this.Base.ButtonText = value;
         }
 
         /// <summary>
@@ -72,8 +70,8 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public float HoldTime
         {
-            get => Base.HoldTimeSeconds;
-            set => Base.HoldTimeSeconds = value;
+            get => this.Base.HoldTimeSeconds;
+            set => this.Base.HoldTimeSeconds = value;
         }
 
         /// <summary>
@@ -86,17 +84,14 @@ namespace Exiled.API.Features.Core.UserSettings
         public void UpdateSetting(string text, float holdTime, bool overrideValue = true, Predicate<Player> filter = null)
         {
             filter ??= _ => true;
-            Base.SendButtonUpdate(text, holdTime, overrideValue, hub => filter(Player.Get(hub)));
+            this.Base.SendButtonUpdate(text, holdTime, overrideValue, hub => filter(Player.Get(hub)));
         }
 
         /// <summary>
         /// Returns a representation of this <see cref="ButtonSetting"/>.
         /// </summary>
         /// <returns>A string in human-readable format.</returns>
-        public override string ToString()
-        {
-            return base.ToString() + $" ={Text}= -{HoldTime}- /{LastPress}/";
-        }
+        public override string ToString() => base.ToString() + $" ={this.Text}= -{this.HoldTime}- /{this.LastPress}/";
 
         /// <summary>
         /// Represents a config for ButtonSetting.
@@ -115,13 +110,13 @@ namespace Exiled.API.Features.Core.UserSettings
             /// <param name="headerPaddling"><inheritdoc cref="HeaderPaddling"/></param>
             public ButtonConfig(string label, string buttonText, string headerName = null, float holdTime = 0.0f, string hintDescription = null, string headerDescription = null, bool headerPaddling = false)
             {
-                Label = label;
-                ButtonText = buttonText;
-                HoldTime = holdTime;
-                HintDescription = hintDescription;
-                HeaderName = headerName;
-                HeaderDescription = headerDescription;
-                HeaderPaddling = headerPaddling;
+                this.Label = label;
+                this.ButtonText = buttonText;
+                this.HoldTime = holdTime;
+                this.HintDescription = hintDescription;
+                this.HeaderName = headerName;
+                this.HeaderDescription = headerDescription;
+                this.HeaderPaddling = headerPaddling;
             }
 
             /// <summary>
@@ -170,7 +165,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override ButtonSetting Create() => new(++IdIncrementor, Label, ButtonText, HoldTime, HintDescription, HeaderName == null ? null : new HeaderSetting(HeaderName, HeaderDescription, HeaderPaddling));
+            public override ButtonSetting Create() => new(++IdIncrementor, this.Label, this.ButtonText, this.HoldTime, this.HintDescription, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

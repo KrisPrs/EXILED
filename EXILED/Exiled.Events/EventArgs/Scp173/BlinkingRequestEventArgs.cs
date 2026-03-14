@@ -31,9 +31,9 @@ namespace Exiled.Events.EventArgs.Scp173
         /// </param>
         public BlinkingRequestEventArgs(Player player, HashSet<ReferenceHub> targets)
         {
-            Player = player;
-            Scp173 = player.Role.As<Scp173Role>();
-            Targets = targets.Select(target => Player.Get(target)).ToList();
+            this.Player = player;
+            this.Scp173 = player.Role.As<Scp173Role>();
+            this.Targets = targets.Select(target => Player.Get(target)).ToList();
         }
 
         /// <summary>

@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="objectiveFootprintBase"><inheritdoc cref="Base"/></param>
         internal HumanDamageObjective(BaseObjective objectiveFootprintBase)
-            : base(objectiveFootprintBase)
-        {
-            Base = objectiveFootprintBase;
-        }
+            : base(objectiveFootprintBase) =>
+            this.Base = objectiveFootprintBase;
 
         /// <inheritdoc/>
         public new BaseObjective Base { get; }
@@ -43,12 +41,12 @@ namespace Exiled.API.Features.Objectives
         /// <param name="amount">Amount of damage.</param>
         /// <param name="type">Type of damage.</param>
         public void Damage(Player attacker, Player target, float amount, DamageType type = DamageType.Unknown)
-            => Damage(new CustomDamageHandler(target, attacker, amount, type, string.Empty));
+            => this.Damage(new CustomDamageHandler(target, attacker, amount, type, string.Empty));
 
         /// <summary>
         /// Fakes player's damage and tries to achieve this objective.
         /// </summary>
         /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
-        public void Damage(AttackerDamageHandler damageHandler) => Base.OnPlayerDamaged(damageHandler.Attacker.ReferenceHub, damageHandler.Base);
+        public void Damage(AttackerDamageHandler damageHandler) => this.Base.OnPlayerDamaged(damageHandler.Attacker.ReferenceHub, damageHandler.Base);
     }
 }

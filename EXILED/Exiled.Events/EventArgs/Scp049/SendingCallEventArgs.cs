@@ -23,10 +23,10 @@ namespace Exiled.Events.EventArgs.Scp049
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public SendingCallEventArgs(Player player, bool isAllowed = true)
         {
-            Player = player;
-            Scp049 = Player.Role.As<Scp049Role>();
-            Duration = PlayerRoles.PlayableScps.Scp049.Scp049CallAbility.BaseCooldown;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp049 = this.Player.Role.As<Scp049Role>();
+            this.Duration = PlayerRoles.PlayableScps.Scp049.Scp049CallAbility.BaseCooldown;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

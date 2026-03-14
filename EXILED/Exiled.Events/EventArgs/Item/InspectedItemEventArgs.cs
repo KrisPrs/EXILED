@@ -21,13 +21,10 @@ namespace Exiled.Events.EventArgs.Item
         /// Initializes a new instance of the <see cref="InspectedItemEventArgs"/> class.
         /// </summary>
         /// <param name="item"><inheritdoc cref="Item"/></param>
-        public InspectedItemEventArgs(ItemBase item)
-        {
-            Item = Item.Get(item);
-        }
+        public InspectedItemEventArgs(ItemBase item) => this.Item = Item.Get(item);
 
         /// <inheritdoc/>
-        public Player Player => Item.Owner;
+        public Player Player => this.Item.Owner;
 
         /// <inheritdoc/>
         public Item Item { get; }

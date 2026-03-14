@@ -97,13 +97,12 @@ namespace Exiled.API.Features
         /// <param name="position">The <see cref="Vector3"/> position where the <see cref="GameObject"/> will spawn.</param>
         /// <param name="rotation">The <see cref="Quaternion"/> rotation of the <see cref="GameObject"/>.</param>
         /// <returns>Returns the <see cref="GameObject"/> instantied.</returns>
-        public static GameObject Spawn(PrefabType prefabType, Vector3 position = default, Quaternion rotation = default)
+        public static GameObject Spawn(PrefabType prefabType, Vector3 position = default, Quaternion? rotation = null)
         {
             if (!TryGetPrefab(prefabType, out GameObject gameObject))
                 return null;
 
             rotation ??= Quaternion.identity;
-
             GameObject newGameObject = UnityEngine.Object.Instantiate(gameObject, position, rotation.Value);
 
             if (newGameObject.TryGetComponent(out StructurePositionSync positionSync))

@@ -36,11 +36,11 @@ namespace Exiled.Events.EventArgs.Scp914
         /// </param>
         public UpgradingPlayerEventArgs(Player player, bool upgradeItems, bool heldOnly, Scp914KnobSetting setting, Vector3 outputPos)
         {
-            Player = player;
-            UpgradeItems = upgradeItems;
-            HeldOnly = heldOnly;
-            KnobSetting = setting;
-            OutputPosition = outputPos;
+            this.Player = player;
+            this.UpgradeItems = upgradeItems;
+            this.HeldOnly = heldOnly;
+            this.KnobSetting = setting;
+            this.OutputPosition = outputPos;
         }
 
         /// <summary>

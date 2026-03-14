@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Scp079
         /// </param>
         public GainingLevelEventArgs(Player player, int newLevel, bool isAllowed = true)
         {
-            Player = player;
-            Scp079 = player.Role.As<Scp079Role>();
-            NewLevel = newLevel;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.Scp079 = player.Role.As<Scp079Role>();
+            this.NewLevel = newLevel;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

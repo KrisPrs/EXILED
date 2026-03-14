@@ -31,9 +31,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public DroppedItemEventArgs(Player player, ItemPickupBase pickup, bool wasThrown)
         {
-            Player = player;
-            Pickup = Pickup.Get(pickup);
-            WasThrown = wasThrown;
+            this.Player = player;
+            this.Pickup = Pickup.Get(pickup);
+            this.WasThrown = wasThrown;
         }
 
         /// <summary>

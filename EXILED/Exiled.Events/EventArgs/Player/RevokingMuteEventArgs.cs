@@ -29,9 +29,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public RevokingMuteEventArgs(Player player, bool isIntercom, bool isAllowed = true)
         {
-            Player = player;
-            IsIntercom = isIntercom;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsIntercom = isIntercom;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

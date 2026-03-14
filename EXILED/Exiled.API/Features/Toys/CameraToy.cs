@@ -26,7 +26,7 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         /// <param name="scp079CameraToy">The <see cref="Scp079CameraToy"/> of the toy.</param>
         internal CameraToy(Scp079CameraToy scp079CameraToy)
-            : base(scp079CameraToy, AdminToyType.CameraToy) => Base = scp079CameraToy;
+            : base(scp079CameraToy, AdminToyType.CameraToy) => this.Base = scp079CameraToy;
 
         /// <summary>
         /// Gets the prefab for EzArm Camera prefab.
@@ -63,8 +63,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector2 VerticalConstraint
         {
-            get => Base.NetworkVerticalConstraint;
-            set => Base.NetworkVerticalConstraint = value;
+            get => this.Base.NetworkVerticalConstraint;
+            set => this.Base.NetworkVerticalConstraint = value;
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector2 HorizontalConstraint
         {
-            get => Base.NetworkHorizontalConstraint;
-            set => Base.NetworkHorizontalConstraint = value;
+            get => this.Base.NetworkHorizontalConstraint;
+            set => this.Base.NetworkHorizontalConstraint = value;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector2 ZoomConstraint
         {
-            get => Base.NetworkZoomConstraint;
-            set => Base.NetworkZoomConstraint = value;
+            get => this.Base.NetworkZoomConstraint;
+            set => this.Base.NetworkZoomConstraint = value;
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Room Room
         {
-            get => Room.Get(Base.NetworkRoom);
-            set => Base.NetworkRoom = value.Identifier;
+            get => Room.Get(this.Base.NetworkRoom);
+            set => this.Base.NetworkRoom = value.Identifier;
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public string Name
         {
-            get => Base.NetworkLabel;
-            set => Base.NetworkLabel = value;
+            get => this.Base.NetworkLabel;
+            set => this.Base.NetworkLabel = value;
         }
 
         /// <summary>

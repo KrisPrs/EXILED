@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp1507
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public UsingTapeEventArgs(ItemBase itemBase, bool isAllowed = true)
         {
-            Item = Item.Get(itemBase);
-            Player = Item.Owner;
-            IsAllowed = isAllowed;
+            this.Item = Item.Get(itemBase);
+            this.Player = this.Item.Owner;
+            this.IsAllowed = isAllowed;
         }
 
         /// <inheritdoc/>

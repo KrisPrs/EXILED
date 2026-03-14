@@ -32,19 +32,19 @@ namespace Exiled.API.Features.DynamicEvents
         /// Initializes a new instance of the <see cref="TDynamicEventDispatcher{T}"/> class.
         /// </summary>
         /// <param name="delegates">The delegates to be bound.</param>
-        public TDynamicEventDispatcher(Dictionary<object, List<Action<T>>> delegates) => boundDelegates = delegates;
+        public TDynamicEventDispatcher(Dictionary<object, List<Action<T>>> delegates) => this.boundDelegates = delegates;
 
         /// <summary>
         /// Gets all the bound delegates.
         /// </summary>
-        public IReadOnlyDictionary<object, List<Action<T>>> BoundDelegates => boundDelegates;
+        public IReadOnlyDictionary<object, List<Action<T>>> BoundDelegates => this.boundDelegates;
 
         /// <summary>
         /// This indexer allows access to bound listeners using an <see cref="object"/> reference.
         /// </summary>
         /// <param name="object">The listener to look for.</param>
         /// <returns>The obund listener corresponding to the specified reference.</returns>
-        public KeyValuePair<object, List<Action<T>>> this[object @object] => boundDelegates.FirstOrDefault(kvp => kvp.Key == @object);
+        public KeyValuePair<object, List<Action<T>>> this[object @object] => this.boundDelegates.FirstOrDefault(kvp => kvp.Key == @object);
 
         /// <summary>
         /// Binds a delegate the event dispatcher.
@@ -131,17 +131,17 @@ namespace Exiled.API.Features.DynamicEvents
         /// <param name="del">The delegate to be bound.</param>
         public virtual void Bind(object obj, Action<T> del)
         {
-            if (!boundDelegates.ContainsKey(obj))
-                boundDelegates.Add(obj, new List<Action<T>>() { del });
+            if (!this.boundDelegates.ContainsKey(obj))
+                this.boundDelegates.Add(obj, new List<Action<T>>() { del });
             else
-                boundDelegates[obj].Add(del);
+                this.boundDelegates[obj].Add(del);
         }
 
         /// <summary>
         /// Unbinds a listener from the event dispatcher.
         /// </summary>
         /// <param name="obj">The listener instance.</param>
-        public virtual void Unbind(object obj) => boundDelegates.Remove(obj);
+        public virtual void Unbind(object obj) => this.boundDelegates.Remove(obj);
 
         /// <summary>
         /// Invokes the delegates from the specified listener.
@@ -150,7 +150,7 @@ namespace Exiled.API.Features.DynamicEvents
         /// <param name="instance">The .</param>
         public virtual void Invoke(object obj, T instance)
         {
-            if (boundDelegates.TryGetValue(obj, out List<Action<T>> delegates))
+            if (this.boundDelegates.TryGetValue(obj, out List<Action<T>> delegates))
                 delegates.ForEach(del => del(instance));
         }
 
@@ -160,11 +160,11 @@ namespace Exiled.API.Features.DynamicEvents
         /// <param name="instance">The parameter instance.</param>
         public virtual void InvokeAll(T instance)
         {
-            foreach (KeyValuePair<object, List<Action<T>>> kvp in boundDelegates)
+            foreach (KeyValuePair<object, List<Action<T>>> kvp in this.boundDelegates)
                 kvp.Value.ForEach(del => del(instance));
         }
 
         /// <inheritdoc/>
-        public virtual void UnbindAll() => boundDelegates.Clear();
+        public virtual void UnbindAll() => this.boundDelegates.Clear();
     }
 }

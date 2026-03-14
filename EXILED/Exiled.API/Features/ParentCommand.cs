@@ -22,10 +22,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="ParentCommand"/> class.
         /// </summary>
-        protected ParentCommand()
-        {
-            LoadGeneratedCommands();
-        }
+        protected ParentCommand() => this.LoadGeneratedCommands();
 
         /// <inheritdoc/>
         public abstract string Command { get; }
@@ -39,26 +36,24 @@ namespace Exiled.API.Features
         /// <inheritdoc/>
         public override sealed void LoadGeneratedCommands()
         {
-            foreach (Type commandType in CommandsToRegister())
+            foreach (Type commandType in this.CommandsToRegister())
             {
                 if (commandType.GetInterface(nameof(ICommand)) != typeof(ICommand))
                 {
-                    Log.Error($"Invalid command type provided for parent command {Command}: {commandType.FullName}");
+                    Log.Error($"Invalid command type provided for parent command {this.Command}: {commandType.FullName}");
                     continue;
                 }
 
                 ICommand command = (ICommand)Activator.CreateInstance(commandType);
-                RegisterCommand(command);
+                this.RegisterCommand(command);
             }
         }
 
         /// <inheritdoc/>
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            return arguments.Count != 0 && TryGetCommand(arguments.Array![arguments.Offset], out ICommand command)
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response) =>
+            arguments.Count != 0 && this.TryGetCommand(arguments.Array![arguments.Offset], out ICommand command)
                 ? command.Execute(new ArraySegment<string>(arguments.Array, arguments.Offset + 1, arguments.Count - 1), sender, out response)
-                : ExecuteParent(arguments, sender, out response);
-        }
+                : this.ExecuteParent(arguments, sender, out response);
 
         /// <summary>
         /// Gets HashSet of subcommands to register.
@@ -75,8 +70,8 @@ namespace Exiled.API.Features
         /// <returns>Was command executed succesfully or not.</returns>
         protected virtual bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            StringBuilder message = StringBuilderPool.Shared.Rent($"{Command}:\n");
-            foreach (ICommand command in AllCommands)
+            StringBuilder message = StringBuilderPool.Shared.Rent($"{this.Command}:\n");
+            foreach (ICommand command in this.AllCommands)
                 message.AppendFormat("- {0}\n<i>{1}</i>\n\n", command.Command, command.Description);
 
             response = StringBuilderPool.Shared.ToStringReturn(message);

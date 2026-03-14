@@ -27,14 +27,14 @@ namespace Exiled.API.Structs
         /// <param name="isStatic">Whether the primitive should be static.</param>
         public PrimitiveSettings(PrimitiveType primitiveType, Color color, Vector3 position, Vector3 rotation, Vector3 scale, bool spawn, bool isStatic)
         {
-            PrimitiveType = primitiveType;
-            Flags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
-            Color = color;
-            Position = position;
-            Rotation = rotation;
-            Scale = scale;
-            Spawn = spawn;
-            IsStatic = isStatic;
+            this.PrimitiveType = primitiveType;
+            this.Flags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
+            this.Color = color;
+            this.Position = position;
+            this.Rotation = rotation;
+            this.Scale = scale;
+            this.Spawn = spawn;
+            this.IsStatic = isStatic;
         }
 
         /// <summary>
@@ -48,14 +48,14 @@ namespace Exiled.API.Structs
         /// <param name="spawn">Whether the primitive should be spawned.</param>
         public PrimitiveSettings(PrimitiveType primitiveType, Color color, Vector3 position, Vector3 rotation, Vector3 scale, bool spawn)
         {
-            PrimitiveType = primitiveType;
-            Flags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
-            Color = color;
-            Position = position;
-            Rotation = rotation;
-            Scale = scale;
-            Spawn = spawn;
-            IsStatic = false;
+            this.PrimitiveType = primitiveType;
+            this.Flags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
+            this.Color = color;
+            this.Position = position;
+            this.Rotation = rotation;
+            this.Scale = scale;
+            this.Spawn = spawn;
+            this.IsStatic = false;
         }
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace Exiled.API.Structs
         /// <param name="spawn">Whether the primitive should be spawned.</param>
         public PrimitiveSettings(PrimitiveType primitiveType, PrimitiveFlags primitiveFlags, Color color, Vector3 position, Vector3 rotation, Vector3 scale, bool spawn)
         {
-            PrimitiveType = primitiveType;
-            Flags = primitiveFlags;
-            Color = color;
-            Position = position;
-            Rotation = rotation;
-            Scale = scale;
-            Spawn = spawn;
-            IsStatic = false;
+            this.PrimitiveType = primitiveType;
+            this.Flags = primitiveFlags;
+            this.Color = color;
+            this.Position = position;
+            this.Rotation = rotation;
+            this.Scale = scale;
+            this.Spawn = spawn;
+            this.IsStatic = false;
         }
 
         /// <summary>

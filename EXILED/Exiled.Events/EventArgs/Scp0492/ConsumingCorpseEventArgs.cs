@@ -28,10 +28,10 @@ namespace Exiled.Events.EventArgs.Scp0492
         /// <remarks> See <see cref="ZombieConsumeAbility.ConsumedRagdolls"/> for all ragdolls consumed.</remarks>
         public ConsumingCorpseEventArgs(ReferenceHub player, BasicRagdoll ragDoll, ZombieConsumeAbility.ConsumeError error)
         {
-            Player = Player.Get(player);
-            Scp0492 = Player.Role.As<Scp0492Role>();
-            Ragdoll = Ragdoll.Get(ragDoll);
-            ErrorCode = error;
+            this.Player = Player.Get(player);
+            this.Scp0492 = this.Player.Role.As<Scp0492Role>();
+            this.Ragdoll = Ragdoll.Get(ragDoll);
+            this.ErrorCode = error;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace Exiled.Events.EventArgs.Scp0492
         /// </summary>
         public bool IsAllowed
         {
-            get => ErrorCode == ZombieConsumeAbility.ConsumeError.None;
-            set => ErrorCode = value ? ZombieConsumeAbility.ConsumeError.None : ZombieConsumeAbility.ConsumeError.TargetNotValid;
+            get => this.ErrorCode == ZombieConsumeAbility.ConsumeError.None;
+            set => this.ErrorCode = value ? ZombieConsumeAbility.ConsumeError.None : ZombieConsumeAbility.ConsumeError.TargetNotValid;
         }
     }
 }

@@ -45,18 +45,18 @@ namespace Exiled.API.Features.Doors
         /// <param name="rooms">The <see cref="List{T}"/> of <see cref="Features.Room"/>'s for this door.</param>
         internal Door(DoorVariant door, List<Room> rooms)
         {
-            Base = door;
+            this.Base = door;
 
             if (rooms != null)
             {
                 DoorVariantToDoor.Add(door, this);
-                RoomsValue = rooms;
-                Rooms = RoomsValue.AsReadOnly();
+                this.RoomsValue = rooms;
+                this.Rooms = this.RoomsValue.AsReadOnly();
             }
 
-            Type = GetDoorType();
-            if (Base != null && Type is DoorType.UnknownDoor or DoorType.UnknownGate or DoorType.UnknownElevator)
-                Log.Warn($"[DoorType] Type: {Type} Room: {Room?.Type ?? RoomType.Unknown} Name:{Name} GameObjectName:{GameObject.name}");
+            this.Type = this.GetDoorType();
+            if (this.Base != null && this.Type is DoorType.UnknownDoor or DoorType.UnknownGate or DoorType.UnknownElevator)
+                Log.Warn($"[DoorType] Type: {this.Type} Room: {this.Room?.Type ?? RoomType.Unknown} Name:{this.Name} GameObjectName:{this.GameObject.name}");
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the door's <see cref="UnityEngine.GameObject"/>.
         /// </summary>
-        public GameObject GameObject => Base.gameObject;
+        public GameObject GameObject => this.Base.gameObject;
 
         /// <summary>
         /// Gets the door's <see cref="UnityEngine.Transform"/>.
         /// </summary>
-        public Transform Transform => Base.transform;
+        public Transform Transform => this.Base.transform;
 
         /// <summary>
         /// Gets the door's <see cref="DoorType"/>.
@@ -87,7 +87,7 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the <see cref="Features.Room"/> that the door is located in.
         /// </summary>
-        public Room Room => Rooms?.FirstOrDefault();
+        public Room Room => this.Rooms?.FirstOrDefault();
 
         /// <summary>
         /// Gets the <see cref="Features.Room"/>'s that the door is located in.
@@ -97,35 +97,35 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets a value indicating whether the door is fully closed.
         /// </summary>
-        public virtual bool IsFullyClosed => ExactState is 0;
+        public virtual bool IsFullyClosed => this.ExactState is 0;
 
         /// <summary>
         /// Gets a value indicating whether the door is fully open.
         /// </summary>
-        public virtual bool IsFullyOpen => ExactState is 1;
+        public virtual bool IsFullyOpen => this.ExactState is 1;
 
         /// <summary>
         /// Gets a value indicating whether the door is currently moving.
         /// </summary>
-        public virtual bool IsMoving => !(IsFullyOpen || IsFullyClosed);
+        public virtual bool IsMoving => !(this.IsFullyOpen || this.IsFullyClosed);
 
         /// <summary>
         /// Gets a value indicating the precise state of the door, from <c>0-1</c>. A value of <c>0</c> indicates the door is fully closed, while a value of <c>1</c> indicates the door is fully open. Values in-between represent the door's animation progress.
         /// </summary>
-        public float ExactState => Base.GetExactState();
+        public float ExactState => this.Base.GetExactState();
 
         /// <summary>
         /// Gets a value indicating whether the door is considered open by the game.
         /// </summary>
-        public bool IsConsideredOpen => Base.IsConsideredOpen();
+        public bool IsConsideredOpen => this.Base.IsConsideredOpen();
 
         /// <summary>
         /// Gets or sets a value indicating whether the door is open.
         /// </summary>
         public bool IsOpen
         {
-            get => Base.NetworkTargetState;
-            set => Base.NetworkTargetState = value;
+            get => this.Base.NetworkTargetState;
+            set => this.Base.NetworkTargetState = value;
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets a value indicating whether this door is subdoor belonging to a checkpoint.
         /// </summary>
-        public bool IsPartOfCheckpoint => ParentCheckpointDoor is not null;
+        public bool IsPartOfCheckpoint => this.ParentCheckpointDoor is not null;
 
         /// <summary>
         /// Gets the checkpoint door the door is belonging to, or null if the door doesn't belong to a checkpoint.
@@ -169,7 +169,7 @@ namespace Exiled.API.Features.Doors
         /// <remarks>
         /// This value is <see langword="false"/> if <see cref="KeycardPermissions"/> is equal to <see cref="KeycardPermissions.None"/>.
         /// </remarks>
-        public bool IsKeycardDoor => Permissions is not Enums.KeycardPermissions.None;
+        public bool IsKeycardDoor => this.Permissions is not Enums.KeycardPermissions.None;
 
         /// <summary>
         /// Gets or sets the required permissions to interact with the generator.
@@ -179,8 +179,8 @@ namespace Exiled.API.Features.Doors
         /// </remarks>
         public KeycardPermissions Permissions
         {
-            get => (KeycardPermissions)RequiredPermissions;
-            set => RequiredPermissions = (DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.RequiredPermissions;
+            set => this.RequiredPermissions = (DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -191,8 +191,8 @@ namespace Exiled.API.Features.Doors
         /// </remarks>
         public KeycardPermissions KeycardPermissions
         {
-            get => (KeycardPermissions)RequiredPermissions;
-            set => RequiredPermissions = (DoorPermissionFlags)value;
+            get => (KeycardPermissions)this.RequiredPermissions;
+            set => this.RequiredPermissions = (DoorPermissionFlags)value;
         }
 
         /// <summary>
@@ -200,12 +200,12 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public Vector3 Position
         {
-            get => GameObject.transform.position;
+            get => this.GameObject.transform.position;
             set
             {
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.position = value;
-                NetworkServer.Spawn(GameObject);
+                NetworkServer.UnSpawn(this.GameObject);
+                this.GameObject.transform.position = value;
+                NetworkServer.Spawn(this.GameObject);
             }
         }
 
@@ -214,46 +214,46 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public bool AllowsScp106
         {
-            get => Base is not IScp106PassableDoor door || door.IsScp106Passable;
-            set => (Base as IScp106PassableDoor)?.IsScp106Passable = value;
+            get => this.Base is not IScp106PassableDoor door || door.IsScp106Passable;
+            set => (this.Base as IScp106PassableDoor)?.IsScp106Passable = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether the door is locked.
         /// </summary>
-        public bool IsLocked => DoorLockType > 0;
+        public bool IsLocked => this.DoorLockType > 0;
 
         /// <summary>
         /// Gets or sets the door lock type.
         /// </summary>
         public DoorLockType DoorLockType
         {
-            get => (DoorLockType)Base.NetworkActiveLocks;
-            set => ChangeLock(value);
+            get => (DoorLockType)this.Base.NetworkActiveLocks;
+            set => this.ChangeLock(value);
         }
 
         /// <summary>
         /// Gets the door's Instance ID.
         /// </summary>
-        public int InstanceId => Base.GetInstanceID();
+        public int InstanceId => this.Base.GetInstanceID();
 
         /// <summary>
         /// Gets a nametag of a door.
         /// </summary>
-        public DoorNametagExtension Nametag => Base.GetComponent<DoorNametagExtension>();
+        public DoorNametagExtension Nametag => this.Base.GetComponent<DoorNametagExtension>();
 
         /// <summary>
         /// Gets the name of this door.
         /// </summary>
-        public string Name => Nametag == null ? GameObject.name.GetBefore(' ') : Nametag.GetName.RemoveBracketsOnEndOfName();
+        public string Name => this.Nametag == null ? this.GameObject.name.GetBefore(' ') : this.Nametag.GetName.RemoveBracketsOnEndOfName();
 
         /// <summary>
         /// Gets or sets the required permissions to open the door.
         /// </summary>
         public DoorPermissionFlags RequiredPermissions
         {
-            get => Base.RequiredPermissions.RequiredPermissions;
-            set => Base.RequiredPermissions.RequiredPermissions = value;
+            get => this.Base.RequiredPermissions.RequiredPermissions;
+            set => this.Base.RequiredPermissions.RequiredPermissions = value;
         }
 
         /// <summary>
@@ -261,8 +261,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public bool RequireAllPermissions
         {
-            get => Base.RequiredPermissions.RequireAll;
-            set => Base.RequiredPermissions.RequireAll = value;
+            get => this.Base.RequiredPermissions.RequireAll;
+            set => this.Base.RequiredPermissions.RequireAll = value;
         }
 
         /// <summary>
@@ -270,8 +270,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public DoorPermissionsPolicy PermissionsPolicy
         {
-            get => Base.RequiredPermissions;
-            set => Base.RequiredPermissions = value;
+            get => this.Base.RequiredPermissions;
+            set => this.Base.RequiredPermissions = value;
         }
 
         /// <summary>
@@ -279,12 +279,12 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public Quaternion Rotation
         {
-            get => GameObject.transform.rotation;
+            get => this.GameObject.transform.rotation;
             set
             {
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.rotation = value;
-                NetworkServer.Spawn(GameObject);
+                NetworkServer.UnSpawn(this.GameObject);
+                this.GameObject.transform.rotation = value;
+                NetworkServer.Spawn(this.GameObject);
             }
         }
 
@@ -293,24 +293,24 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public Vector3 Scale
         {
-            get => GameObject.transform.localScale;
+            get => this.GameObject.transform.localScale;
             set
             {
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.localScale = value;
-                NetworkServer.Spawn(GameObject);
+                NetworkServer.UnSpawn(this.GameObject);
+                this.GameObject.transform.localScale = value;
+                NetworkServer.Spawn(this.GameObject);
             }
         }
 
         /// <summary>
         /// Gets the door's <see cref="ZoneType"/>.
         /// </summary>
-        public ZoneType Zone => Room?.Zone ?? ZoneType.Unspecified;
+        public ZoneType Zone => this.Room?.Zone ?? ZoneType.Unspecified;
 
         /// <summary>
         /// Gets the door's <see cref="ButtonVariant"/>.
         /// </summary>
-        public ButtonVariant[] Buttons => Base.Buttons;
+        public ButtonVariant[] Buttons => this.Base.Buttons;
 
         /// <summary>
         /// Gets a <see cref="List{T}"/> containing all <see cref="Features.Room"/>'s that are connected with <see cref="Door"/>.
@@ -501,7 +501,7 @@ namespace Exiled.API.Features.Doors
         /// <param name="beep">The beep sound to play.</param>
         public void PlaySound(DoorBeepType beep)
         {
-            switch (Base)
+            switch (this.Base)
             {
                 case Interactables.Interobjects.BasicDoor basic when beep is not DoorBeepType.InteractionAllowed:
                     basic.RpcPlayBeepSound();
@@ -520,20 +520,20 @@ namespace Exiled.API.Features.Doors
         {
             if (lockType is DoorLockType.None)
             {
-                Base.NetworkActiveLocks = 0;
+                this.Base.NetworkActiveLocks = 0;
             }
             else
             {
-                DoorLockType locks = DoorLockType;
+                DoorLockType locks = this.DoorLockType;
                 if (locks.HasFlag(lockType))
                     locks &= ~lockType;
                 else
                     locks |= lockType;
 
-                Base.NetworkActiveLocks = (ushort)locks;
+                this.Base.NetworkActiveLocks = (ushort)locks;
             }
 
-            DoorEvents.TriggerAction(Base, IsLocked ? DoorAction.Locked : DoorAction.Unlocked, null);
+            DoorEvents.TriggerAction(this.Base, this.IsLocked ? DoorAction.Locked : DoorAction.Unlocked, null);
         }
 
         /// <summary>
@@ -543,8 +543,8 @@ namespace Exiled.API.Features.Doors
         /// <param name="lockType">The <see cref="Enums.DoorLockType"/> of the lockdown.</param>
         public void Lock(float time, DoorLockType lockType)
         {
-            Lock(lockType);
-            Unlock(time, lockType);
+            this.Lock(lockType);
+            this.Unlock(time, lockType);
         }
 
         /// <summary>
@@ -553,36 +553,36 @@ namespace Exiled.API.Features.Doors
         /// <param name="lockType">The <see cref="Enums.DoorLockType"/> of the lockdown.</param>
         public void Lock(DoorLockType lockType)
         {
-            DoorLockType locks = DoorLockType;
+            DoorLockType locks = this.DoorLockType;
             locks |= lockType;
-            Base.NetworkActiveLocks = (ushort)locks;
-            DoorEvents.TriggerAction(Base, IsLocked ? DoorAction.Locked : DoorAction.Unlocked, null);
+            this.Base.NetworkActiveLocks = (ushort)locks;
+            DoorEvents.TriggerAction(this.Base, this.IsLocked ? DoorAction.Locked : DoorAction.Unlocked, null);
         }
 
         /// <summary>
         /// Unlocks and clears all active locks on the door.
         /// </summary>
-        public void Unlock() => ChangeLock(DoorLockType.None);
+        public void Unlock() => this.ChangeLock(DoorLockType.None);
 
         /// <summary>
         /// Unlocks and clears all active locks on the door after a specified length of time.
         /// </summary>
         /// <param name="time">The amount of time that must pass before unlocking the door.</param>
         /// <param name="flagsToUnlock">The <see cref="Enums.DoorLockType"/> of the lockdown.</param>
-        public void Unlock(float time, DoorLockType flagsToUnlock) => DoorScheduledUnlocker.UnlockLater(Base, time, (DoorLockReason)flagsToUnlock);
+        public void Unlock(float time, DoorLockType flagsToUnlock) => DoorScheduledUnlocker.UnlockLater(this.Base, time, (DoorLockReason)flagsToUnlock);
 
         /// <summary>
         /// Checks if specified <see cref="Player"/> can interact with the door.
         /// </summary>
         /// <param name="player">Player to check.</param>
         /// <returns><see langword="true"/> if the specified player can interact with the door. Otherwise, <see langword="false"/>.</returns>
-        public bool IsAllowToInteract(Player player = null) => Base.AllowInteracting(player?.ReferenceHub, 0);
+        public bool IsAllowToInteract(Player player = null) => this.Base.AllowInteracting(player?.ReferenceHub, 0);
 
         /// <summary>
         /// Returns the Door in a human-readable format.
         /// </summary>
         /// <returns>A string containing Door-related data.</returns>
-        public override string ToString() => $"{Type} ({Zone}) [{Room}] *{DoorLockType}* ={KeycardPermissions}=";
+        public override string ToString() => $"{this.Type} ({this.Zone}) [{this.Room}] *{this.DoorLockType}* ={this.KeycardPermissions}=";
 
         /// <summary>
         /// Creates the door object associated with a specific <see cref="DoorVariant"/>.
@@ -611,13 +611,13 @@ namespace Exiled.API.Features.Doors
 
         private DoorType GetDoorType()
         {
-            if (Nametag is null)
+            if (this.Nametag is null)
             {
-                string doorName = GameObject.name.GetBefore('(').TrimEnd();
+                string doorName = this.GameObject.name.GetBefore('(').TrimEnd();
 
                 return doorName switch
                 {
-                    "LCZ PortallessBreakableDoor" => Room?.Type switch
+                    "LCZ PortallessBreakableDoor" => this.Room?.Type switch
                     {
                         RoomType.Hcz106 => DoorType.Scp106Checkpoint,
                         RoomType.HczTestRoom => DoorType.TestRoom,
@@ -633,7 +633,7 @@ namespace Exiled.API.Features.Doors
                     "Prison BreakableDoor" => DoorType.PrisonDoor,
                     "914 Door" => DoorType.Scp914Door,
                     "EZ PortallessBreakableDoor" => DoorType.ServerRoomCloset,
-                    "EZ Keycard BreakableDoor" => Room?.Type switch
+                    "EZ Keycard BreakableDoor" => this.Room?.Type switch
                     {
                         RoomType.HczEzCheckpointA => DoorType.CheckpointArmoryA,
                         RoomType.HczEzCheckpointB => DoorType.CheckpointArmoryB,
@@ -641,16 +641,16 @@ namespace Exiled.API.Features.Doors
                         RoomType.HczLoadingBay => DoorType.HczLoadingBay,
                         _ => DoorType.UnknownDoor,
                     },
-                    "Unsecured Pryable GateDoor" => Room?.Type switch
+                    "Unsecured Pryable GateDoor" => this.Room?.Type switch
                     {
                         RoomType.EzCheckpointHallwayA => DoorType.CheckpointGateA,
                         RoomType.EzCheckpointHallwayB => DoorType.CheckpointGateB,
-                        RoomType.Hcz049 => Position.y < -10 ? DoorType.Scp049Gate : DoorType.Scp173NewGate,
+                        RoomType.Hcz049 => this.Position.y < -10 ? DoorType.Scp049Gate : DoorType.Scp173NewGate,
                         _ => DoorType.UnknownGate,
                     },
                     "Cargo Elevator Door" => DoorType.ElevatorServerRoom,
                     "Nuke Elevator Door" => DoorType.ElevatorNuke,
-                    "Elevator Door" or "Elevator Door 02" or "Elevator Door 01" => (Base as Interactables.Interobjects.ElevatorDoor)?.Group switch
+                    "Elevator Door" or "Elevator Door 02" or "Elevator Door 01" => (this.Base as Interactables.Interobjects.ElevatorDoor)?.Group switch
                     {
                         ElevatorGroup.Scp049 => DoorType.ElevatorScp049,
                         ElevatorGroup.GateB => DoorType.ElevatorGateB,
@@ -663,14 +663,14 @@ namespace Exiled.API.Features.Doors
                 };
             }
 
-            return Name.RemoveBracketsOnEndOfName() switch
+            return this.Name.RemoveBracketsOnEndOfName() switch
             {
                 // Doors contains the DoorNameTagExtension component
                 "CHECKPOINT_LCZ_A" => DoorType.CheckpointLczA,
                 "CHECKPOINT_LCZ_B" => DoorType.CheckpointLczB,
 
                 // TODO: Remove when it's fix https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/782
-                "CHECKPOINT_EZ_HCZ_A" => Room?.Type switch
+                "CHECKPOINT_EZ_HCZ_A" => this.Room?.Type switch
                 {
                     RoomType.HczEzCheckpointA => DoorType.CheckpointEzHczA,
                     _ => DoorType.CheckpointEzHczB,

@@ -22,9 +22,9 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="oldName">The old name.</param>
         public ChangedNicknameEventArgs(Player player, string oldName)
         {
-            Player = player;
-            OldName = oldName;
-            NewName = player.CustomName;
+            this.Player = player;
+            this.OldName = oldName;
+            this.NewName = player.CustomName;
         }
 
         /// <summary>

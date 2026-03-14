@@ -25,12 +25,12 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="mode"><inheritdoc cref="NewMode"/></param>
         public ChangingDisruptorModeEventArgs(ItemBase firearm, bool mode)
         {
-            Firearm = Item.Get(firearm).As<Firearm>();
-            NewMode = mode ? DisruptorMode.Disintegrator : DisruptorMode.BurstFire;
+            this.Firearm = Item.Get(firearm).As<Firearm>();
+            this.NewMode = mode ? DisruptorMode.Disintegrator : DisruptorMode.BurstFire;
         }
 
         /// <inheritdoc/>
-        public Item Item => Firearm;
+        public Item Item => this.Firearm;
 
         /// <inheritdoc/>
         public Firearm Firearm { get; }
@@ -41,6 +41,6 @@ namespace Exiled.Events.EventArgs.Player
         public DisruptorMode NewMode { get; }
 
         /// <inheritdoc />
-        public Player Player => Item.Owner;
+        public Player Player => this.Item.Owner;
     }
 }

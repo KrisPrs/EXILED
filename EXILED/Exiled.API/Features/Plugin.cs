@@ -31,11 +31,11 @@ namespace Exiled.API.Features
         /// </summary>
         public Plugin()
         {
-            Assembly = Assembly.GetCallingAssembly();
-            Name = Assembly.GetName().Name;
-            Prefix = Name.ToSnakeCase();
-            Author = Assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-            Version = Assembly.GetName().Version;
+            this.Assembly = Assembly.GetCallingAssembly();
+            this.Name = this.Assembly.GetName().Name;
+            this.Prefix = this.Name.ToSnakeCase();
+            this.Author = this.Assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
+            this.Version = this.Assembly.GetName().Version;
         }
 
         /// <inheritdoc/>
@@ -72,28 +72,28 @@ namespace Exiled.API.Features
         public ITranslation InternalTranslation { get; protected set; }
 
         /// <inheritdoc/>
-        public string ConfigPath => Paths.GetConfigPath(Prefix);
+        public string ConfigPath => Paths.GetConfigPath(this.Prefix);
 
         /// <inheritdoc/>
-        public string TranslationPath => Paths.GetTranslationPath(Prefix);
+        public string TranslationPath => Paths.GetTranslationPath(this.Prefix);
 
         /// <inheritdoc/>
         public virtual void OnEnabled()
         {
-            AssemblyInformationalVersionAttribute attribute = Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-            Log.Info($"{Name} v{(Version is not null ? $"{Version.Major}.{Version.Minor}.{Version.Build}" : attribute is not null ? attribute.InformationalVersion : string.Empty)} by {Author} has been enabled!");
+            AssemblyInformationalVersionAttribute attribute = this.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            Log.Info($"{this.Name} v{(this.Version is not null ? $"{this.Version.Major}.{this.Version.Minor}.{this.Version.Build}" : attribute is not null ? attribute.InformationalVersion : string.Empty)} by {this.Author} has been enabled!");
         }
 
         /// <inheritdoc/>
-        public virtual void OnDisabled() => Log.Info($"{Name} has been disabled!");
+        public virtual void OnDisabled() => Log.Info($"{this.Name} has been disabled!");
 
         /// <inheritdoc/>
-        public virtual void OnReloaded() => Log.Info($"{Name} has been reloaded!");
+        public virtual void OnReloaded() => Log.Info($"{this.Name} has been reloaded!");
 
         /// <inheritdoc/>
         public virtual void OnRegisteringCommands()
         {
-            foreach (Type type in Assembly.GetTypes())
+            foreach (Type type in this.Assembly.GetTypes())
             {
                 if (type.GetInterface(nameof(ICommand)) != typeof(ICommand))
                     continue;
@@ -109,7 +109,7 @@ namespace Exiled.API.Features
                             continue;
 
                         Type handlerType = (Type)customAttributeData.ConstructorArguments[0].Value;
-                        RegisterCommand(handlerType, (ICommand)Activator.CreateInstance(type));
+                        this.RegisterCommand(handlerType, (ICommand)Activator.CreateInstance(type));
                     }
                     catch (Exception exception)
                     {
@@ -127,18 +127,18 @@ namespace Exiled.API.Features
         public void RegisterCommand(Type commandHandlerType, ICommand command)
         {
             Type commandTypeToRegister = command.GetType();
-            if (!Commands.TryGetValue(commandTypeToRegister, out (ICommand, HashSet<Type>) commandData))
+            if (!this.Commands.TryGetValue(commandTypeToRegister, out (ICommand, HashSet<Type>) commandData))
                 commandData = (command, new HashSet<Type>());
             if (commandData.Item2.Contains(commandHandlerType))
                 return;
 
-            RegisterCommand(commandHandlerType, commandData);
+            this.RegisterCommand(commandHandlerType, commandData);
         }
 
         /// <inheritdoc/>
         public virtual void OnUnregisteringCommands()
         {
-            foreach ((ICommand, HashSet<Type>) command in Commands.Values)
+            foreach ((ICommand, HashSet<Type>) command in this.Commands.Values)
             {
                 if (command.Item2.Contains(typeof(RemoteAdminCommandHandler)))
                     CommandProcessor.RemoteAdminCommandHandler.UnregisterCommand(command.Item1);
@@ -150,7 +150,7 @@ namespace Exiled.API.Features
         }
 
         /// <inheritdoc/>
-        public int CompareTo(IPlugin<IConfig> other) => -Priority.CompareTo(other.Priority);
+        public int CompareTo(IPlugin<IConfig> other) => -this.Priority.CompareTo(other.Priority);
 
         private void RegisterCommand(Type commandHandlerType, (ICommand, HashSet<Type>) commandData)
         {
@@ -172,7 +172,7 @@ namespace Exiled.API.Features
                 }
                 else
                 {
-                    Log.Error($"Invalid command handler type provided for command {command.Command} in {Name}: {commandHandlerType}");
+                    Log.Error($"Invalid command handler type provided for command {command.Command} in {this.Name}: {commandHandlerType}");
                     return;
                 }
             }
@@ -183,12 +183,12 @@ namespace Exiled.API.Features
             }
 
             commandData.Item2.Add(commandHandlerType);
-            Commands[commandTypeToRegister] = commandData;
+            this.Commands[commandTypeToRegister] = commandData;
             if (command is global::ParentCommand)
-                Log.Send($"[{Name}.{nameof(RegisterCommand)}] Command '{command.Command}' uses obsolete ParentCommand class. Use {typeof(ParentCommand).FullName} instead of {typeof(global::ParentCommand).FullName}.", LogLevel.Debug, ConsoleColor.DarkGray);
+                Log.Send($"[{this.Name}.{nameof(this.RegisterCommand)}] Command '{command.Command}' uses obsolete ParentCommand class. Use {typeof(ParentCommand).FullName} instead of {typeof(global::ParentCommand).FullName}.", LogLevel.Debug, ConsoleColor.DarkGray);
 
             if (!commandTypeToRegister.GetProperty(nameof(ICommand.Description))?.CanWrite ?? true)
-                Log.Send($"[{Name}.{nameof(RegisterCommand)}] Command '{command.Command}' has description without setter, making translation impossible. Consider fixing this.", LogLevel.Debug, ConsoleColor.DarkGray);
+                Log.Send($"[{this.Name}.{nameof(this.RegisterCommand)}] Command '{command.Command}' has description without setter, making translation impossible. Consider fixing this.", LogLevel.Debug, ConsoleColor.DarkGray);
         }
     }
 
@@ -206,13 +206,13 @@ namespace Exiled.API.Features
         /// </summary>
         public Plugin()
         {
-            Assembly = Assembly.GetCallingAssembly();
-            InternalTranslation = new TTranslation();
+            this.Assembly = Assembly.GetCallingAssembly();
+            this.InternalTranslation = new TTranslation();
         }
 
         /// <summary>
         /// Gets the plugin translations.
         /// </summary>
-        public TTranslation Translation => (TTranslation)InternalTranslation;
+        public TTranslation Translation => (TTranslation)this.InternalTranslation;
     }
 }

@@ -30,9 +30,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangedItemEventArgs(Player player, ItemBase oldItem)
         {
-            Player = player;
-            Item = Player.CurrentItem;
-            OldItem = Item.Get(oldItem);
+            this.Player = player;
+            this.Item = this.Player.CurrentItem;
+            this.OldItem = Item.Get(oldItem);
         }
 
         /// <summary>

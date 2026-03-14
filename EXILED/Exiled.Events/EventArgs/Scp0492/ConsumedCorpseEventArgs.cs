@@ -27,9 +27,9 @@ namespace Exiled.Events.EventArgs.Scp0492
         /// <remarks> See <see cref="ZombieConsumeAbility.ConsumedRagdolls"/> for all RagDolls consumed.</remarks>
         public ConsumedCorpseEventArgs(ReferenceHub player, BasicRagdoll ragDoll)
         {
-            Player = Player.Get(player);
-            Scp0492 = Player.Role.As<Scp0492Role>();
-            Ragdoll = Ragdoll.Get(ragDoll);
+            this.Player = Player.Get(player);
+            this.Scp0492 = this.Player.Role.As<Scp0492Role>();
+            this.Ragdoll = Ragdoll.Get(ragDoll);
         }
 
         /// <summary>

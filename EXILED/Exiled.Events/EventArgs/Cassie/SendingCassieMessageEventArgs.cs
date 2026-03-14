@@ -31,43 +31,43 @@ namespace Exiled.Events.EventArgs.Cassie
         /// </param>
         public SendingCassieMessageEventArgs(CassieAnnouncement annc, bool isAllowed = true)
         {
-            Announcement = annc;
-            payload = annc.Payload;
+            this.Announcement = annc;
+            this.payload = annc.Payload;
 
-            Words = payload.Content;
-            switch (payload.SubtitleSource)
+            this.Words = this.payload.Content;
+            switch (this.payload.SubtitleSource)
             {
                 case CassieTtsPayload.SubtitleMode.None:
                 case CassieTtsPayload.SubtitleMode.Automatic:
-                    CustomSubtitles = string.Empty;
+                    this.CustomSubtitles = string.Empty;
                     break;
                 case CassieTtsPayload.SubtitleMode.Custom:
-                    CustomSubtitles = payload._customSubtitle;
+                    this.CustomSubtitles = this.payload._customSubtitle;
                     break;
                 case CassieTtsPayload.SubtitleMode.FromTranslation:
                     StringBuilder builder = StringBuilderPool.Pool.Get();
                     SubtitleController controller = SubtitleController.Singleton;
 
-                    foreach (SubtitlePart part in payload._subtitleMessage.SubtitleParts)
+                    foreach (SubtitlePart part in this.payload._subtitleMessage.SubtitleParts)
                     {
                         Subtitle subtitle = controller.Subtitles[part.Subtitle];
                         builder.Append(controller.GetTranslation(subtitle));
                     }
 
-                    CustomSubtitles = StringBuilderPool.Pool.ToStringReturn(builder);
+                    this.CustomSubtitles = StringBuilderPool.Pool.ToStringReturn(builder);
 
                     break;
                 default:
-                    CustomSubtitles = string.Empty;
+                    this.CustomSubtitles = string.Empty;
                     break;
             }
 
-            MakeHold = payload.PlayBackground;
-            GlitchScale = annc.GlitchScale;
-            MakeNoise = annc.GlitchScale is not 0;
-            SubtitleSource = payload.SubtitleSource;
+            this.MakeHold = this.payload.PlayBackground;
+            this.GlitchScale = annc.GlitchScale;
+            this.MakeNoise = annc.GlitchScale is not 0;
+            this.SubtitleSource = this.payload.SubtitleSource;
 
-            IsAllowed = isAllowed;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Exiled.Events.EventArgs.Cassie
             set
             {
                 if (field != value)
-                    SubtitleSource = CassieTtsPayload.SubtitleMode.Custom;
+                    this.SubtitleSource = CassieTtsPayload.SubtitleMode.Custom;
 
                 field = value;
             }
@@ -103,8 +103,8 @@ namespace Exiled.Events.EventArgs.Cassie
             get;
             set
             {
-                if (!MakeNoise && value is not 0)
-                    MakeNoise = true;
+                if (!this.MakeNoise && value is not 0)
+                    this.MakeNoise = true;
 
                 field = value;
             }
@@ -141,16 +141,16 @@ namespace Exiled.Events.EventArgs.Cassie
                 CassieTtsPayload newPayload;
 
                 // I love readonly fields :)
-                if (SubtitleSource is CassieTtsPayload.SubtitleMode.FromTranslation)
+                if (this.SubtitleSource is CassieTtsPayload.SubtitleMode.FromTranslation)
                 {
-                    newPayload = new CassieTtsPayload(Words, MakeHold, payload._subtitleMessage.SubtitleParts);
+                    newPayload = new CassieTtsPayload(this.Words, this.MakeHold, this.payload._subtitleMessage.SubtitleParts);
                 }
                 else
                 {
-                    if (SubtitleSource is CassieTtsPayload.SubtitleMode.Automatic)
-                        newPayload = new CassieTtsPayload(Words, true, MakeHold);
+                    if (this.SubtitleSource is CassieTtsPayload.SubtitleMode.Automatic)
+                        newPayload = new CassieTtsPayload(this.Words, true, this.MakeHold);
                     else
-                        newPayload = new CassieTtsPayload(Words, CustomSubtitles, MakeHold);
+                        newPayload = new CassieTtsPayload(this.Words, this.CustomSubtitles, this.MakeHold);
                 }
 
                 return field switch
@@ -162,7 +162,7 @@ namespace Exiled.Events.EventArgs.Cassie
 
                     CassieWaveAnnouncement waveAnnc => new CassieWaveAnnouncement(waveAnnc.Wave, newPayload),
                     Cassie079RecontainAnnouncement recontainAnnc => new Cassie079RecontainAnnouncement(recontainAnnc._callback, false, newPayload),
-                    _ => new CassieAnnouncement(newPayload, 0, GlitchScale / (API.Features.Warhead.IsDetonated ? 2F : 1F) * (MakeNoise ? 1F : 0F)),
+                    _ => new CassieAnnouncement(newPayload, 0, this.GlitchScale / (API.Features.Warhead.IsDetonated ? 2F : 1F) * (this.MakeNoise ? 1F : 0F)),
                 };
             }
             private set;

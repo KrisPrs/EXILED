@@ -17,9 +17,6 @@ namespace Exiled.Events.Patches.Generic
     [HarmonyPatch(typeof(TeslaGateController), nameof(TeslaGateController.Start))]
     internal class TeslaList
     {
-        private static void Postfix()
-        {
-            TeslaGate.BaseTeslaGateToTeslaGate.Clear();
-        }
+        private static void Postfix() => TeslaGate.BaseTeslaGateToTeslaGate.Clear();
     }
 }

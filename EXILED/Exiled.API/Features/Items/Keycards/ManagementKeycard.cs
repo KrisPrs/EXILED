@@ -42,24 +42,24 @@ namespace Exiled.API.Features.Items.Keycards
         /// <inheritdoc cref="ILabelKeycard.Label"/>
         public string Label
         {
-            get => DataDict[Serial].Label;
+            get => DataDict[this.Serial].Label;
 
             set
             {
-                DataDict[Serial].Label = value;
-                Resync();
+                DataDict[this.Serial].Label = value;
+                this.Resync();
             }
         }
 
         /// <inheritdoc cref="ILabelKeycard.LabelColor"/>
         public Color LabelColor
         {
-            get => DataDict[Serial].LabelColor ?? Color.clear;
+            get => DataDict[this.Serial].LabelColor ?? Color.clear;
 
             set
             {
-                DataDict[Serial].LabelColor = value;
-                Resync();
+                DataDict[this.Serial].LabelColor = value;
+                this.Resync();
             }
         }
 

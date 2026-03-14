@@ -24,10 +24,8 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="objectiveFootprintBase">A <see cref="BaseObjective"/> instance.</param>
         internal EscapeObjective(BaseObjective objectiveFootprintBase)
-            : base(objectiveFootprintBase)
-        {
-            Base = objectiveFootprintBase;
-        }
+            : base(objectiveFootprintBase) =>
+            this.Base = objectiveFootprintBase;
 
         /// <inheritdoc />
         public new BaseObjective Base { get; }
@@ -40,6 +38,6 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="player">Target that has escaped.</param>
         /// <param name="newRole">Role that target will get after escaping.</param>
-        public void Escape(Player player, RoleTypeId newRole) => Base.OnServerRoleSet(player.ReferenceHub, newRole, RoleChangeReason.Escaped);
+        public void Escape(Player player, RoleTypeId newRole) => this.Base.OnServerRoleSet(player.ReferenceHub, newRole, RoleChangeReason.Escaped);
     }
 }

@@ -27,8 +27,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public KickedEventArgs(Player target, string reason)
         {
-            Player = target;
-            Reason = reason;
+            this.Player = target;
+            this.Reason = reason;
         }
 
         /// <summary>

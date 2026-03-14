@@ -25,10 +25,8 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         /// <param name="magazine">target <see cref="IPrimaryAmmoContainerModule"/>.</param>
         public NormalMagazine(MagazineModule magazine)
-            : base(magazine)
-        {
-            MagazineModule = magazine;
-        }
+            : base(magazine) =>
+            this.MagazineModule = magazine;
 
         /// <summary>
         /// Gets an original <see cref="MagazineModule"/>.
@@ -36,12 +34,12 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         public MagazineModule MagazineModule { get; }
 
         /// <inheritdoc/>
-        public override Firearm Firearm => Item.Get<Firearm>(MagazineModule.Firearm);
+        public override Firearm Firearm => Item.Get<Firearm>(this.MagazineModule.Firearm);
 
         /// <inheritdoc/>
         public override int MaxAmmo
         {
-            set => MagazineModule._defaultCapacity = value - (int)MagazineModule.Firearm.AttachmentsValue(AttachmentParam.MagazineCapacityModifier);
+            set => this.MagazineModule._defaultCapacity = value - (int)this.MagazineModule.Firearm.AttachmentsValue(AttachmentParam.MagazineCapacityModifier);
         }
 
         /// <inheritdoc/>
@@ -49,24 +47,24 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         {
             set
             {
-                MagazineModule.SyncData[MagazineModule.ItemSerial] = Math.Max(value, 0) + 1;
-                Resync();
+                MagazineModule.SyncData[this.MagazineModule.ItemSerial] = Math.Max(value, 0) + 1;
+                this.Resync();
             }
         }
 
         /// <inheritdoc/>
         public override int ConstantMaxAmmo
         {
-            get => MagazineModule._defaultCapacity;
-            set => MagazineModule._defaultCapacity = value;
+            get => this.MagazineModule._defaultCapacity;
+            set => this.MagazineModule._defaultCapacity = value;
         }
 
         /// <inheritdoc/>
         public override AmmoType AmmoType
         {
-            get => Magazine.AmmoType.GetAmmoType();
+            get => this.Magazine.AmmoType.GetAmmoType();
 
-            set => MagazineModule._ammoType = value.GetItemType();
+            set => this.MagazineModule._ammoType = value.GetItemType();
         }
 
         /// <summary>
@@ -74,12 +72,12 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// </summary>
         public bool MagazineInserted
         {
-            get => MagazineModule.MagazineInserted;
+            get => this.MagazineModule.MagazineInserted;
 
             set
             {
-                MagazineModule.MagazineInserted = value;
-                Resync();
+                this.MagazineModule.MagazineInserted = value;
+                this.Resync();
             }
         }
 
@@ -90,14 +88,14 @@ namespace Exiled.API.Features.Items.FirearmModules.Primary
         /// Affects on actual ammo count.
         /// Removes all ammo from magazine.
         /// </remarks>
-        public void RemoveMagazine() => MagazineModule.ServerRemoveMagazine();
+        public void RemoveMagazine() => this.MagazineModule.ServerRemoveMagazine();
 
         /// <summary>
         /// Inserts current magazine from current <see cref="Exiled.API.Features.Items.Firearm"/>.
         /// </summary>
-        public void InsertMagazine() => MagazineModule.ServerInsertEmptyMagazine();
+        public void InsertMagazine() => this.MagazineModule.ServerInsertEmptyMagazine();
 
         /// <inheritdoc/>
-        public override void Resync() => MagazineModule.ServerResyncData();
+        public override void Resync() => this.MagazineModule.ServerResyncData();
     }
 }

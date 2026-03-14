@@ -30,10 +30,10 @@ namespace Exiled.Events.EventArgs.Map
         /// </param>
         public AnnouncingScpTerminationEventArgs(Player scp, string terminationCause)
         {
-            Player = scp;
-            Role = scp.Role;
-            TerminationCause = terminationCause;
-            IsAllowed = true;
+            this.Player = scp;
+            this.Role = scp.Role;
+            this.TerminationCause = terminationCause;
+            this.IsAllowed = true;
         }
 
         /// <summary>

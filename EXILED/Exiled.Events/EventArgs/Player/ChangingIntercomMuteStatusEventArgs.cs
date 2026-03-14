@@ -29,9 +29,9 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingIntercomMuteStatusEventArgs(Player player, bool isMuted, bool isAllowed = true)
         {
-            Player = player;
-            IsMuted = isMuted;
-            IsAllowed = isAllowed;
+            this.Player = player;
+            this.IsMuted = isMuted;
+            this.IsAllowed = isAllowed;
         }
 
         /// <summary>

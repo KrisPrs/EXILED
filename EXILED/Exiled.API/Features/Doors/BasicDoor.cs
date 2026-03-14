@@ -26,10 +26,8 @@ namespace Exiled.API.Features.Doors
         /// <param name="door">The base <see cref="Interactables.Interobjects.BasicDoor"/> for this door.</param>
         /// <param name="room">The <see cref="Room"/>'s for this door.</param>
         public BasicDoor(Basegame door, List<Room> room)
-            : base(door, room)
-        {
-            Base = door;
-        }
+            : base(door, room) =>
+            this.Base = door;
 
         /// <summary>
         /// Gets the base <see cref="Basegame"/>.
@@ -39,15 +37,15 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the list with all Ignored's colliders for <see cref="RoleTypeId.Scp106"/> or <see cref="EffectType.Ghostly"/>.
         /// </summary>
-        public IEnumerable<Collider> Scp106Colliders => Base.IgnoredColliders;
+        public IEnumerable<Collider> Scp106Colliders => this.Base.IgnoredColliders;
 
         /// <summary>
         /// Gets or sets the total cooldown before door can be triggered again.
         /// </summary>
         public float Cooldown
         {
-            get => Base._cooldownDuration;
-            set => Base._cooldownDuration = value;
+            get => this.Base._cooldownDuration;
+            set => this.Base._cooldownDuration = value;
         }
 
         /// <summary>
@@ -55,8 +53,8 @@ namespace Exiled.API.Features.Doors
         /// </summary>
         public float RemainingCooldown
         {
-            get => Base._remainingAnimCooldown;
-            set => Base._remainingAnimCooldown = value;
+            get => this.Base._remainingAnimCooldown;
+            set => this.Base._remainingAnimCooldown = value;
         }
     }
 }

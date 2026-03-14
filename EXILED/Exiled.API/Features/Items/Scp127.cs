@@ -33,18 +33,18 @@ namespace Exiled.API.Features.Items
         public Scp127(InventorySystem.Items.Firearms.Firearm itemBase)
             : base(itemBase)
         {
-            foreach (ModuleBase module in Base.Modules)
+            foreach (ModuleBase module in this.Base.Modules)
             {
                 switch (module)
                 {
                     case Scp127HumeModule humeModule:
-                        HumeModule = humeModule;
+                        this.HumeModule = humeModule;
                         break;
                     case Scp127TierManagerModule tierManagerModule:
-                        TierManagerModule = tierManagerModule;
+                        this.TierManagerModule = tierManagerModule;
                         break;
                     case Scp127VoiceLineManagerModule voiceLineManagerModule:
-                        VoiceLineManagerModule = voiceLineManagerModule;
+                        this.VoiceLineManagerModule = voiceLineManagerModule;
                         break;
                 }
             }
@@ -84,8 +84,8 @@ namespace Exiled.API.Features.Items
         /// <remarks>If setter is used, after tier chance this value won't be edited automatically.</remarks>
         public float HsMax
         {
-            get => CustomHsMax ?? HumeModule.HsMax;
-            set => CustomHsMax = value;
+            get => this.CustomHsMax ?? this.HumeModule.HsMax;
+            set => this.CustomHsMax = value;
         }
 
         /// <summary>
@@ -93,8 +93,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ShieldRegenRate
         {
-            get => HumeModule.ShieldRegenRate;
-            set => HumeModule.ShieldRegenRate = value;
+            get => this.HumeModule.ShieldRegenRate;
+            set => this.HumeModule.ShieldRegenRate = value;
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ShieldDecayRate
         {
-            get => HumeModule.ShieldDecayRate;
-            set => HumeModule.ShieldDecayRate = value;
+            get => this.HumeModule.ShieldDecayRate;
+            set => this.HumeModule.ShieldDecayRate = value;
         }
 
         /// <summary>
@@ -111,8 +111,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float ShieldOnDamagePause
         {
-            get => HumeModule.ShieldOnDamagePause;
-            set => HumeModule.ShieldOnDamagePause = value;
+            get => this.HumeModule.ShieldOnDamagePause;
+            set => this.HumeModule.ShieldOnDamagePause = value;
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float UnequipDecayDelay
         {
-            get => HumeModule.UnequipDecayDelay;
-            set => HumeModule.UnequipDecayDelay = value;
+            get => this.HumeModule.UnequipDecayDelay;
+            set => this.HumeModule.UnequipDecayDelay = value;
         }
 
         /// <summary>
@@ -129,8 +129,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float HsRegeneration
         {
-            get => HumeModule.HsRegeneration;
-            set => HumeModule.HsRegeneration = value;
+            get => this.HumeModule.HsRegeneration;
+            set => this.HumeModule.HsRegeneration = value;
         }
 
         /// <summary>
@@ -138,8 +138,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float KillBonus
         {
-            get => TierManagerModule.KillBonus;
-            set => TierManagerModule.KillBonus = value;
+            get => this.TierManagerModule.KillBonus;
+            set => this.TierManagerModule.KillBonus = value;
         }
 
         /// <summary>
@@ -147,8 +147,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float PassiveExpAmount
         {
-            get => TierManagerModule.PassiveExpAmount;
-            set => TierManagerModule.PassiveExpAmount = value;
+            get => this.TierManagerModule.PassiveExpAmount;
+            set => this.TierManagerModule.PassiveExpAmount = value;
         }
 
         /// <summary>
@@ -156,8 +156,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float PassiveExpInterval
         {
-            get => TierManagerModule.PassiveExpInterval;
-            set => TierManagerModule.PassiveExpInterval = value;
+            get => this.TierManagerModule.PassiveExpInterval;
+            set => this.TierManagerModule.PassiveExpInterval = value;
         }
 
         /// <summary>
@@ -165,8 +165,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public Scp127TierManagerModule.TierThreshold[] TierThresholds
         {
-            get => TierManagerModule.Thresholds;
-            set => TierManagerModule.Thresholds = value;
+            get => this.TierManagerModule.Thresholds;
+            set => this.TierManagerModule.Thresholds = value;
         }
 
         /// <summary>
@@ -174,8 +174,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public Scp127Tier CurrentTier
         {
-            get => TierManagerModule.CurTier;
-            set => TierManagerModule.CurTier = value;
+            get => this.TierManagerModule.CurTier;
+            set => this.TierManagerModule.CurTier = value;
         }
 
         /// <summary>
@@ -183,27 +183,27 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float Experience
         {
-            get => TierManagerModule.ServerExp;
-            set => TierManagerModule.ServerExp = value;
+            get => this.TierManagerModule.ServerExp;
+            set => this.TierManagerModule.ServerExp = value;
         }
 
         /// <summary>
         /// Gets the instance record.
         /// </summary>
-        public Scp127TierManagerModule.InstanceRecord InstanceRecord => Scp127TierManagerModule.GetRecord(Serial);
+        public Scp127TierManagerModule.InstanceRecord InstanceRecord => Scp127TierManagerModule.GetRecord(this.Serial);
 
         /// <summary>
         /// Gets the Owner stats.
         /// </summary>
-        public Scp127TierManagerModule.OwnerStats OwnerStats => Scp127TierManagerModule.GetStats(Base);
+        public Scp127TierManagerModule.OwnerStats OwnerStats => Scp127TierManagerModule.GetStats(this.Base);
 
         /// <summary>
         /// Gets or sets all Voice Triggers.
         /// </summary>
         public Scp127VoiceTriggerBase[] VoiceTriggers
         {
-            get => VoiceLineManagerModule._foundTriggers;
-            set => VoiceLineManagerModule._foundTriggers = value;
+            get => this.VoiceLineManagerModule._foundTriggers;
+            set => this.VoiceLineManagerModule._foundTriggers = value;
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Exiled.API.Features.Items
         {
             get
             {
-                if (!Scp127VoiceLineManagerModule.FriendshipMemory.TryGetValue(Serial, out HashSet<uint> uintSet))
+                if (!Scp127VoiceLineManagerModule.FriendshipMemory.TryGetValue(this.Serial, out HashSet<uint> uintSet))
                     return null;
 
                 return uintSet.Select(Player.Get);
@@ -224,20 +224,20 @@ namespace Exiled.API.Features.Items
         /// Increases experience.
         /// </summary>
         /// <param name="amount">Amount to add.</param>
-        public void IncreaseExperience(float amount) => TierManagerModule.ServerIncreaseExp(Base, amount);
+        public void IncreaseExperience(float amount) => this.TierManagerModule.ServerIncreaseExp(this.Base, amount);
 
         /// <summary>
         /// Sets owner stats.
         /// </summary>
         /// <param name="exp">New experience amount.</param>
-        public void SetOwnerStats(float exp) => TierManagerModule.ServerSetStats(exp);
+        public void SetOwnerStats(float exp) => this.TierManagerModule.ServerSetStats(exp);
 
         /// <summary>
         /// Sends tier stats.
         /// </summary>
         /// <param name="tier">New tier.</param>
         /// <param name="progress">New progress.</param>
-        public void SendTierStats(Scp127Tier tier, byte progress) => TierManagerModule.ServerSendStats(Serial, Owner.ReferenceHub, tier, progress);
+        public void SendTierStats(Scp127Tier tier, byte progress) => this.TierManagerModule.ServerSendStats(this.Serial, this.Owner.ReferenceHub, tier, progress);
 
         /// <summary>
         /// Tries to play voice line.
@@ -247,10 +247,10 @@ namespace Exiled.API.Features.Items
         /// <returns><c>true</c> if voice line has been played successfully. Otherwise, <c>false</c>.</returns>
         public bool TryPlayVoiceLine(Scp127VoiceLinesTranslation voiceLine, Scp127VoiceTriggerBase.VoiceLinePriority priority = Scp127VoiceTriggerBase.VoiceLinePriority.Normal)
         {
-            if (!VoiceLineManagerModule.TryFindVoiceLine(voiceLine, out Scp127VoiceTriggerBase triggerBase, out AudioClip audioClip))
+            if (!this.VoiceLineManagerModule.TryFindVoiceLine(voiceLine, out Scp127VoiceTriggerBase triggerBase, out AudioClip audioClip))
                 return false;
 
-            VoiceLineManagerModule.ServerSendVoiceLine(triggerBase, null, audioClip, (byte)priority);
+            this.VoiceLineManagerModule.ServerSendVoiceLine(triggerBase, null, audioClip, (byte)priority);
             return true;
         }
 
@@ -259,7 +259,7 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="player">Target to check.</param>
         /// <returns><c>true</c> if this instance of SCP-127 and <paramref name="player"/> have friendship. Otherwise, <c>false</c>.</returns>
-        public bool HasFriendship(Player player) => Scp127VoiceLineManagerModule.HasFriendship(Serial, player.ReferenceHub);
+        public bool HasFriendship(Player player) => Scp127VoiceLineManagerModule.HasFriendship(this.Serial, player.ReferenceHub);
 
         /// <summary>
         /// Adds player as a friend.
@@ -267,7 +267,7 @@ namespace Exiled.API.Features.Items
         /// <param name="player">Target to be added.</param>
         public void AddFriend(Player player)
         {
-            HashSet<uint> uints = Scp127VoiceLineManagerModule.FriendshipMemory.GetOrAddNew(Serial);
+            HashSet<uint> uints = Scp127VoiceLineManagerModule.FriendshipMemory.GetOrAddNew(this.Serial);
             uints.Add(player.NetId);
         }
     }

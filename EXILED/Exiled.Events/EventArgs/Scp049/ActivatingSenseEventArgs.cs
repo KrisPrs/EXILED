@@ -25,12 +25,12 @@ namespace Exiled.Events.EventArgs.Scp049
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed"/></param>
         public ActivatingSenseEventArgs(Player player, Player target, bool isAllowed = true)
         {
-            Player = player;
-            Scp049 = player.Role.As<Scp049Role>();
-            Target = target;
-            IsAllowed = isAllowed;
-            FailedCooldown = PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility.AttemptFailCooldown;
-            Duration = PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility.EffectDuration;
+            this.Player = player;
+            this.Scp049 = player.Role.As<Scp049Role>();
+            this.Target = target;
+            this.IsAllowed = isAllowed;
+            this.FailedCooldown = PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility.AttemptFailCooldown;
+            this.Duration = PlayerRoles.PlayableScps.Scp049.Scp049SenseAbility.EffectDuration;
         }
 
         /// <inheritdoc/>
