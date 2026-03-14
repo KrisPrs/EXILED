@@ -11,6 +11,7 @@ namespace Exiled.API.Features.Pickups
     using System.Collections.Generic;
     using System.Linq;
 
+    using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features.Core;
     using Exiled.API.Features.Items;
@@ -576,7 +577,7 @@ namespace Exiled.API.Features.Pickups
         /// <param name="rotation">The rotation to spawn the <see cref="Pickup"/>.</param>
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <returns>The <see cref="Pickup"/>. See documentation of <see cref="Create(ItemType)"/> for more information on casting.</returns>
-        /// <seealso cref="Projectile.CreateAndSpawn(Enums.ProjectileType, Vector3, Quaternion, bool, Player)"/>
+        /// <seealso cref="Projectile.CreateAndSpawn(ProjectileType, Vector3, Quaternion?, bool, Player)"/>
         public static Pickup CreateAndSpawn(ItemType type, Vector3 position, Quaternion rotation, Player previousOwner = null) => Create(type).Spawn(position, rotation, previousOwner);
 
         /// <summary>
@@ -588,7 +589,7 @@ namespace Exiled.API.Features.Pickups
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <typeparam name="T">The specified <see cref="Pickup"/> type.</typeparam>
         /// <returns>The <see cref="Pickup"/>. See documentation of <see cref="Create(ItemType)"/> for more information on casting.</returns>
-        /// <seealso cref="Projectile.CreateAndSpawn(Enums.ProjectileType, Vector3, Quaternion, bool, Player)"/>
+        /// <seealso cref="Projectile.CreateAndSpawn(ProjectileType, Vector3, Quaternion?, bool, Player)"/>
         public static Pickup CreateAndSpawn<T>(ItemType type, Vector3 position, Quaternion rotation, Player previousOwner = null)
             where T : Pickup => CreateAndSpawn(type, position, rotation, previousOwner) as T;
 
@@ -632,7 +633,7 @@ namespace Exiled.API.Features.Pickups
         /// <param name="rotation">The rotation to spawn the <see cref="Pickup"/>.</param>
         /// <param name="previousOwner">An optional previous owner of the item.</param>
         /// <returns>The spawned <see cref="Pickup"/>.</returns>
-        /// <seealso cref="Projectile.Spawn(Vector3, Quaternion, bool, Player)"/>
+        /// <seealso cref="Projectile.Spawn(Vector3, Quaternion?, bool, Player)"/>
         public Pickup Spawn(Vector3 position, Quaternion rotation, Player previousOwner = null)
         {
             this.Position = position;

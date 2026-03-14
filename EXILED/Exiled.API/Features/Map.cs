@@ -5,12 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.API.Features.Pickups.Projectiles;
-
 namespace Exiled.API.Features
 {
-#pragma warning disable SA1401
+    using Pickups.Projectiles;
 
+#pragma warning disable SA1401
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;

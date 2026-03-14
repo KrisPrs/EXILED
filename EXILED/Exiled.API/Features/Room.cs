@@ -459,7 +459,6 @@ namespace Exiled.API.Features
         }
 
         private static RoomType FindType(GameObject gameObject) =>
-            // Try to remove brackets if they exist.
             TryRemovePostfixes(gameObject.name.RemoveBracketsOnEndOfName()) switch
             {
                 "PocketWorld" => RoomType.Pocket,
