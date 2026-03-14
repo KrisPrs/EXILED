@@ -79,10 +79,10 @@ namespace Exiled.CustomItems.API.Features
         /// Throw the CustomGrenade object.
         /// </summary>
         /// <param name="position">The <see cref="Vector3"/>position to throw at.</param>
+        /// <param name="player">The <see cref="Player"/> to count as the thrower of the grenade.</param>
         /// <param name="weight">The <see cref="float"/>Weight of the Grenade.</param>
         /// <param name="fuseTime">The <see cref="float"/>FuseTime of the grenade.</param>
         /// <param name="grenadeType">The <see cref="ItemType"/>of the grenade to spawn.</param>
-        /// <param name="player">The <see cref="Player"/> to count as the thrower of the grenade.</param>
         /// <returns>The <see cref="Pickup"/> spawned.</returns>
         public virtual Pickup Throw(Vector3 position, Player? player = null, float weight = 1f, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHE)
         {
