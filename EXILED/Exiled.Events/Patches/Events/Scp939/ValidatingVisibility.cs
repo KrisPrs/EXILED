@@ -7,7 +7,9 @@
 
 namespace Exiled.Events.Patches.Events.Scp939;
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 
 using API.Enums;
@@ -16,6 +18,8 @@ using Exiled.API.Features.Pools;
 using Exiled.Events.EventArgs.Scp939;
 using HarmonyLib;
 using Mirror;
+using PlayerRoles.FirstPersonControl;
+using PlayerRoles.PlayableScps.HumanTracker;
 using PlayerRoles.PlayableScps.Scp939;
 
 using static HarmonyLib.AccessTools;
@@ -35,175 +39,161 @@ internal class ValidatingVisibility
         LocalBuilder ev = generator.DeclareLocal(typeof(ValidatingVisibilityEventArgs));
 
         Label returnFalse = generator.DefineLabel();
-        int offset = 0;
 
-        // ldc.i4.0 - return false after !base.ValidateVisibility
-        int index = 4;
-        List<CodeInstruction> block1 = CreateEventBlock(generator, ev, returnFalse, Scp939VisibilityState.None);
-        MoveLabels(newInstructions[index + offset], block1[0]);
-        newInstructions.InsertRange(index + offset, block1);
-        offset += block1.Count;
+        // Block 1: after failed base.ValidateVisibility → return false (None)
+        // ldc.i4.0
+        int index = newInstructions.FindIndex(i => i.opcode == OpCodes.Ldc_I4_0);
+        newInstructions.InsertRange(index, StaticCallEvent(generator, ev, returnFalse, newInstructions[index], Scp939VisibilityState.None));
 
-        // ldc.i4.1 - return true after !IsEnemy (target is SCP)
-        index = 11;
-        List<CodeInstruction> block2 = CreateEventBlock(generator, ev, returnFalse, Scp939VisibilityState.SeenAsScp);
-        MoveLabels(newInstructions[index + offset], block2[0]);
-        newInstructions.InsertRange(index + offset, block2);
-        offset += block2.Count;
+        // Block 2: after !IsEnemy (target is SCP) → return true (SeenAsScp)
+        // first ldc.i4.1
+        index = newInstructions.FindIndex(i => i.opcode == OpCodes.Ldc_I4_1);
+        newInstructions.InsertRange(index, StaticCallEvent(generator, ev, returnFalse, newInstructions[index], Scp939VisibilityState.SeenAsScp));
 
-        // ldc.i4.1 - return true after !(role is FpcStandardRoleBase)
-        index = 20;
-        List<CodeInstruction> block3 = CreateEventBlock(generator, ev, returnFalse, Scp939VisibilityState.None);
-        MoveLabels(newInstructions[index + offset], block3[0]);
-        newInstructions.InsertRange(index + offset, block3);
-        offset += block3.Count;
+        // Block 3: after !(role is FpcStandardRoleBase) → return true (None)
+        // ldc.i4.1 following isinst FpcStandardRoleBase
+        int isinstIndex = newInstructions.FindIndex(i => i.opcode == OpCodes.Isinst && i.operand is Type t && t == typeof(FpcStandardRoleBase));
+        index = newInstructions.FindIndex(isinstIndex, i => i.opcode == OpCodes.Ldc_I4_1);
+        newInstructions.InsertRange(index, StaticCallEvent(generator, ev, returnFalse, newInstructions[index], Scp939VisibilityState.None));
 
-        // ldc.i4.1 - return true after Detonated || IsOneTargetLeft
-        index = 26;
-        List<CodeInstruction> block4 = CreateEventBlockWithStateCheck(generator, ev, returnFalse);
-        MoveLabels(newInstructions[index + offset], block4[0]);
-        newInstructions.InsertRange(index + offset, block4);
-        offset += block4.Count;
+        // Block 4: after Detonated || IsOneTargetLeft → return true (SeenByDetonation or SeenByLastTracker)
+        // ldc.i4.1 following IsOneTargetLeft call
+        int lastTrackerIndex = newInstructions.FindIndex(i => i.Calls(PropertyGetter(typeof(LastHumanTracker), nameof(LastHumanTracker.IsOneTargetLeft))));
+        index = newInstructions.FindIndex(lastTrackerIndex, i => i.opcode == OpCodes.Ldc_I4_1);
+        newInstructions.InsertRange(index, DetonationCallEvent(generator, ev, returnFalse, newInstructions[index]));
 
-        // ldloc.3 - before return ldloc.3 (in range or lastSeen check)
-        index = 89;
-        List<CodeInstruction> block5 = CreateEventBlockForRangeCheck(generator, ev, returnFalse);
-        MoveLabels(newInstructions[index + offset], block5[0]);
-        newInstructions.InsertRange(index + offset, block5);
-        offset += block5.Count;
+        // Block 5: before final ldloc.3 return — pre-check for SeenByLastTime
+        // last ldloc.3 (flag before ret)
+        index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Ldloc_3);
 
-        // ldsfld LastSeen - writing to LastSeen dictionary (SeenByRange)
-        index = 91;
-        List<CodeInstruction> block6 = CreateEventBlock(generator, ev, returnFalse, Scp939VisibilityState.SeenByRange);
-        MoveLabels(newInstructions[index + offset], block6[0]);
-        newInstructions.InsertRange(index + offset, block6);
+        Label skipEvent = generator.DefineLabel();
+
+        newInstructions.InsertRange(index, new CodeInstruction[]
+            {
+                // if (!flag) skip event
+                new CodeInstruction(OpCodes.Ldloc_3).MoveLabelsFrom(newInstructions[index]),
+                new(OpCodes.Brfalse_S, skipEvent),
+
+                // state = SeenByLastTime
+                new(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByLastTime),
+            }
+            .Concat(CallEvent(generator, ev, returnFalse))
+            .Append(new CodeInstruction(OpCodes.Nop).WithLabels(skipEvent)));
+
+        // Block 6: before writing to LastSeen dictionary → SeenByRange
+        // last ldsfld LastSeen
+        index = newInstructions.FindLastIndex(i => i.LoadsField(Field(typeof(Scp939VisibilityController), nameof(Scp939VisibilityController.LastSeen))));
+        newInstructions.InsertRange(index, StaticCallEvent(generator, ev, returnFalse, newInstructions[index], Scp939VisibilityState.SeenByRange));
 
         // return false
         newInstructions.Add(new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(returnFalse));
         newInstructions.Add(new CodeInstruction(OpCodes.Ret));
 
-        foreach (CodeInstruction instr in newInstructions)
-            yield return instr;
+        for (int z = 0; z < newInstructions.Count; z++)
+            yield return newInstructions[z];
 
         ListPool<CodeInstruction>.Pool.Return(newInstructions);
     }
 
-    private static void MoveLabels(CodeInstruction from, CodeInstruction to)
+    /// <summary>
+    /// Creates an event block with a fixed <see cref="Scp939VisibilityState"/>, moving labels from the target instruction.
+    /// </summary>
+    /// <param name="generator">The <see cref="ILGenerator"/>.</param>
+    /// <param name="ev">The <see cref="LocalBuilder"/> storing the event args.</param>
+    /// <param name="returnFalse">The <see cref="Label"/> to jump to when the event is not allowed.</param>
+    /// <param name="target">The <see cref="CodeInstruction"/> whose labels will be moved to the first emitted instruction.</param>
+    /// <param name="state">The <see cref="Scp939VisibilityState"/> to pass into the event.</param>
+    /// <returns>The emitted <see cref="CodeInstruction"/>s.</returns>
+    private static IEnumerable<CodeInstruction> StaticCallEvent(ILGenerator generator, LocalBuilder ev, Label returnFalse, CodeInstruction target, Scp939VisibilityState state)
     {
-        to.labels.AddRange(from.labels);
-        from.labels.Clear();
+        yield return new CodeInstruction(OpCodes.Ldc_I4, (int)state).MoveLabelsFrom(target);
+
+        foreach (CodeInstruction instruction in CallEvent(generator, ev, returnFalse))
+            yield return instruction;
     }
 
     /// <summary>
-    /// Creates event block with fixed visibility state.
+    /// Creates an event block that distinguishes <see cref="Scp939VisibilityState.SeenByDetonation"/>
+    /// from <see cref="Scp939VisibilityState.SeenByLastTracker"/> by checking <see cref="AlphaWarheadController.Detonated"/>.
     /// </summary>
-    private static List<CodeInstruction> CreateEventBlock(ILGenerator generator, LocalBuilder ev, Label returnFalse, Scp939VisibilityState state)
-    {
-        List<CodeInstruction> result = new()
-        {
-            // state
-            new(OpCodes.Ldc_I4, (int)state),
-        };
-
-        result.AddRange(CreateEventHandlerBlock(generator, ev, returnFalse));
-        return result;
-    }
-
-    /// <summary>
-    /// Creates event block that checks Detonated to determine state.
-    /// </summary>
-    private static List<CodeInstruction> CreateEventBlockWithStateCheck(ILGenerator generator, LocalBuilder ev, Label returnFalse)
+    /// <param name="generator">The <see cref="ILGenerator"/>.</param>
+    /// <param name="ev">The <see cref="LocalBuilder"/> storing the event args.</param>
+    /// <param name="returnFalse">The <see cref="Label"/> to jump to when the event is not allowed.</param>
+    /// <param name="target">The <see cref="CodeInstruction"/> whose labels will be moved to the first emitted instruction.</param>
+    /// <returns>The emitted <see cref="CodeInstruction"/>s.</returns>
+    private static IEnumerable<CodeInstruction> DetonationCallEvent(ILGenerator generator, LocalBuilder ev, Label returnFalse, CodeInstruction target)
     {
         Label isDetonated = generator.DefineLabel();
         Label afterStateLoad = generator.DefineLabel();
 
-        List<CodeInstruction> result = new()
+        // if (AlphaWarheadController.Detonated) goto isDetonated
+        yield return new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(AlphaWarheadController), nameof(AlphaWarheadController.Detonated))).MoveLabelsFrom(target);
+        yield return new(OpCodes.Brtrue_S, isDetonated);
+
+        // state = SeenByLastTracker
+        yield return new(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByLastTracker);
+        yield return new(OpCodes.Br_S, afterStateLoad);
+
+        // isDetonated: state = SeenByDetonation
+        yield return new CodeInstruction(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByDetonation).WithLabels(isDetonated);
+
+        // afterStateLoad: state is on stack, proceed to event
+        bool first = true;
+        foreach (CodeInstruction instruction in CallEvent(generator, ev, returnFalse))
         {
-            // if (AlphaWarheadController.Detonated) goto isDetonated
-            new(OpCodes.Call, PropertyGetter(typeof(AlphaWarheadController), nameof(AlphaWarheadController.Detonated))),
-            new(OpCodes.Brtrue, isDetonated),
+            if (first)
+            {
+                instruction.labels.Add(afterStateLoad);
+                first = false;
+            }
 
-            // state = SeenByLastTracker
-            new(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByLastTracker),
-            new(OpCodes.Br, afterStateLoad),
-
-            // isDetonated: state = SeenByDetonation
-            new CodeInstruction(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByDetonation).WithLabels(isDetonated),
-        };
-
-        // afterStateLoad: state is on stack
-        List<CodeInstruction> handlerBlock = CreateEventHandlerBlock(generator, ev, returnFalse);
-        handlerBlock[0].labels.Add(afterStateLoad);
-        result.AddRange(handlerBlock);
-
-        return result;
+            yield return instruction;
+        }
     }
 
     /// <summary>
-    /// Creates event block for range/lastSeen check at [089].
+    /// Main IL logic for invoking the event. Expects the <see cref="Scp939VisibilityState"/> already on the evaluation stack.
     /// </summary>
-    private static List<CodeInstruction> CreateEventBlockForRangeCheck(ILGenerator generator, LocalBuilder ev, Label returnFalse)
-    {
-        Label skipEventLabel = generator.DefineLabel();
-
-        List<CodeInstruction> result = new()
-        {
-            // if (!loc.3) goto skipEvent
-            new(OpCodes.Ldloc_3),
-            new(OpCodes.Brfalse, skipEventLabel),
-
-            // state = SeenByLastTime
-            new(OpCodes.Ldc_I4, (int)Scp939VisibilityState.SeenByLastTime),
-        };
-
-        result.AddRange(CreateEventHandlerBlock(generator, ev, returnFalse));
-
-        // skipEvent:
-        result.Add(new CodeInstruction(OpCodes.Nop).WithLabels(skipEventLabel));
-
-        return result;
-    }
-
-    /// <summary>
-    /// Creates common event handler block.
-    /// Expects state already on stack.
-    /// </summary>
-    private static List<CodeInstruction> CreateEventHandlerBlock(ILGenerator generator, LocalBuilder ev, Label returnFalse)
+    /// <param name="generator">The <see cref="ILGenerator"/>.</param>
+    /// <param name="ev">The <see cref="LocalBuilder"/> storing the event args.</param>
+    /// <param name="returnFalse">The <see cref="Label"/> to jump to when the event is not allowed.</param>
+    /// <returns>The emitted <see cref="CodeInstruction"/>s.</returns>
+    private static IEnumerable<CodeInstruction> CallEvent(ILGenerator generator, LocalBuilder ev, Label returnFalse)
     {
         Label continueLabel = generator.DefineLabel();
 
-        return new List<CodeInstruction>
-        {
-            // new ValidatingVisibilityEventArgs(state, Owner, hub)
-            new(OpCodes.Ldarg_0),
-            new(OpCodes.Call, PropertyGetter(typeof(Scp939VisibilityController), nameof(Scp939VisibilityController.Owner))),
-            new(OpCodes.Ldarg_1),
-            new(OpCodes.Newobj, GetDeclaredConstructors(typeof(ValidatingVisibilityEventArgs))[0]),
-            new(OpCodes.Dup),
-            new(OpCodes.Stloc, ev.LocalIndex),
+        // ...VisibilityState loaded in stack
+        // ValidatingVisibilityEventArgs ev = new(state, scp939, target)
+        yield return new(OpCodes.Ldarg_0);
+        yield return new(OpCodes.Call, PropertyGetter(typeof(Scp939VisibilityController), nameof(Scp939VisibilityController.Owner)));
+        yield return new(OpCodes.Ldarg_1);
+        yield return new(OpCodes.Newobj, GetDeclaredConstructors(typeof(ValidatingVisibilityEventArgs))[0]);
+        yield return new(OpCodes.Dup);
+        yield return new(OpCodes.Stloc_S, ev.LocalIndex);
 
-            // Handlers.Scp939.OnValidatingVisibility(ev)
-            new(OpCodes.Call, Method(typeof(Handlers.Scp939), nameof(Handlers.Scp939.OnValidatingVisibility))),
+        // Scp939.OnValidatingVisibility(ev)
+        yield return new(OpCodes.Call, Method(typeof(Handlers.Scp939), nameof(Handlers.Scp939.OnValidatingVisibility)));
 
-            // if (!ev.IsAllowed) return false
-            new(OpCodes.Ldloc, ev.LocalIndex),
-            new(OpCodes.Callvirt, PropertyGetter(typeof(ValidatingVisibilityEventArgs), nameof(ValidatingVisibilityEventArgs.IsAllowed))),
-            new(OpCodes.Brfalse, returnFalse),
+        // if (!ev.IsAllowed)
+        //     return false;
+        yield return new(OpCodes.Ldloc_S, ev.LocalIndex);
+        yield return new(OpCodes.Callvirt, PropertyGetter(typeof(ValidatingVisibilityEventArgs), nameof(ValidatingVisibilityEventArgs.IsAllowed)));
+        yield return new(OpCodes.Brfalse_S, returnFalse);
 
-            // if (!ev.IsLateSeen) goto continue
-            new(OpCodes.Ldloc, ev.LocalIndex),
-            new(OpCodes.Callvirt, PropertyGetter(typeof(ValidatingVisibilityEventArgs), nameof(ValidatingVisibilityEventArgs.IsLateSeen))),
-            new(OpCodes.Brfalse, continueLabel),
+        // if (ev.IsLateSeen)
+        //     ValidatingVisibility.SetToLastSeen(target);
+        //     return true;
+        yield return new(OpCodes.Ldloc_S, ev.LocalIndex);
+        yield return new(OpCodes.Callvirt, PropertyGetter(typeof(ValidatingVisibilityEventArgs), nameof(ValidatingVisibilityEventArgs.IsLateSeen)));
+        yield return new(OpCodes.Brfalse_S, continueLabel);
 
-            // SetToLastSeen(hub); return true
-            new(OpCodes.Ldarg_1),
-            new(OpCodes.Call, Method(typeof(ValidatingVisibility), nameof(SetToLastSeen))),
-            new(OpCodes.Ldc_I4_1),
-            new(OpCodes.Ret),
+        yield return new(OpCodes.Ldarg_1);
+        yield return new(OpCodes.Call, Method(typeof(ValidatingVisibility), nameof(SetToLastSeen)));
+        yield return new(OpCodes.Ldc_I4_1);
+        yield return new(OpCodes.Ret);
 
-            // continue:
-            new CodeInstruction(OpCodes.Nop).WithLabels(continueLabel),
-        };
+        // continue:
+        yield return new CodeInstruction(OpCodes.Nop).WithLabels(continueLabel);
     }
 
     private static void SetToLastSeen(ReferenceHub target) =>
