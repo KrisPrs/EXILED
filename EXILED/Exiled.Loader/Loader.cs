@@ -856,7 +856,7 @@ public class Loader
         Timing.CallDelayed(10f, () =>
         {
             VersionControl.Update();
-            Server.Restart();
+            Log.SendRaw("Перезагрузите сервер для применения обновления", ConsoleColor.Yellow);
         });
     }
 }
