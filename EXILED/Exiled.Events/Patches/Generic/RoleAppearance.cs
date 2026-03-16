@@ -22,133 +22,168 @@ namespace Exiled.Events.Patches.Generic
     using Mirror;
 
     using PlayerRoles;
+    using PlayerRoles.FirstPersonControl;
+    using PlayerRoles.PlayableScps.Scp049.Zombies;
     using PlayerRoles.SpawnData;
+
+    using RelativePositioning;
 
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="RoleSyncInfo.Write(Mirror.NetworkWriter)"/> to implement <see cref="Role.GlobalAppearance"/>, <see cref="Role.TeamAppearances"/> and <see cref="Role.IndividualAppearances"/>.
+    /// Патч для <see cref="RoleSyncInfo.Write(NetworkWriter)"/>.
+    /// Реализует систему подмены внешности через <see cref="Role.GlobalAppearance"/>,
+    /// <see cref="Role.TeamAppearances"/>, <see cref="Role.RoleAppearances"/> и <see cref="Role.IndividualAppearances"/>.
     /// </summary>
     [HarmonyPatch(typeof(RoleSyncInfo), nameof(RoleSyncInfo.Write))]
-    internal class RoleAppearance
+    internal static class RoleAppearance
     {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> codeInstructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(codeInstructions);
+            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
+            Label continueOriginal = generator.DefineLabel();
+            int insertIndex = newInstructions.FindIndex(i =>
+                i.Calls(Method(typeof(NetworkWriterExtensions), nameof(NetworkWriterExtensions.WriteUInt)))) + 1;
 
-            LocalBuilder player = generator.DeclareLocal(typeof(Player));
-            LocalBuilder role = generator.DeclareLocal(typeof(Role));
+            // Вставляем перехват:
+            // if (TryHandleAppearance(ref this, writer))
+            //     return;
+            newInstructions.InsertRange(insertIndex, new[]
+            {
+                // Загружаем ref this (для struct Ldarg_0 = указатель на структуру)
+                new CodeInstruction(OpCodes.Ldarg_0),
 
-            Label skipEvent = generator.DefineLabel();
-            Label skip = generator.DefineLabel();
-            Label skip2 = generator.DefineLabel();
+                // Загружаем writer
+                new CodeInstruction(OpCodes.Ldarg_1),
 
-            int offset = -2;
-            int index = newInstructions.FindIndex(i => i.LoadsField(Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole)))) + offset;
+                // Вызываем наш обработчик
+                new CodeInstruction(OpCodes.Call, Method(typeof(RoleAppearance), nameof(TryHandleAppearance))),
 
-            newInstructions.InsertRange(
-                index,
-                new[]
-                {
-                    // Player player = Player.Get(_targetNetId);
-                    // if (player == null)
-                    //     skip;
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetNetId))),
-                    new(OpCodes.Call, Method(typeof(Player), nameof(Player.Get), new[] { typeof(uint) })),
-                    new(OpCodes.Dup),
-                    new(OpCodes.Stloc_S, player.LocalIndex),
-                    new(OpCodes.Brfalse_S, skipEvent),
+                // Если вернул false — переходим к оригинальному коду
+                new CodeInstruction(OpCodes.Brfalse_S, continueOriginal),
 
-                    // if (_targetNetId == _receiverNetId)
-                    //     skip;
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetNetId))),
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._receiverNetId))),
-                    new(OpCodes.Beq_S, skipEvent),
+                // Если вернул true — выходим из метода (всё уже записано)
+                new CodeInstruction(OpCodes.Ret),
+            });
 
-                    // role = player.Role;
-                    // if (role == null)
-                    //     skip;
-                    new(OpCodes.Ldloc_S, player.LocalIndex),
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.Role))),
-                    new(OpCodes.Dup),
-                    new(OpCodes.Stloc_S, role.LocalIndex),
-                    new(OpCodes.Brfalse_S, skip),
+            // Добавляем метку на следующую инструкцию после вставки
+            newInstructions[insertIndex + 5].labels.Add(continueOriginal);
 
-                    // _targetRole = role.GetAppearanceForPlayer(Player.Get(this._receiverHub));
-                    new(OpCodes.Ldarg_0),
-
-                    new(OpCodes.Ldloc_S, role.LocalIndex),
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._receiverNetId))),
-                    new(OpCodes.Call, Method(typeof(Player), nameof(Player.Get), new[] { typeof(uint) })),
-                    new(OpCodes.Call, Method(typeof(RoleExtensions), nameof(RoleExtensions.GetAppearanceForPlayer))),
-                    new(OpCodes.Stfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole))),
-
-                    new CodeInstruction(OpCodes.Nop).WithLabels(skip),
-
-                    // SendingRoleEventArgs ev = new(player, _receiverNetId, _targetRole);
-                    // Player.OnSendingRole(ev);
-                    // roleType = ev.RoleType;
-                    new(OpCodes.Ldarg_0),
-
-                    new(OpCodes.Ldloc_S, player.LocalIndex),
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._receiverNetId))),
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole))),
-
-                    new(OpCodes.Newobj, GetDeclaredConstructors(typeof(SendingRoleEventArgs))[0]),
-                    new(OpCodes.Dup),
-                    new(OpCodes.Call, Method(typeof(Handlers.Player), nameof(Handlers.Player.OnSendingRole))),
-
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(SendingRoleEventArgs), nameof(SendingRoleEventArgs.RoleType))),
-                    new(OpCodes.Stfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole))),
-
-                    new CodeInstruction(OpCodes.Nop).WithLabels(skipEvent),
-                });
-
-            offset = -2;
-            index = newInstructions.FindIndex(i => i.Calls(Method(typeof(IPublicSpawnDataWriter), nameof(IPublicSpawnDataWriter.WritePublicSpawnData)))) + offset;
-
-            Label cnt = (Label)newInstructions[index - 1].operand;
-
-            newInstructions.InsertRange(
-                index,
-                new[]
-                {
-                    // if (role == null)
-                    //     skip;
-                    new CodeInstruction(OpCodes.Ldloc_S, role.LocalIndex),
-                    new(OpCodes.Brfalse_S, skip2),
-
-                    // SendMessage(player.Role, writer, _targetRole)
-                    // skip original nw code;
-                    new(OpCodes.Ldloc_S, player.LocalIndex),
-                    new(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.Role))),
-                    new(OpCodes.Ldarg_1),
-                    new(OpCodes.Ldarg_0),
-                    new(OpCodes.Ldfld, Field(typeof(RoleSyncInfo), nameof(RoleSyncInfo._targetRole))),
-
-                    new(OpCodes.Call, Method(typeof(RoleAppearance), nameof(RoleAppearance.SendMessage))),
-                    new(OpCodes.Br_S, cnt),
-
-                    new CodeInstruction(OpCodes.Nop).WithLabels(skip2),
-                });
-
-            for (int z = 0; z < newInstructions.Count; z++)
-                yield return newInstructions[z];
+            foreach (CodeInstruction instruction in newInstructions)
+                yield return instruction;
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
 
-        private static void SendMessage(Role role, NetworkWriter writer, RoleTypeId appearance)
+        private static bool TryHandleAppearance(ref RoleSyncInfo info, NetworkWriter writer)
         {
-            Role appearancedRole = role.Type == appearance ? role : Role.Create(appearance.GetRoleBase());
+            // Не перехватываем если игрок смотрит на себя, это вызовет десинк
+            if (info._targetNetId == info._receiverNetId)
+                return false;
 
-            appearancedRole.SendAppearanceSpawnMessage(writer, role.Base);
+            Player targetPlayer = Player.Get(info._targetNetId);
+            if (targetPlayer?.Role is not { } role)
+                return false;
+
+            Player receiverPlayer = Player.Get(info._receiverNetId);
+            if (receiverPlayer == null)
+                return false;
+
+            RoleTypeId appearance = role.GetAppearanceForPlayer(receiverPlayer);
+            SendingRoleEventArgs ev = new(targetPlayer, receiverPlayer, appearance);
+            Handlers.Player.OnSendingRole(ev);
+            appearance = ev.RoleType;
+
+            writer.WriteRoleType(appearance);
+            WritePrependedData(ref info, writer);
+            WritePublicSpawnData(info._role, writer, appearance);
+            return true;
+        }
+
+        /// <summary>
+        /// Записывает prepended spoofed data, если они присутствуют.
+        /// </summary>
+        /// <param name="info">Ссылка на структуру RoleSyncInfo.</param>
+        /// <param name="writer">NetworkWriter для записи данных.</param>
+        /// <remarks>
+        /// Prepended data используется для особых случаев спуфинга на уровне игры.
+        /// Копируем байты как есть, не интерпретируя их содержимое.
+        /// </remarks>
+        private static void WritePrependedData(ref RoleSyncInfo info, NetworkWriter writer)
+        {
+            if (info._prependedSpoofedData == null)
+                return;
+
+            foreach (byte b in info._prependedSpoofedData.ToArraySegment())
+                writer.WriteByte(b);
+        }
+
+        private static void WritePublicSpawnData(PlayerRoleBase realRole, NetworkWriter writer, RoleTypeId appearance)
+        {
+            if (realRole == null)
+                return;
+
+            if (realRole.RoleTypeId == appearance || !appearance.TryGetRoleBase(out PlayerRoleBase fakeBase))
+            {
+                if (realRole is IPublicSpawnDataWriter spawnWriter)
+                    spawnWriter.WritePublicSpawnData(writer);
+
+                return;
+            }
+
+            switch (fakeBase)
+            {
+                case PlayerRoles.HumanRole role when role.UsesUnitNames:
+                {
+                    byte unitId = realRole is PlayerRoles.HumanRole { UsesUnitNames: true } humanReal ? humanReal.UnitNameId : (byte)0;
+                    writer.WriteByte(unitId);
+
+                    WriteFpcSpawnData(realRole, writer);
+                    return;
+                }
+
+                case ZombieRole:
+                {
+                    if (realRole is ZombieRole zombieReal)
+                    {
+                        writer.WriteUShort(zombieReal._syncMaxHealth);
+                        writer.WriteBool(zombieReal._showConfirmationBox);
+                    }
+                    else
+                    {
+                        writer.WriteUShort(400);
+                        writer.WriteBool(false);
+                    }
+
+                    WriteFpcSpawnData(realRole, writer);
+                    return;
+                }
+
+                case PlayerRoles.PlayableScps.Scp1507.Scp1507Role:
+                {
+                    byte reason = realRole is PlayerRoles.PlayableScps.Scp1507.Scp1507Role scp1507Real ? (byte)scp1507Real.ServerSpawnReason
+                        : (byte)RoleChangeReason.ItemUsage;
+
+                    writer.WriteByte(reason);
+                    WriteFpcSpawnData(realRole, writer);
+                    return;
+                }
+            }
+
+            if (fakeBase is not FpcStandardRoleBase)
+                return;
+
+            WriteFpcSpawnData(realRole, writer);
+        }
+
+        private static void WriteFpcSpawnData(PlayerRoleBase realRole, NetworkWriter writer)
+        {
+            if (realRole is not FpcStandardRoleBase fpcReal)
+                return;
+
+            fpcReal.FpcModule.MouseLook.GetSyncValues(0, out ushort syncH, out _);
+            writer.WriteRelativePosition(new(fpcReal._hubTransform.position));
+            writer.WriteUShort(syncH);
         }
     }
 }

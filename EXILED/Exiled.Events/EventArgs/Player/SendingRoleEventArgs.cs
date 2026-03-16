@@ -7,63 +7,54 @@
 
 namespace Exiled.Events.EventArgs.Player
 {
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
-    using Exiled.API.Features.Roles;
     using Exiled.Events.EventArgs.Interfaces;
-
     using PlayerRoles;
 
     /// <summary>
-    /// Contains all information before a <see cref="API.Features.Player"/>'s role is sent to a client.
+    /// Contains all information before a <see cref="Player"/>'s role is sent to a client.
     /// </summary>
-    public class SendingRoleEventArgs : IPlayerEvent
+    public class SendingRoleEventArgs : IPlayerEvent, IExiledEvent
     {
         private RoleTypeId roleTypeId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SendingRoleEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="SendingRoleEventArgs"/> class.
         /// </summary>
-        /// <param name="player">
-        /// <inheritdoc cref="Player" />
-        /// </param>
-        /// <param name="target">
-        /// <inheritdoc cref="Target" />
-        /// </param>
-        /// <param name="roleType">
-        /// <inheritdoc cref="RoleType" />
-        /// </param>
-        public SendingRoleEventArgs(Player player, uint target, RoleTypeId roleType)
+        /// <param name="player">The player whose role is being sent.</param>
+        /// <param name="target">The player receiving the role information.</param>
+        /// <param name="roleType">The role type being sent.</param>
+        public SendingRoleEventArgs(Player player, Player target, RoleTypeId roleType)
         {
             this.Player = player;
-            this.Target = Player.Get(target);
+            this.Target = target;
             this.roleTypeId = roleType;
         }
 
         /// <summary>
-        /// Gets the <see cref="API.Features.Player"/> on whose behalf the role change request is sent.
+        /// Gets the <see cref="Player"/> on whose behalf the role change request is sent.
         /// </summary>
         public Player Player { get; }
 
         /// <summary>
-        /// gets the <see cref="API.Features.Player"/> to whom the request is sent.
+        /// Gets the <see cref="Player"/> to whom the request is sent.
         /// </summary>
+        /// <remarks>This is never null when event is invoked from the transpiler.</remarks>
         public Player Target { get; }
 
         /// <summary>
         /// Gets or sets the <see cref="RoleTypeId"/> that is sent to the <see cref="Target"/>.
         /// </summary>
-        /// <remarks>Checks value by player <see cref="Role.CheckAppearanceCompatibility(RoleTypeId)"/>.</remarks>
+        /// <remarks>Checks value by player's <see cref="API.Features.Roles.Role.CheckAppearanceCompatibility(RoleTypeId)"/>.</remarks>
         public RoleTypeId RoleType
         {
             get => this.roleTypeId;
-
             set
             {
-                if (this.Player.Role.CheckAppearanceCompatibility(value))
-                {
-                    this.roleTypeId = value;
-                }
+                if (this.Player?.Role != null && !this.Player.Role.CheckAppearanceCompatibility(value))
+                    return;
+
+                this.roleTypeId = value;
             }
         }
     }

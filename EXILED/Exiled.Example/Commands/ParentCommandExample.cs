@@ -25,6 +25,7 @@ namespace Exiled.Example.Commands
         public ParentCommandExample() => this.LoadGeneratedCommands();
 
         // Use this to load commands for the parent command
+
         /// <inheritdoc />
         public override string Command { get; } = "yourcommand";   // COMMAND
 
@@ -37,6 +38,7 @@ namespace Exiled.Example.Commands
         /// <inheritdoc />
         public override void LoadGeneratedCommands() // Put here your commands (the other commands dont need the [CommandHandler(typeof())]
             =>
+
                 // to register commands put that in your parent command, change the Parent Test to your command class name
                 this.RegisterCommand(new ParentTest());
 

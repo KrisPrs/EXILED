@@ -71,6 +71,16 @@ namespace Exiled.CustomRoles.Events
 
                 Extensions.ToChangeRolePlayers.Remove(ev.Player);
             }
+
+            foreach (Player player in Player.List)
+            {
+                if (player == ev.Player)
+                    continue;
+
+                if (player.Role?.RoleAppearances.Count > 0 || player.Role?.TeamAppearances.Count > 0 ||
+                    player.Role?.IndividualAppearances.Count > 0)
+                    player.Role.UpdateAppearanceFor(ev.Player);
+            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.SendingRole" />
