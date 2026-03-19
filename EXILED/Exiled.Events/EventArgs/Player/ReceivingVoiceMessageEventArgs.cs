@@ -10,6 +10,7 @@ namespace Exiled.Events.EventArgs.Player
     using Exiled.API.Features;
     using Exiled.Events.EventArgs.Interfaces;
     using PlayerRoles.Voice;
+    using VoiceChat;
     using VoiceChat.Networking;
 
     /// <summary>
@@ -22,14 +23,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         /// <param name="receiver">The player receiving the voice message.</param>
         /// <param name="sender">The player sending the voice message.</param>
-        /// <param name="voiceModule">The senders voice module.</param>
+        /// <param name="voiceModule">The receiver's voice module.</param>
         /// <param name="voiceMessage">The voice message being sent.</param>
-        public ReceivingVoiceMessageEventArgs(Player receiver, Player sender, VoiceModuleBase voiceModule, VoiceMessage voiceMessage)
+        /// <param name="channel">The channel after ValidateSend.</param>
+        public ReceivingVoiceMessageEventArgs(Player receiver, Player sender, VoiceModuleBase voiceModule, VoiceMessage voiceMessage, VoiceChatChannel channel)
         {
-            this.Sender = sender;
-            this.Player = receiver;
-            this.VoiceMessage = voiceMessage;
-            this.VoiceModule = voiceModule;
+            Sender = sender;
+            Player = receiver;
+            VoiceMessage = voiceMessage;
+            VoiceModule = voiceModule;
+            Channel = channel;
         }
 
         /// <summary>
@@ -48,9 +51,20 @@ namespace Exiled.Events.EventArgs.Player
         public VoiceMessage VoiceMessage { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="Sender"/>'s <see cref="VoiceModuleBase" />.
+        /// Gets the receiver's <see cref="VoiceModuleBase" />.
         /// </summary>
         public VoiceModuleBase VoiceModule { get; }
+
+        /// <summary>
+        /// Gets the channel after ValidateSend (before ValidateReceive).
+        /// </summary>
+        public VoiceChatChannel Channel { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to skip ValidateReceive call.
+        /// If true, <see cref="VoiceMessage.Channel"/> will be used as-is.
+        /// </summary>
+        public bool SkipValidate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the player can receive the voice message.
