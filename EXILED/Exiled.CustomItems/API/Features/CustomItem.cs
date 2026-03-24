@@ -721,6 +721,19 @@ namespace Exiled.CustomItems.API.Features
         }
 
         /// <summary>
+        /// Creates a new current <see cref="CustomItem"/> <see cref="Item"/> instance with with owner.
+        /// </summary>
+        /// <param name="owner">Item's <see cref="Player"/> owner.</param>
+        /// <returns>A created <see cref="Item"/>.</returns>
+        public virtual Item CreateItem(Player owner)
+        {
+            Item item = Item.Create(this.Type, owner);
+            item.Scale = this.Scale;
+            this.TrackedSerials.Add(item.Serial);
+            return item;
+        }
+
+        /// <summary>
         /// Spawns the <see cref="CustomItem"/> in a specific location.
         /// </summary>
         /// <param name="x">The x coordinate.</param>

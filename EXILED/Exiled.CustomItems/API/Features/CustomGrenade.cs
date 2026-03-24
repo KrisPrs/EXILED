@@ -67,7 +67,20 @@ namespace Exiled.CustomItems.API.Features
         {
             Item item = base.CreateItem();
 
-            if (item is Throwable throwable && throwable.Projectile is TimeGrenadeProjectile timeProjectile)
+            if (item is Throwable { Projectile: TimeGrenadeProjectile timeProjectile })
+            {
+                timeProjectile.FuseTime = this.FuseTime;
+            }
+
+            return item;
+        }
+
+        /// <inheritdoc/>
+        public override Item CreateItem(Player owner)
+        {
+            Item item = base.CreateItem(owner);
+
+            if (item is Throwable { Projectile: TimeGrenadeProjectile timeProjectile })
             {
                 timeProjectile.FuseTime = this.FuseTime;
             }
@@ -86,13 +99,13 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="Pickup"/> spawned.</returns>
         public virtual Pickup Throw(Vector3 position, Player? player = null, float weight = 1f, float fuseTime = 3f, ItemType grenadeType = ItemType.GrenadeHE)
         {
-            if (player is null)
-                player = Server.Host;
+            player ??= Server.Host;
 
             player.Role.Is(out FpcRole fpcRole);
             Vector3 velocity = fpcRole.FirstPersonController.FpcModule.Motor.Velocity;
 
-            Throwable throwable = (Throwable)Item.Create(grenadeType, player);
+            // Само наличие grenadeType здесь ранее - является как минимум ошибкой разраба
+            Throwable throwable = (Throwable)CreateItem(player);
 
             ThrownProjectile thrownProjectile = Object.Instantiate(throwable.Base.Projectile, position, throwable.Owner.CameraTransform.rotation);
 
@@ -100,7 +113,7 @@ namespace Exiled.CustomItems.API.Features
             {
                 ItemId = throwable.Type,
                 Locked = !throwable.Base._repickupable,
-                Serial = ItemSerialGenerator.GenerateNext(),
+                Serial = throwable.Serial,
                 WeightKg = weight,
             };
 
