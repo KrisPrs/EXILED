@@ -37,6 +37,37 @@ namespace Exiled.API.Features
         internal static readonly Dictionary<RoomIdentifier, Room> RoomIdentifierToRoom = new(250, new ComponentsEqualityComparer());
 
         /// <summary>
+        /// Список всех имён у префабов в комнатах.
+        /// </summary>
+        private static HashSet<string> roomNames =
+        [
+            "Tank-Supported Shelf Open Connector",
+            "Simple Boxes Open Connector",
+            "Pipes Long Open Connector",
+            "Huge Orange Pipes Open Connector",
+            "Pipes Short Open Connector",
+            "Atlas_WoodCardboard_CrateB",
+            "Atlas_WoodCardboard_CrateA",
+            "Box",
+            "Trim_Catwalk_Shelf",
+            "Trim_Vents_GridFence_1m",
+            "Modular_Large_Pipe_Angle55degre",
+            "Atlas_Wood_Cardboard_Cratelarge",
+            "Atlas_Wood_Cardboard_Cratedoublelarge",
+            "Atlas_Wood_Cardboard_Palet",
+            "nitrogenTank_small",
+            "Palet",
+            "Atlas_WoodCardboard_BoxA",
+            "Atlas_WoodCardboard_CardboardBox5",
+            "Atlas_WoodCardboard_CardboardBox3",
+            "Atlas_WoodCardboard_CardboardBox4",
+            "Atlas_WoodCardboard_CardboardBox2",
+            "Atlas_WoodCardboard_CardboardBox1",
+            "Atlas_WoodCardboard_BoxB",
+            "Boxes Ladder Open Connector"
+        ];
+
+        /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Room"/> which contains all the <see cref="Room"/> instances.
         /// </summary>
         public static IReadOnlyCollection<Room> List => RoomIdentifierToRoom.Values;
@@ -55,6 +86,11 @@ namespace Exiled.API.Features
         /// Gets the <see cref="Room"/> <see cref="UnityEngine.Transform"/>.
         /// </summary>
         public Transform Transform => this.transform;
+
+        /// <summary>
+        /// Gets all Hubert's prefabs in room.
+        /// </summary>
+        public Dictionary<string, List<GameObject>> RoomPrefabs { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="Room"/> position.
@@ -456,6 +492,21 @@ namespace Exiled.API.Features
             this.Doors = this.DoorsValue.AsReadOnly();
             this.Speakers = this.SpeakersValue.AsReadOnly();
             this.Cameras = this.CamerasValue.AsReadOnly();
+
+            foreach (string s in roomNames)
+            {
+                List<GameObject> objects = new List<GameObject>();
+                gameObject.ForEachComponentInChildren(
+                    (GameObject obj) =>
+                {
+                    if (obj.name.ToLower().Contains(s.ToLower()))
+                    {
+                        objects.Add(obj);
+                    }
+                }, false);
+
+                RoomPrefabs[s] = objects;
+            }
         }
 
         private static RoomType FindType(GameObject gameObject) =>
