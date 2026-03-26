@@ -650,7 +650,7 @@ namespace Exiled.API.Features.Doors
                     },
                     "Cargo Elevator Door" => DoorType.ElevatorServerRoom,
                     "Nuke Elevator Door" => DoorType.ElevatorNuke,
-                    "Elevator Door" or "Elevator Door 02" or "Elevator Door 01" => (this.Base as Interactables.Interobjects.ElevatorDoor)?.Group switch
+                    not null when Base is Interactables.Interobjects.ElevatorDoor elevatorGroup => elevatorGroup?.Group switch
                     {
                         ElevatorGroup.Scp049 => DoorType.ElevatorScp049,
                         ElevatorGroup.GateB => DoorType.ElevatorGateB,
@@ -659,6 +659,7 @@ namespace Exiled.API.Features.Doors
                         ElevatorGroup.LczB01 or ElevatorGroup.LczB02 => DoorType.ElevatorLczB,
                         _ => DoorType.UnknownElevator,
                     },
+                    "Spawnable Unsecured Pryable GateDoor" => DoorType.SpawnableUnsecuredGate,
                     _ => DoorType.UnknownDoor,
                 };
             }

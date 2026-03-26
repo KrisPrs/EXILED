@@ -22,8 +22,8 @@ namespace Exiled.API.Features
     using Respawning;
     using Respawning.NamingRules;
 
-    using CustomFirearmHandler = DamageHandlers.FirearmDamageHandler;
-    using CustomHandlerBase = DamageHandlers.DamageHandlerBase;
+    using CustomFirearmHandler = Exiled.API.Features.DamageHandlers.FirearmDamageHandler;
+    using CustomHandlerBase = Exiled.API.Features.DamageHandlers.DamageHandlerBase;
 
     /// <summary>
     /// A set of tools to use in-game C.A.S.S.I.E.
@@ -115,7 +115,7 @@ namespace Exiled.API.Features
             float value = 0;
             string[] lines = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            CassiePlaybackModifiers modifiers = new();
+            CassiePlaybackModifiers modifiers = new ();
             StringBuilder builder = StringBuilderPool.Pool.Get();
 
             for (int i = 0; i < lines.Length; i++)
@@ -129,7 +129,9 @@ namespace Exiled.API.Features
                     }
 
                     if (halt)
+                    {
                         break;
+                    }
                 }
             }
 
@@ -158,7 +160,7 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="num">Number to convert.</param>
         /// <returns>A CASSIE-readable <see cref="string"/> representing the number.</returns>
-        public static string ConvertNumber(int num) => LabApi.Features.Wrappers.Cassie.ConvertNumber(num);
+        public static string ConvertNumber(int num) => LabApi.Features.Wrappers.Announcer.ConvertNumber(num);
 
         /// <summary>
         /// Announce a SCP Termination.

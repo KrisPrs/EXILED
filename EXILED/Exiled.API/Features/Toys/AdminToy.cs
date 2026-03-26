@@ -81,11 +81,11 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector3 Position
         {
-            get => this.AdminToyBase.transform.position;
+            get => Transform.position;
             set
             {
-                this.AdminToyBase.transform.position = value;
-                this.AdminToyBase.NetworkPosition = value;
+                Transform.position = value;
+                AdminToyBase.NetworkPosition = Transform.localPosition;
             }
         }
 
@@ -94,11 +94,11 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Quaternion Rotation
         {
-            get => this.AdminToyBase.transform.rotation;
+            get => Transform.rotation;
             set
             {
-                this.AdminToyBase.transform.rotation = value;
-                this.AdminToyBase.NetworkRotation = value;
+                Transform.rotation = value;
+                AdminToyBase.NetworkRotation = Transform.localRotation;
             }
         }
 
@@ -107,11 +107,11 @@ namespace Exiled.API.Features.Toys
         /// </summary>
         public Vector3 Scale
         {
-            get => this.AdminToyBase.transform.localScale;
+            get => Transform.localScale;
             set
             {
-                this.AdminToyBase.transform.localScale = value;
-                this.AdminToyBase.NetworkScale = value;
+                Transform.localScale = value;
+                AdminToyBase.NetworkScale = value;
             }
         }
 
