@@ -42,9 +42,9 @@ namespace Exiled.API.Features.Items
         public new Scp1509Item Base { get; }
 
         /// <summary>
-        /// Gets the <see cref="Scp1509RespawnEligibility"/> instance.
+        /// Gets the <see cref="Scp1509RespawnCriteriaManager"/> instance.
         /// </summary>
-        public Scp1509RespawnEligibility RespawnEligibility => this.Base._respawnEligibility;
+        public Scp1509RespawnCriteriaManager RespawnCriteriaManager => Base.RespawnCriteriaManager;
 
         /// <summary>
         /// Gets or sets the shield regeneration rate.
@@ -87,8 +87,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public double NextResurrectTime
         {
-            get => this.Base._nextResurrectTime;
-            set => this.Base._nextResurrectTime = value;
+            get => Base.NextResurrectTime;
+            set => Base.NextResurrectTime = value;
         }
 
         /// <summary>
@@ -105,8 +105,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedAhpBonus
         {
-            get => this.Base._revivedPlayerAOEBonusAHP;
-            set => this.Base._revivedPlayerAOEBonusAHP = value;
+            get => Base.RevivedPlayerAOEBonusAHP;
+            set => Base.RevivedPlayerAOEBonusAHP = value;
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedAhpBonusDistance
         {
-            get => this.Base._revivedPlayerAOEBonusAHPDistance;
-            set => this.Base._revivedPlayerAOEBonusAHPDistance = value;
+            get => Base.RevivedPlayerAOEBonusAHPDistance;
+            set => Base.RevivedPlayerAOEBonusAHPDistance = value;
         }
 
         /// <summary>
@@ -123,8 +123,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MaxHs
         {
-            get => this.Base._equippedHS;
-            set => this.Base._equippedHS = value;
+            get => Base.EquippedHS;
+            set => Base.EquippedHS = value;
         }
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RevivedBlurTime
         {
-            get => this.Base._revivedPlayerBlurTime;
-            set => this.Base._revivedPlayerBlurTime = value;
+            get => Base.RevivedPlayerBlurTime;
+            set => Base.RevivedPlayerBlurTime = value;
         }
 
         /// <summary>
@@ -141,8 +141,12 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public IEnumerable<Player> RevivedPlayers
         {
-            get => this.Base._revivedPlayers.Select(Player.Get);
-            set => this.Base._revivedPlayers = value.Select(x => x.ReferenceHub).ToList();
+            get => Base.RevivedPlayers.Select(Player.Get);
+            set
+            {
+                Base.RevivedPlayers.Clear();
+                Base.RevivedPlayers.AddRange(value.Select(x => x.ReferenceHub));
+            }
         }
 
         /// <summary>
@@ -150,13 +154,13 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="roleTypeId">Role to respawn.</param>
         /// <returns>Found player or <c>null</c>.</returns>
-        public Player GetEligibleSpectator(RoleTypeId roleTypeId) => Player.Get(this.RespawnEligibility.GetEligibleSpectator(roleTypeId));
+        public Player GetEligibleSpectator(RoleTypeId roleTypeId) => Player.Get(Scp1509RespawnEligibility.GetEligibleSpectator(roleTypeId));
 
         /// <summary>
         /// Checks if there is any eligible spectator for spawn.
         /// </summary>
         /// <returns><c>true</c> if any spectator is found. Otherwise, <c>false</c>.</returns>
-        public bool IsAnyEligibleSpectators() => this.RespawnEligibility.IsAnyEligibleSpectators();
+        public bool IsAnyEligibleSpectators() => Scp1509RespawnEligibility.IsAnyEligibleSpectators();
 
         /// <summary>
         /// Clones current <see cref="Scp1509"/> object.
