@@ -24,7 +24,7 @@ namespace Exiled.Events.Patches.Fixes
     /// <remarks>
     /// Most of the logic comes from https://github.com/KadavasKingdom/SLFixes so shoutout to SlejmUr.
     /// </remarks>
-    [HarmonyPatch(typeof(RoomUtils), nameof(RoomUtils.TryRaycastRoom))]
+    // [HarmonyPatch(typeof(RoomUtils), nameof(RoomUtils.TryRaycastRoom))]
     public class TryRaycastRoomFix
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
