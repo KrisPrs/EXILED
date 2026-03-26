@@ -7,7 +7,6 @@
 
 namespace Exiled.Events.Patches.Events.Player
 {
-    using System;
     using System.Collections.Generic;
     using System.Reflection.Emit;
 
@@ -16,8 +15,6 @@ namespace Exiled.Events.Patches.Events.Player
     using Exiled.Events.EventArgs.Player;
 
     using HarmonyLib;
-
-    using Hazards;
     using LiteNetLib;
 
     using static HarmonyLib.AccessTools;
@@ -35,7 +32,7 @@ namespace Exiled.Events.Patches.Events.Player
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
 
             Label ret = generator.DefineLabel();
-            newInstructions[newInstructions.Count - 1].labels.Add(ret);
+            newInstructions[^1].labels.Add(ret);
             LocalBuilder ev = generator.DeclareLocal(typeof(PreAuthenticatingEventArgs));
             int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldstr && instruction.operand == (object)"{0};{1};{2};{3}");
 
