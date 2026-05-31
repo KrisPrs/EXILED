@@ -812,12 +812,18 @@ namespace Exiled.API.Features.Items
 
             if (pickup is FirearmPickup firearmPickup)
             {
-                PrimaryMagazine.MaxAmmo = firearmPickup.MaxAmmo;
-                AmmoDrain = firearmPickup.AmmoDrain;
-                Damage = firearmPickup.Damage;
-                Inaccuracy = firearmPickup.Inaccuracy;
-                Penetration = firearmPickup.Penetration;
-                DamageFalloffDistance = firearmPickup.DamageFalloffDistance;
+                MEC.Timing.CallDelayed(0f, () =>
+                {
+                    if (Base == null || Base.AllSubcomponents == null)
+                        return;
+
+                    PrimaryMagazine.MaxAmmo = firearmPickup.MaxAmmo;
+                    AmmoDrain = firearmPickup.AmmoDrain;
+                    Damage = firearmPickup.Damage;
+                    Inaccuracy = firearmPickup.Inaccuracy;
+                    Penetration = firearmPickup.Penetration;
+                    DamageFalloffDistance = firearmPickup.DamageFalloffDistance;
+                });
             }
         }
     }
