@@ -8,7 +8,7 @@
 namespace Exiled.Events.EventArgs.Player
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Linq;
 
     using API.Enums;
     using API.Features;
@@ -16,6 +16,8 @@ namespace Exiled.Events.EventArgs.Player
     using Exiled.API.Features.Pools;
     using Interfaces;
     using InventorySystem;
+    using LabApi.Events.Arguments.PlayerEvents;
+    using LabApi.Events.Handlers;
     using PlayerRoles;
 
     /// <summary>
@@ -24,7 +26,6 @@ namespace Exiled.Events.EventArgs.Player
     public class ChangingRoleEventArgs : IPlayerEvent, IDeniableEvent
     {
         private RoleTypeId newRole;
-        private SpawnReason reason;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangingRoleEventArgs" /> class.
@@ -43,10 +44,10 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public ChangingRoleEventArgs(Player player, RoleTypeId newRole, RoleChangeReason reason, RoleSpawnFlags spawnFlags)
         {
-            this.Player = player;
-            this.NewRole = newRole;
-            this.reason = (SpawnReason)reason;
-            this.SpawnFlags = spawnFlags;
+            Player = player;
+            NewRole = newRole;
+            Reason = (SpawnReason)reason;
+            SpawnFlags = spawnFlags;
         }
 
         /// <summary>
@@ -54,8 +55,8 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         ~ChangingRoleEventArgs()
         {
-            ListPool<ItemType>.Pool.Return(this.Items);
-            DictionaryPool<ItemType, ushort>.Pool.Return(this.Ammo);
+            ListPool<ItemType>.Pool.Return(Items);
+            DictionaryPool<ItemType, ushort>.Pool.Return(Ammo);
         }
 
         /// <summary>
@@ -68,34 +69,30 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public RoleTypeId NewRole
         {
-            get => this.newRole;
+            get => newRole;
             set
             {
-                if (this.reason == SpawnReason.Destroyed)
+                InventoryRoleInfo inventory = value.GetInventory();
+
+                Items.Clear();
+                Ammo.Clear();
+
+                PlayerReceivingLoadoutEventArgs playerReceivingLoadoutEventArgs = new(Player.ReferenceHub, inventory.Items.ToList(), inventory.Ammo, !ShouldPreserveInventory);
+                PlayerEvents.OnReceivingLoadout(playerReceivingLoadoutEventArgs);
+                if (!playerReceivingLoadoutEventArgs.IsAllowed)
                 {
-                    Log.Error($"Tried to change NewRole for Destroyed!\n{new StackTrace()}");
                     return;
                 }
 
-                InventoryRoleInfo inventory = value.GetInventory();
+                foreach (ItemType itemType in playerReceivingLoadoutEventArgs.Items)
+                    Items.Add(itemType);
 
-                this.Items.Clear();
-                this.Ammo.Clear();
+                foreach (KeyValuePair<ItemType, ushort> ammoPair in playerReceivingLoadoutEventArgs.Ammo)
+                    Ammo.Add(ammoPair.Key, ammoPair.Value);
 
-                foreach (ItemType itemType in inventory.Items)
-                    this.Items.Add(itemType);
-
-                foreach (KeyValuePair<ItemType, ushort> ammoPair in inventory.Ammo)
-                    this.Ammo.Add(ammoPair.Key, ammoPair.Value);
-
-                this.newRole = value;
+                newRole = value;
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the current event is safe to do some actions with player.
-        /// </summary>
-        public bool IsSafe => this.NewRole != RoleTypeId.Destroyed && this.Reason != SpawnReason.Destroyed;
 
         /// <summary>
         /// Gets base items that the player will receive.
@@ -112,28 +109,14 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public bool ShouldPreserveInventory
         {
-            get => !this.SpawnFlags.HasFlag(RoleSpawnFlags.AssignInventory);
-            set => this.SpawnFlags = this.SpawnFlags.ModifyFlags(!value, RoleSpawnFlags.AssignInventory);
+            get => !SpawnFlags.HasFlag(RoleSpawnFlags.AssignInventory);
+            set => SpawnFlags = SpawnFlags.ModifyFlags(!value, RoleSpawnFlags.AssignInventory);
         }
 
         /// <summary>
         /// Gets or sets the reason for their class change.
         /// </summary>
-        public SpawnReason Reason
-        {
-            get => this.reason;
-
-            set
-            {
-                if (this.reason == SpawnReason.Destroyed)
-                {
-                    Log.Error("Tried to change Destroyed reason!");
-                    return;
-                }
-
-                this.reason = value;
-            }
-        }
+        public SpawnReason Reason { get; set; }
 
         /// <summary>
         /// Gets or sets the spawn flags for their class change.

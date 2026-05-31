@@ -8,189 +8,196 @@
 namespace Exiled.CustomItems.API.Features
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
 
-    using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.DamageHandlers;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Pickups;
-    using Exiled.API.Structs;
     using Exiled.Events.EventArgs.Item;
     using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
-    using InventorySystem.Items.Firearms.BasicMessages;
-    using MEC;
-    using PlayerRoles;
+    using InventorySystem.Items.Firearms.Modules;
     using UnityEngine;
 
+    using Firearm = Exiled.API.Features.Items.Firearm;
+    using Player = Exiled.API.Features.Player;
+
     /// <summary>
-    ///     The Custom Weapon base class.
+    /// The Custom Weapon base class.
     /// </summary>
     public abstract class CustomWeapon : CustomItem
     {
-        private readonly HashSet<Player> cooldownedPlayers = new();
+        /// <summary>
+        /// Gets or sets value indicating what <see cref="Attachment"/>s the weapon will have.
+        /// </summary>
+        public virtual AttachmentName[] Attachments { get; set; } = { };
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override ItemType Type
         {
             get => base.Type;
             set
             {
                 if (!value.IsWeapon(false) && value != ItemType.None)
-                    throw new ArgumentOutOfRangeException($"{nameof(this.Type)}", value, "Invalid weapon type.");
+                    throw new ArgumentOutOfRangeException($"{nameof(Type)}", value, "Invalid weapon type.");
 
                 base.Type = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets value indicating what <see cref="Attachment" />s the weapon will have.
+        /// Gets or sets the weapon damage.
         /// </summary>
-        public virtual AttachmentName[] Attachments { get; set; } = { };
+        public virtual float Damage { get; set; } = -1;
 
         /// <summary>
-        /// Gets or sets value indicating what <see cref="AttachmentName" />s the weapon wont have.
+        /// Gets or sets a value indicating how big of a clip the weapon will have.
         /// </summary>
-        public virtual AttachmentName[] BannedAttachments { get; set; } = { };
-
-        /// <summary>
-        ///     Gets or sets the weapon damage.
-        /// </summary>
-        public abstract float Damage { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating how big of a clip the weapon will have.
-        /// </summary>
+        /// <remarks>Warning for <see cref="ItemType.GunShotgun"/> and <see cref="ItemType.GunRevolver"/>.
+        /// They are not fully compatible with this features.</remarks>
         public virtual byte ClipSize { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating how many ammo will be spent per shot.
+        /// Gets or sets a value indicating whether to allow friendly fire with this weapon on FF-enabled servers.
         /// </summary>
-        public virtual byte AmmoUsage { get; set; } = 1;
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether firearm can be unloaded.
-        /// </summary>
-        public virtual bool CanUnload { get; set; } = true;
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether firearm's attachments can be modified.
-        /// </summary>
-        public bool AllowAttachmentsChange { get; set; } = true;
-
-        /// <summary>
-        ///     Gets or sets a value indicating shot cooldown.
-        /// </summary>
-        [Description("Кулдаун на выстрелы. Работает только при ClipSize > 1 и FireCooldown > 0. -1 для отключения.")]
-        public float FireCooldown { get; set; } = -1;
-
-        /// <summary>
-        ///     Gets or sets a value indicating message, displayed to players, trying to reload cooldowned weapon.
-        /// </summary>
-        [Description("Сообщение при попытке перезарядить оружие под кулдауном. {0} - кулдаун из конфига")]
-        public string WeaponNotReady { get; set; } = "Оружие ещё не готово к выстрелу! Оно может стрелять только раз в {0} секунд.";
-
-        /// <summary>
-        ///     Gets or sets a value indicating damage multipliers by ArmorType and HitboxType.
-        /// </summary>
-        [Description("Множители урона в зависимости от брони и точки попадания. Словарь ТипБрони: (ЗонаПопадания: МножительУрона)")]
-        public Dictionary<ItemType, Dictionary<HitboxType, float>> ArmorAndZoneDamageMultipliers { get; set; } = new()
-        {
-            [ItemType.None] = new Dictionary<HitboxType, float>
-            {
-                [HitboxType.Headshot] = 1,
-                [HitboxType.Limb] = 1,
-                [HitboxType.Body] = 1,
-            },
-            [ItemType.ArmorLight] = new Dictionary<HitboxType, float>
-            {
-                [HitboxType.Headshot] = 1,
-            },
-            [ItemType.ArmorCombat] = new Dictionary<HitboxType, float>
-            {
-                [HitboxType.Headshot] = 1,
-            },
-            [ItemType.ArmorHeavy] = new Dictionary<HitboxType, float>
-            {
-                [HitboxType.Headshot] = 1,
-            },
-        };
-
-        /// <summary>
-        ///     Gets or sets a value indicating  damage multipliers by target RoleTypeId.
-        /// </summary>
-        [Description("Множители урона для ролей. Словарь RoleType: МножительУрона")]
-        public Dictionary<RoleTypeId, float> RoleDamageMultipliers { get; set; } = new()
-        {
-            { RoleTypeId.Scp096, 1 },
-            { RoleTypeId.Scp173, 1 },
-        };
-
-        /// <summary>
-        /// Gets or sets a value indicating whether firearm's will be reset after shot.
-        /// </summary>
-        [Description("Будет ли оружие убрано-возвращено в руки после выстрела")]
-        public bool ForceResetWeaponOnShot { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether firearm's will be double shot.
-        /// </summary>
-        [Description("При использовании КД выстрелов, разрешать ли двойной")]
-        public bool AllowDoubleShot { get; set; } = false;
+        public virtual bool FriendlyFire { get; set; }
 
         /// <inheritdoc />
-        public override Item CreateItem()
+        public override Pickup? Spawn(Vector3 position, Player? previousOwner = null)
         {
-            Item item = base.CreateItem();
-
-            if (item is Firearm firearm)
+            if (!Type.IsWeapon(false))
             {
-                if (!this.Attachments.IsEmpty())
-                    firearm.AddAttachment(this.Attachments);
-
-                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = this.ClipSize;
-                firearm.AmmoDrain = this.AmmoUsage;
+                Log.Debug($"{nameof(Spawn)}: Item is not Firearm.");
+                return null;
             }
 
-            return item;
+            Firearm firearm = Item.Create<Firearm>(Type);
+
+            if (ClipSize > 0)
+                firearm.MaxMagazineAmmo = ClipSize;
+
+            if (!Attachments.IsEmpty())
+                firearm.AddAttachment(Attachments);
+
+            Pickup? pickup = firearm.CreatePickup(position);
+
+            if (pickup is null)
+            {
+                Log.Debug($"{nameof(Spawn)}: Pickup is null.");
+                return null;
+            }
+
+            if (ClipSize > 0)
+                firearm.MagazineAmmo = ClipSize;
+
+            pickup.Weight = Weight;
+            pickup.Scale = Scale;
+            if (previousOwner is not null)
+                pickup.PreviousOwner = previousOwner;
+
+            TrackedSerials.Add(pickup.Serial);
+            return pickup;
         }
 
         /// <inheritdoc />
+        public override Pickup? Spawn(Vector3 position, Item item, Player? previousOwner = null)
+        {
+            if (item is Firearm firearm)
+            {
+                if (ClipSize > 0)
+                    firearm.MaxMagazineAmmo = ClipSize;
+
+                if (!Attachments.IsEmpty())
+                    firearm.AddAttachment(Attachments);
+
+                if (ClipSize > 0)
+                    firearm.MagazineAmmo = ClipSize;
+
+                int ammo = firearm.MagazineAmmo;
+                Log.Debug($"{nameof(Name)}.{nameof(Spawn)}: Spawning weapon with {ammo} ammo.");
+                Pickup? pickup = firearm.CreatePickup(position);
+                pickup.Scale = Scale;
+
+                if (previousOwner is not null)
+                    pickup.PreviousOwner = previousOwner;
+
+                TrackedSerials.Add(pickup.Serial);
+                return pickup;
+            }
+
+            return base.Spawn(position, item, previousOwner);
+        }
+
+        /// <inheritdoc/>
+        public override void Give(Player player, bool displayMessage = true)
+        {
+            Item item = player.AddItem(Type);
+
+            if (item is Firearm firearm)
+            {
+                if (ClipSize > 0)
+                    firearm.MaxMagazineAmmo = ClipSize;
+
+                if (!Attachments.IsEmpty())
+                    firearm.AddAttachment(Attachments);
+
+                if (ClipSize > 0)
+                    firearm.MagazineAmmo = ClipSize;
+            }
+
+            Log.Debug($"{nameof(Give)}: Adding {item.Serial} to tracker.");
+            TrackedSerials.Add(item.Serial);
+
+            OnAcquired(player, item, displayMessage);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAcquired(Player player, Item item, bool displayMessage)
+        {
+            // MaxMagazineAmmo writes to MagazineModule._defaultCapacity, which is per-instance state and is not
+            // carried over when the item is re-created (e.g. dropped and picked back up). Re-assert it here so the
+            // custom ClipSize survives every base-game capacity clamp (reload, attachment changes) no matter how
+            // the weapon entered the inventory.
+            if (ClipSize > 0 && item is Firearm firearm)
+                firearm.MaxMagazineAmmo = ClipSize;
+
+            base.OnAcquired(player, item, displayMessage);
+        }
+
+        /// <inheritdoc/>
         protected override void SubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ReloadingWeapon += this.OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting += this.OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot += this.OnInternalShot;
-            Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
-            Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
-            Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.ReloadingWeapon += OnInternalReloading;
+            Exiled.Events.Handlers.Player.ReloadedWeapon += OnInternalReloaded;
+            Exiled.Events.Handlers.Player.Shooting += OnInternalShooting;
+            Exiled.Events.Handlers.Player.Shot += OnInternalShot;
+            Exiled.Events.Handlers.Player.Hurting += OnInternalHurting;
+            Exiled.Events.Handlers.Item.ChangingAttachments += OnInternalChangingAttachment;
 
             base.SubscribeEvents();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void UnsubscribeEvents()
         {
-            Exiled.Events.Handlers.Player.ReloadingWeapon -= this.OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting -= this.OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot -= this.OnInternalShot;
-            Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
-            Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
-            Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.ReloadingWeapon -= OnInternalReloading;
+            Exiled.Events.Handlers.Player.ReloadedWeapon -= OnInternalReloaded;
+            Exiled.Events.Handlers.Player.Shooting -= OnInternalShooting;
+            Exiled.Events.Handlers.Player.Shot -= OnInternalShot;
+            Exiled.Events.Handlers.Player.Hurting -= OnInternalHurting;
+            Exiled.Events.Handlers.Item.ChangingAttachments -= OnInternalChangingAttachment;
 
             base.UnsubscribeEvents();
         }
 
         /// <summary>
-        ///     Handles reloading for custom weapons.
+        /// Handles reloading for custom weapons.
         /// </summary>
-        /// <param name="ev"><see cref="ReloadingWeaponEventArgs" />.</param>
+        /// <param name="ev"><see cref="ReloadingWeaponEventArgs"/>.</param>
         protected virtual void OnReloading(ReloadingWeaponEventArgs ev)
         {
         }
@@ -206,150 +213,156 @@ namespace Exiled.CustomItems.API.Features
         /// <summary>
         /// Handles shooting for custom weapons.
         /// </summary>
-        /// <param name="ev"><see cref="ShootingEventArgs" />.</param>
+        /// <param name="ev"><see cref="ShootingEventArgs"/>.</param>
         protected virtual void OnShooting(ShootingEventArgs ev)
         {
         }
 
         /// <summary>
-        ///     Handles shot for custom weapons.
+        /// Handles shot for custom weapons.
         /// </summary>
-        /// <param name="ev"><see cref="ShotEventArgs" />.</param>
+        /// <param name="ev"><see cref="ShotEventArgs"/>.</param>
         protected virtual void OnShot(ShotEventArgs ev)
         {
         }
 
         /// <summary>
-        ///     Handles hurting for custom weapons.
+        /// Handles hurting for custom weapons.
         /// </summary>
-        /// <param name="ev"><see cref="HurtingEventArgs" />.</param>
+        /// <param name="ev"><see cref="HurtingEventArgs"/>.</param>
         protected virtual void OnHurting(HurtingEventArgs ev)
         {
+            if (ev.IsAllowed && Damage >= 0)
+                ev.Amount = Damage;
         }
 
         /// <summary>
-        ///     Handles unloading for custom weapons.
+        /// Handles attachment changing for custom weapons.
         /// </summary>
-        /// <param name="ev"><see cref="HurtingEventArgs" />.</param>
-        protected virtual void OnUnloading(UnloadingWeaponEventArgs ev)
+        /// <param name="ev"><see cref="ChangingAttachmentsEventArgs"/>.</param>
+        protected virtual void OnChangingAttachment(ChangingAttachmentsEventArgs ev)
         {
-        }
-
-        private void OnInternalChangingAttachments(ChangingAttachmentsEventArgs ev)
-        {
-            if (!this.Check(ev.Player.CurrentItem))
-                return;
-
-            IEnumerable<AttachmentIdentifier> newAttachments = ev.NewAttachmentIdentifiers.Except(ev.CurrentAttachmentIdentifiers);
-            if (!this.AllowAttachmentsChange || newAttachments.Any(x => this.BannedAttachments.Contains(x.Name)))
-                ev.IsAllowed = false;
         }
 
         private void OnInternalReloading(ReloadingWeaponEventArgs ev)
         {
-            if (!this.Check(ev.Player.CurrentItem))
+            if (!Check(ev.Item))
                 return;
 
-            if (this.cooldownedPlayers.Contains(ev.Player))
+            if (ClipSize > 0 && ev.Firearm.TotalAmmo >= ClipSize)
             {
                 ev.IsAllowed = false;
-                ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
                 return;
             }
 
-            Log.Debug($"{nameof(this.Name)}.{nameof(this.OnInternalReloading)}: Reloading weapon. Calling external reload event..");
-            this.OnReloading(ev);
+            OnReloading(ev);
+        }
 
-            Log.Debug($"{nameof(this.Name)}.{nameof(this.OnInternalReloading)}: External event ended. {ev.IsAllowed}");
+        private void OnInternalReloaded(ReloadedWeaponEventArgs ev)
+        {
+            if (!Check(ev.Item))
+                return;
+
+            if (ClipSize > 0)
+            {
+                int ammoChambered = ((AutomaticActionModule?)ev.Firearm.Base.Modules.FirstOrDefault(x => x is AutomaticActionModule))?.SyncAmmoChambered ?? 0;
+                int ammoToGive = ClipSize - ammoChambered;
+
+                AmmoType ammoType = ev.Firearm.AmmoType;
+                int firearmAmmo = ev.Firearm.MagazineAmmo;
+                int ammoDrop = -(ClipSize - firearmAmmo - ammoChambered);
+
+                int ammoInInventory = ev.Player.GetAmmo(ammoType) + firearmAmmo;
+                if (ammoToGive < ammoInInventory)
+                {
+                    ev.Firearm.MagazineAmmo = ammoToGive;
+                    int newAmmo = ev.Player.GetAmmo(ammoType) + ammoDrop;
+                    ev.Player.SetAmmo(ammoType, (ushort)newAmmo);
+                }
+                else
+                {
+                    ev.Firearm.MagazineAmmo = ammoInInventory;
+                    ev.Player.SetAmmo(ammoType, 0);
+                }
+            }
+
+            OnReloaded(ev);
         }
 
         private void OnInternalShooting(ShootingEventArgs ev)
         {
-            if (!this.Check(ev.Player))
+            if (!Check(ev.Item))
                 return;
 
-            if (this.cooldownedPlayers.Contains(ev.Player))
-            {
-                ev.IsAllowed = false;
-                ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
-                Log.Debug($"Disallowed shot from cooldowned on {this.Name} player {ev.Player.Nickname}");
-                return;
-            }
-
-            if (!this.AllowDoubleShot)
-                this.cooldownedPlayers.Add(ev.Player);
-
-            Timing.CallDelayed(this.FireCooldown, () =>
-            {
-                this.cooldownedPlayers.Remove(ev.Player);
-                Log.Debug($"Cooldown of {this.Name} removed from player {ev.Player.Nickname}");
-            });
-
-            this.OnShooting(ev);
+            OnShooting(ev);
         }
 
         private void OnInternalShot(ShotEventArgs ev)
         {
-            Item curItem = ev.Player.CurrentItem;
-            if (!this.Check(curItem))
+            if (!Check(ev.Item))
                 return;
 
-            this.OnShot(ev);
-            if (this.ForceResetWeaponOnShot)
-                Timing.RunCoroutine(this.ResetWeapon(ev.Player));
-        }
-
-        private IEnumerator<float> ResetWeapon(Player player)
-        {
-            Item curItem = player.CurrentItem;
-            yield return Timing.WaitForSeconds(0.01f);
-            player.CurrentItem = null;
-            yield return Timing.WaitForSeconds(0.08f);
-            player.CurrentItem = curItem;
+            OnShot(ev);
         }
 
         private void OnInternalHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker is null || ev.Player is null || ev.Attacker == ev.Player || !this.Check(ev.Attacker.CurrentItem) || ev.DamageHandler == null)
+            if (ev.Attacker is null)
+            {
                 return;
+            }
+
+            if (ev.Player is null)
+            {
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: target null");
+                return;
+            }
+
+            if (!Check(ev.Attacker.CurrentItem))
+            {
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: !Check()");
+                return;
+            }
+
+            if (ev.Attacker == ev.Player)
+            {
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: attacker == target");
+                return;
+            }
+
+            if (ev.DamageHandler is null)
+            {
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: Handler null");
+                return;
+            }
 
             if (!ev.DamageHandler.CustomBase.BaseIs(out FirearmDamageHandler firearmDamageHandler))
             {
-                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Handler not firearm");
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: Handler not firearm");
                 return;
             }
 
-            if (!this.Check(firearmDamageHandler.Item))
+            if (!Check(firearmDamageHandler.Item))
             {
-                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: type != type");
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: type != type");
                 return;
             }
 
-            ev.Amount = this.Damage;
-            if (ev.Player.IsHuman && this.ArmorAndZoneDamageMultipliers.TryGetValue(ev.Player.CurrentArmor?.Type ?? ItemType.None, out Dictionary<HitboxType, float> dic) &&
-                dic.TryGetValue(firearmDamageHandler.Hitbox, out float multiplier))
+            if (!FriendlyFire && (ev.Attacker.Role.Team == ev.Player.Role.Team))
             {
-                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Found damage muptiplier for armor/hitbox {multiplier}");
-                ev.Amount *= multiplier;
+                Log.Debug($"{Name}: {nameof(OnInternalHurting)}: FF is disabled for this weapon!");
+                return;
             }
 
-            if (this.RoleDamageMultipliers.TryGetValue(ev.Player.Role.Type, out multiplier))
-            {
-                Log.Debug($"{this.Name}: {nameof(this.OnInternalHurting)}: Found damage muptiplier for target role: {multiplier}");
-                ev.Amount *= multiplier;
-            }
-
-            this.OnHurting(ev);
+            OnHurting(ev);
         }
 
-        private void OnInternalUnloading(UnloadingWeaponEventArgs ev)
+        private void OnInternalChangingAttachment(ChangingAttachmentsEventArgs ev)
         {
-            if (!this.Check(ev.Firearm))
+            if (!Check(ev.Player.CurrentItem))
                 return;
 
-            ev.IsAllowed = this.CanUnload;
-
-            this.OnUnloading(ev);
+            OnChangingAttachment(ev);
         }
     }
 }

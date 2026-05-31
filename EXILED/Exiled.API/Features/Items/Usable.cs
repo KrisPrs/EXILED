@@ -28,8 +28,10 @@ namespace Exiled.API.Features.Items
         /// </summary>
         /// <param name="itemBase">The base <see cref="UsableItem"/> class.</param>
         public Usable(UsableItem itemBase)
-            : base(itemBase) =>
-            this.Base = itemBase;
+            : base(itemBase)
+        {
+            Base = itemBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Usable"/> class.
@@ -48,20 +50,20 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Gets a value indicating whether this item is equippable.
         /// </summary>
-        public bool Equippable => this.Base.AllowEquip;
+        public bool Equippable => Base.AllowEquip;
 
         /// <summary>
         /// Gets a value indicating whether this item is holsterable.
         /// </summary>
-        public bool Holsterable => this.Base.AllowHolster;
+        public bool Holsterable => Base.AllowHolster;
 
         /// <summary>
         /// Gets or sets the weight of the item.
         /// </summary>
         public new float Weight
         {
-            get => this.Base._weight;
-            set => this.Base._weight = value;
+            get => Base._weight;
+            set => Base._weight = value;
         }
 
         /// <summary>
@@ -69,8 +71,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public bool IsUsing
         {
-            get => this.Base.IsUsing;
-            set => UsableItemsController.ServerEmulateMessage(this.Serial, value ? StatusMessage.StatusType.Start : StatusMessage.StatusType.Cancel);
+            get => Base.IsUsing;
+            set => UsableItemsController.ServerEmulateMessage(Serial, value ? StatusMessage.StatusType.Start : StatusMessage.StatusType.Cancel);
         }
 
         /// <summary>
@@ -78,8 +80,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float UseTime
         {
-            get => this.Base.UseTime;
-            set => this.Base.UseTime = value;
+            get => Base.UseTime;
+            set => Base.UseTime = value;
         }
 
         /// <summary>
@@ -87,8 +89,8 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float MaxCancellableTime
         {
-            get => this.Base.MaxCancellableTime;
-            set => this.Base.MaxCancellableTime = value;
+            get => Base.MaxCancellableTime;
+            set => Base.MaxCancellableTime = value;
         }
 
         /// <summary>
@@ -96,14 +98,14 @@ namespace Exiled.API.Features.Items
         /// </summary>
         public float RemainingCooldown
         {
-            get => UsableItemsController.GlobalItemCooldowns.TryGetValue(this.Serial, out float value) ? value : -1;
-            set => UsableItemsController.GlobalItemCooldowns[this.Serial] = Time.timeSinceLevelLoad + value;
+            get => UsableItemsController.GlobalItemCooldowns.TryGetValue(Serial, out float value) ? value : -1;
+            set => UsableItemsController.GlobalItemCooldowns[Serial] = Time.timeSinceLevelLoad + value;
         }
 
         /// <summary>
         /// Gets all the cooldown between uses of this item.
         /// </summary>
-        public float PlayerGetCooldown => UsableItemsController.GetCooldown(this.Serial, this.Base, UsableItemsController.GetHandler(this.Base.Owner));
+        public float PlayerGetCooldown => UsableItemsController.GetCooldown(Serial, Base, UsableItemsController.GetHandler(Base.Owner));
 
         /// <summary>
         /// Creates the <see cref="Pickup"/> that based on this <see cref="Item"/>.
@@ -112,11 +114,11 @@ namespace Exiled.API.Features.Items
         /// <param name="rotation">The rotation of the item.</param>
         /// <param name="spawn">Whether the <see cref="Pickup"/> should be initially spawned.</param>
         /// <returns>The created <see cref="Pickup"/>.</returns>
-        public override Pickup CreatePickup(Vector3 position, Quaternion rotation = default, bool spawn = true)
+        public override Pickup CreatePickup(Vector3 position, Quaternion? rotation = null, bool spawn = true)
         {
-            PickupSyncInfo info = new(this.Type, this.Weight, this.Serial);
+            PickupSyncInfo info = new(Type, Weight, Serial);
 
-            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation);
+            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(Base, info, position, rotation ?? Quaternion.identity);
 
             Pickup pickup = Pickup.Get(ipb);
 
@@ -129,22 +131,23 @@ namespace Exiled.API.Features.Items
         /// <summary>
         /// Uses the item.
         /// </summary>
+        public virtual void Use() => Use(Owner);
+
+        /// <summary>
+        /// Uses the item.
+        /// </summary>
         /// <param name="owner">Target <see cref="Player"/> to use an <see cref="Usable"/>.</param>
-        /// <exception cref="System.InvalidOperationException">The <see cref="Item.Owner"/> of the item cannot be <see langword="null"/>.</exception>
         public virtual void Use(Player owner = null)
         {
-            Player oldOwner = this.Owner;
-            owner ??= this.Owner;
+            Player oldOwner = Owner;
+            owner ??= Owner;
 
-            if (owner is null)
-                throw new System.InvalidOperationException("The Owner of the item cannot be null.");
+            Base.Owner = owner.ReferenceHub;
+            Base.ServerOnUsingCompleted();
 
-            this.Base.Owner = owner.ReferenceHub;
-            this.Base.ServerOnUsingCompleted();
+            typeof(UsableItemsController).InvokeStaticEvent(nameof(UsableItemsController.ServerOnUsingCompleted), new object[] { owner.ReferenceHub, Base });
 
-            typeof(UsableItemsController).InvokeStaticEvent(nameof(UsableItemsController.ServerOnUsingCompleted), new object[] { owner.ReferenceHub, this.Base });
-
-            this.Base.Owner = oldOwner.ReferenceHub;
+            Base.Owner = oldOwner.ReferenceHub;
         }
 
         /// <inheritdoc/>
@@ -153,8 +156,8 @@ namespace Exiled.API.Features.Items
             base.ReadPickupInfoBefore(pickup);
             if (pickup is UsablePickup usablePickup)
             {
-                this.UseTime = usablePickup.UseTime;
-                this.MaxCancellableTime = usablePickup.MaxCancellableTime;
+                UseTime = usablePickup.UseTime;
+                MaxCancellableTime = usablePickup.MaxCancellableTime;
             }
         }
     }
