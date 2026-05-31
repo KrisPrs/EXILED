@@ -123,7 +123,11 @@ namespace Exiled.CustomRoles.Commands.User
                 return false;
             }
 
-            activeAbilities[abilityNumber - 1].UseAbility(player);
+            if (arguments.Count > 1)
+                activeAbilities[abilityNumber - 1].UseAbility(player, arguments.Skip(1).ToList());
+            else
+                activeAbilities[abilityNumber - 1].UseAbility(player);
+
             response = string.Format(this.AbilityUsedResponse, activeAbilities[abilityNumber - 1].Name);
             return false;
         }

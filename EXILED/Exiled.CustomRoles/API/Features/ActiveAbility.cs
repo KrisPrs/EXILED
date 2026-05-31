@@ -59,6 +59,23 @@ namespace Exiled.CustomRoles.API.Features
         }
 
         /// <summary>
+        ///     Uses the ability with additional string arguments.
+        /// </summary>
+        /// <param name="player">The <see cref="Player" /> using the ability.</param>
+        /// <param name="arguments">The string arguments for using the ability.</param>
+        public virtual void UseAbility(Player player, List<string> arguments)
+        {
+            this.ActivePlayers.Add(player);
+            this.LastUsed[player] = DateTime.Now;
+            this.ShowMessage(player);
+            this.AbilityUsed(player, arguments);
+
+            Timing.CallDelayed(this.Cooldown, () => this.RemindAbility(player));
+            if (this.Duration > 0)
+                Timing.CallDelayed(this.Duration, () => this.EndAbility(player));
+        }
+
+        /// <summary>
         ///     Reminds if ability is ready.
         /// </summary>
         /// <param name="player">The <see cref="Player" /> the ability is ready for.</param>
@@ -131,6 +148,15 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         /// <param name="player">The <see cref="Player" /> using the ability.</param>
         protected virtual void AbilityUsed(Player player)
+        {
+        }
+
+        /// <summary>
+        ///     Called when the ability is used with additional arguments.
+        /// </summary>
+        /// <param name="player">The <see cref="Player" /> using the ability.</param>
+        /// <param name="arguments">The arguments for using the ability.</param>
+        protected virtual void AbilityUsed(Player player, List<string> arguments)
         {
         }
 
