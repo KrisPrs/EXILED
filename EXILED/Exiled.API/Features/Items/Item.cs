@@ -422,11 +422,11 @@ namespace Exiled.API.Features.Items
         /// <param name="rotation">The rotation of the item.</param>
         /// <param name="spawn">Whether the <see cref="Pickup"/> should be initially spawned.</param>
         /// <returns>The created <see cref="Pickup"/>.</returns>
-        public virtual Pickup CreatePickup(Vector3 position, Quaternion? rotation = null, bool spawn = true)
+        public virtual Pickup CreatePickup(Vector3 position, Quaternion rotation = default, bool spawn = true)
         {
             PickupSyncInfo info = new(this.Type, this.Weight, this.Serial);
 
-            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation ?? Quaternion.identity);
+            ItemPickupBase ipb = InventoryExtensions.ServerCreatePickup(this.Base, info, position, rotation);
 
             this.Base.OnRemoved(ipb);
 
