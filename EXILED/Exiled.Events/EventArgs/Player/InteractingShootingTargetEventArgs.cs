@@ -24,6 +24,9 @@ namespace Exiled.Events.EventArgs.Player
     /// </summary>
     public class InteractingShootingTargetEventArgs : IPlayerEvent, IDeniableEvent
     {
+        private int autoResetTime;
+        private int maxHp;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InteractingShootingTargetEventArgs" /> class.
         /// </summary>
@@ -47,12 +50,12 @@ namespace Exiled.Events.EventArgs.Player
         /// </param>
         public InteractingShootingTargetEventArgs(Player player, ShootingTarget shootingTarget, ShootingTargetButton targetButton, int maxHp, int autoResetTime, bool isAllowed = true)
         {
-            this.Player = player;
-            this.ShootingTarget = ShootingTargetToy.Get(shootingTarget);
-            this.TargetButton = targetButton;
-            this.IsAllowed = isAllowed;
-            this.NewMaxHp = maxHp;
-            this.NewAutoResetTime = autoResetTime;
+            Player = player;
+            ShootingTarget = ShootingTargetToy.Get(shootingTarget);
+            TargetButton = targetButton;
+            IsAllowed = isAllowed;
+            this.maxHp = maxHp;
+            this.autoResetTime = autoResetTime;
         }
 
         /// <summary>
@@ -70,12 +73,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public int NewMaxHp
         {
-            get;
+            get => maxHp;
             set
             {
-                if (!this.ShootingTarget.IsSynced)
-                    throw new InvalidOperationException("Attempted to set MaxHp while target is in local mode. Set target's IsSynced to true before setting IsAllowed.");
-                field = Mathf.Clamp(value, 1, 256);
+                if (!ShootingTarget.IsSynced)
+                {
+                    Log.Warn("Attempted to set MaxHp while target is in local mode. Set target's IsSynced to true before setting NewMaxHp.");
+                    return;
+                }
+
+                maxHp = Mathf.Clamp(value, 1, 256);
             }
         }
 
@@ -84,12 +91,16 @@ namespace Exiled.Events.EventArgs.Player
         /// </summary>
         public int NewAutoResetTime
         {
-            get;
+            get => autoResetTime;
             set
             {
-                if (!this.ShootingTarget.IsSynced)
-                    throw new InvalidOperationException("Attempted to set AutoResetTime while target is in local mode. Set target's IsSynced to true before setting IsAllowed.");
-                field = Mathf.Clamp(value, 0, 10);
+                if (!ShootingTarget.IsSynced)
+                {
+                    Log.Warn("Attempted to set AutoResetTime while target is in local mode. Set target's IsSynced to true before setting NewAutoResetTime.");
+                    return;
+                }
+
+                autoResetTime = Mathf.Clamp(value, 0, 10);
             }
         }
 

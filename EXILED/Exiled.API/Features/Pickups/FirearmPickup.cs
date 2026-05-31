@@ -9,6 +9,8 @@ namespace Exiled.API.Features.Pickups
 {
     using System;
 
+    using Exiled.API.Features.Items.FirearmModules;
+    using Exiled.API.Features.Items.FirearmModules.Primary;
     using Exiled.API.Interfaces;
     using InventorySystem.Items;
     using InventorySystem.Items.Firearms;
@@ -27,8 +29,10 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="BaseFirearm"/> class.</param>
         internal FirearmPickup(BaseFirearm pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FirearmPickup"/> class.
@@ -37,8 +41,8 @@ namespace Exiled.API.Features.Pickups
         internal FirearmPickup(ItemType type)
             : base(type)
         {
-            this.Base = (BaseFirearm)((Pickup)this).Base;
-            this.Ammo = this.MaxAmmo;
+            Base = (BaseFirearm)((Pickup)this).Base;
+            Ammo = MaxAmmo;
         }
 
         /// <summary>
@@ -64,14 +68,14 @@ namespace Exiled.API.Features.Pickups
         {
             get
             {
-                if (!AttachmentPreview.TryGetOrAddInstance(this.Type, out Firearm baseFirearm))
+                if (!AttachmentPreview.TryGetOrAddInstance(Type, out Firearm baseFirearm))
                     return 0;
 
                 Items.Firearm firearm = Items.Item.Get<Items.Firearm>(baseFirearm);
 
                 ushort oldSerial = firearm.Serial;
 
-                firearm.Serial = this.Serial;
+                firearm.Serial = Serial;
 
                 int ammo = firearm.PrimaryMagazine.Ammo;
 
@@ -82,14 +86,14 @@ namespace Exiled.API.Features.Pickups
 
             set
             {
-                if (!AttachmentPreview.TryGetOrAddInstance(this.Type, out Firearm baseFirearm))
+                if (!AttachmentPreview.TryGetOrAddInstance(Type, out Firearm baseFirearm))
                     return;
 
                 Items.Firearm firearm = Items.Item.Get<Items.Firearm>(baseFirearm);
 
                 ushort oldSerial = firearm.Serial;
 
-                firearm.Serial = this.Serial;
+                firearm.Serial = Serial;
 
                 firearm.PrimaryMagazine.Ammo = value;
 
@@ -111,28 +115,52 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public uint Attachments
         {
-            get => this.Base.Worldmodel.AttachmentCode;
-            set => this.Base.Worldmodel.Setup(this.Base.CurId, this.Base.Worldmodel.WorldmodelType, value);
+            get => Base.Worldmodel.AttachmentCode;
+            set => Base.Worldmodel.Setup(Base.CurId, Base.Worldmodel.WorldmodelType, value);
         }
+
+        /// <summary>
+        /// Gets or sets the damage for this <see cref="FirearmPickup"/>.
+        /// </summary>
+        public float Damage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the inaccuracy for this <see cref="FirearmPickup"/>.
+        /// </summary>
+        public float Inaccuracy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the penetration for this <see cref="FirearmPickup"/>.
+        /// </summary>
+        public float Penetration { get; set; }
+
+        /// <summary>
+        /// Gets or sets how much fast the value drop over the distance.
+        /// </summary>
+        public float DamageFalloffDistance { get; set; }
 
         /// <summary>
         /// Initializes the item as if it was spawned naturally by map generation.
         /// </summary>
-        public void Distribute() => this.Base.OnDistributed();
+        public void Distribute() => Base.OnDistributed();
 
         /// <summary>
         /// Returns the FirearmPickup in a human-readable format.
         /// </summary>
         /// <returns>A string containing FirearmPickup related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}*";
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}*";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Items.Item item)
         {
             if (item is Items.Firearm firearm)
             {
-                this.MaxAmmo = firearm.PrimaryMagazine.ConstantMaxAmmo;
-                this.AmmoDrain = firearm.AmmoDrain;
+                MaxAmmo = firearm.PrimaryMagazine.ConstantMaxAmmo;
+                AmmoDrain = firearm.AmmoDrain;
+                Damage = firearm.Damage;
+                Inaccuracy = firearm.Inaccuracy;
+                Penetration = firearm.Penetration;
+                DamageFalloffDistance = firearm.DamageFalloffDistance;
             }
 
             base.ReadItemInfo(item);
@@ -142,13 +170,28 @@ namespace Exiled.API.Features.Pickups
         protected override void InitializeProperties(ItemBase itemBase)
         {
             base.InitializeProperties(itemBase);
-            if (!(itemBase as Firearm).TryGetModule(out IPrimaryAmmoContainerModule magazine))
+            if (itemBase is not Firearm firearm)
             {
-                Log.Error($"firearm prefab {itemBase.ItemTypeId} doesnt have an primary magazine module(unexpected)");
+                Log.Error("FirearmPickup::InitializeProperties called with a non-firearm item!");
                 return;
             }
 
-            this.MaxAmmo = magazine.AmmoMax;
+            foreach (ModuleBase module in firearm.Modules)
+            {
+                switch (module)
+                {
+                    case IPrimaryAmmoContainerModule primaryAmmoModule:
+                        MaxAmmo = primaryAmmoModule.AmmoMax;
+                        break;
+
+                    case HitscanHitregModuleBase hitregModule:
+                        Damage = hitregModule.BaseDamage;
+                        Inaccuracy = hitregModule.BaseBulletInaccuracy;
+                        Penetration = hitregModule.BasePenetration;
+                        DamageFalloffDistance = hitregModule.DamageFalloffDistance;
+                        break;
+                }
+            }
         }
     }
 }

@@ -27,16 +27,20 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         /// <param name="pickupBase">The base <see cref="Scp244DeployablePickup"/> class.</param>
         internal Scp244Pickup(Scp244DeployablePickup pickupBase)
-            : base(pickupBase) =>
-            this.Base = pickupBase;
+            : base(pickupBase)
+        {
+            Base = pickupBase;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scp244Pickup"/> class.
         /// </summary>
         /// <param name="type">The <see cref="ItemType"/> of the pickup.</param>
         internal Scp244Pickup(ItemType type)
-            : base(type) =>
-            this.Base = (Scp244DeployablePickup)((Pickup)this).Base;
+            : base(type)
+        {
+            Base = (Scp244DeployablePickup)((Pickup)this).Base;
+        }
 
         /// <summary>
         /// Gets the <see cref="Scp244DeployablePickup"/> that this class is encapsulating.
@@ -46,30 +50,30 @@ namespace Exiled.API.Features.Pickups
         /// <summary>
         /// Gets the amount of time this Scp244 has been on the ground.
         /// </summary>
-        public TimeSpan Lifetime => this.Base._lifeTime.Elapsed;
+        public TimeSpan Lifetime => Base._lifeTime.Elapsed;
 
         /// <summary>
         /// Gets the speed of <see cref="Scp244Pickup"/>'s too grow.
         /// </summary>
-        public float GrowSpeed => this.Base.GrowSpeed;
+        public float GrowSpeed => Base.GrowSpeed;
 
         /// <summary>
         /// Gets the time for the sphere to finish their expansion.
         /// </summary>
-        public float TimeToGrow => this.Base.TimeToGrow;
+        public float TimeToGrow => Base.TimeToGrow;
 
         /// <summary>
         /// Gets the current size effect of the Scp244's Hypothermia.
         /// </summary>
-        public float CurrentDiameter => this.Base.CurrentDiameter;
+        public float CurrentDiameter => Base.CurrentDiameter;
 
         /// <summary>
         /// Gets or sets the current size percent of the Scp244's Hypothermia.
         /// </summary>
         public float CurrentSizePercent
         {
-            get => this.Base.CurrentSizePercent;
-            set => this.Base.CurrentSizePercent = value;
+            get => Base.CurrentSizePercent;
+            set => Base.CurrentSizePercent = value;
         }
 
         /// <summary>
@@ -78,8 +82,8 @@ namespace Exiled.API.Features.Pickups
         /// <remarks>This does not prevent visual effects.</remarks>
         public float MaxDiameter
         {
-            get => this.Base.MaxDiameter;
-            set => this.Base.MaxDiameter = value;
+            get => Base.MaxDiameter;
+            set => Base.MaxDiameter = value;
         }
 
         /// <summary>
@@ -87,27 +91,27 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public float Health
         {
-            get => this.Base._health;
-            set => this.Base._health = value;
+            get => Base._health;
+            set => Base._health = value;
         }
 
         /// <summary>
         /// Gets a value indicating whether this Scp244 is breakable.
         /// </summary>
-        public bool IsBreakable => this.Base.State is Scp244State.Idle or Scp244State.Active;
+        public bool IsBreakable => Base.State is Scp244State.Idle or Scp244State.Active;
 
         /// <summary>
         /// Gets a value indicating whether this Scp244 is broken.
         /// </summary>
-        public bool IsBroken => this.Base.State is Scp244State.Destroyed;
+        public bool IsBroken => Base.State is Scp244State.Destroyed;
 
         /// <summary>
         /// Gets or sets the <see cref="Scp244State"/>.
         /// </summary>
         public Scp244State State
         {
-            get => this.Base.State;
-            set => this.Base.State = value;
+            get => Base.State;
+            set => Base.State = value;
         }
 
         /// <summary>
@@ -115,22 +119,22 @@ namespace Exiled.API.Features.Pickups
         /// </summary>
         public float ActivationDot
         {
-            get => this.Base._activationDot;
-            set => this.Base._activationDot = value;
+            get => Base._activationDot;
+            set => Base._activationDot = value;
         }
 
         /// <summary>
         /// Damages the Scp244Pickup.
         /// </summary>
         /// <param name="handler">The <see cref="DamageHandler"/> used to deal damage.</param>
-        /// <returns><see langword="true"/> if the the damage has been deal; otherwise, <see langword="false"/>.</returns>
-        public bool Damage(DamageHandler handler) => this.Base.Damage(handler.Damage, handler, Vector3.zero);
+        /// <returns><see langword="true"/> if the damage has been dealt; otherwise, <see langword="false"/>.</returns>
+        public bool Damage(DamageHandler handler) => Base.Damage(handler.Damage, handler, Vector3.zero);
 
         /// <summary>
         /// Returns the Scp244Pickup in a human readable format.
         /// </summary>
         /// <returns>A string containing Scp244Pickup related data.</returns>
-        public override string ToString() => $"{this.Type} ({this.Serial}) [{this.Weight}] *{this.Scale}* |{this.Health}| -{this.State}- ={this.CurrentSizePercent}=";
+        public override string ToString() => $"{Type} ({Serial}) [{Weight}] *{Scale}* |{Health}| -{State}- ={CurrentSizePercent}=";
 
         /// <inheritdoc/>
         internal override void ReadItemInfo(Item item)
@@ -138,9 +142,9 @@ namespace Exiled.API.Features.Pickups
             base.ReadItemInfo(item);
             if (item is Scp244 scp244)
             {
-                this.ActivationDot = scp244.ActivationDot;
-                this.MaxDiameter = scp244.MaxDiameter;
-                this.Health = scp244.Health;
+                ActivationDot = scp244.ActivationDot;
+                MaxDiameter = scp244.MaxDiameter;
+                Health = scp244.Health;
             }
         }
     }

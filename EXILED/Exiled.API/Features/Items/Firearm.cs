@@ -812,8 +812,12 @@ namespace Exiled.API.Features.Items
 
             if (pickup is FirearmPickup firearmPickup)
             {
-                this.PrimaryMagazine.ConstantMaxAmmo = firearmPickup.MaxAmmo;
-                this.AmmoDrain = firearmPickup.AmmoDrain;
+                PrimaryMagazine.MaxAmmo = firearmPickup.MaxAmmo;
+                AmmoDrain = firearmPickup.AmmoDrain;
+                Damage = firearmPickup.Damage;
+                Inaccuracy = firearmPickup.Inaccuracy;
+                Penetration = firearmPickup.Penetration;
+                DamageFalloffDistance = firearmPickup.DamageFalloffDistance;
             }
         }
     }

@@ -94,6 +94,8 @@ namespace Exiled.Events
             LabApi.Events.Handlers.Scp127Events.GainingExperience += Handlers.Scp127.OnGainingExperience;
             LabApi.Events.Handlers.Scp127Events.GainExperience += Handlers.Scp127.OnGainedExperience;
 
+            LabApi.Events.Handlers.ServerEvents.ProjectileExploding += Handlers.Map.OnSpawningGrenadeEffect;
+
             ServerConsole.ReloadServerName();
         }
 
@@ -136,6 +138,8 @@ namespace Exiled.Events
             LabApi.Events.Handlers.Scp127Events.Talked -= Handlers.Scp127.OnTalked;
             LabApi.Events.Handlers.Scp127Events.GainingExperience -= Handlers.Scp127.OnGainingExperience;
             LabApi.Events.Handlers.Scp127Events.GainExperience -= Handlers.Scp127.OnGainedExperience;
+
+            LabApi.Events.Handlers.ServerEvents.ProjectileExploding -= Handlers.Map.OnSpawningGrenadeEffect;
         }
 
         /// <summary>
