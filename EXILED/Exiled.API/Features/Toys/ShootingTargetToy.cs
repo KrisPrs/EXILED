@@ -49,17 +49,17 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Gets the prefab for Sport Shooting Target.
         /// </summary>
-        public static ShootingTarget SportShootingTargetPrefab { get; internal set; }
+        public static ShootingTarget SportShootingTargetPrefab => PrefabHelper.GetPrefab<ShootingTarget>(PrefabType.SportTarget);
 
         /// <summary>
         /// Gets the prefab for DBoy Shooting Target.
         /// </summary>
-        public static ShootingTarget DboyShootingTargetPrefab { get; internal set; }
+        public static ShootingTarget DboyShootingTargetPrefab => PrefabHelper.GetPrefab<ShootingTarget>(PrefabType.DBoyTarget);
 
         /// <summary>
         /// Gets the prefab for Binary Shooting Target.
         /// </summary>
-        public static ShootingTarget BinaryShootingTargetPrefab { get; internal set; }
+        public static ShootingTarget BinaryShootingTargetPrefab => PrefabHelper.GetPrefab<ShootingTarget>(PrefabType.BinaryTarget);
 
         /// <summary>
         /// Gets the base-game <see cref="ShootingTarget"/> for this target.

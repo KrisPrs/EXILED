@@ -25,17 +25,12 @@ namespace Exiled.Loader.Features.Configs
         /// Initializes a new instance of the <see cref="CommentGatheringTypeInspector"/> class.
         /// </summary>
         /// <param name="innerTypeDescriptor">The inner type description instance.</param>
-        public CommentGatheringTypeInspector(ITypeInspector innerTypeDescriptor)
-        {
-            this.innerTypeDescriptor = innerTypeDescriptor ?? throw new ArgumentNullException(nameof(innerTypeDescriptor));
-        }
+        public CommentGatheringTypeInspector(ITypeInspector innerTypeDescriptor) => this.innerTypeDescriptor = innerTypeDescriptor ?? throw new ArgumentNullException("innerTypeDescriptor");
 
         /// <inheritdoc/>
-        public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
-        {
-            return innerTypeDescriptor
+        public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container) =>
+            this.innerTypeDescriptor
                 .GetProperties(type, container)
                 .Select(descriptor => new CommentsPropertyDescriptor(descriptor));
-        }
     }
 }

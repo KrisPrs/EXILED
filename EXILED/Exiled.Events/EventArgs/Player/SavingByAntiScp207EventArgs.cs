@@ -26,11 +26,13 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="hitboxType">The hitbox that was hit.</param>
         public SavingByAntiScp207EventArgs(ReferenceHub player, float damageAmount, DamageHandlerBase handler, HitboxType hitboxType)
         {
-            Player = Player.Get(player);
+            this.Player = Player.Get(player);
 
-            Handler = handler;
-            HitboxType = hitboxType;
-            DamageAmount = damageAmount;
+            this.Handler = handler;
+            this.HitboxType = hitboxType;
+            this.DamageAmount = damageAmount;
+            this.DamageMultiplier = (this.Player.Health + this.Player.ArtificialHealth - AntiScp207.DeathSaveHealth) / damageAmount;
+            this.IsAllowed = true;
         }
 
         /// <summary>
@@ -44,9 +46,14 @@ namespace Exiled.Events.EventArgs.Player
         public float DamageAmount { get; }
 
         /// <summary>
-        /// Gets or sets the health amount the player will have after being saved from death.
+        /// Gets or sets the multiplier for the damage that is applied when the event is allowed.
         /// </summary>
-        public float DeathSaveHealth { get; set; } = AntiScp207.DeathSaveHealth;
+        public float DamageMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the multiplier for the damage that if event denied.
+        /// </summary>
+        public float DeniedDamageMultiplier { get; set; } = 1;
 
         /// <summary>
         /// Gets the damage handler that describes the incoming damage.
@@ -62,6 +69,6 @@ namespace Exiled.Events.EventArgs.Player
         /// Gets or sets a value indicating whether the event is allowed.
         /// If set to <c>false</c>, the event will be denied.
         /// </summary>
-        public bool IsAllowed { get; set; } = true;
+        public bool IsAllowed { get; set; }
     }
 }

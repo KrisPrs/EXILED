@@ -33,7 +33,7 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Gets the prefab.
         /// </summary>
-        public static LightSourceToy Prefab { get; internal set; }
+        public static LightSourceToy Prefab => PrefabHelper.GetPrefab<LightSourceToy>(PrefabType.LightSourceToy);
 
         /// <summary>
         /// Gets the base <see cref="LightSourceToy"/>.

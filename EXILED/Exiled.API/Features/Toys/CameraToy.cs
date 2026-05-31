@@ -31,27 +31,27 @@ namespace Exiled.API.Features.Toys
         /// <summary>
         /// Gets the prefab for EzArm Camera prefab.
         /// </summary>
-        public static Scp079CameraToy EzArmCameraPrefab { get; internal set; }
+        public static Scp079CameraToy EzArmCameraPrefab { get; } = PrefabHelper.GetPrefab<Scp079CameraToy>(PrefabType.EzArmCameraToy);
 
         /// <summary>
         /// Gets the prefab for Ez Camera prefab.
         /// </summary>
-        public static Scp079CameraToy EzCameraPrefab { get; internal set; }
+        public static Scp079CameraToy EzCameraPrefab { get; } = PrefabHelper.GetPrefab<Scp079CameraToy>(PrefabType.EzCameraToy);
 
         /// <summary>
         /// Gets the prefab for Hcz Camera prefab.
         /// </summary>
-        public static Scp079CameraToy HczCameraPrefab { get; internal set; }
+        public static Scp079CameraToy HczCameraPrefab { get; } = PrefabHelper.GetPrefab<Scp079CameraToy>(PrefabType.HczCameraToy);
 
         /// <summary>
         /// Gets the prefab for Lcz Camera prefab.
         /// </summary>
-        public static Scp079CameraToy LczCameraPrefab { get; internal set; }
+        public static Scp079CameraToy LczCameraPrefab { get; } = PrefabHelper.GetPrefab<Scp079CameraToy>(PrefabType.LczCameraToy);
 
         /// <summary>
         /// Gets the prefab for Sz Camera prefab.
         /// </summary>
-        public static Scp079CameraToy SzCameraPrefab { get; internal set; }
+        public static Scp079CameraToy SzCameraPrefab { get; } = PrefabHelper.GetPrefab<Scp079CameraToy>(PrefabType.SzCameraToy);
 
         /// <summary>
         /// Gets the base <see cref="Scp079CameraToy"/>.

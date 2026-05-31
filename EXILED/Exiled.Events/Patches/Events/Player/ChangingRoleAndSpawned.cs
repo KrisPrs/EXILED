@@ -23,8 +23,6 @@ namespace Exiled.Events.Patches.Events.Player
     using InventorySystem.Items.Armor;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.Usables.Scp1344;
-    using LabApi.Events.Arguments.PlayerEvents;
-    using LabApi.Events.Handlers;
     using Mirror;
 
     using PlayerRoles;
@@ -258,7 +256,6 @@ namespace Exiled.Events.Patches.Events.Player
                     InventoryItemProvider.OnItemProvided?.Invoke(ev.Player.ReferenceHub, itemBase);
                 }
 
-                PlayerEvents.OnReceivedLoadout(new PlayerReceivedLoadoutEventArgs(ev.Player.ReferenceHub, ev.Items, ev.Ammo, !ev.ShouldPreserveInventory));
                 InventoryItemProvider.InventoriesToReplenish.Enqueue(ev.Player.ReferenceHub);
             }
             catch (Exception exception)

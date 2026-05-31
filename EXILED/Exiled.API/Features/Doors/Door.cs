@@ -313,11 +313,6 @@ namespace Exiled.API.Features.Doors
         public ButtonVariant[] Buttons => this.Base.Buttons;
 
         /// <summary>
-        /// Gets the door's <see cref="ButtonVariant"/>.
-        /// </summary>
-        public ButtonVariant[] Buttons => Base.Buttons;
-
-        /// <summary>
         /// Gets a <see cref="List{T}"/> containing all <see cref="Features.Room"/>'s that are connected with <see cref="Door"/>.
         /// </summary>
         internal List<Room> RoomsValue { get; } = new List<Room>();
