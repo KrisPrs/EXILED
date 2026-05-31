@@ -310,11 +310,6 @@ namespace Exiled.API.Features.Doors
         /// <summary>
         /// Gets the door's <see cref="ButtonVariant"/>.
         /// </summary>
-        public ButtonVariant[] Buttons => this.Base.Buttons;
-
-        /// <summary>
-        /// Gets the door's <see cref="ButtonVariant"/>.
-        /// </summary>
         public ButtonVariant[] Buttons => Base.Buttons;
 
         /// <summary>
