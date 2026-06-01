@@ -383,10 +383,6 @@ namespace Exiled.API.Features
             get => ReferenceHub.nicknameSync.Network_customPlayerInfoString;
             set
             {
-                if (!NicknameSync.ValidateCustomInfo(value, out string rejectionText))
-                {
-                    Log.Warn($"Could not set CustomInfo for {Nickname}. Reason: {rejectionText}");
-                }
 
                 InfoArea = string.IsNullOrEmpty(value) ? InfoArea & ~PlayerInfoArea.CustomInfo : InfoArea |= PlayerInfoArea.CustomInfo;
                 ReferenceHub.nicknameSync.Network_customPlayerInfoString = value;
@@ -3480,10 +3476,10 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="effect">The <see cref="EffectType"/> to disable.</param>
         public void DisableEffect(EffectType effect)
-        {
-            if (TryGetEffect(effect, out StatusEffectBase playerEffect))
-                playerEffect.IsEnabled = false;
-        }
+            {
+                if (this.TryGetEffect(effect, out StatusEffectBase playerEffect))
+                    playerEffect.ServerSetState(0);
+            }
 
         /// <summary>
         /// Disables a <see cref="IEnumerable{T}"/> of <see cref="EffectType"/> on the player.
