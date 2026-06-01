@@ -383,7 +383,6 @@ namespace Exiled.API.Features
             get => ReferenceHub.nicknameSync.Network_customPlayerInfoString;
             set
             {
-
                 InfoArea = string.IsNullOrEmpty(value) ? InfoArea & ~PlayerInfoArea.CustomInfo : InfoArea |= PlayerInfoArea.CustomInfo;
                 ReferenceHub.nicknameSync.Network_customPlayerInfoString = value;
             }
