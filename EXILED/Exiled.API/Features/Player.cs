@@ -3843,6 +3843,9 @@ namespace Exiled.API.Features
         /// <inheritdoc cref="Map.GetNearCameras(Vector3, float)"/>
         public IEnumerable<Camera> GetNearCameras(float toleration = 15f) => Map.GetNearCameras(Position, toleration);
 
+        /// <inheritdoc cref="Map.GetNearestCamera(Vector3)"/>
+        public Camera GetNearestCamera() => Map.GetNearestCamera(Position);
+
         /// <summary>
         /// Teleports the player to the given <see cref="Vector3"/> coordinates.
         /// </summary>
