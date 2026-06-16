@@ -10,6 +10,7 @@ namespace Exiled.CustomItems.API.Features
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -24,6 +25,8 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.API.Features.Spawn;
     using Exiled.API.Interfaces;
     using Exiled.CustomItems.API.EventArgs;
+    using Exiled.CustomItems.API.Models;
+    using Exiled.CustomItems.API.Models.Configs;
     using Exiled.Events.EventArgs.Map;
     using Exiled.Events.EventArgs.Player;
     using Exiled.Events.EventArgs.Scp914;
@@ -95,6 +98,12 @@ namespace Exiled.CustomItems.API.Features
         /// Gets or sets the scale of the item.
         /// </summary>
         public virtual Vector3 Scale { get; set; } = Vector3.one;
+
+        /// <summary>
+        /// Gets or sets the settings of displaying text above custom item pickups.
+        /// </summary>
+        [Description("Настройки отображения текстоев над кастомными предметами")]
+        public DisplayConfig DisplayConfig { get; set; } = new DisplayConfig();
 
         /// <summary>
         /// Gets or sets the ItemType to use for this item.
@@ -270,35 +279,6 @@ namespace Exiled.CustomItems.API.Features
                 return false;
 
             customItem = (uint.TryParse(name, out uint id) ? Get<T>(id) : Get<T>(name)) !;
-
-            return customItem is not null;
-        }
-
-        /// <summary>
-        /// Tries to get a <see cref="CustomItem"/> with a specific type.
-        /// </summary>
-        /// <param name="t">The <see cref="System.Type"/> of the item to look for.</param>
-        /// <param name="customItem">The found <see cref="CustomItem"/>, <see langword="null"/> if not registered.</param>
-        /// <returns>Returns a value indicating whether the <see cref="CustomItem"/> was found or not.</returns>
-        [Obsolete("Для получения типов кастомИтема - используй TryGetMany<T>😡😡😡", true)]
-        public static bool TryGet(Type t, out CustomItem? customItem)
-        {
-            customItem = Get(t);
-
-            return customItem is not null;
-        }
-
-        /// <summary>
-        /// Tries to get a <see cref="CustomItem"/> with a specific type.
-        /// </summary>
-        /// <typeparam name="T">The type <typeparamref name="T"/> to cast the customitem to.</typeparam>
-        /// <param name="customItem">The found <see cref="CustomItem"/>, <see langword="null"/> if not registered.</param>
-        /// <returns>Returns a value indicating whether the <see cref="CustomItem"/> was found or not.</returns>
-        [Obsolete("Для получения типов кастомИтема - используй TryGetMany<T>😡😡😡", true)]
-        public static bool TryGet<T>(out T? customItem)
-            where T : CustomItem
-        {
-            customItem = Get<T>();
 
             return customItem is not null;
         }
@@ -965,6 +945,8 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.ChangingRole += this.OnInternalOwnerChangingRole;
             Exiled.Events.Handlers.Scp914.UpgradingInventoryItem += this.OnInternalUpgradingInventoryItem;
             Exiled.Events.Handlers.Map.PickupAdded += this.OnInternalPickupAdded;
+
+            CustomItemDisplayManager.Init();
         }
 
         /// <summary>
@@ -984,6 +966,8 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.ChangingRole -= this.OnInternalOwnerChangingRole;
             Exiled.Events.Handlers.Scp914.UpgradingInventoryItem -= this.OnInternalUpgradingInventoryItem;
             Exiled.Events.Handlers.Map.PickupAdded -= this.OnInternalPickupAdded;
+
+            CustomItemDisplayManager.Destroy();
         }
 
         /// <summary>
@@ -1197,6 +1181,7 @@ namespace Exiled.CustomItems.API.Features
                 return;
 
             ev.Pickup.Weight = this.Weight < 0 ? ev.Pickup.Weight : this.Weight;
+            CustomItemDisplayManager.Register(ev.Pickup, this);
         }
     }
 }
