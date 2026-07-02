@@ -184,6 +184,16 @@ namespace Exiled.CustomRoles.API
         }
 
         /// <summary>
+        /// Gets a list of a players with ability.
+        /// </summary>
+        /// <typeparam name="T">The specified <see cref="CustomRole"/> type.</typeparam>
+        /// <returns>List of players with <see langword="T"/> type of ability.</returns>
+        public static IEnumerable<Player> GetWithAbility<T>()
+            where T : CustomAbility =>
+            InternalPlayerToCustomRoles.Values
+                .Where(x => x.CustomAbilities!.OfType<T>().Any()).SelectMany(x => x.TrackedPlayers);
+
+        /// <summary>
         ///     Registers a <see cref="CustomRole" />.
         /// </summary>
         /// <param name="role"><see cref="CustomRole" /> to be registered.</param>

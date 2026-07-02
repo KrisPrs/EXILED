@@ -96,11 +96,11 @@ namespace Exiled.CustomRoles.Commands
 
             foreach (Player target in players)
             {
-                ReadOnlyCollection<CustomRole> roles = target.GetCustomRoles();
+                CustomRole? role = target.GetCustomRole();
                 builder.Append((target.DisplayNickname + (target.HasCustomName ? $" ({target.Nickname})" : string.Empty)).PadRight(30 + (target.HasCustomName ? 23 : 0)));
                 builder.Append(" ");
                 builder.Append($"({target.Id})".PadRight(5));
-                if (roles.IsEmpty())
+                if (role == null)
                 {
                     builder.AppendLine(" | No Custom Role");
                 }
@@ -108,7 +108,7 @@ namespace Exiled.CustomRoles.Commands
                 {
                     // builder.Append($" | [{string.Join(", ", roles.Select(role => $"<color={role.Role.GetColor().ToHex()}>{role}</color>"))}]");
                     builder.Append(" | [");
-                    builder.Append(string.Join(", ", roles.Select(role => $"<color={role.Role.GetColor().ToHex()}>{role}</color>")));
+                    builder.Append($"<color={role.Role.GetColor().ToHex()}>{role}</color>");
                     builder.AppendLine("]");
                 }
             }

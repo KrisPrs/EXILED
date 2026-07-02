@@ -12,30 +12,26 @@ namespace Exiled.CustomItems.API.Features
     using System.ComponentModel;
     using System.Linq;
 
-    using CustomPlayerEffects;
-    using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.DamageHandlers;
     using Exiled.API.Features.Items;
-    using Exiled.API.Features.Pickups;
     using Exiled.API.Structs;
+    using Exiled.CustomItems.API.Models;
     using Exiled.Events.EventArgs.Item;
     using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
-    using InventorySystem.Items.Firearms.BasicMessages;
+    using LabApi.Events.Arguments.PlayerEvents;
+    using LabApi.Features.Wrappers;
     using MEC;
     using PlayerRoles;
-    using UnityEngine;
 
     /// <summary>
     ///     The Custom Weapon base class.
     /// </summary>
     public abstract class CustomWeapon : CustomItem
     {
-        private readonly HashSet<Player> cooldownedPlayers = new();
-
         /// <inheritdoc />
         public override ItemType Type
         {
@@ -145,9 +141,9 @@ namespace Exiled.CustomItems.API.Features
         public bool AllowDoubleShot { get; set; } = false;
 
         /// <inheritdoc />
-        public override Item CreateItem()
+        public override Exiled.API.Features.Items.Item CreateItem()
         {
-            Item item = base.CreateItem();
+            Exiled.API.Features.Items.Item item = base.CreateItem();
 
             if (item is Firearm firearm)
             {
@@ -165,8 +161,7 @@ namespace Exiled.CustomItems.API.Features
         protected override void SubscribeEvents()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon += this.OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting += this.OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot += this.OnInternalShot;
+            LabApi.Events.Handlers.PlayerEvents.ShotWeapon += this.OnInternalShot;
             Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
@@ -178,8 +173,7 @@ namespace Exiled.CustomItems.API.Features
         protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon -= this.OnInternalReloading;
-            Exiled.Events.Handlers.Player.Shooting -= this.OnInternalShooting;
-            Exiled.Events.Handlers.Player.Shot -= this.OnInternalShot;
+            LabApi.Events.Handlers.PlayerEvents.ShotWeapon -= this.OnInternalShot;
             Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
@@ -207,7 +201,7 @@ namespace Exiled.CustomItems.API.Features
         /// Handles shooting for custom weapons.
         /// </summary>
         /// <param name="ev"><see cref="ShootingEventArgs" />.</param>
-        protected virtual void OnShooting(ShootingEventArgs ev)
+        protected virtual void OnShooting(PlayerShootingWeaponEventArgs ev)
         {
         }
 
@@ -215,7 +209,7 @@ namespace Exiled.CustomItems.API.Features
         ///     Handles shot for custom weapons.
         /// </summary>
         /// <param name="ev"><see cref="ShotEventArgs" />.</param>
-        protected virtual void OnShot(ShotEventArgs ev)
+        protected virtual void OnShot(PlayerShotWeaponEventArgs ev)
         {
         }
 
@@ -250,7 +244,13 @@ namespace Exiled.CustomItems.API.Features
             if (!this.Check(ev.Player.CurrentItem))
                 return;
 
-            if (this.cooldownedPlayers.Contains(ev.Player))
+            if (!ev.Firearm.Base.gameObject.TryGetComponent(out CockedController controller))
+            {
+                controller = ev.Firearm.Base.gameObject.AddComponent<CockedController>();
+                controller.Init(FirearmItem.Get(ev.Firearm.Base), this);
+            }
+
+            if (controller.IsOnCooldown)
             {
                 ev.IsAllowed = false;
                 ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
@@ -263,45 +263,28 @@ namespace Exiled.CustomItems.API.Features
             Log.Debug($"{nameof(this.Name)}.{nameof(this.OnInternalReloading)}: External event ended. {ev.IsAllowed}");
         }
 
-        private void OnInternalShooting(ShootingEventArgs ev)
+        private void OnInternalShot(PlayerShotWeaponEventArgs ev)
         {
-            if (!this.Check(ev.Player))
-                return;
-
-            if (this.cooldownedPlayers.Contains(ev.Player))
-            {
-                ev.IsAllowed = false;
-                ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
-                Log.Debug($"Disallowed shot from cooldowned on {this.Name} player {ev.Player.Nickname}");
-                return;
-            }
-
-            if (!this.AllowDoubleShot)
-                this.cooldownedPlayers.Add(ev.Player);
-
-            Timing.CallDelayed(this.FireCooldown, () =>
-            {
-                this.cooldownedPlayers.Remove(ev.Player);
-                Log.Debug($"Cooldown of {this.Name} removed from player {ev.Player.Nickname}");
-            });
-
-            this.OnShooting(ev);
-        }
-
-        private void OnInternalShot(ShotEventArgs ev)
-        {
-            Item curItem = ev.Player.CurrentItem;
+            Exiled.API.Features.Items.Item curItem = Exiled.API.Features.Items.Item.Get(ev.Player.CurrentItem?.Base);
             if (!this.Check(curItem))
                 return;
 
+            if (!ev.FirearmItem.Base.gameObject.TryGetComponent(out CockedController controller))
+            {
+                controller = ev.FirearmItem.Base.gameObject.AddComponent<CockedController>();
+                controller.Init(ev.FirearmItem, this);
+                Log.Debug("Инициализация после выстрела");
+            }
+
+            controller.ProcessShot();
             this.OnShot(ev);
             if (this.ForceResetWeaponOnShot)
                 Timing.RunCoroutine(this.ResetWeapon(ev.Player));
         }
 
-        private IEnumerator<float> ResetWeapon(Player player)
+        private IEnumerator<float> ResetWeapon(Exiled.API.Features.Player player)
         {
-            Item curItem = player.CurrentItem;
+            Exiled.API.Features.Items.Item curItem = player.CurrentItem;
             yield return Timing.WaitForSeconds(0.01f);
             player.CurrentItem = null;
             yield return Timing.WaitForSeconds(0.08f);

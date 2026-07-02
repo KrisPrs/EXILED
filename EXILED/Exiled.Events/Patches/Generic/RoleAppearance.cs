@@ -8,24 +8,20 @@
 namespace Exiled.Events.Patches.Generic
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection.Emit;
 
     using API.Features;
-
     using Exiled.API.Extensions;
     using Exiled.API.Features.Pools;
     using Exiled.API.Features.Roles;
     using Exiled.Events.EventArgs.Player;
-
     using HarmonyLib;
-
     using Mirror;
-
     using PlayerRoles;
     using PlayerRoles.FirstPersonControl;
     using PlayerRoles.PlayableScps.Scp049.Zombies;
     using PlayerRoles.SpawnData;
-
     using RelativePositioning;
 
     using static HarmonyLib.AccessTools;
@@ -87,6 +83,14 @@ namespace Exiled.Events.Patches.Generic
 
             Player receiverPlayer = Player.Get(info._receiverNetId);
             if (receiverPlayer == null)
+                return false;
+
+            bool hasCustomAppearance = role.GlobalAppearance != role.Type ||
+                                       role.TeamAppearances.Any() ||
+                                       role.RoleAppearances.Any() ||
+                                       role.IndividualAppearances.Any();
+
+            if (!hasCustomAppearance)
                 return false;
 
             RoleTypeId appearance = role.GetAppearanceForPlayer(receiverPlayer);

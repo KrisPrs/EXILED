@@ -7,23 +7,19 @@
 
 namespace Exiled.CustomRoles.Events
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using API;
     using API.Features;
-
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Roles;
     using Exiled.API.Features.Spawn;
     using Exiled.Events.EventArgs.Player;
-
     using FLXLib.Extensions;
-
     using MEC;
-
     using PlayerRoles;
-
     using UnityEngine;
 
     /// <summary>
@@ -36,12 +32,18 @@ namespace Exiled.CustomRoles.Events
         /// </summary>
         public const string LastCustomRoleKey = "LastCustomRole";
 
+        /// <summary>
+        ///     SessionVariable key.
+        /// </summary>
+        private readonly Dictionary<(Player spectator, Player target), string> sentSpectatorNames = new();
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.WaitingForPlayers" />
         public void OnWaitingForPlayers()
         {
             Extensions.InternalPlayerToCustomRoles.Clear();
             Extensions.ToChangeRolePlayers.Clear();
             Extensions.AssignInventoryPlayers.Clear();
+            sentSpectatorNames.Clear();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.ChangingRole" />
@@ -91,19 +93,44 @@ namespace Exiled.CustomRoles.Events
 
             if (ev.Player.IsDead && ev.Target.TryGetCustomRole(out CustomRole role))
             {
-                ev.Player.SetDispayNicknameForTargetOnly(ev.Target, role.GetSpectatorText(ev.Target));
-                Log.Debug($"[Name sync] Sent name of {ev.Target.Nickname} to {ev.Player.Nickname}");
+                string spectatorText = role.GetSpectatorText(ev.Target);
+                (Player Player, Player Target) key = (ev.Player, ev.Target);
+
+                if (!sentSpectatorNames.TryGetValue(key, out string sentText) || sentText != spectatorText)
+                {
+                    ev.Player.SetDispayNicknameForTargetOnly(ev.Target, spectatorText);
+                    sentSpectatorNames[key] = spectatorText;
+                    Log.Debug($"[Name sync] Sent name of {ev.Target.Nickname} to {ev.Player.Nickname}");
+                }
             }
             else if (ev.Target.IsDead && ev.Player.TryGetCustomRole(out role))
             {
-                ev.Target.SetDispayNicknameForTargetOnly(ev.Player, role.GetSpectatorText(ev.Player));
-                Log.Debug($"[Name sync] Sent name of {ev.Player.Nickname} to {ev.Target.Nickname}");
+                string spectatorText = role.GetSpectatorText(ev.Player);
+                (Player Target, Player Player) key = (ev.Target, ev.Player);
+
+                if (!sentSpectatorNames.TryGetValue(key, out string sentText) || sentText != spectatorText)
+                {
+                    ev.Target.SetDispayNicknameForTargetOnly(ev.Player, spectatorText);
+                    sentSpectatorNames[key] = spectatorText;
+                    Log.Debug($"[Name sync] Sent name of {ev.Player.Nickname} to {ev.Target.Nickname}");
+                }
             }
             else
             {
-                Log.Debug($"[Name sync] Name reset for {ev.Player.Nickname} of {ev.Target.Nickname}.");
-                ev.Target.SetDispayNicknameForTargetOnly(ev.Player, ev.Player.CustomName);
-                ev.Player.SetDispayNicknameForTargetOnly(ev.Target, ev.Target.CustomName);
+                (Player Player, Player Target) key1 = (ev.Player, ev.Target);
+                (Player Target, Player Player) key2 = (ev.Target, ev.Player);
+
+                if (sentSpectatorNames.Remove(key1))
+                {
+                    ev.Target.SetDispayNicknameForTargetOnly(ev.Player, ev.Player.CustomName);
+                    Log.Debug($"[Name sync] Name reset for {ev.Player.Nickname} of {ev.Target.Nickname}.");
+                }
+
+                if (sentSpectatorNames.Remove(key2))
+                {
+                    ev.Player.SetDispayNicknameForTargetOnly(ev.Target, ev.Target.CustomName);
+                    Log.Debug($"[Name sync] Name reset for {ev.Target.Nickname} of {ev.Player.Nickname}.");
+                }
             }
         }
 

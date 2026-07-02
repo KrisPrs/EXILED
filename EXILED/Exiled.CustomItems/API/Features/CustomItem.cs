@@ -866,6 +866,13 @@ namespace Exiled.CustomItems.API.Features
         public virtual bool Check(Item? item) => item is not null && this.TrackedSerials.Contains(item.Serial);
 
         /// <summary>
+        /// Checks the specified inventory item to see if it is a custom item.
+        /// </summary>
+        /// <param name="serial">The serial to check.</param>
+        /// <returns>True if it is a custom item.</returns>
+        public virtual bool Check(int? serial) => serial is not null && this.TrackedSerials.Contains(serial.Value);
+
+        /// <summary>
         /// Checks the specified player's current item to see if it is a custom item.
         /// </summary>
         /// <param name="player">The <see cref="Player"/> who's current item should be checked.</param>

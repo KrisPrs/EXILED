@@ -47,6 +47,10 @@ namespace Exiled.Events
         public override void OnEnabled()
         {
             Instance = this;
+            _ = Exiled.API.Extensions.MirrorExtensions.SyncVarDirtyBits;
+            _ = Exiled.API.Extensions.MirrorExtensions.RpcFullNames;
+            _ = Exiled.API.Extensions.MirrorExtensions.WriterExtensions;
+
             base.OnEnabled();
 
             Stopwatch watch = Stopwatch.StartNew();

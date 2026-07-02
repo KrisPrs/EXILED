@@ -8,7 +8,6 @@
 namespace Exiled.CustomItems.API.Models;
 
 using System.Collections.Generic;
-
 using System.Linq;
 using Configs;
 using InventorySystem.Items.Firearms.Modules;
@@ -21,7 +20,7 @@ using Features;
 using MEC;
 using UnityEngine;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS1591
 #pragma warning disable SA1600
 public static class CustomItemDisplayManager
 {
@@ -57,16 +56,10 @@ public static class CustomItemDisplayManager
         if (string.IsNullOrEmpty(displayText))
             displayText = customItem.Name;
 
-        Text textToy = Text.Create(Vector3.zero, string.Empty);
-        textToy.DisplaySize = new(10f, 5f);
+        Text textToy = Text.Create(pickup.Position + config.DisplayTextOffset, string.Empty);
+        textToy.DisplaySize = new(8f, 4f);
         textToy.Spawn();
 
-        textToy.Transform.SetParent(pickup.Transform, true);
-
-        Vector3 pickupScale = pickup.Scale;
-        textToy.Transform.localScale = new(1f / pickupScale.x, 1f / pickupScale.y, 1f / pickupScale.z);
-
-        textToy.Transform.localPosition = config.DisplayTextOffset;
         string formattedText = $"<size=1>{displayText}</size>";
         TrackedDisplays[pickup.Base.netId] = new(pickup, textToy, formattedText, config);
     }
@@ -118,7 +111,9 @@ public static class CustomItemDisplayManager
                     continue;
                 }
 
-                Vector3 textWorldPos = data.TextToy.Transform.position;
+                data.TextToy.Position = data.Pickup.Position + data.Config.DisplayTextOffset;
+
+                Vector3 textWorldPos = data.TextToy.Position;
                 float maxDist = data.Config.DistanceToAppear;
                 float maxDistSqr = maxDist * maxDist;
 
@@ -134,49 +129,56 @@ public static class CustomItemDisplayManager
 
                     if (data.Config.IsStraightLookNeeded)
                     {
-                        Ray ray = new(player.CameraTransform.position, player.CameraTransform.forward);
-                        Vector3 toText = textWorldPos - ray.origin;
+                        Vector3 camPos = player.CameraTransform.position;
 
-                        if (Vector3.Dot(ray.direction, toText) <= 0f)
+                        Vector3 dirToPickup = data.Pickup.Position - camPos;
+
+                        if (Vector3.Dot(player.CameraTransform.forward, dirToPickup) <= 0f)
                             continue;
 
-                        Vector3 closestPointOnRay = ray.origin + (ray.direction * Vector3.Dot(ray.direction, toText));
-                        if (Vector3.Distance(closestPointOnRay, textWorldPos) > 0.2f)
+                        Vector3 closestPointOnRay = camPos + Vector3.Project(dirToPickup, player.CameraTransform.forward);
+                        if (Vector3.Distance(closestPointOnRay, data.Pickup.Position) > 0.5f)
                             continue;
 
                         HitscanHitregModuleBase.ToggleColliders(player.ReferenceHub, false);
-                        if (Physics.Linecast(player.CameraTransform.position, textWorldPos, out RaycastHit hit))
+
+                        RaycastHit[] hits = Physics.RaycastAll(camPos, (textWorldPos - camPos).normalized, Vector3.Distance(camPos, textWorldPos));
+                        bool blocked = false;
+
+                        foreach (RaycastHit hit in hits.OrderBy(h => h.distance))
                         {
-                            if (hit.distance < Vector3.Distance(player.CameraTransform.position, textWorldPos))
-                            {
-                                HitscanHitregModuleBase.ToggleColliders(player.ReferenceHub, true);
+                            if (hit.collider.transform == data.Pickup.Transform || hit.collider.transform.IsChildOf(data.Pickup.Transform))
                                 continue;
-                            }
+
+                            blocked = true;
+                            break;
                         }
 
                         HitscanHitregModuleBase.ToggleColliders(player.ReferenceHub, true);
+
+                        if (blocked)
+                            continue;
                     }
 
                     currentObservers.Add(player);
+
                     Vector3 dir = player.CameraTransform.position - textWorldPos;
                     if (dir.sqrMagnitude < 0.01f)
                         continue;
 
-                    Quaternion desiredWorldRot = Quaternion.LookRotation(dir, Vector3.up);
-                    Quaternion parentRot = data.TextToy.Transform.parent ? data.TextToy.Transform.parent.rotation : Quaternion.identity;
-                    Quaternion localRot = Quaternion.Inverse(parentRot) * desiredWorldRot;
+                    Quaternion desiredWorldRot = Quaternion.LookRotation(-dir, Vector3.up);
 
                     bool sendRotation = true;
                     if (data.LastRotations.TryGetValue(player, out Quaternion lastRot))
                     {
-                        if (Quaternion.Angle(lastRot, localRot) < 5f)
+                        if (Quaternion.Angle(lastRot, desiredWorldRot) < 1f)
                             sendRotation = false;
                     }
 
                     if (sendRotation)
                     {
-                        data.LastRotations[player] = localRot;
-                        player.SendFakeSyncVar(data.TextToy.Base.netIdentity, typeof(TextToy), "NetworkRotation", localRot);
+                        data.LastRotations[player] = desiredWorldRot;
+                        player.SendFakeSyncVar(data.TextToy.Base.netIdentity, typeof(TextToy), "NetworkRotation", desiredWorldRot);
                     }
 
                     if (!data.ActiveObservers.Contains(player))

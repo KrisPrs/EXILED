@@ -188,6 +188,16 @@ namespace Exiled.CustomRoles.API.Features
             Registered.OfType<T>().FirstOrDefault();
 
         /// <summary>
+        /// Gets a <see cref="CustomRole"/> by type.
+        /// </summary>
+        /// <typeparam name="T">The specified <see cref="CustomRole"/> type.</typeparam>
+        /// <param name="id">The ID of the role to get.</param>
+        /// <returns>The role, or <see langword="null"/> if it doesn't exist.</returns>
+        public static T? Get<T>(uint id)
+            where T : CustomRole =>
+            Registered.OfType<T>().FirstOrDefault(x => x.Id == id);
+
+        /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="CustomRole"/> by type.
         /// </summary>
         /// <typeparam name="T">The specified <see cref="CustomRole"/> type.</typeparam>
