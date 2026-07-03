@@ -145,7 +145,7 @@ public static class CustomItemDisplayManager
                         RaycastHit[] hits = Physics.RaycastAll(camPos, (textWorldPos - camPos).normalized, Vector3.Distance(camPos, textWorldPos));
                         bool blocked = false;
 
-                        foreach (RaycastHit hit in hits.OrderBy(h => h.distance))
+                        foreach (RaycastHit hit in hits)
                         {
                             if (hit.collider.transform == data.Pickup.Transform || hit.collider.transform.IsChildOf(data.Pickup.Transform))
                                 continue;
