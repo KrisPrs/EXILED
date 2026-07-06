@@ -21,6 +21,7 @@ using UnityEngine;
 #pragma warning disable SA1600
 public static class CustomItemDisplayManager
 {
+    private static readonly List<uint> ToRemoveBuffer = new();
     private static readonly Dictionary<uint, DisplayData> TrackedDisplays = new();
     private static readonly RaycastHit[] RaycastBuffer = new RaycastHit[10];
     private static CoroutineHandle updateHandle;
@@ -94,27 +95,32 @@ public static class CustomItemDisplayManager
     {
         while (true)
         {
-            yield return Timing.WaitForSeconds(0.15f);
+            yield return Timing.WaitForSeconds(0.3f);
 
             if (TrackedDisplays.Count == 0)
                 continue;
 
-            List<uint> keys = new(TrackedDisplays.Keys);
-            foreach (uint netId in keys)
+            ToRemoveBuffer.Clear();
+            foreach (KeyValuePair<uint, DisplayData> kvp in TrackedDisplays)
             {
-                if (!TrackedDisplays.TryGetValue(netId, out DisplayData data))
-                    continue;
+                if (!kvp.Value.Pickup.Base)
+                    ToRemoveBuffer.Add(kvp.Key);
+            }
 
-                if (!data.Pickup.Base)
+            foreach (uint netId in ToRemoveBuffer)
+                Unregister(netId);
+
+            foreach (KeyValuePair<uint, DisplayData> kvp in TrackedDisplays)
+            {
+                DisplayData data = kvp.Value;
+                Vector3 pickupPos = data.Pickup.Position;
+                if (pickupPos != data.LastPickupPos)
                 {
-                    Unregister(netId);
-                    continue;
+                    data.LastPickupPos = pickupPos;
+                    data.TextToy.Position = pickupPos + data.Offset;
                 }
 
-                Vector3 pickupPos = data.Pickup.Position;
-                data.TextToy.Position = pickupPos + data.Offset;
                 Vector3 textWorldPos = data.TextToy.Position;
-
                 foreach (Player player in Player.List)
                 {
                     if (!player.IsAlive)
@@ -124,7 +130,6 @@ public static class CustomItemDisplayManager
                     Vector3 playerPos = player.Position;
 
                     bool shouldSee = false;
-
                     if ((pickupPos - playerPos).sqrMagnitude <= 100f)
                     {
                         Vector3 dirToPickup = pickupPos - camPos;
@@ -165,7 +170,7 @@ public static class CustomItemDisplayManager
 
                             if (data.LastRotations.TryGetValue(player, out Quaternion lastRot))
                             {
-                                if (Quaternion.Angle(lastRot, desiredWorldRot) < 1f)
+                                if (Quaternion.Angle(lastRot, desiredWorldRot) < 5f)
                                     sendRotation = false;
                             }
 
@@ -184,12 +189,11 @@ public static class CustomItemDisplayManager
                     }
                     else
                     {
-                        if (data.ActiveObservers.Contains(player))
+                        if (data.ActiveObservers.Remove(player))
                         {
                             if (player.IsConnected)
                                 player.SendFakeSyncVar(data.TextToy.Base.netIdentity, typeof(TextToy), "Network_textFormat", string.Empty);
 
-                            data.ActiveObservers.Remove(player);
                             data.LastRotations.Remove(player);
                         }
                     }
@@ -207,6 +211,8 @@ public static class CustomItemDisplayManager
         public string FormattedText { get; set; } = formattedText;
 
         public Vector3 Offset { get; set; } = offset;
+
+        public Vector3 LastPickupPos { get; set; } = Vector3.zero;
 
         public HashSet<Player> ActiveObservers { get; set; } = new();
 

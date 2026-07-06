@@ -22,6 +22,7 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.Events.EventArgs.Player;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
+    using InventorySystem.Items.Firearms.Modules;
     using LabApi.Events.Arguments.PlayerEvents;
     using LabApi.Features.Wrappers;
     using MEC;
@@ -246,8 +247,12 @@ namespace Exiled.CustomItems.API.Features
 
             if (!ev.Firearm.Base.gameObject.TryGetComponent(out CockedController controller))
             {
+                FirearmItem firearm = FirearmItem.Get(ev.Firearm.Base);
+                if (!firearm.Base.TryGetModule(out AutomaticActionModule _))
+                    return;
+
                 controller = ev.Firearm.Base.gameObject.AddComponent<CockedController>();
-                controller.Init(FirearmItem.Get(ev.Firearm.Base), this);
+                controller.Init(firearm, this);
             }
 
             if (controller.IsOnCooldown)
