@@ -150,6 +150,21 @@ namespace Exiled.API.Enums
         Scp939,
 
         /// <summary>
+        /// Damage caused by <see cref="RoleTypeId.Scp939"/> claw ability.
+        /// </summary>
+        Scp939Claw,
+
+        /// <summary>
+        /// Damage caused by <see cref="RoleTypeId.Scp939"/> lunge ability.
+        /// </summary>
+        Scp939LungeTarget,
+
+        /// <summary>
+        /// Damage caused by <see cref="RoleTypeId.Scp939"/> lunge ability splash damage.
+        /// </summary>
+        Scp939LungeSecondary,
+
+        /// <summary>
         /// Damage caused by <see cref="RoleTypeId.Scp0492"/>.
         /// </summary>
         Scp0492,

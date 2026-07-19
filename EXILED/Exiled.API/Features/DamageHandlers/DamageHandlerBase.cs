@@ -209,8 +209,14 @@ namespace Exiled.API.Features.DamageHandlers
                     return DamageType.MicroHid;
                 case DisruptorDamageHandler:
                     return DamageType.ParticleDisruptor;
-                case Scp939DamageHandler:
-                    return DamageType.Scp939;
+                case Scp939DamageHandler scp939DamageHandler:
+                    return scp939DamageHandler.Scp939DamageType switch
+                    {
+                        Scp939DamageType.Claw => DamageType.Scp939Claw,
+                        Scp939DamageType.LungeTarget => DamageType.Scp939LungeTarget,
+                        Scp939DamageType.LungeSecondary => DamageType.Scp939LungeSecondary,
+                        _ => DamageType.Scp939,
+                    };
                 case JailbirdDamageHandler:
                     return DamageType.Jailbird;
                 case Scp1507DamageHandler:
