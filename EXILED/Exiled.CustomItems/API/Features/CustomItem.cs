@@ -738,12 +738,31 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="Pickup"/> of the spawned <see cref="CustomItem"/>.</returns>
         public virtual Pickup? Spawn(Vector3 position, Player? previousOwner = null)
         {
-            Item item = this.CreateItem();
+            Item item = Item.Create(Type);
+            Pickup? pickup = Spawn(position, item, previousOwner);
+
+            item.Destroy();
+            return pickup;
+        }
+
+        /// <summary>
+        /// Spawns the <see cref="CustomItem"/> in a specific position.
+        /// </summary>
+        /// <param name="position">The <see cref="Vector3"/> where the <see cref="CustomItem"/> will be spawned.</param>
+        /// <param name="item">The <see cref="Item"/> to be spawned as a <see cref="CustomItem"/>.</param>
+        /// <param name="previousOwner">The <see cref="Pickup.PreviousOwner"/> of the item. Can be null.</param>
+        /// <returns>The <see cref="Pickup"/> of the spawned <see cref="CustomItem"/>.</returns>
+        public virtual Pickup? Spawn(Vector3 position, Item item, Player? previousOwner = null)
+        {
             Pickup? pickup = item.CreatePickup(position);
+
+            pickup.Scale = Scale;
+            pickup.Weight = Weight;
 
             if (previousOwner is not null)
                 pickup.PreviousOwner = previousOwner;
 
+            TrackedSerials.Add(pickup.Serial);
             return pickup;
         }
 
