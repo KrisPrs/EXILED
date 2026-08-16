@@ -163,6 +163,7 @@ namespace Exiled.CustomItems.API.Features
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon += this.OnInternalReloading;
             LabApi.Events.Handlers.PlayerEvents.ShotWeapon += this.OnInternalShot;
+            LabApi.Events.Handlers.PlayerEvents.ShootingWeapon += this.OnInternalShooting;
             Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
@@ -175,6 +176,7 @@ namespace Exiled.CustomItems.API.Features
         {
             Exiled.Events.Handlers.Player.ReloadingWeapon -= this.OnInternalReloading;
             LabApi.Events.Handlers.PlayerEvents.ShotWeapon -= this.OnInternalShot;
+            LabApi.Events.Handlers.PlayerEvents.ShootingWeapon -= this.OnInternalShooting;
             Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
@@ -338,6 +340,14 @@ namespace Exiled.CustomItems.API.Features
             ev.IsAllowed = this.CanUnload;
 
             this.OnUnloading(ev);
+        }
+
+        private void OnInternalShooting(PlayerShootingWeaponEventArgs ev)
+        {
+            if (Exiled.API.Features.Items.Item.Get(ev.FirearmItem.Base) is Firearm firearm && !this.Check(firearm))
+                return;
+
+            this.OnShooting(ev);
         }
     }
 }
