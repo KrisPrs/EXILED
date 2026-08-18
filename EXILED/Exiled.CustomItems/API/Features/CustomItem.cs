@@ -738,7 +738,7 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>The <see cref="Pickup"/> of the spawned <see cref="CustomItem"/>.</returns>
         public virtual Pickup? Spawn(Vector3 position, Player? previousOwner = null)
         {
-            Item item = Item.Create(Type);
+            Item item = this.CreateItem();
             Pickup? pickup = Spawn(position, item, previousOwner);
 
             item.Destroy();
