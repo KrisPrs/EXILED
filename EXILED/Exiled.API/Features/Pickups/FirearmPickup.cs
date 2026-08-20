@@ -155,7 +155,7 @@ namespace Exiled.API.Features.Pickups
         {
             if (item is Items.Firearm firearm)
             {
-                MaxAmmo = firearm.PrimaryMagazine.ConstantMaxAmmo;
+                MaxAmmo = firearm.PrimaryMagazine.MaxAmmo;
                 AmmoDrain = firearm.AmmoDrain;
                 Damage = firearm.Damage;
                 Inaccuracy = firearm.Inaccuracy;
