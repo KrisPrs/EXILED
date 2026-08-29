@@ -247,17 +247,7 @@ namespace Exiled.CustomItems.API.Features
             if (!this.Check(ev.Player.CurrentItem))
                 return;
 
-            if (!ev.Firearm.Base.gameObject.TryGetComponent(out CockedController controller))
-            {
-                FirearmItem firearm = FirearmItem.Get(ev.Firearm.Base);
-                if (!firearm.Base.TryGetModule(out AutomaticActionModule _))
-                    return;
-
-                controller = ev.Firearm.Base.gameObject.AddComponent<CockedController>();
-                controller.Init(firearm, this);
-            }
-
-            if (controller.IsOnCooldown)
+            if (this.GetCooldownController(FirearmItem.Get(ev.Firearm.Base)) is { IsOnCooldown: true })
             {
                 ev.IsAllowed = false;
                 ev.Player.ShowHint(string.Format(this.WeaponNotReady, this.FireCooldown));
@@ -276,17 +266,44 @@ namespace Exiled.CustomItems.API.Features
             if (!this.Check(curItem))
                 return;
 
-            if (!ev.FirearmItem.Base.gameObject.TryGetComponent(out CockedController controller))
-            {
-                controller = ev.FirearmItem.Base.gameObject.AddComponent<CockedController>();
-                controller.Init(ev.FirearmItem, this);
-                Log.Debug("Инициализация после выстрела");
-            }
-
-            controller.ProcessShot();
+            this.ProcessShot(ev.FirearmItem, ev.Player);
             this.OnShot(ev);
+        }
+
+        /// <summary>
+        /// Applies the shot cooldown and the after-shot weapon reset.
+        /// </summary>
+        /// <param name="firearmItem">The firearm that has just been fired.</param>
+        /// <param name="player">The shooter.</param>
+        private void ProcessShot(FirearmItem firearmItem, Exiled.API.Features.Player player)
+        {
+            this.GetCooldownController(firearmItem)?.ProcessShot();
+
             if (this.ForceResetWeaponOnShot)
-                Timing.RunCoroutine(this.ResetWeapon(ev.Player));
+                Timing.RunCoroutine(this.ResetWeapon(player));
+        }
+
+        /// <summary>
+        /// Gets the <see cref="CockedController"/> of the given firearm, creating it if needed.
+        /// </summary>
+        /// <param name="firearmItem">The firearm to get the controller for.</param>
+        /// <returns>The controller, or <see langword="null"/> if the cooldown is disabled or unsupported by the firearm.</returns>
+        private CockedController? GetCooldownController(FirearmItem? firearmItem)
+        {
+            if (this.FireCooldown <= 0 || firearmItem is null)
+                return null;
+
+            // Блокировка затвора есть только у AutomaticActionModule, для остальных LabApi пишет в консоль ошибку.
+            if (!firearmItem.Base.TryGetModule(out AutomaticActionModule _))
+                return null;
+
+            if (firearmItem.Base.gameObject.TryGetComponent(out CockedController controller))
+                return controller;
+
+            controller = firearmItem.Base.gameObject.AddComponent<CockedController>();
+            controller.Init(firearmItem, this);
+
+            return controller;
         }
 
         private IEnumerator<float> ResetWeapon(Exiled.API.Features.Player player)
@@ -344,10 +361,13 @@ namespace Exiled.CustomItems.API.Features
 
         private void OnInternalShooting(PlayerShootingWeaponEventArgs ev)
         {
-            if (Exiled.API.Features.Items.Item.Get(ev.FirearmItem.Base) is Firearm firearm && !this.Check(firearm))
+            if (!this.Check(Exiled.API.Features.Items.Item.Get(ev.FirearmItem.Base)))
                 return;
 
             this.OnShooting(ev);
+
+            if (!ev.IsAllowed)
+                this.ProcessShot(ev.FirearmItem, ev.Player);
         }
     }
 }

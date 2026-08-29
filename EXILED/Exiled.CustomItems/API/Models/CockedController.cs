@@ -20,6 +20,8 @@ public class CockedController : MonoBehaviour
 
     private float lastShotTime;
 
+    private bool locked;
+
     private FirearmItem firearmItem = null!;
 
     public bool IsOnCooldown => Time.time - lastShotTime < сooldownTime;
@@ -38,6 +40,7 @@ public class CockedController : MonoBehaviour
 
     public void Init(FirearmItem firearm, CustomWeapon weapon)
     {
+        Log.Debug("Контроллер поставлен");
         firearmItem = firearm;
         сooldownTime = weapon.FireCooldown;
     }
@@ -46,15 +49,17 @@ public class CockedController : MonoBehaviour
     {
         Log.Debug("Лочим пушку");
         lastShotTime = Time.time;
+        locked = true;
         IsBoltLocked = true;
     }
 
     public void Update()
     {
-        if (firearmItem.StoredAmmo + firearmItem.ChamberedAmmo == 0 || IsOnCooldown)
+        if (!locked || IsOnCooldown || firearmItem.StoredAmmo + firearmItem.ChamberedAmmo == 0)
             return;
 
         Log.Debug("Разлочим пушку");
+        locked = false;
         IsBoltLocked = false;
     }
 }
