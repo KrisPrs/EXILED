@@ -157,6 +157,22 @@ namespace Exiled.API.Features
         public IEnumerable<Pickup> Pickups => Pickup.List.Where(pickup => FindParentRoom(pickup.GameObject) == this);
 
         /// <summary>
+        /// Gets a <see cref="IEnumerable{T}"/> of the clutter spawned in the <see cref="Room"/> by the map generator.
+        /// </summary>
+        /// <remarks>
+        /// Clutter is the junk piles, crates, racks and other decorative props randomly placed by <see cref="ClutterSpawner"/> during the map generation.
+        /// Those objects are not networked, so any change made to them server-side will not be replicated to the clients.
+        /// Only the clutter instantiated by the game is listed here, the props already baked into the room prefab are not, use <see cref="GetChildren"/> or <see cref="FindChildren"/> to find those.
+        /// </remarks>
+        public IEnumerable<GameObject> Clutter => ClutterValue.Where(clutter => clutter != null);
+
+        /// <summary>
+        /// Gets a <see cref="IEnumerable{T}"/> of <see cref="ClutterSpawner"/> in the <see cref="Room"/>.
+        /// </summary>
+        /// <remarks>The spawners stay in the room after the generation, but the clutter components they hold are destroyed as soon as they have spawned their props.</remarks>
+        public IEnumerable<ClutterSpawner> ClutterSpawners => GetComponentsInChildren<ClutterSpawner>(true);
+
+        /// <summary>
         /// Gets or sets the color of the room's lights by changing the warhead color.
         /// </summary>
         /// <remarks>Will return <see cref="Color.clear"/> when <see cref="RoomLightController"/> is <see langword="null"/>.</remarks>
@@ -216,6 +232,11 @@ namespace Exiled.API.Features
         /// Gets a <see cref="List{T}"/> containing all known <see cref="Camera"/>s in that <see cref="Room"/>.
         /// </summary>
         internal List<Camera> CamerasValue { get; } = new();
+
+        /// <summary>
+        /// Gets a <see cref="List{T}"/> containing all the clutter spawned in that <see cref="Room"/>.
+        /// </summary>
+        internal List<GameObject> ClutterValue { get; } = new();
 
         /// <summary>
         /// Gets a <see cref="List{T}"/> containing all known <see cref="RoomLightController"/>s in that <see cref="Room"/>.
@@ -335,6 +356,65 @@ namespace Exiled.API.Features
         public Vector3 WorldPosition(Vector3 offset) => Transform.TransformPoint(offset);
 
         /// <summary>
+        /// Gets every <see cref="Transform"/> of the <see cref="Room"/> hierarchy, the room itself excluded.
+        /// </summary>
+        /// <param name="includeInactive">Whether inactive children should be included.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of the children of the <see cref="Room"/>.</returns>
+        /// <remarks>Most of the decorative props of a room can only be found this way, as they hold no dedicated component.</remarks>
+        public IEnumerable<Transform> GetChildren(bool includeInactive = true) => GetComponentsInChildren<Transform>(includeInactive).Where(child => child != Transform);
+
+        /// <summary>
+        /// Gets every child of the <see cref="Room"/> whose name matches the given one.
+        /// </summary>
+        /// <param name="name">The name to look for.</param>
+        /// <param name="exactMatch">Whether the name has to match exactly, instead of only being contained in it.</param>
+        /// <param name="includeInactive">Whether inactive children should be included.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of the matching children.</returns>
+        /// <remarks>Clutter props are instantiated from prefabs, so their name ends with the usual clone suffix.</remarks>
+        public IEnumerable<Transform> FindChildren(string name, bool exactMatch = false, bool includeInactive = true) => GetChildren(includeInactive).Where(child => exactMatch
+            ? child.name.Equals(name, StringComparison.OrdinalIgnoreCase)
+            : child.name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
+
+        /// <summary>
+        /// Gets the first child of the <see cref="Room"/> whose name matches the given one.
+        /// </summary>
+        /// <param name="name">The name to look for.</param>
+        /// <param name="exactMatch">Whether the name has to match exactly, instead of only being contained in it.</param>
+        /// <param name="includeInactive">Whether inactive children should be included.</param>
+        /// <returns>The matching child, or <see langword="null"/> if there is none.</returns>
+        public Transform FindChild(string name, bool exactMatch = false, bool includeInactive = true) => FindChildren(name, exactMatch, includeInactive).FirstOrDefault();
+
+        /// <summary>
+        /// Tries to get the first child of the <see cref="Room"/> whose name matches the given one.
+        /// </summary>
+        /// <param name="name">The name to look for.</param>
+        /// <param name="child">The matching child, or <see langword="null"/> if there is none.</param>
+        /// <param name="exactMatch">Whether the name has to match exactly, instead of only being contained in it.</param>
+        /// <param name="includeInactive">Whether inactive children should be included.</param>
+        /// <returns><see langword="true"/> if a child has been found; otherwise, <see langword="false"/>.</returns>
+        public bool TryFindChild(string name, out Transform child, bool exactMatch = false, bool includeInactive = true)
+        {
+            child = FindChild(name, exactMatch, includeInactive);
+            return child != null;
+        }
+
+        /// <summary>
+        /// Gets every component of the given type in the <see cref="Room"/> hierarchy.
+        /// </summary>
+        /// <typeparam name="T">The type of the components to look for.</typeparam>
+        /// <param name="includeInactive">Whether components on inactive objects should be included.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> of the found components.</returns>
+        public IEnumerable<T> GetComponentsInRoom<T>(bool includeInactive = true) => GetComponentsInChildren<T>(includeInactive);
+
+        /// <summary>
+        /// Gets the first component of the given type in the <see cref="Room"/> hierarchy.
+        /// </summary>
+        /// <typeparam name="T">The type of the component to look for.</typeparam>
+        /// <param name="includeInactive">Whether components on inactive objects should be included.</param>
+        /// <returns>The found component, or <see langword="null"/> if there is none.</returns>
+        public T GetComponentInRoom<T>(bool includeInactive = true) => GetComponentInChildren<T>(includeInactive);
+
+        /// <summary>
         /// Flickers the room's lights off for a duration.
         /// </summary>
         /// <param name="duration">Duration in seconds, or -1 for an indefinite duration.</param>
@@ -413,6 +493,27 @@ namespace Exiled.API.Features
         /// </summary>
         /// <returns>A string containing Room-related data.</returns>
         public override string ToString() => $"{Type} ({Zone}) [{Doors?.Count}] *{Cameras?.Count}* |{TeslaGate != null}|";
+
+        /// <summary>
+        /// Registers a clutter object spawned by the map generator in the <see cref="Room"/> it belongs to.
+        /// </summary>
+        /// <param name="clutter">The spawned clutter <see cref="GameObject"/>.</param>
+        internal static void RegisterClutter(GameObject clutter)
+        {
+            if (clutter == null)
+                return;
+
+            Room room = clutter.GetComponentInParent<Room>(true);
+
+            if (room == null)
+                room = FindParentRoom(clutter);
+
+            // Clutter spawned outside of any room, e.g. by a room connector of an open hallway.
+            if (room == null)
+                return;
+
+            room.ClutterValue.Add(clutter);
+        }
 
         /// <summary>
         /// Factory method to create and add a <see cref="Room"/> component to a Transform.
