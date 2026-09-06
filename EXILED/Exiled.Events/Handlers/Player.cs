@@ -179,6 +179,12 @@ namespace Exiled.Events.Handlers
         public static Event<SettingRoleInfoEventArgs> SettingRoleInfo { get; set; } = new();
 
         /// <summary>
+        ///     Invoked before giving a CustomRoles inventory preset to a player, allowing to edit the
+        ///     resolved inventory before rolling items.
+        /// </summary>
+        public static Event<GivingInventoryEventArgs> GivingInventory { get; set; } = new();
+
+        /// <summary>
         /// Invoked before hurting a <see cref="API.Features.Player"/>.
         /// </summary>
         public static Event<HurtingEventArgs> Hurting { get; set; } = new();
@@ -1415,6 +1421,12 @@ namespace Exiled.Events.Handlers
         /// </summary>
         /// <param name="ev">The <see cref="DestroyingEventArgs"/> instance. </param>
         public static void OnSettingRoleInfo(SettingRoleInfoEventArgs ev) => SettingRoleInfo.InvokeSafely(ev);
+
+        /// <summary>
+        ///     Called before giving a CustomRoles inventory preset to a player.
+        /// </summary>
+        /// <param name="ev">The <see cref="GivingInventoryEventArgs"/> instance.</param>
+        public static void OnGivingInventory(GivingInventoryEventArgs ev) => GivingInventory.InvokeSafely(ev);
 
         /// <summary>
         /// Called before a <see cref="Player"/>'s custom display name is changed.

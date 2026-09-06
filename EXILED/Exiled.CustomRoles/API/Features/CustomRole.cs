@@ -535,7 +535,15 @@ namespace Exiled.CustomRoles.API.Features
             try
             {
                 player.TryGetSessionVariable("buffitems", out short itemsBuff);
+
+                List<Dictionary<string, short>> inventoryClone = new(this.Inventory.Count);
                 foreach (Dictionary<string, short> slot in this.Inventory)
+                    inventoryClone.Add(new Dictionary<string, short>(slot));
+
+                GivingInventoryEventArgs ev = new(player, this.Id, inventoryClone);
+                Exiled.Events.Handlers.Player.OnGivingInventory(ev);
+
+                foreach (Dictionary<string, short> slot in ev.Inventory)
                 {
                     foreach (KeyValuePair<string, short> item in slot)
                     {

@@ -38,14 +38,14 @@ public class SettingRoleInfoEventArgs
         public Player Player { get; }
 
         /// <summary>
-        /// Gets the scale that is near to be set.
+        /// Gets or sets the scale that is near to be set.
         /// </summary>
-        public Vector3 Scale { get; }
+        public Vector3 Scale { get; set; }
 
         /// <summary>
-        /// Gets the custom role thas is near to be set.
+        /// Gets or sets the custom role thas is near to be set.
         /// </summary>
-        public string CustomInfo { get; }
+        public string CustomInfo { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the custom info setting can be set.
