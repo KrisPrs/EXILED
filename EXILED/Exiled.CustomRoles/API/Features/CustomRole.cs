@@ -587,15 +587,17 @@ namespace Exiled.CustomRoles.API.Features
             Log.Debug($"{this.Name} ({this.Id}): Setting health values.");
             player.Health = this.MaxHealth;
             player.MaxHealth = this.MaxHealth;
-            player.Scale = this.Scale;
             if (this.Gravity.HasValue && player.Role is FpcRole fpcRole)
                 fpcRole.Gravity = this.Gravity.Value;
 
             Log.Debug($"{this.Name}: Setting player info");
             player.InfoArea &= ~PlayerInfoArea.Role;
+            SettingRoleInfoEventArgs ev = new(player, this.Scale, this.CustomInfo);
+            Exiled.Events.Handlers.Player.OnSettingRoleInfo(ev);
             if (this.CustomInfo.ToLowerInvariant() != "none")
-                player.CustomInfo = this.CustomInfo;
+                player.CustomInfo = ev.CustomInfo;
 
+            player.Scale = ev.Scale;
             if (Extensions.InternalPlayerToCustomRoles.TryGetValue(player, out CustomRole cr))
             {
                 Log.Error($"player: {player} already has custom role in AddRole: cr is {cr.Name} ({cr.Id})");

@@ -174,6 +174,11 @@ namespace Exiled.Events.Handlers
         public static Event<DestroyingEventArgs> Destroying { get; set; } = new();
 
         /// <summary>
+        /// Invoked before destroying a <see cref="API.Features.Player"/>.
+        /// </summary>
+        public static Event<SettingRoleInfoEventArgs> SettingRoleInfo { get; set; } = new();
+
+        /// <summary>
         /// Invoked before hurting a <see cref="API.Features.Player"/>.
         /// </summary>
         public static Event<HurtingEventArgs> Hurting { get; set; } = new();
@@ -1404,6 +1409,12 @@ namespace Exiled.Events.Handlers
         /// </summary>
         /// <param name="ev">The <see cref="DestroyingEventArgs"/> instance. </param>
         public static void OnDestroying(DestroyingEventArgs ev) => Destroying.InvokeSafely(ev);
+
+        /// <summary>
+        /// Called before setting <see cref="API.Features.Player"/> role settings.
+        /// </summary>
+        /// <param name="ev">The <see cref="DestroyingEventArgs"/> instance. </param>
+        public static void OnSettingRoleInfo(SettingRoleInfoEventArgs ev) => SettingRoleInfo.InvokeSafely(ev);
 
         /// <summary>
         /// Called before a <see cref="Player"/>'s custom display name is changed.
