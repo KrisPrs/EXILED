@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="HeaderSetting.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -11,6 +11,7 @@ namespace Exiled.API.Features.Core.UserSettings
 
     using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
+    using YamlDotNet.Serialization;
 
     /// <summary>
     /// Represents a header setting.
@@ -81,6 +82,10 @@ namespace Exiled.API.Features.Core.UserSettings
             public HeaderConfig()
             {
             }
+
+            /// <inheritdoc/>
+            [YamlIgnore]
+            public override int Id { get; set; } = 0;
 
             /// <summary>
             /// Gets or sets HeaderName of a HeaderConfig.

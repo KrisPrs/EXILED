@@ -10,6 +10,7 @@ namespace Exiled.API.Features.Core.UserSettings
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.SqlTypes;
     using System.Linq;
 
     using Exiled.API.Features.Pools;
@@ -30,6 +31,11 @@ namespace Exiled.API.Features.Core.UserSettings
         /// A collection that contains all settings that were sent to clients.
         /// </summary>
         internal static readonly List<SettingBase> Settings = new();
+
+        /// <summary>
+        /// A collection that contains all ids taken by buttons.
+        /// </summary>
+        internal static readonly HashSet<int> TakenIds = new();
 
         private static readonly Dictionary<Player, bool> WasPressed = new();
 
@@ -153,11 +159,6 @@ namespace Exiled.API.Features.Core.UserSettings
         /// Gets or sets the action to be executed when this setting is changed.
         /// </summary>
         public Action<Player, SettingBase> OnChanged { get; set; }
-
-        /// <summary>
-        /// Gets or sets incrementor to avoid useless id setting.
-        /// </summary>
-        protected static int IdIncrementor { get; set; } = 0;
 
         /// <summary>
         /// Tries to get the setting with the specified id.
@@ -499,6 +500,15 @@ namespace Exiled.API.Features.Core.UserSettings
         public abstract class SettingConfig<TSetting>
             where TSetting : SettingBase
         {
+            // private static int incrementor = 0;
+
+            /// <summary>
+            /// Gets or sets the ID of the button.
+            /// </summary>
+            public virtual int Id { get; set; }
+
+            // = ++incrementor;
+
             /// <summary>
             /// Creates a SettingBase instanse.
             /// </summary>

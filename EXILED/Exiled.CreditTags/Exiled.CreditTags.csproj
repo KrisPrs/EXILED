@@ -10,6 +10,8 @@
         <NoWarn>$(NoWarn);CS1591;SA1600</NoWarn>
         <Configurations>Debug;Release;Installer</Configurations>
         <Platforms>AnyCPU</Platforms>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>net4.8</TargetFramework>
     </PropertyGroup>
 
     <Import Project="../EXILED.props" />

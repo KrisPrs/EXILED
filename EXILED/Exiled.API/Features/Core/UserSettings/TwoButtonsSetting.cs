@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="TwoButtonsSetting.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -215,7 +215,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TwoButtonsSetting instanse.
             /// </summary>
             /// <returns>TwoButtonsSetting.</returns>
-            public override TwoButtonsSetting Create() => new(++IdIncrementor, this.Label, this.FirstOption, this.SecondOption, this.DefaultIsSecond, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
+            public override TwoButtonsSetting Create() => new((int)Id, this.Label, this.FirstOption, this.SecondOption, this.DefaultIsSecond, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

@@ -7,6 +7,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Configurations>Debug;Release;Installer</Configurations>
         <Platforms>AnyCPU</Platforms>
+        <TargetFramework>net4.8</TargetFramework>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <Import Project="../EXILED.props" />

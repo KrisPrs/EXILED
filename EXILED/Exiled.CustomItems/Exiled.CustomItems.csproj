@@ -10,6 +10,8 @@
         <Configurations>Debug;Release;Installer</Configurations>
         <Platforms>AnyCPU</Platforms>
         <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <TargetFramework>net4.8</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

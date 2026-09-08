@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(BuildProperties) == '' OR $(BuildProperties) == 'true'">
-    <TargetFramework>net48</TargetFramework>
-    <LangVersion>14.0</LangVersion>
+    <TargetFramework>net4.8</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <PlatformTarget>x64</PlatformTarget>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>$(MSBuildThisFileDirectory)\bin\$(Configuration)\</OutputPath>
