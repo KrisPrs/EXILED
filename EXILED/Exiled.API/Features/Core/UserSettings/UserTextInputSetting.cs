@@ -206,7 +206,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a TextInputSetting instanse.
             /// </summary>
             /// <returns>TextInputSetting.</returns>
-            public override UserTextInputSetting Create() => new((int)Id, this.Label, this.PlaceHolder, this.CharacterLimit, this.ContentType, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
+            public override UserTextInputSetting Create() => new(ProvideIdFromArchives(this.Label), this.Label, this.PlaceHolder, this.CharacterLimit, this.ContentType, this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

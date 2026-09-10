@@ -165,7 +165,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override ButtonSetting Create() => new((int)Id, this.Label, this.ButtonText, this.HoldTime, this.HintDescription, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
+            public override ButtonSetting Create() => new(ProvideIdFromArchives(this.Label), this.Label, this.ButtonText, this.HoldTime, this.HintDescription, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }
 }

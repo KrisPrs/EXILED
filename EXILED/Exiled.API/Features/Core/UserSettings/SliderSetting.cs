@@ -251,7 +251,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// Creates a ButtonSetting instanse.
             /// </summary>
             /// <returns>ButtonSetting.</returns>
-            public override SliderSetting Create() => new((int)Id, this.Label, this.MinimumValue, this.MaximumValue, this.DefaultValue, this.IsInteger, this.StringFormat, this.DisplayFormat,
+            public override SliderSetting Create() => new(ProvideIdFromArchives(this.Label), this.Label, this.MinimumValue, this.MaximumValue, this.DefaultValue, this.IsInteger, this.StringFormat, this.DisplayFormat,
                 this.HintDescription, 255, this.IsServerOnly, this.HeaderName == null ? null : new HeaderSetting(this.HeaderName, this.HeaderDescription, this.HeaderPaddling));
         }
     }

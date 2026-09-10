@@ -83,10 +83,6 @@ namespace Exiled.API.Features.Core.UserSettings
             {
             }
 
-            /// <inheritdoc/>
-            [YamlIgnore]
-            public override int Id { get; set; } = 0;
-
             /// <summary>
             /// Gets or sets HeaderName of a HeaderConfig.
             /// </summary>
