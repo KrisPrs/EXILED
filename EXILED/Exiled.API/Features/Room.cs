@@ -39,8 +39,8 @@ namespace Exiled.API.Features
         /// <summary>
         /// Список всех имён у префабов в комнатах.
         /// </summary>
-        private static HashSet<string> roomNames =
-        [
+        private static readonly HashSet<string> RoomNames = new(StringComparer.OrdinalIgnoreCase)
+        {
             "Tank-Supported Shelf Open Connector",
             "Simple Boxes Open Connector",
             "Pipes Long Open Connector",
@@ -64,8 +64,8 @@ namespace Exiled.API.Features
             "Atlas_WoodCardboard_CardboardBox2",
             "Atlas_WoodCardboard_CardboardBox1",
             "Atlas_WoodCardboard_BoxB",
-            "Boxes Ladder Open Connector"
-        ];
+            "Boxes Ladder Open Connector",
+        };
 
         /// <summary>
         /// Gets a <see cref="IEnumerable{T}"/> of <see cref="Room"/> which contains all the <see cref="Room"/> instances.
@@ -594,20 +594,17 @@ namespace Exiled.API.Features
             Speakers = SpeakersValue.AsReadOnly();
             Cameras = CamerasValue.AsReadOnly();
 
-            foreach (string s in roomNames)
+            foreach (Transform child in GetChildren())
             {
-                List<GameObject> objects = new List<GameObject>();
-                gameObject.ForEachComponentInChildren(
-                    (GameObject obj) =>
-                {
-                    if (obj.name.ToLower().Contains(s.ToLower()))
-                    {
-                        objects.Add(obj);
-                    }
-                }, false);
+                string key = child.name.RemoveBracketsOnEndOfName();
 
-                if(!objects.IsEmpty())
-                    RoomPrefabs[s] = objects;
+                if (!RoomNames.Contains(key))
+                    continue;
+
+                if (!RoomPrefabs.TryGetValue(key, out List<GameObject> objects))
+                    RoomPrefabs[key] = objects = new List<GameObject>();
+
+                objects.Add(child.gameObject);
             }
         }
 
