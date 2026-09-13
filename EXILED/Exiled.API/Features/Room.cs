@@ -596,7 +596,7 @@ namespace Exiled.API.Features
 
             foreach (string s in roomNames)
             {
-                List<GameObject> objects = new List<GameObject>();
+                List<GameObject> objects = [];
                 gameObject.ForEachComponentInChildren(
                     (GameObject obj) =>
                 {
@@ -606,7 +606,8 @@ namespace Exiled.API.Features
                     }
                 }, false);
 
-                RoomPrefabs[s] = objects;
+                if(!objects.IsEmpty())
+                    RoomPrefabs[s] = objects;
             }
         }
 
