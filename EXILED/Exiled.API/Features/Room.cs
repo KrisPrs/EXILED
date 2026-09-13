@@ -596,7 +596,7 @@ namespace Exiled.API.Features
 
             foreach (string s in roomNames)
             {
-                List<GameObject> objects = [];
+                List<GameObject> objects = new List<GameObject>();
                 gameObject.ForEachComponentInChildren(
                     (GameObject obj) =>
                 {
