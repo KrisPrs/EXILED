@@ -538,7 +538,7 @@ namespace Exiled.CustomRoles.API.Features
 
                 List<Dictionary<string, short>> inventoryClone = new(this.Inventory.Count);
                 foreach (Dictionary<string, short> slot in this.Inventory)
-                    inventoryClone.Add(new Dictionary<string, short>(slot));
+                    inventoryClone.Add(new(slot));
 
                 GivingInventoryEventArgs ev = new(player, this.Id, inventoryClone);
                 Exiled.Events.Handlers.Player.OnGivingInventory(ev);
@@ -602,10 +602,14 @@ namespace Exiled.CustomRoles.API.Features
             player.InfoArea &= ~PlayerInfoArea.Role;
             SettingRoleInfoEventArgs ev = new(player, this.Scale, this.CustomInfo);
             Exiled.Events.Handlers.Player.OnSettingRoleInfo(ev);
-            if (this.CustomInfo.ToLowerInvariant() != "none")
-                player.CustomInfo = ev.CustomInfo;
+            if (ev.IsAllowed)
+            {
+                if (this.CustomInfo.ToLowerInvariant() != "none")
+                    player.CustomInfo = ev.CustomInfo;
 
-            player.Scale = ev.Scale;
+                player.Scale = ev.Scale;
+            }
+
             if (Extensions.InternalPlayerToCustomRoles.TryGetValue(player, out CustomRole cr))
             {
                 Log.Error($"player: {player} already has custom role in AddRole: cr is {cr.Name} ({cr.Id})");
