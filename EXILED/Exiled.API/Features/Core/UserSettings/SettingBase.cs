@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="SettingBase.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -10,9 +10,7 @@ namespace Exiled.API.Features.Core.UserSettings
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
-    using System.Text;
 
     using Exiled.API.Features.Pools;
     using Exiled.API.Interfaces;
@@ -501,14 +499,6 @@ namespace Exiled.API.Features.Core.UserSettings
         public abstract class SettingConfig<TSetting>
             where TSetting : SettingBase
         {
-            private static readonly string ArchivesFolder = Path.Combine(Paths.Exiled, "UserSettingsArchives");
-
-            private static readonly string FilePath = Path.Combine(ArchivesFolder, $"{Server.Port}.yml");
-
-            private static Dictionary<string, int> loadedArchives = new Dictionary<string, int>();
-
-            private static bool archivesLoaded = false;
-
             /// <summary>
             /// Creates a SettingBase instanse.
             /// </summary>
@@ -520,59 +510,7 @@ namespace Exiled.API.Features.Core.UserSettings
             /// </summary>
             /// <param name="label">A label for the setting. Must be unique.</param>
             /// <returns>An id for the setting.</returns>
-            protected int ProvideIdFromArchives(string label)
-            {
-                Log.Debug($"Started providing id for button with label - {label}");
-
-                if (!Directory.Exists(ArchivesFolder))
-                {
-                    Log.Debug("Archives folder isn't created. Creating...");
-                    Directory.CreateDirectory(ArchivesFolder);
-                }
-
-                using FileStream fs = new(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
-
-                if (!archivesLoaded)
-                {
-                    Log.Debug("Archives aren't loaded. Loading the archives!");
-
-                    using StreamReader reader = new(fs, Encoding.UTF8, true, 1024, leaveOpen: true);
-
-                    loadedArchives = Loader.Loader.Deserializer.
-                        Deserialize<Dictionary<string, int>>(reader.ReadToEnd()) ?? new Dictionary<string, int>();
-
-                    archivesLoaded = true;
-                }
-
-                Log.Debug($"Checking the archives for label: {label}");
-
-                if (!loadedArchives.TryGetValue(label, out int archivedId))
-                {
-                    Log.Debug($"Failed to find an archived Id for a setting with label: {label}. Providing a new one...");
-                    archivedId = loadedArchives.IsEmpty() ? 1 : FindMinFreeNumber(loadedArchives.Values.ToList());
-
-                    Log.Debug($"Archiving setting with label {label} with new id: {archivedId}");
-
-                    loadedArchives.Add(label, archivedId);
-
-                    using StreamWriter writer = new StreamWriter(fs);
-                    writer.Write(Loader.Loader.Serializer.Serialize(loadedArchives));
-                }
-
-                Log.Debug($"Returning ID {archivedId} for a setting with label {label}");
-                return archivedId;
-            }
-
-            private static int FindMinFreeNumber(List<int> numbers)
-            {
-                int min = numbers.Min();
-                int max = numbers.Max();
-
-                IEnumerable<int> free = Enumerable.Range(min, max - min + 1)
-                                     .Except(numbers);
-
-                return free.Any() ? free.Min() : max + 1;
-            }
+            protected int ProvideIdFromArchives(string label) => UserSettingsArchive.ProvideId(label);
         }
     }
 }
