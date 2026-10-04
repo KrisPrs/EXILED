@@ -25,9 +25,13 @@ public static class CustomItemDisplayManager
     private static readonly Dictionary<uint, DisplayData> TrackedDisplays = new();
     private static readonly RaycastHit[] RaycastBuffer = new RaycastHit[10];
     private static CoroutineHandle updateHandle;
+    private static int initCount;
 
     public static void Init()
     {
+        if (initCount++ > 0)
+            return;
+
         Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
         Exiled.Events.Handlers.Map.PickupDestroyed += OnPickupDestroyed;
         updateHandle = Timing.RunCoroutine(UpdateLoop());
@@ -35,6 +39,9 @@ public static class CustomItemDisplayManager
 
     public static void Destroy()
     {
+        if (initCount == 0 || --initCount > 0)
+            return;
+
         Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
         Exiled.Events.Handlers.Map.PickupDestroyed -= OnPickupDestroyed;
         Timing.KillCoroutines(updateHandle);
@@ -54,12 +61,17 @@ public static class CustomItemDisplayManager
             displayText = customItem.Name;
 
         Vector3 offset = customItem.DisplayConfig.DisplayTextOffset;
-        Text textToy = Text.Create(pickup.Position + offset, string.Empty);
+        Text textToy = Text.Create(position: pickup.Position + offset, text: string.Empty, spawn: false);
         textToy.DisplaySize = new(8f, 4f);
         textToy.Spawn();
 
         string formattedText = $"<size=1>{displayText}</size>";
-        TrackedDisplays[pickup.Base.netId] = new(pickup, textToy, formattedText, offset);
+        float distance = customItem.DisplayConfig.DistanceToAppear;
+        TrackedDisplays[pickup.Base.netId] = new(pickup, textToy, formattedText, offset)
+        {
+            DistanceSqr = distance * distance,
+            IsStraightLookNeeded = customItem.DisplayConfig.IsStraightLookNeeded,
+        };
     }
 
     private static void Unregister(uint netId)
@@ -121,19 +133,28 @@ public static class CustomItemDisplayManager
                 }
 
                 Vector3 textWorldPos = data.TextToy.Position;
+                data.ActiveObservers.RemoveWhere(p => !p.IsConnected);
                 foreach (Player player in Player.List)
                 {
                     if (!player.IsAlive)
+                    {
+                        if (data.ActiveObservers.Remove(player))
+                        {
+                            player.SendFakeSyncVar(data.TextToy.Base.netIdentity, typeof(TextToy), "Network_textFormat", string.Empty);
+                            data.LastRotations.Remove(player);
+                        }
+
                         continue;
+                    }
 
                     Vector3 camPos = player.CameraTransform.position;
                     Vector3 playerPos = player.Position;
 
                     bool shouldSee = false;
-                    if ((pickupPos - playerPos).sqrMagnitude <= 100f)
+                    if ((pickupPos - playerPos).sqrMagnitude <= data.DistanceSqr)
                     {
                         Vector3 dirToPickup = pickupPos - camPos;
-                        if (Vector3.Angle(player.CameraTransform.forward, dirToPickup) <= 25f)
+                        if (!data.IsStraightLookNeeded || Vector3.Angle(player.CameraTransform.forward, dirToPickup) <= 25f)
                         {
                             float distToPickup = dirToPickup.magnitude;
                             if (distToPickup > 0.1f)
@@ -213,6 +234,10 @@ public static class CustomItemDisplayManager
         public Vector3 Offset { get; set; } = offset;
 
         public Vector3 LastPickupPos { get; set; } = Vector3.zero;
+
+        public float DistanceSqr { get; set; } = 25f;
+
+        public bool IsStraightLookNeeded { get; set; } = true;
 
         public HashSet<Player> ActiveObservers { get; set; } = new();
 
