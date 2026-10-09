@@ -254,7 +254,11 @@ namespace Exiled.API.Features.DamageHandlers
                     Log.Warn($"{nameof(DamageHandler)}.{nameof(this.Type)}: No matching {nameof(DamageType)} for {nameof(UniversalDamageHandler)} with ID {translation.Id}, type will be reported as {DamageType.Unknown}. Report this to EXILED Devs.");
                     break;
                 case PlayerStatsSystem.FirearmDamageHandler firearmDamageHandler:
-                    return Item.Get<Firearm>(firearmDamageHandler.Firearm).FirearmType switch
+                    Firearm firearm = Item.Get<Firearm>(firearmDamageHandler.Firearm);
+                    if (firearm == null)
+                        return DamageTypeExtensions.ItemConversion.TryGetValue(firearmDamageHandler.WeaponType, out DamageType weaponDamageType) ? weaponDamageType : DamageType.Firearm;
+
+                    return firearm.FirearmType switch
                     {
                         FirearmType.A7 => DamageType.A7,
                         FirearmType.Com15 => DamageType.Com15,
