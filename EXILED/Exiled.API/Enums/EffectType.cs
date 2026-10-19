@@ -50,11 +50,6 @@ namespace Exiled.API.Enums
         Blinded,
 
         /// <summary>
-        /// Darkens the affected player's screen based on intensity. 100 and above = cpmpletely black screen.
-        /// </summary>
-        Blindness,
-
-        /// <summary>
         /// Increases damage the affected player receives. Does not apply any standalone damage.
         /// </summary>
         Burned,
@@ -398,5 +393,10 @@ namespace Exiled.API.Enums
         /// Allows SCPs to see the affected player from a certain distance. Works on SCPs.
         /// </summary>
         AnomalousTarget,
+
+        /// <summary>
+        /// Darkens the affected player's screen based on intensity. 100 and above = cpmpletely black screen.
+        /// </summary>
+        Blindness,
     }
 }
