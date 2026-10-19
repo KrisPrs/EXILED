@@ -46,7 +46,13 @@ namespace Exiled.API.Enums
         /// <summary>
         /// Blurs the affected player's screen.
         /// </summary>
+        [Obsolete("Use Blurred instead.")]
         Blinded,
+
+        /// <summary>
+        /// Darkens the affected player's screen based on intensity. 100 and above = cpmpletely black screen.
+        /// </summary>
+        Blindness,
 
         /// <summary>
         /// Increases damage the affected player receives. Does not apply any standalone damage.
@@ -216,7 +222,6 @@ namespace Exiled.API.Enums
         /// <summary>
         /// Makes you a marshmallow guy.
         /// </summary>
-        [Obsolete("Only availaible for Halloween")]
         Marshmallow,
 
         /// <summary>
@@ -317,73 +322,61 @@ namespace Exiled.API.Enums
         /// <summary>
         /// <see cref="CustomPlayerEffects.Metal"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         Metal,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.OrangeCandy"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         OrangeCandy,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.OrangeWitness"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         OrangeWitness,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.Prismatic"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         Prismatic,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.SlowMetabolism"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         SlowMetabolism,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.Spicy"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         Spicy,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.SugarCrave"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween or Christmas.")]
         SugarCrave,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.SugarHigh"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         SugarHigh,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.SugarRush"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         SugarRush,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.TemporaryBypass"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         TemporaryBypass,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.TraumatizedByEvil"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         TraumatizedByEvil,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.WhiteCandy"/>.
         /// </summary>
-        [Obsolete("Only availaible for Halloween.")]
         WhiteCandy,
 
         /// <summary>

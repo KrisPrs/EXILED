@@ -36,6 +36,7 @@ namespace Exiled.API.Extensions
             { EffectType.Bleeding, typeof(Bleeding) },
             { EffectType.BodyshotReduction, typeof(BodyshotReduction) },
             { EffectType.Burned, typeof(Burned) },
+            { EffectType.Blindness, typeof(Blindness) },
             { EffectType.CardiacArrest, typeof(CardiacArrest) },
             { EffectType.Concussed, typeof(Concussed) },
             { EffectType.PocketCorroding, typeof(PocketCorroding) },
