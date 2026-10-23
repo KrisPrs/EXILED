@@ -58,7 +58,7 @@ public static class CustomItemDisplayManager
             return;
 
         if (string.IsNullOrEmpty(displayText))
-            displayText = customItem.Name;
+            displayText = customItem.GetShowableName();
 
         Vector3 offset = customItem.DisplayConfig.DisplayTextOffset;
         Text textToy = Text.Create(position: pickup.Position + offset, text: string.Empty, spawn: false);

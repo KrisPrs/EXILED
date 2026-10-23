@@ -69,6 +69,10 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public abstract string Name { get; set; }
 
+        public virtual string ShowableName { get; set; } = string.Empty;
+
+        public virtual string CategoryName { get; set; } = string.Empty;
+
         /// <summary>
         /// Gets or sets the description of the item.
         /// </summary>
@@ -757,7 +761,8 @@ namespace Exiled.CustomItems.API.Features
             Pickup? pickup = item.CreatePickup(position);
 
             pickup.Scale = Scale;
-            pickup.Weight = Weight;
+            if (this.Weight >= 0)
+                pickup.Weight = Weight;
 
             if (previousOwner is not null)
                 pickup.PreviousOwner = previousOwner;
@@ -897,6 +902,8 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="player">The <see cref="Player"/> who's current item should be checked.</param>
         /// <returns>True if it is a custom item.</returns>
         public virtual bool Check(Player? player) => this.Check(player?.CurrentItem);
+
+        public string GetShowableName() => string.IsNullOrEmpty(this.ShowableName) ? this.Name : this.ShowableName;
 
         /// <inheritdoc/>
         public override string ToString() => $"[{this.Name} ({this.Type}) | {this.Id}] {this.Description}";
@@ -1087,7 +1094,7 @@ namespace Exiled.CustomItems.API.Features
         protected virtual void ShowPickedUpMessage(Player player)
         {
             if (Instance!.Config.PickedUpHint.Show)
-                player.ShowHint(string.Format(Instance.Config.PickedUpHint.Content, this.Name, this.Description), this.PickedUpHintDuration < 0 ? Instance.Config.PickedUpHint.Duration : this.PickedUpHintDuration);
+                player.ShowHint(string.Format(Instance.Config.PickedUpHint.Content, this.GetShowableName(), this.Description), this.PickedUpHintDuration < 0 ? Instance.Config.PickedUpHint.Duration : this.PickedUpHintDuration);
         }
 
         /// <summary>
@@ -1097,7 +1104,7 @@ namespace Exiled.CustomItems.API.Features
         protected virtual void ShowSelectedMessage(Player player)
         {
             if (Instance!.Config.SelectedHint.Show)
-                player.ShowHint(string.Format(Instance.Config.SelectedHint.Content, this.Name, this.Description), this.SelectedHintDuration < 0 ? Instance.Config.SelectedHint.Duration : this.SelectedHintDuration);
+                player.ShowHint(string.Format(Instance.Config.SelectedHint.Content, this.GetShowableName(), this.Description), this.SelectedHintDuration < 0 ? Instance.Config.SelectedHint.Duration : this.SelectedHintDuration);
         }
 
         private void OnInternalOwnerChangingRole(ChangingRoleEventArgs ev)

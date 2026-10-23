@@ -8,6 +8,7 @@
 namespace Exiled.CustomRoles.Commands.Admin.List
 {
     using System;
+    using System.Linq;
     using System.Text;
 
     using API.Features;
@@ -71,23 +72,23 @@ namespace Exiled.CustomRoles.Commands.Admin.List
 
             int count = 0;
 
-            foreach (CustomRole customRole in CustomRole.Registered)
-            {
-                if (customRole.TrackedPlayers.Count == 0)
-                    continue;
-
-                message.AppendLine()
-                    .AppendFormat(this.CustomRoleFormat, customRole.Id, customRole.Name, customRole.Role, customRole.TrackedPlayers.Count)
-                    .AppendLine();
-
-                count += customRole.TrackedPlayers.Count;
-
-                foreach (Player owner in customRole.TrackedPlayers)
+            message.AppendByCategories(
+                CustomRole.Registered.Where(customRole => customRole.TrackedPlayers.Count != 0),
+                customRole => customRole.CategoryName,
+                (builder, customRole, indent) =>
                 {
-                    message.AppendFormat(this.PlayerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role.Type)
+                    builder.AppendLine()
+                        .Append(indent).AppendFormat(this.CustomRoleFormat, customRole.Id, customRole.Name, customRole.Role, customRole.TrackedPlayers.Count)
                         .AppendLine();
-                }
-            }
+
+                    count += customRole.TrackedPlayers.Count;
+
+                    foreach (Player owner in customRole.TrackedPlayers)
+                    {
+                        builder.Append(indent).AppendFormat(this.PlayerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role.Type)
+                            .AppendLine();
+                    }
+                });
 
             if (message.Length == 0)
                 message.Append(this.NoCustomRolesMessage);

@@ -79,6 +79,8 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         public abstract string SpectatorText { get; set; }
 
+        public virtual string CategoryName { get; set; } = string.Empty;
+
         /// <summary>
         ///     Gets all of the players currently set to this role.
         /// </summary>

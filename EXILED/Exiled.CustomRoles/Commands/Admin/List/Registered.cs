@@ -71,8 +71,10 @@ namespace Exiled.CustomRoles.Commands.Admin.List
 
             builder.Append(string.Format(this.CustomRolesListFormat, CustomRole.Registered.Count));
 
-            foreach (CustomRole role in CustomRole.Registered.OrderBy(r => r.Id))
-                builder.Append(string.Format(this.CustomRoleFormat, role.Id, role.Name, role.Role)).AppendLine();
+            builder.AppendByCategories(
+                CustomRole.Registered.OrderBy(r => r.Id),
+                role => role.CategoryName,
+                (message, role, indent) => message.Append(indent).Append(string.Format(this.CustomRoleFormat, role.Id, role.Name, role.Role)).AppendLine());
 
             response = StringBuilderPool.Pool.ToStringReturn(builder);
             return true;

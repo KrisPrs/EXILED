@@ -68,8 +68,10 @@ namespace Exiled.CustomItems.Commands.List
 
             message.Append(string.Format(this.CustomItemsHeader, CustomItem.Registered.Count));
 
-            foreach (CustomItem customItem in CustomItem.Registered.OrderBy(item => item.Id))
-                message.Append(string.Format(this.CustomItemFormat, customItem.Id, customItem.Name, customItem.Type)).AppendLine();
+            message.AppendByCategories(
+                CustomItem.Registered.OrderBy(item => item.Id),
+                item => item.CategoryName,
+                (builder, item, indent) => builder.Append(indent).Append(string.Format(this.CustomItemFormat, item.Id, item.Name, item.Type)).AppendLine());
 
             response = StringBuilderPool.Pool.ToStringReturn(message);
             return true;

@@ -151,7 +151,9 @@ namespace Exiled.CustomItems.API.Features
                 if (!this.Attachments.IsEmpty())
                     firearm.AddAttachment(this.Attachments);
 
-                firearm.MagazineAmmo = firearm.MaxMagazineAmmo = this.ClipSize;
+                if (this.ClipSize > 0)
+                    firearm.MagazineAmmo = firearm.MaxMagazineAmmo = this.ClipSize;
+
                 firearm.AmmoDrain = this.AmmoUsage;
             }
 
@@ -332,7 +334,9 @@ namespace Exiled.CustomItems.API.Features
                 return;
             }
 
-            ev.Amount = this.Damage;
+            if (this.Damage >= 0)
+                ev.Amount = this.Damage;
+
             if (ev.Player.IsHuman && this.ArmorAndZoneDamageMultipliers.TryGetValue(ev.Player.CurrentArmor?.Type ?? ItemType.None, out Dictionary<HitboxType, float> dic) &&
                 dic.TryGetValue(firearmDamageHandler.Hitbox, out float multiplier))
             {

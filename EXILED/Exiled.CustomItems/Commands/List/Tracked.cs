@@ -86,29 +86,29 @@ namespace Exiled.CustomItems.Commands.List
 
             int count = 0;
 
-            foreach (CustomItem customItem in CustomItem.Registered)
-            {
-                if (customItem.TrackedSerials.Count == 0)
-                    continue;
-
-                message.AppendLine()
-                    .AppendFormat(this.ItemFormat, customItem.Id, customItem.Name, customItem.Type, customItem.TrackedSerials.Count)
-                    .AppendLine();
-
-                count += customItem.TrackedSerials.Count;
-
-                foreach (int insideInventory in customItem.TrackedSerials)
+            message.AppendByCategories(
+                CustomItem.Registered.Where(customItem => customItem.TrackedSerials.Count != 0),
+                customItem => customItem.CategoryName,
+                (builder, customItem, indent) =>
                 {
-                    Player owner = Player.List.FirstOrDefault(player => player.Inventory.UserInventory.Items.Any(item => item.Key == insideInventory));
+                    builder.AppendLine()
+                        .Append(indent).AppendFormat(this.ItemFormat, customItem.Id, customItem.Name, customItem.Type, customItem.TrackedSerials.Count)
+                        .AppendLine();
 
-                    message.AppendFormat(this.SerialFormat, insideInventory);
+                    count += customItem.TrackedSerials.Count;
 
-                    if (owner is null)
-                        message.AppendLine(this.NoOwnerMessage);
-                    else
-                        message.AppendFormat(this.OwnerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role).AppendLine();
-                }
-            }
+                    foreach (int insideInventory in customItem.TrackedSerials)
+                    {
+                        Player owner = Player.List.FirstOrDefault(player => player.Inventory.UserInventory.Items.Any(item => item.Key == insideInventory));
+
+                        builder.Append(indent).AppendFormat(this.SerialFormat, insideInventory);
+
+                        if (owner is null)
+                            builder.AppendLine(this.NoOwnerMessage);
+                        else
+                            builder.AppendFormat(this.OwnerFormat, owner.Nickname, owner.UserId, owner.Id, owner.Role).AppendLine();
+                    }
+                });
 
             if (message.Length == 0)
                 message.Append(this.NoCustomItemsMessage);
