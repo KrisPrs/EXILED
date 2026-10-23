@@ -79,6 +79,9 @@ namespace Exiled.CustomRoles.API.Features
         /// </summary>
         public abstract string SpectatorText { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the Category Name of this role.
+        /// </summary>
         public virtual string CategoryName { get; set; } = string.Empty;
 
         /// <summary>

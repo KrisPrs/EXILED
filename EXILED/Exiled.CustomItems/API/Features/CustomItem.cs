@@ -69,8 +69,14 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public abstract string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the showable name of the item.
+        /// </summary>
         public virtual string ShowableName { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the category name of the item.
+        /// </summary>
         public virtual string CategoryName { get; set; } = string.Empty;
 
         /// <summary>
@@ -903,6 +909,10 @@ namespace Exiled.CustomItems.API.Features
         /// <returns>True if it is a custom item.</returns>
         public virtual bool Check(Player? player) => this.Check(player?.CurrentItem);
 
+        /// <summary>
+        /// Checks the showable name of custom item.
+        /// </summary>
+        /// <returns>string.</returns>
         public string GetShowableName() => string.IsNullOrEmpty(this.ShowableName) ? this.Name : this.ShowableName;
 
         /// <inheritdoc/>

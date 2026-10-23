@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="CategoryGrouping.cs" company="ExMod Team">
+// Copyright (c) ExMod Team. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace Exiled.CustomRoles.Commands.Admin.List
 {
     using System;
@@ -5,13 +12,17 @@ namespace Exiled.CustomRoles.Commands.Admin.List
     using System.Linq;
     using System.Text;
 
+#pragma warning disable SA1600
     internal static class CategoryGrouping
+#pragma warning restore SA1600
     {
         private const string OtherCategoryName = "Другое";
 
         private const string EntryIndent = "   ";
 
+#pragma warning disable SA1600
         public static StringBuilder AppendByCategories<T>(this StringBuilder builder, IEnumerable<T> entries, Func<T, string> getCategory, Action<StringBuilder, T, string> appendEntry)
+#pragma warning restore SA1600
         {
             List<T> entryList = entries.ToList();
 
