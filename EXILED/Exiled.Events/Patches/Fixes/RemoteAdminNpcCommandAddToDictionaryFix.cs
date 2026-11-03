@@ -22,7 +22,7 @@ namespace Exiled.Events.Patches.Fixes
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Fix to add <see cref="Npc"/> created via RA to the <see cref="Npc.List"/>.
+    /// Fix to add <see cref="Npc"/> created via RA to the <see cref="Npc.List"/> and <see cref="Player.List"/>.
     /// </summary>
     [HarmonyPatch(typeof(SpawnDummyCommand), nameof(SpawnDummyCommand.Execute))]
     internal static class RemoteAdminNpcCommandAddToDictionaryFix
@@ -58,8 +58,16 @@ namespace Exiled.Events.Patches.Fixes
                         new(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.GameObject))),
                         new(OpCodes.Ldloc_S,  npc.LocalIndex),
 
-                        // Player.Dictionary.Add(GameObject, ReferenceHub)
-                        new(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Player>), nameof(Dictionary<GameObject, Player>.Add))),
+                        // Npc.Dictionary.get_Dictionary
+                        new(OpCodes.Call,     PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
+                        new(OpCodes.Ldloc_S,  npc.LocalIndex),
+
+                        // Npc::GameObject.get_GameObject
+                        new(OpCodes.Callvirt, PropertyGetter(typeof(Npc), nameof(Npc.GameObject))),
+                        new(OpCodes.Ldloc_S,  npc.LocalIndex),
+
+                        // Npc.Dictionary.Add(GameObject, ReferenceHub)
+                        new(OpCodes.Callvirt, Method(typeof(Dictionary<Npc, Player>), nameof(Dictionary<Npc, Player>.Add))),
                     });
 
             for (int i = 0; i < newInstructions.Count; i++)

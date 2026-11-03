@@ -271,6 +271,7 @@ namespace Exiled.API.Features
             });
 
             Dictionary.Add(npc.GameObject, npc);
+            Player.Dictionary.Add(npc.GameObject, npc);
             return npc;
         }
 
@@ -301,13 +302,20 @@ namespace Exiled.API.Features
                 Round.IgnoredPlayers.Add(npc.ReferenceHub);
 
             Dictionary.Add(npc.GameObject, npc);
+            Player.Dictionary.Add(npc.GameObject, npc);
             return npc;
         }
 
         /// <summary>
         /// Destroys all NPCs currently spawned.
         /// </summary>
-        public static void DestroyAll() => DummyUtils.DestroyAllDummies();
+        public static void DestroyAll()
+        {
+            foreach (Npc npc in List)
+                npc.Destroy();
+
+            DummyUtils.DestroyAllDummies();
+        }
 
         /// <summary>
         /// Follow a specific player.
@@ -343,6 +351,7 @@ namespace Exiled.API.Features
             {
                 Round.IgnoredPlayers.Remove(this.ReferenceHub);
                 Dictionary.Remove(this.ReferenceHub.gameObject);
+                Player.Dictionary.Remove(this.ReferenceHub.gameObject);
                 NetworkServer.Destroy(this.ReferenceHub.gameObject);
             }
             catch (Exception e)
