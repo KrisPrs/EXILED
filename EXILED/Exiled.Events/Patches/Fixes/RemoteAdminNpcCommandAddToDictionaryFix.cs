@@ -58,6 +58,9 @@ namespace Exiled.Events.Patches.Fixes
                         new(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.GameObject))),
                         new(OpCodes.Ldloc_S,  npc.LocalIndex),
 
+                        // Player.Dictionary.Add(GameObject, ReferenceHub)
+                        new(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Player>), nameof(Dictionary<GameObject, Player>.Add))),
+
                         // Npc.Dictionary.get_Dictionary
                         new(OpCodes.Call,     PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
                         new(OpCodes.Ldloc_S,  npc.LocalIndex),
@@ -67,7 +70,7 @@ namespace Exiled.Events.Patches.Fixes
                         new(OpCodes.Ldloc_S,  npc.LocalIndex),
 
                         // Npc.Dictionary.Add(GameObject, ReferenceHub)
-                        new(OpCodes.Callvirt, Method(typeof(Dictionary<Npc, Player>), nameof(Dictionary<Npc, Player>.Add))),
+                        new(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.Add))),
                     });
 
             for (int i = 0; i < newInstructions.Count; i++)
