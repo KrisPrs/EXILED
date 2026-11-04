@@ -314,6 +314,10 @@ namespace Exiled.CustomItems.API.Features
             yield return Timing.WaitForSeconds(0.01f);
             player.CurrentItem = null;
             yield return Timing.WaitForSeconds(0.08f);
+
+            if (curItem?.Base == null || !player.IsConnected || !player.Inventory.UserInventory.Items.ContainsKey(curItem.Serial))
+                yield break;
+
             player.CurrentItem = curItem;
         }
 
