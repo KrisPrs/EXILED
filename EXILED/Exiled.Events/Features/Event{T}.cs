@@ -10,11 +10,10 @@ namespace Exiled.Events.Features
     using System;
     using System.Buffers;
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Reflection;
 
     using Exiled.API.Features;
     using Exiled.Events.EventArgs.Interfaces;
-
     using MEC;
 
     /// <summary>
@@ -47,6 +46,8 @@ namespace Exiled.Events.Features
         private static readonly IComparer<Registration> RegisterComparable = Comparer<Registration>.Create((x, y) => y.priority - x.priority);
 
         private static readonly IComparer<AsyncRegistration> AsyncRegisterComparable = Comparer<AsyncRegistration>.Create((x, y) => y.priority - x.priority);
+
+        private readonly HashSet<string> namespacesOfSubscribers = new HashSet<string>();
 
         private readonly List<Registration> innerEvent = new();
 
@@ -140,6 +141,13 @@ namespace Exiled.Events.Features
             if (handler == null)
                 return;
 
+            Type reflectedType = handler.GetMethodInfo().ReflectedType;
+
+            if (reflectedType == null)
+                Log.Warn($"Handler {handler.GetMethodInfo().Name} does not have a reflected type!");
+
+            namespacesOfSubscribers.Add($"{reflectedType} - {reflectedType.Namespace}");
+
             Registration registration = new Registration(handler, priority);
             int index = this.innerEvent.BinarySearch(registration, RegisterComparable);
             if (index < 0)
@@ -179,6 +187,13 @@ namespace Exiled.Events.Features
             if (handler == null)
                 return;
 
+            Type reflectedType = handler.GetMethodInfo().ReflectedType;
+
+            if (reflectedType == null)
+                Log.Warn($"Handler {handler.GetMethodInfo().Name} does not have a reflected type!");
+
+            namespacesOfSubscribers.Add($"{reflectedType} - {reflectedType.Namespace}");
+
             AsyncRegistration registration = new AsyncRegistration(handler, 0);
             int index = this.innerAsyncEvent.BinarySearch(registration, AsyncRegisterComparable);
             if (index < 0)
@@ -200,8 +215,18 @@ namespace Exiled.Events.Features
         public void Unsubscribe(CustomEventHandler<T> handler)
         {
             int index = this.innerEvent.FindIndex(p => p.handler == handler);
+
             if (index != -1)
+            {
+                Type reflectedType = handler.GetMethodInfo().ReflectedType;
+
+                if (reflectedType == null)
+                    Log.Warn($"Handler {handler.GetMethodInfo().Name} does not have a reflected type!");
+
+                namespacesOfSubscribers.Remove($"{reflectedType} - {reflectedType.Namespace}");
+
                 this.innerEvent.RemoveAt(index);
+            }
         }
 
         /// <summary>
@@ -211,9 +236,25 @@ namespace Exiled.Events.Features
         public void Unsubscribe(CustomAsyncEventHandler<T> handler)
         {
             int index = this.innerAsyncEvent.FindIndex(p => p.handler == handler);
+
             if (index != -1)
+            {
+                Type reflectedType = handler.GetMethodInfo().ReflectedType;
+
+                if (reflectedType == null)
+                    Log.Warn($"Handler {handler.GetMethodInfo().Name} does not have a reflected type!");
+
+                namespacesOfSubscribers.Remove($"{reflectedType} - {reflectedType.Namespace}");
+
                 this.innerAsyncEvent.RemoveAt(index);
+            }
         }
+
+        /// <summary>
+        /// Provides a list of namespaces and classes of methods that subscribed to this EventArgs.
+        /// </summary>
+        /// <returns>A list of namespaces.</returns>
+        public List<string> GetNamespacesOfSubcribers() => new List<string>(namespacesOfSubscribers);
 
         /// <summary>
         /// Executes all <see cref="CustomEventHandler{TEventArgs}"/> listeners safely.
