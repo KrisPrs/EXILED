@@ -18,13 +18,18 @@ namespace Exiled.CustomRoles.Commands.Admin.List
     {
         private const string OtherCategoryName = "Другое";
 
-        private const string EntryIndent = "   ";
+        private const string EntryIndent = "";
+
+        private const string CategoryPrefix = "// ";
 
 #pragma warning disable SA1600
         public static StringBuilder AppendByCategories<T>(this StringBuilder builder, IEnumerable<T> entries, Func<T, string> getCategory, Action<StringBuilder, T, string> appendEntry)
 #pragma warning restore SA1600
         {
             List<T> entryList = entries.ToList();
+
+            if (builder.Length > 0 && builder[builder.Length - 1] != '\n')
+                builder.AppendLine();
 
             if (entryList.All(entry => string.IsNullOrEmpty(getCategory(entry))))
             {
@@ -38,7 +43,7 @@ namespace Exiled.CustomRoles.Commands.Admin.List
                          .GroupBy(entry => string.IsNullOrEmpty(getCategory(entry)) ? null : getCategory(entry))
                          .OrderBy(group => group.Key is null))
             {
-                builder.Append(group.Key ?? OtherCategoryName).AppendLine(":");
+                builder.Append(CategoryPrefix).Append(group.Key ?? OtherCategoryName).AppendLine();
 
                 foreach (T entry in group)
                     appendEntry(builder, entry, EntryIndent);
