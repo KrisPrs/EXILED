@@ -539,7 +539,7 @@ namespace Exiled.CustomRoles.API.Features
         {
             try
             {
-                player.TryGetSessionVariable("buffitems", out short itemsBuff);
+                player.TryGetSessionVariable("BuffItems", out int itemsBuff);
 
                 List<Dictionary<string, short>> inventoryClone = new(this.Inventory.Count);
                 foreach (Dictionary<string, short> slot in this.Inventory)
@@ -552,7 +552,7 @@ namespace Exiled.CustomRoles.API.Features
                 {
                     foreach (KeyValuePair<string, short> item in slot)
                     {
-                        byte chance = (byte)Mathf.Clamp(item.Value + itemsBuff, 0, 100);
+                        byte chance = (byte)Mathf.Clamp(item.Value > 0 ? item.Value + itemsBuff : item.Value, 0, 100);
                         if (UnityEngine.Random.Range(0, 101) > chance)
                             continue;
 
