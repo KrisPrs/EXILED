@@ -39,10 +39,15 @@ namespace Exiled.CustomRoles.Commands.Admin.List
                 return builder;
             }
 
+            bool isFirstGroup = true;
             foreach (IGrouping<string?, T> group in entryList
                          .GroupBy(entry => string.IsNullOrEmpty(getCategory(entry)) ? null : getCategory(entry))
                          .OrderBy(group => group.Key is null))
             {
+                if (!isFirstGroup)
+                    builder.AppendLine();
+
+                isFirstGroup = false;
                 builder.Append(CategoryPrefix).Append(group.Key ?? OtherCategoryName).AppendLine();
 
                 foreach (T entry in group)
