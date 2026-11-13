@@ -18,7 +18,7 @@ namespace Exiled.CustomItems.Commands
     /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
-    internal sealed class Main : ParentCommand
+    internal sealed class Main : ParentCommand, IUsageProvider
     {
         /// <inheritdoc/>
         public override string Command { get; } = "customitems";
@@ -27,7 +27,12 @@ namespace Exiled.CustomItems.Commands
         public override string[] Aliases { get; set; } = { "ci", "cis" };
 
         /// <inheritdoc/>
-        public override string Description { get; set; } = string.Empty;
+        public override string Description { get; set; } = "Кастомные предметы: give (g), spawn (sp), info (i), list (l)";
+
+        /// <summary>
+        /// Gets the usage hint shown in the Remote Admin console.
+        /// </summary>
+        public string[] Usage { get; } = { "give/spawn/info/list", "Название/ID предмета", "Игрок/all" };
 
         /// <inheritdoc/>
         protected override IEnumerable<Type> CommandsToRegister()

@@ -18,7 +18,7 @@ namespace Exiled.CustomRoles.Commands.Admin
     /// </summary>
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(GameConsoleCommandHandler))]
-    public class Parent : ParentCommand
+    public class Parent : ParentCommand, IUsageProvider
     {
         /// <inheritdoc />
         public override string Command { get; } = "customroles";
@@ -27,7 +27,12 @@ namespace Exiled.CustomRoles.Commands.Admin
         public override string[] Aliases { get; set; } = { "cr", "crs" };
 
         /// <inheritdoc />
-        public override string Description { get; set; } = string.Empty;
+        public override string Description { get; set; } = "Кастомные роли: give (g), info (i), list (l)";
+
+        /// <summary>
+        /// Gets the usage hint shown in the Remote Admin console.
+        /// </summary>
+        public string[] Usage { get; } = { "give/info/list", "Название/ID роли", "Игрок/all" };
 
         /// <inheritdoc />
         protected override IEnumerable<Type> CommandsToRegister()
