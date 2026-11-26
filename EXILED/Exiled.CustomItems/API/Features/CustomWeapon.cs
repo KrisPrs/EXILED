@@ -33,8 +33,6 @@ namespace Exiled.CustomItems.API.Features
     /// </summary>
     public abstract class CustomWeapon : CustomItem
     {
-        private readonly Dictionary<ushort, int> pickupAmmo = new();
-
         /// <inheritdoc />
         public override ItemType Type
         {
@@ -171,8 +169,6 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
-            Exiled.Events.Handlers.Player.PickingUpItem += this.OnInternalRememberingAmmo;
-            Exiled.Events.Handlers.Player.ItemAdded += this.OnInternalRestoringAmmo;
 
             base.SubscribeEvents();
         }
@@ -186,8 +182,6 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
-            Exiled.Events.Handlers.Player.PickingUpItem -= this.OnInternalRememberingAmmo;
-            Exiled.Events.Handlers.Player.ItemAdded -= this.OnInternalRestoringAmmo;
 
             base.UnsubscribeEvents();
         }
@@ -238,43 +232,6 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="ev"><see cref="HurtingEventArgs" />.</param>
         protected virtual void OnUnloading(UnloadingWeaponEventArgs ev)
         {
-        }
-
-        /// <summary>
-        /// Remembers the magazine ammo of a custom weapon pickup before the game clamps it to the standard capacity.
-        /// </summary>
-        /// <param name="ev"><see cref="PickingUpItemEventArgs"/>.</param>
-        private void OnInternalRememberingAmmo(PickingUpItemEventArgs ev)
-        {
-            if (CustomItems.Instance?.Config.RestoreAmmoOnPickup == true && ev.Pickup is Exiled.API.Features.Pickups.FirearmPickup firearmPickup && this.Check(ev.Pickup))
-                this.pickupAmmo[ev.Pickup.Serial] = firearmPickup.Ammo;
-        }
-
-        /// <summary>
-        /// Restores the custom capacity and the remembered magazine ammo of a picked up custom weapon, taking the surplus back from the reserve.
-        /// </summary>
-        /// <param name="ev"><see cref="ItemAddedEventArgs"/>.</param>
-        private void OnInternalRestoringAmmo(ItemAddedEventArgs ev)
-        {
-            if (ev.Pickup is not Exiled.API.Features.Pickups.FirearmPickup firearmPickup || ev.Item is not Firearm firearm || !this.pickupAmmo.TryGetValue(firearm.Serial, out int ammo))
-                return;
-
-            this.pickupAmmo.Remove(firearm.Serial);
-            if (!this.Check(firearm))
-                return;
-
-            firearm.MaxMagazineAmmo = firearmPickup.MaxAmmo;
-            int lost = Math.Min(ammo, firearm.MaxMagazineAmmo) - firearm.MagazineAmmo;
-            if (lost <= 0)
-                return;
-
-            if (firearm.AmmoType != Exiled.API.Enums.AmmoType.None)
-            {
-                lost = Math.Min(lost, ev.Player.GetAmmo(firearm.AmmoType));
-                ev.Player.SetAmmo(firearm.AmmoType, (ushort)(ev.Player.GetAmmo(firearm.AmmoType) - lost));
-            }
-
-            firearm.MagazineAmmo += lost;
         }
 
         private void OnInternalChangingAttachments(ChangingAttachmentsEventArgs ev)
