@@ -20,6 +20,7 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.CustomItems.API.Models;
     using Exiled.Events.EventArgs.Item;
     using Exiled.Events.EventArgs.Player;
+    using InventorySystem.Items.Firearms;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
     using InventorySystem.Items.Firearms.Modules;
@@ -33,6 +34,8 @@ namespace Exiled.CustomItems.API.Features
     /// </summary>
     public abstract class CustomWeapon : CustomItem
     {
+        private readonly Dictionary<ushort, int> pickupAmmo = new();
+
         /// <inheritdoc />
         public override ItemType Type
         {
@@ -146,7 +149,7 @@ namespace Exiled.CustomItems.API.Features
         {
             Exiled.API.Features.Items.Item item = base.CreateItem();
 
-            if (item is Firearm firearm)
+            if (item is Exiled.API.Features.Items.Firearm firearm)
             {
                 if (!this.Attachments.IsEmpty())
                     firearm.AddAttachment(this.Attachments);
@@ -169,6 +172,8 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.DroppingItem += this.OnInternalRememberingAmmo;
+            Exiled.Events.Handlers.Player.ItemAdded += this.OnInternalRestoringAmmo;
 
             base.SubscribeEvents();
         }
@@ -182,6 +187,8 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
+            Exiled.Events.Handlers.Player.DroppingItem -= this.OnInternalRememberingAmmo;
+            Exiled.Events.Handlers.Player.ItemAdded -= this.OnInternalRestoringAmmo;
 
             base.UnsubscribeEvents();
         }
@@ -232,6 +239,30 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="ev"><see cref="HurtingEventArgs" />.</param>
         protected virtual void OnUnloading(UnloadingWeaponEventArgs ev)
         {
+        }
+
+        /// <summary>
+        /// Remembers the magazine ammo of a custom weapon pickup before the game clamps it to the standard capacity.
+        /// </summary>
+        /// <param name="ev"><see cref="PickingUpItemEventArgs"/>.</param>
+        private void OnInternalRememberingAmmo(DroppingItemEventArgs ev)
+        {
+            if (this.Check(ev.Item) && ev.Item is Exiled.API.Features.Items.Firearm firearm)
+                this.pickupAmmo[ev.Item.Serial] = firearm.MagazineAmmo;
+        }
+
+        /// <summary>
+        /// Restores the custom capacity and the remembered magazine ammo of a picked up custom weapon, taking the surplus back from the reserve.
+        /// </summary>
+        /// <param name="ev"><see cref="ItemAddedEventArgs"/>.</param>
+        private void OnInternalRestoringAmmo(ItemAddedEventArgs ev)
+        {
+            if (ev.Item is not Exiled.API.Features.Items.Firearm firearm || !this.pickupAmmo.TryGetValue(firearm.Serial, out int ammo))
+                return;
+
+            this.pickupAmmo.Remove(firearm.Serial);
+
+            Timing.CallDelayed(0.25f, () => firearm.MagazineAmmo = ammo);
         }
 
         private void OnInternalChangingAttachments(ChangingAttachmentsEventArgs ev)
