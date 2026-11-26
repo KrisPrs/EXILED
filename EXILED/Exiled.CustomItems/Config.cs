@@ -36,5 +36,11 @@ namespace Exiled.CustomItems
         /// </summary>
         [Description("The hint that is shown when someone selects a custom item.")]
         public Broadcast SelectedHint { get; private set; } = new("You have selected a {0}\n{1}", 5);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a picked up custom weapon keeps the magazine ammo above the standard capacity.
+        /// </summary>
+        [Description("Сохранять ли патроны в магазине кастомного оружия сверх стандартной ёмкости при подборе (иначе игра срезает их до стандартной, лишние уходят в запас или пропадают)")]
+        public bool RestoreAmmoOnPickup { get; set; } = false;
     }
 }
