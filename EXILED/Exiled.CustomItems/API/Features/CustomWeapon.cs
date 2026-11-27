@@ -15,12 +15,11 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.DamageHandlers;
-    using Exiled.API.Features.Items;
     using Exiled.API.Structs;
     using Exiled.CustomItems.API.Models;
     using Exiled.Events.EventArgs.Item;
+    using Exiled.Events.EventArgs.Map;
     using Exiled.Events.EventArgs.Player;
-    using InventorySystem.Items.Firearms;
     using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items.Firearms.Attachments.Components;
     using InventorySystem.Items.Firearms.Modules;
@@ -172,7 +171,7 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting += this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon += this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments += this.OnInternalChangingAttachments;
-            Exiled.Events.Handlers.Player.DroppingItem += this.OnInternalRememberingAmmo;
+            Exiled.Events.Handlers.Map.PickupAdded += this.OnInternalRememberingAmmo;
             Exiled.Events.Handlers.Player.ItemAdded += this.OnInternalRestoringAmmo;
 
             base.SubscribeEvents();
@@ -187,7 +186,7 @@ namespace Exiled.CustomItems.API.Features
             Exiled.Events.Handlers.Player.Hurting -= this.OnInternalHurting;
             Exiled.Events.Handlers.Player.UnloadingWeapon -= this.OnInternalUnloading;
             Exiled.Events.Handlers.Item.ChangingAttachments -= this.OnInternalChangingAttachments;
-            Exiled.Events.Handlers.Player.DroppingItem -= this.OnInternalRememberingAmmo;
+            Exiled.Events.Handlers.Map.PickupAdded -= this.OnInternalRememberingAmmo;
             Exiled.Events.Handlers.Player.ItemAdded -= this.OnInternalRestoringAmmo;
 
             base.UnsubscribeEvents();
@@ -244,11 +243,14 @@ namespace Exiled.CustomItems.API.Features
         /// <summary>
         /// Remembers the magazine ammo of a custom weapon pickup before the game clamps it to the standard capacity.
         /// </summary>
-        /// <param name="ev"><see cref="PickingUpItemEventArgs"/>.</param>
-        private void OnInternalRememberingAmmo(DroppingItemEventArgs ev)
+        /// <param name="ev"><see cref="PickupAddedEventArgs"/>.</param>
+        private void OnInternalRememberingAmmo(PickupAddedEventArgs ev)
         {
-            if (this.Check(ev.Item) && ev.Item is Exiled.API.Features.Items.Firearm firearm)
-                this.pickupAmmo[ev.Item.Serial] = firearm.MagazineAmmo;
+            if (this.Check(ev.Pickup) && ev.Pickup is Exiled.API.Features.Pickups.FirearmPickup firearmPickup)
+            {
+                this.pickupAmmo[ev.Pickup.Serial] = firearmPickup.Ammo;
+                firearmPickup.Ammo = 0;
+            }
         }
 
         /// <summary>
