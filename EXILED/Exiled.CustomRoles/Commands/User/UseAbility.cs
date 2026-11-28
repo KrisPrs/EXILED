@@ -88,7 +88,7 @@ namespace Exiled.CustomRoles.Commands.User
 
                     activeAbilities.Add(scp079ActiveAbility);
                 }
-                else if (ability is ActiveAbility activeAbility)
+                else if (ability is ActiveAbility activeAbility && activeAbility.IsVisible(player))
                 {
                     activeAbilities.Add(activeAbility);
                 }

@@ -108,6 +108,9 @@ namespace Exiled.CustomRoles.Commands.User
                         scp079ActiveAbilities.Add(scp079ActiveAbility);
                         break;
                     case ActiveAbility activeAbility:
+                        if (!activeAbility.IsVisible(player))
+                            continue;
+
                         activeAbilities.Add(activeAbility);
                         break;
                     case PassiveAbility { IsHidden: false } passiveAbility when includePassive:
