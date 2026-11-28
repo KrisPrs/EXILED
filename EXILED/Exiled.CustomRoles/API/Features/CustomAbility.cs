@@ -98,6 +98,13 @@ namespace Exiled.CustomRoles.API.Features
         public virtual bool Check(Player player) => player is not null && this.Players.Contains(player);
 
         /// <summary>
+        ///     Whether the ability is listed in .a / role info and can be picked by number for this player (false hides it, e.g. by the role's mode).
+        /// </summary>
+        /// <param name="player">The player to check.</param>
+        /// <returns>True if the ability is shown to the player.</returns>
+        public virtual bool IsVisible(Player player) => true;
+
+        /// <summary>
         ///     Adds this ability to the player.
         /// </summary>
         /// <param name="player">The <see cref="Player" /> to give the ability to.</param>

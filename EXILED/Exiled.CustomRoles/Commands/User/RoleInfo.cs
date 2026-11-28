@@ -113,7 +113,7 @@ namespace Exiled.CustomRoles.Commands.User
 
                         activeAbilities.Add(activeAbility);
                         break;
-                    case PassiveAbility { IsHidden: false } passiveAbility when includePassive:
+                    case PassiveAbility { IsHidden: false } passiveAbility when includePassive && passiveAbility.IsVisible(player):
                         passiveAbilities.Add(passiveAbility);
                         break;
                 }
